@@ -1,0 +1,12 @@
+--
+-m
+-j
+-x
+-i prueba
+-b _CODE = 0x4010
+-b _DATA = 0xc000
+-k C:\Dev\MSX\SDCC\bin\..\lib\z80
+-l z80
+prueba.o
+
+-e

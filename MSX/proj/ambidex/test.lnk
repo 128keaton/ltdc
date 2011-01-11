@@ -1,0 +1,12 @@
+--
+-m
+-j
+-x
+-i test
+-b _CODE = 0x4010
+-b _DATA = 0xc000
+-k C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80
+-l z80
+test.o
+
+-e

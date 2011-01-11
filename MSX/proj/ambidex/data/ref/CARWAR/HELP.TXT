@@ -1,0 +1,13 @@
+CARWAR 1.2
+PHENIX Copr 1997
+
+Tableau -> CIRCUIT1.PCX
+Voiture 1 -> CAR1.PCX
+Voiture 2 -> CAMAROS.PCX
+
+PLAYER           1     2   FLIC
+
+HAUT             8     a     o
+BAS              5     q     l
+GAUCHE           4     w     :
+DROITE           6     x     !

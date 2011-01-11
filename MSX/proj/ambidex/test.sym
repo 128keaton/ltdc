@@ -1,0 +1,126 @@
+; no$gmb format .sym file
+; Generated automagically by ASxxxx linker V01.75 + NoICE + SDCC Feb 1999 (SDK 3.0.0)
+; Area: .  .ABS.
+01:4010 s__CODE
+00:C000 s__DATA
+00:C0AD s__BSS
+00:C0AD s__CABS
+00:C0AD s__GSFINAL
+00:C0AD s__GSINIT
+00:C0AD s__HOME
+00:C0AD s__OVERLAY
+; Area: _CODE
+01:4010 _main
+01:4010 _main_start
+01:402B _MainLoop
+01:402B _MainLoop_start
+01:402B _main_end
+01:43A0 _MainLoop_end
+01:46A0 _SetShortVec
+01:46A0 _SetShortVec_start
+01:46DA _SetShortVec_end
+01:46DA _TransXZ
+01:46DA _TransXZ_start
+01:48A3 _TransXZIndex
+01:48A3 _TransXZIndex_start
+01:48A3 _TransXZ_end
+01:4AC1 _Project
+01:4AC1 _Project_start
+01:4AC1 _TransXZIndex_end
+01:4BF6 _Project_end
+01:4BF6 _Update
+01:4BF6 _Update_start
+01:5483 _SetScreen8
+01:5483 _SetScreen8_start
+01:5483 _Update_end
+01:54B0 _SetPage8
+01:54B0 _SetPage8_start
+01:54B0 _SetScreen8_end
+01:54C8 _DrawPoint8
+01:54C8 _DrawPoint8_start
+01:54C8 _SetPage8_end
+01:5510 _DrawLine
+01:5510 _DrawLine_start
+01:5510 _DrawPoint8_end
+01:5567 _DrawLineSimple
+01:5567 _DrawLineSimple_start
+01:5567 _DrawLine_end
+01:55D5 _DrawLine8
+01:55D5 _DrawLine8_start
+01:55D5 _DrawLineSimple_end
+01:55E2 _DrawLine8_end
+01:55E2 _VPDCommand
+01:55E2 _VPDCommand_start
+01:5620 _VPDCommand_end
+01:5620 _waitRetrace
+01:5620 _waitRetrace_start
+01:562B _WaitForVDP
+01:562B _WaitForVDP_start
+01:562B _waitRetrace_end
+01:5643 _Joystick
+01:5643 _Joystick_start
+01:5643 _WaitForVDP_end
+01:5655 _Joystick_end
+01:5655 _Joytrig
+01:5655 _Joytrig_start
+01:5669 _GetKeyMatrixLine
+01:5669 _GetKeyMatrixLine_start
+01:5669 _Joytrig_end
+01:567B _GetKeyMatrixLine_end
+01:567B _WriteToVRAM
+01:567B _WriteToVRAM_start
+01:56A5 _WriteToVRAM_end
+01:56A5 __initrleblock
+01:56CC __divschar_rrx_s
+01:56D3 __divschar_rrx_hds
+01:56DA __modschar_rrx_s
+01:56E1 __modschar_rrx_hds
+01:56E8 __divsint_rrx_s
+01:56F4 __divsint_rrx_hds
+01:56FC __modsint_rrx_s
+01:5708 __modsint_rrx_hds
+01:5710 __divuchar_rrx_s
+01:5717 __divuchar_rrx_hds
+01:571E __moduchar_rrx_s
+01:5725 __moduchar_rrx_hds
+01:572C __divuint_rrx_s
+01:5738 __divuint_rrx_hds
+01:5740 __moduint_rrx_s
+01:574C __moduint_rrx_hds
+01:5754 .div8
+01:5754 .mod8
+01:575C .div16
+01:575C .mod16
+01:5799 .divu8
+01:5799 .modu8
+01:579C .divu16
+01:579C .modu16
+01:57D1 __muluchar_rrx_s
+01:57E4 __mulschar_rrx_s
+01:57EB __mulschar_rrx_hds
+01:57F7 __mulint_rrx_s
+01:5803 __mulint_rrx_hds
+01:5803 __muluchar_rrx_hds
+; Area: _DATA
+00:C000 _SX
+00:C002 _SY
+00:C004 _DX
+00:C006 _DY
+00:C008 _NX
+00:C00A _NY
+00:C00C _CLR
+00:C00D _ARG
+00:C00E _CMD
+00:C00F _g_Camera
+00:C015 _g_Position
+00:C01B _g_Angle
+00:C01C _g_AngleIndex
+00:C01D _g_Local
+00:C04D _g_World
+00:C07D _g_Screen
+; Area: _OVERLAY
+; Area: _HOME
+; Area: _GSINIT
+; Area: _GSFINAL
+; Area: _CABS
+; Area: _BSS
