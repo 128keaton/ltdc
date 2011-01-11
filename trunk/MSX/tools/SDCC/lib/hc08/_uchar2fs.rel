@@ -1,0 +1,52 @@
+XH
+H F areas 5 global symbols
+M _uchar2fs
+O -mhc08
+S ___ulong2fs Ref0000
+S ___ulong2fs_PARM_1 Ref0000
+S __ret2 Ref0000
+S __ret3 Ref0000
+A _CODE size 0 flags 0 addr 0
+A HOME size 0 flags 20 addr 0
+A GSINIT0 size 0 flags 20 addr 0
+A GSINIT size 0 flags 20 addr 0
+A GSFINAL size 0 flags 20 addr 0
+A CSEG size 27 flags 20 addr 0
+S ___uchar2fs Def0000
+A XINIT size 0 flags 0 addr 0
+A CONST size 0 flags 20 addr 0
+A DSEG size 4 flags 0 addr 0
+A OSEG size 0 flags 4 addr 0
+A BSEG size 0 flags 0 addr 0
+A XSEG size 0 flags 0 addr 0
+A XISEG size 0 flags 0 addr 0
+A XABS size 0 flags 8 addr 0
+A CABS size 0 flags 28 addr 0
+T 00 00
+R 00 00 00 08
+T 00 00
+R 00 00 00 08
+T 00 00
+R 00 00 00 05
+T 00 00 C7 00 03 5F CF 00 02 5F CF
+R 00 00 00 05 02 03 00 01 02 07 00 01
+T 00 09 00 01 5F CF 00 00 CD
+R 00 00 00 05 02 02 00 01 02 06 00 01
+T 00 10 00 00 B7 00 03 BF
+R 00 00 00 05 02 02 00 00 29 05 00 08
+T 00 15 00 02 4E 00 00
+R 00 00 00 05 29 02 00 08 2B 05 00 02
+T 00 18 00 01 4E 00 00
+R 00 00 00 05 29 02 00 08 2B 05 00 03
+T 00 1B 00 00 4E 00 00
+R 00 00 00 05 29 02 00 08 29 05 00 08
+T 00 1E 00 00 4E 00 01
+R 00 00 00 05 2B 02 00 03 29 05 00 08
+T 00 21 00 00 BE 00 02 B6
+R 00 00 00 05 2B 02 00 02 29 05 00 08
+T 00 25 00 03
+R 00 00 00 05 29 02 00 08
+T 00 26
+R 00 00 00 05
+T 00 26 81
+R 00 00 00 05

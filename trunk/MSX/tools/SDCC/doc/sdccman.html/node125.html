@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>4.6.8 Libraries</TITLE>
+<META NAME="description" CONTENT="4.6.8 Libraries">
+<META NAME="keywords" CONTENT="sdccman">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sdccman.css">
+
+<LINK REL="next" HREF="node126.html">
+<LINK REL="previous" HREF="node124.html">
+<LINK REL="up" HREF="node117.html">
+<LINK REL="next" HREF="node126.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html2503"
+  HREF="node126.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html2497"
+  HREF="node117.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html2491"
+  HREF="node124.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html2499"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html2501"
+  HREF="node187.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html2504"
+  HREF="node126.html">4.6.9 Adding New Devices</A>
+<B> Up:</B> <A NAME="tex2html2498"
+  HREF="node117.html">4.6 The PIC16 port</A>
+<B> Previous:</B> <A NAME="tex2html2492"
+  HREF="node124.html">4.6.7 Header Files</A>
+ &nbsp; <B>  <A NAME="tex2html2500"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp; <B>  <A NAME="tex2html2502"
+  HREF="node187.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html2505"
+  HREF="node125.html#SECTION00568100000000000000">Building the libraries</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION00568000000000000000">
+4.6.8 Libraries</A>
+</H2>
+
+<P>
+The libraries<A NAME="3010"></A> that PIC16<A NAME="3011"></A> port
+depends on are the microcontroller device libraries which contain
+the symbol definitions for the microcontroller special function registers.
+These libraries have the format pic18fxxxx.lib, where <I>xxxx</I>
+is the microcontroller identification number. The specific library
+is selected automatically by the compiler at link stage according
+to the selected device.
+
+<P>
+Libraries are created with gplib which is part of the gputils package
+http://sourceforge.net/projects/gputils.
+
+<P>
+
+<H3><A NAME="SECTION00568100000000000000">
+Building the libraries</A>
+</H3>
+
+<P>
+Before using SDCC/pic16 there are some libraries that need to be compiled.
+This process is not done automatically by SDCC since not all users
+use SDCC for pic16 projects. So each user should compile the libraries
+separately.
+
+<P>
+The steps to compile the pic16 libraries under Linux and Mac OS X
+are:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD>cd&nbsp;device/lib/pic16
+
+<P>
+./configure
+
+<P>
+make
+
+<P>
+cd&nbsp;..
+
+<P>
+make&nbsp;model-pic16
+
+<P>
+su&nbsp;-c&nbsp;'make&nbsp;install'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;install&nbsp;the&nbsp;libraries,&nbsp;you&nbsp;need&nbsp;the&nbsp;root&nbsp;password
+</DD>
+</DL>If you need to install the headers too, do:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD>cd&nbsp;device/include
+
+<P>
+su&nbsp;-c&nbsp;'make&nbsp;install'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;install&nbsp;the&nbsp;headers,&nbsp;you&nbsp;need&nbsp;the&nbsp;root&nbsp;password
+</DD>
+</DL>There exist a special target to build the I/O libraries. This target
+is not automatically build because it will build the I/O library for
+<I>every</I> supported device. This way building will take quite a
+lot of time. Users are advised to edit the <B>device/lib/pic16/pics.build</B>
+file and then execute:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD>make&nbsp;lib-io
+</DD>
+</DL>
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html2503"
+  HREF="node126.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html2497"
+  HREF="node117.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html2491"
+  HREF="node124.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html2499"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html2501"
+  HREF="node187.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html2504"
+  HREF="node126.html">4.6.9 Adding New Devices</A>
+<B> Up:</B> <A NAME="tex2html2498"
+  HREF="node117.html">4.6 The PIC16 port</A>
+<B> Previous:</B> <A NAME="tex2html2492"
+  HREF="node124.html">4.6.7 Header Files</A>
+ &nbsp; <B>  <A NAME="tex2html2500"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp; <B>  <A NAME="tex2html2502"
+  HREF="node187.html">Index</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2008-03-23
+</ADDRESS>
+</BODY>
+</HTML>

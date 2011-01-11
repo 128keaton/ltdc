@@ -1,0 +1,6 @@
+tinibios.rel
+memcpyx.rel
+lcd390.rel
+i2c390.rel
+rtc390.rel
+putchar.rel
