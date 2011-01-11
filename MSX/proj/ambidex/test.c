@@ -110,7 +110,9 @@ void WaitForVDP();
 char Joystick(char n);
 char Joytrig(char n);
 u8 GetKeyMatrixLine(u8 n);
-void WriteToVRAM(i16 addr, u8 value);
+//void WriteToVRAM(i16 addr, u8 value);
+void WriteToVRAM(u8 x, u8 y, u8 value);
+
 
 //----------------------------------------
 // G L O B A L E S
@@ -168,9 +170,9 @@ void MainLoop()
 		0, 0, 0, 0, 0, 0, 0, 0,	0, 1, 212, 0, 0, 0, 0xC0
 	};
 	u8 x = 128, y = 96;
-	i8 i, j;
+	i16 i, j;
 	u8 bEnd = 0/*, keyCode*/;
-	i16 addr;
+	//i16 addr;
 	i8 page = 0;
 	u8 keyLine;
 
@@ -203,29 +205,40 @@ void MainLoop()
 		//addr = y;
 		//addr <<= 8;
 		//addr += x;
-		addr = x + (y * 256);
-		WriteToVRAM(addr, 0x0F);
+		//addr = x + (y << 8);
+		//WriteToVRAM(addr, 0x0F);
+		WriteToVRAM(x, y, 0x0F);
 
-		x++;
+		//x++;
 	    if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
 		{
 			switch (i)
 			{
-		        case 1: // ↑
-					y--;
-					g_Position.y -= 10;
-					break;
-		        case 3: // →
-					g_Position.x += 10;
-					break;
-				case 5: // ↓
-					y++;
-					g_Position.y += 10;
-					break;
-		        case 7: // ←
-					g_Position.x -= 10;
-					break;
+			case 1: y--; break;
+			case 2: y--; x++; break;
+			case 3: x++; break;
+			case 4: y++; x++; break;
+			case 5: y++; break;
+			case 6: y++; x--; break;
+			case 7: x--; break;
+			case 8: y--; x--; break;
 			}
+
+			//switch (i)
+			//{
+		 //       case 1: // ↑
+			//		g_Position.y -= 10;
+			//		break;
+		 //       case 3: // →
+			//		g_Position.x += 10;
+			//		break;
+			//	case 5: // ↓
+			//		g_Position.y += 10;
+			//		break;
+		 //       case 7: // ←
+			//		g_Position.x -= 10;
+			//		break;
+			//}
 		}
 
 		DrawPoint8(x,     y - 1, 255);
@@ -248,6 +261,14 @@ void MainLoop()
 					DrawPoint8(10 + j, 10 + i, 255);
 			}
 		}
+
+		//for(i=0; i<10; i++) // rows
+		//{
+		//	for(j=0; j<256; j++) // characters
+		//	{
+		//		DrawPoint8(j, i, j);
+		//	}
+		//}
 
 
 		//page = DISP_PAGE - page;
@@ -874,9 +895,11 @@ u8 GetKeyMatrixLine(u8 n)
 /**
  *
  */
-void WriteToVRAM(i16 addr, u8 value)
+//void WriteToVRAM(i16 addr, u8 value)
+void WriteToVRAM(u8 x, u8 y, u8 value)
 {
-	addr; value;
+	//addr; value;
+	x; y; value;
 
 	WaitForVDP();
 
