@@ -14,7 +14,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__OVERLAY
      0003    l__BSS
      00AD    l__DATA
-     1829    l__CODE
+     1825    l__CODE
      4010    s__CODE
      C000    s__DATA
      C0AD    s__BSS
@@ -28,7 +28,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   1829 =   6185. bytes (REL,CON)
+_CODE                              4010   1825 =   6181. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -91,38 +91,38 @@ _CODE                              4010   1829 =   6185. bytes (REL,CON)
      5698    _GetKeyMatrixLine_end
      5698    _WriteToVRAM
      5698    _WriteToVRAM_start
-     56C2    _WriteToVRAM_end
-     56C2    __initrleblock
-     56E9    __divschar_rrx_s
-     56F0    __divschar_rrx_hds
-     56F7    __modschar_rrx_s
-     56FE    __modschar_rrx_hds
-     5705    __divsint_rrx_s
-     5711    __divsint_rrx_hds
-     5719    __modsint_rrx_s
-     5725    __modsint_rrx_hds
-     572D    __divuchar_rrx_s
-     5734    __divuchar_rrx_hds
-     573B    __moduchar_rrx_s
-     5742    __moduchar_rrx_hds
-     5749    __divuint_rrx_s
-     5755    __divuint_rrx_hds
-     575D    __moduint_rrx_s
-     5769    __moduint_rrx_hds
-     5771    .div8
-     5771    .mod8
-     5779    .div16
-     5779    .mod16
-     57B6    .divu8
-     57B6    .modu8
-     57B9    .divu16
-     57B9    .modu16
-     57EE    __muluchar_rrx_s
-     5801    __mulschar_rrx_s
-     5808    __mulschar_rrx_hds
-     5814    __mulint_rrx_s
-     5820    __mulint_rrx_hds
-     5820    __muluchar_rrx_hds
+     56BE    _WriteToVRAM_end
+     56BE    __initrleblock
+     56E5    __divschar_rrx_s
+     56EC    __divschar_rrx_hds
+     56F3    __modschar_rrx_s
+     56FA    __modschar_rrx_hds
+     5701    __divsint_rrx_s
+     570D    __divsint_rrx_hds
+     5715    __modsint_rrx_s
+     5721    __modsint_rrx_hds
+     5729    __divuchar_rrx_s
+     5730    __divuchar_rrx_hds
+     5737    __moduchar_rrx_s
+     573E    __moduchar_rrx_hds
+     5745    __divuint_rrx_s
+     5751    __divuint_rrx_hds
+     5759    __moduint_rrx_s
+     5765    __moduint_rrx_hds
+     576D    .div8
+     576D    .mod8
+     5775    .div16
+     5775    .mod16
+     57B2    .divu8
+     57B2    .modu8
+     57B5    .divu16
+     57B5    .modu16
+     57EA    __muluchar_rrx_s
+     57FD    __mulschar_rrx_s
+     5804    __mulschar_rrx_hds
+     5810    __mulint_rrx_s
+     581C    __mulint_rrx_hds
+     581C    __muluchar_rrx_hds
 
 Hexadecimal
 
@@ -158,11 +158,11 @@ MODULES
 	FILE test.o
 		NAME test
 LIBRARIES
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE div.o
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010
