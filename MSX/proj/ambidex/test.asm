@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-; This file was generated Tue Jan 11 23:32:47 2011
+; This file was generated Wed Jan 12 12:09:10 2011
 ;--------------------------------------------------------
 	.module test
 	.optsdcc -mz80
@@ -4543,8 +4543,8 @@ _WriteToVRAM:
 		 out (#0x99),a
 	
 		 ld a,5(ix)
-		 and #0x3F ;
-		 or #0x40 ;
+;
+;
 		 out (#0x99),a
 	
 		 ;

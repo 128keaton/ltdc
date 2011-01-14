@@ -923,8 +923,8 @@ void WriteToVRAM(u8 x, u8 y, u8 value)
 		out		(#0x99),a
 
 		ld		a,5(ix)
-		and		#0x3F		;// Set 2 last bits to 0
-		or		#0x40		;// write access
+;//		and		#0x3F		;// Set 2 last bits to 0
+;//		or		#0x40		;// write access
 		out		(#0x99),a
 
 		;// Write value

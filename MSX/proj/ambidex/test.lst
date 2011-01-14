@@ -1,7 +1,7 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : free open source ANSI-C Compiler
                               3 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-                              4 ; This file was generated Tue Jan 11 23:32:47 2011
+                              4 ; This file was generated Wed Jan 12 12:09:10 2011
                               5 ;--------------------------------------------------------
                               6 	.module test
                               7 	.optsdcc -mz80
@@ -4543,20 +4543,20 @@
    169E D3 99              4543 		 out (#0x99),a
                            4544 	
    16A0 DD 7E 05           4545 		 ld a,5(ix)
-   16A3 E6 3F              4546 		 and #0x3F ;
-   16A5 F6 40              4547 		 or #0x40 ;
-   16A7 D3 99              4548 		 out (#0x99),a
+                           4546 ;
+                           4547 ;
+   16A3 D3 99              4548 		 out (#0x99),a
                            4549 	
                            4550 		 ;
-   16A9 DD 7E 06           4551 		 ld a,6(ix)
-   16AC D3 98              4552 		 out (#0x98),a
+   16A5 DD 7E 06           4551 		 ld a,6(ix)
+   16A8 D3 98              4552 		 out (#0x98),a
                            4553 	
-   16AE FB                 4554 		 ei
+   16AA FB                 4554 		 ei
                            4555 		
                            4556 ;	genLabel
                            4557 ;	genEndFunction
-   16AF DD E1              4558 	pop	ix
-   16B1 C9                 4559 	ret
-   16B2                    4560 _WriteToVRAM_end::
+   16AB DD E1              4558 	pop	ix
+   16AD C9                 4559 	ret
+   16AE                    4560 _WriteToVRAM_end::
                            4561 	.area _CODE
                            4562 	.area _CABS
