@@ -159,6 +159,12 @@ void main(void)
 
 #include "trigo.inc"
 #include "proj.inc"
+// Sprites
+// SX : 13
+// SY : 11
+// 16 sprites/car (208 px)
+// 4 cars (44 px)
+
 
 /**
  *
