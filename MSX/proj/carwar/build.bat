@@ -1,5 +1,5 @@
 @ECHO off
-SET PROGRAM=test
+SET PROGRAM=carwar
 
 ECHO -- SDCC Compile --
 sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 %PROGRAM%.c

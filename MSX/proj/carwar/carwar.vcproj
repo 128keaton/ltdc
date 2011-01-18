@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="ambidex"
+	Name="carwar"
 	ProjectGUID="{DE2AC870-23ED-4B5F-A333-624E76B5A965}"
 	RootNamespace="ambidex"
 	TargetFrameworkVersion="196613"
@@ -161,11 +161,15 @@
 			>
 		</File>
 		<File
-			RelativePath=".\proj.inc"
+			RelativePath=".\carwar.asm"
 			>
 		</File>
 		<File
-			RelativePath=".\test.c"
+			RelativePath=".\carwar.c"
+			>
+		</File>
+		<File
+			RelativePath=".\proj.inc"
 			>
 		</File>
 		<File

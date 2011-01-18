@@ -1,7 +1,7 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : free open source ANSI-C Compiler
                               3 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-                              4 ; This file was generated Wed Jan 12 12:09:10 2011
+                              4 ; This file was generated Mon Jan 17 22:35:59 2011
                               5 ;--------------------------------------------------------
                               6 	.module test
                               7 	.optsdcc -mz80
@@ -149,7 +149,7 @@
                             149 ;	genEndFunction
    0018 C3r1Bs00            150 	jp	_MainLoop
    001B                     151 _main_end::
-                            152 ;test.c:166: void MainLoop()
+                            152 ;test.c:172: void MainLoop()
                             153 ;	genLabel
                             154 ;	genFunction
                             155 ;	---------------------------------
@@ -163,7 +163,7 @@
    0023 21 E6 FF            163 	ld	hl,#-26
    0026 39                  164 	add	hl,sp
    0027 F9                  165 	ld	sp,hl
-                            166 ;test.c:168: unsigned char clsScreen8[15] = 
+                            166 ;test.c:174: unsigned char clsScreen8[15] = 
                             167 ;	genAddrOf
    0028 21 0B 00            168 	ld	hl,#0x000B
    002B 39                  169 	add	hl,sp
@@ -180,14 +180,14 @@
    0037 01 D4 00 00 00 C0   180 	.db	0x01, 0xD4, 0x00, 0x00, 0x00, 0xC0
    003D 00                  181 	.db	0
    003E C1                  182 	pop	bc
-                            183 ;test.c:172: u8 x = 128, y = 96;
+                            183 ;test.c:178: u8 x = 128, y = 96;
                             184 ;	genAssign
                             185 ;	AOP_STK for _MainLoop_x_1_1
    003F DD 36 F0 80         186 	ld	-16(ix),#0x80
                             187 ;	genAssign
                             188 ;	AOP_STK for _MainLoop_y_1_1
    0043 DD 36 EF 60         189 	ld	-17(ix),#0x60
-                            190 ;test.c:179: SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
+                            190 ;test.c:185: SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
                             191 ;	genIpush
                             192 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0047 21 00 FF            193 	ld	hl,#0xFFFFFF00
@@ -207,7 +207,7 @@
    005B F1                  207 	pop	af
    005C F1                  208 	pop	af
    005D F1                  209 	pop	af
-                            210 ;test.c:180: SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
+                            210 ;test.c:186: SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
                             211 ;	genPlus
                             212 ;	genPlusIncr
    005E 11r23s00            213 	ld	de,#_g_Local + 6
@@ -229,7 +229,7 @@
    0072 F1                  229 	pop	af
    0073 F1                  230 	pop	af
    0074 F1                  231 	pop	af
-                            232 ;test.c:181: SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
+                            232 ;test.c:187: SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
                             233 ;	genPlus
                             234 ;	genPlusIncr
    0075 11r29s00            235 	ld	de,#_g_Local + 12
@@ -251,7 +251,7 @@
    0089 F1                  251 	pop	af
    008A F1                  252 	pop	af
    008B F1                  253 	pop	af
-                            254 ;test.c:182: SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
+                            254 ;test.c:188: SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
                             255 ;	genPlus
                             256 ;	genPlusIncr
    008C 11r2Fs00            257 	ld	de,#_g_Local + 18
@@ -273,7 +273,7 @@
    00A0 F1                  273 	pop	af
    00A1 F1                  274 	pop	af
    00A2 F1                  275 	pop	af
-                            276 ;test.c:183: SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
+                            276 ;test.c:189: SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
                             277 ;	genPlus
                             278 ;	genPlusIncr
    00A3 11r35s00            279 	ld	de,#_g_Local + 24
@@ -295,7 +295,7 @@
    00B7 F1                  295 	pop	af
    00B8 F1                  296 	pop	af
    00B9 F1                  297 	pop	af
-                            298 ;test.c:184: SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
+                            298 ;test.c:190: SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
                             299 ;	genPlus
                             300 ;	genPlusIncr
    00BA 11r3Bs00            301 	ld	de,#_g_Local + 30
@@ -317,7 +317,7 @@
    00CE F1                  317 	pop	af
    00CF F1                  318 	pop	af
    00D0 F1                  319 	pop	af
-                            320 ;test.c:185: SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
+                            320 ;test.c:191: SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
                             321 ;	genPlus
                             322 ;	genPlusIncr
    00D1 11r41s00            323 	ld	de,#_g_Local + 36
@@ -339,7 +339,7 @@
    00E5 F1                  339 	pop	af
    00E6 F1                  340 	pop	af
    00E7 F1                  341 	pop	af
-                            342 ;test.c:186: SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
+                            342 ;test.c:192: SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
                             343 ;	genPlus
                             344 ;	genPlusIncr
    00E8 11r47s00            345 	ld	de,#_g_Local + 42
@@ -361,7 +361,7 @@
    00FC F1                  361 	pop	af
    00FD F1                  362 	pop	af
    00FE F1                  363 	pop	af
-                            364 ;test.c:188: SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
+                            364 ;test.c:194: SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
                             365 ;	genIpush
                             366 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    00FF 21 00 03            367 	ld	hl,#0x0300
@@ -381,7 +381,7 @@
    0113 F1                  381 	pop	af
    0114 F1                  382 	pop	af
    0115 F1                  383 	pop	af
-                            384 ;test.c:190: SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
+                            384 ;test.c:196: SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
                             385 ;	genIpush
                             386 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0116 21 00 00            387 	ld	hl,#0x0000
@@ -401,15 +401,15 @@
    012A F1                  401 	pop	af
    012B F1                  402 	pop	af
    012C F1                  403 	pop	af
-                            404 ;test.c:192: g_Angle = 30;
+                            404 ;test.c:198: g_Angle = 30;
                             405 ;	genAssign
    012D FD 21r1Bs00         406 	ld	iy,#_g_Angle
    0131 FD 36 00 1E         407 	ld	0(iy),#0x1E
-                            408 ;test.c:194: SetScreen8();
+                            408 ;test.c:200: SetScreen8();
                             409 ;	genCall
                             410 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0135 CDr90s14            411 	call	_SetScreen8
-                            412 ;test.c:196: VPDCommand((int)&clsScreen8);
+                            412 ;test.c:202: VPDCommand((int)&clsScreen8);
                             413 ;	genAddrOf
    0138 21 0B 00            414 	ld	hl,#0x000B
    013B 39                  415 	add	hl,sp
@@ -422,10 +422,10 @@
                             422 ;	genCall
    013F CDrEFs15            423 	call	_VPDCommand
    0142 F1                  424 	pop	af
-                            425 ;test.c:198: while(bEnd == 0)
+                            425 ;test.c:204: while(bEnd == 0)
                             426 ;	genLabel
    0143                     427 00115$:
-                            428 ;test.c:200: DrawPoint8(x,     y - 1, 0);
+                            428 ;test.c:206: DrawPoint8(x,     y - 1, 0);
                             429 ;	genMinus
                             430 ;	AOP_STK for _MainLoop_y_1_1
    0143 DD 7E EF            431 	ld	a,-17(ix)
@@ -451,7 +451,7 @@
    0159 F1                  451 	pop	af
    015A 33                  452 	inc	sp
    015B D1                  453 	pop	de
-                            454 ;test.c:201: DrawPoint8(x + 1, y,     0);
+                            454 ;test.c:207: DrawPoint8(x + 1, y,     0);
                             455 ;	genPlus
                             456 ;	AOP_STK for _MainLoop_x_1_1
                             457 ;	genPlusIncr
@@ -476,7 +476,7 @@
    016F F1                  476 	pop	af
    0170 33                  477 	inc	sp
    0171 D1                  478 	pop	de
-                            479 ;test.c:202: DrawPoint8(x - 1, y,     0);
+                            479 ;test.c:208: DrawPoint8(x - 1, y,     0);
                             480 ;	genMinus
                             481 ;	AOP_STK for _MainLoop_x_1_1
                             482 ;	AOP_STK for _MainLoop_sloc0_1_0
@@ -504,7 +504,7 @@
    018C F1                  504 	pop	af
    018D 33                  505 	inc	sp
    018E D1                  506 	pop	de
-                            507 ;test.c:203: DrawPoint8(x,     y + 1, 0);
+                            507 ;test.c:209: DrawPoint8(x,     y + 1, 0);
                             508 ;	genPlus
                             509 ;	AOP_STK for _MainLoop_y_1_1
                             510 ;	AOP_STK for _MainLoop_sloc1_1_0
@@ -533,7 +533,7 @@
    01A9 F1                  533 	pop	af
    01AA 33                  534 	inc	sp
    01AB D1                  535 	pop	de
-                            536 ;test.c:210: WriteToVRAM(x, y, 0x0F);
+                            536 ;test.c:216: WriteToVRAM(x, y, 0x0F);
                             537 ;	genIpush
                             538 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
    01AC D5                  539 	push	de
@@ -555,7 +555,7 @@
    01BE F1                  555 	pop	af
    01BF 33                  556 	inc	sp
    01C0 D1                  557 	pop	de
-                            558 ;test.c:213: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+                            558 ;test.c:219: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
                             559 ;	genIpush
                             560 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
    01C1 D5                  561 	push	de
@@ -617,7 +617,7 @@
    01FB DD 7E E6            617 	ld	a,-26(ix)
    01FE DD B6 E7            618 	or	a,-25(ix)
    0201 CAr86s02            619 	jp	Z,00111$
-                            620 ;test.c:215: switch (i)
+                            620 ;test.c:221: switch (i)
                             621 ;	genCmpLt
    0204 79                  622 	ld	a,c
    0205 D6 01               623 	sub	a,#0x01
@@ -653,7 +653,7 @@
    0235 C3r67s02            653 	jp	00106$
    0238 C3r75s02            654 	jp	00107$
    023B C3r7Ds02            655 	jp	00108$
-                            656 ;test.c:217: case 1: y--; break;
+                            656 ;test.c:223: case 1: y--; break;
                             657 ;	genLabel
    023E                     658 00101$:
                             659 ;	genAssign
@@ -663,7 +663,7 @@
    023F DD 71 EF            663 	ld	-17(ix),c
                             664 ;	genGoto
    0242 18 42               665 	jr	00111$
-                            666 ;test.c:218: case 2: y--; x++; break;
+                            666 ;test.c:224: case 2: y--; x++; break;
                             667 ;	genLabel
    0244                     668 00102$:
                             669 ;	genAssign
@@ -678,7 +678,7 @@
    0249 DD 71 F0            678 	ld	-16(ix),c
                             679 ;	genGoto
    024C 18 38               680 	jr	00111$
-                            681 ;test.c:219: case 3: x++; break;
+                            681 ;test.c:225: case 3: x++; break;
                             682 ;	genLabel
    024E                     683 00103$:
                             684 ;	genAssign
@@ -688,7 +688,7 @@
    024F DD 71 F0            688 	ld	-16(ix),c
                             689 ;	genGoto
    0252 18 32               690 	jr	00111$
-                            691 ;test.c:220: case 4: y++; x++; break;
+                            691 ;test.c:226: case 4: y++; x++; break;
                             692 ;	genLabel
    0254                     693 00104$:
                             694 ;	genAssign
@@ -704,7 +704,7 @@
    025A DD 72 F0            704 	ld	-16(ix),d
                             705 ;	genGoto
    025D 18 27               706 	jr	00111$
-                            707 ;test.c:221: case 5: y++; break;
+                            707 ;test.c:227: case 5: y++; break;
                             708 ;	genLabel
    025F                     709 00105$:
                             710 ;	genAssign
@@ -715,7 +715,7 @@
    0262 DD 71 EF            715 	ld	-17(ix),c
                             716 ;	genGoto
    0265 18 1F               717 	jr	00111$
-                            718 ;test.c:222: case 6: y++; x--; break;
+                            718 ;test.c:228: case 6: y++; x--; break;
                             719 ;	genLabel
    0267                     720 00106$:
                             721 ;	genAssign
@@ -732,7 +732,7 @@
    0270 DD 71 F0            732 	ld	-16(ix),c
                             733 ;	genGoto
    0273 18 11               734 	jr	00111$
-                            735 ;test.c:223: case 7: x--; break;
+                            735 ;test.c:229: case 7: x--; break;
                             736 ;	genLabel
    0275                     737 00107$:
                             738 ;	genAssign
@@ -743,7 +743,7 @@
    0278 DD 71 F0            743 	ld	-16(ix),c
                             744 ;	genGoto
    027B 18 09               745 	jr	00111$
-                            746 ;test.c:224: case 8: y--; x--; break;
+                            746 ;test.c:230: case 8: y--; x--; break;
                             747 ;	genLabel
    027D                     748 00108$:
                             749 ;	genAssign
@@ -757,10 +757,10 @@
                             757 ;	genAssign
                             758 ;	AOP_STK for _MainLoop_x_1_1
    0283 DD 71 F0            759 	ld	-16(ix),c
-                            760 ;test.c:225: }
+                            760 ;test.c:231: }
                             761 ;	genLabel
    0286                     762 00111$:
-                            763 ;test.c:244: DrawPoint8(x,     y - 1, 255);
+                            763 ;test.c:250: DrawPoint8(x,     y - 1, 255);
                             764 ;	genMinus
                             765 ;	AOP_STK for _MainLoop_y_1_1
    0286 DD 7E EF            766 	ld	a,-17(ix)
@@ -784,7 +784,7 @@
    0298 CDrD5s14            784 	call	_DrawPoint8
    029B F1                  785 	pop	af
    029C 33                  786 	inc	sp
-                            787 ;test.c:245: DrawPoint8(x + 1, y,     255);
+                            787 ;test.c:251: DrawPoint8(x + 1, y,     255);
                             788 ;	genPlus
                             789 ;	AOP_STK for _MainLoop_x_1_1
                             790 ;	genPlusIncr
@@ -808,7 +808,7 @@
    02AD CDrD5s14            808 	call	_DrawPoint8
    02B0 F1                  809 	pop	af
    02B1 33                  810 	inc	sp
-                            811 ;test.c:246: DrawPoint8(x - 1, y,     255);
+                            811 ;test.c:252: DrawPoint8(x - 1, y,     255);
                             812 ;	genMinus
                             813 ;	AOP_STK for _MainLoop_x_1_1
    02B2 DD 7E F0            814 	ld	a,-16(ix)
@@ -832,7 +832,7 @@
    02C4 CDrD5s14            832 	call	_DrawPoint8
    02C7 F1                  833 	pop	af
    02C8 33                  834 	inc	sp
-                            835 ;test.c:247: DrawPoint8(x,     y + 1, 255);
+                            835 ;test.c:253: DrawPoint8(x,     y + 1, 255);
                             836 ;	genPlus
                             837 ;	AOP_STK for _MainLoop_y_1_1
                             838 ;	genPlusIncr
@@ -856,7 +856,7 @@
    02D9 CDrD5s14            856 	call	_DrawPoint8
    02DC F1                  857 	pop	af
    02DD 33                  858 	inc	sp
-                            859 ;test.c:249: g_AngleIndex = g_Angle >> 2;
+                            859 ;test.c:255: g_AngleIndex = g_Angle >> 2;
                             860 ;	genRightShift
    02DE FD 21r1Bs00         861 	ld	iy,#_g_Angle
    02E2 FD 7E 00            862 	ld	a,0(iy)
@@ -864,7 +864,7 @@
    02E7 CB 3F               864 	srl	a
    02E9 FD 21r1Cs00         865 	ld	iy,#_g_AngleIndex
    02ED FD 77 00            866 	ld	0(iy),a
-                            867 ;test.c:251: g_Angle += 4;
+                            867 ;test.c:257: g_Angle += 4;
                             868 ;	genPlus
                             869 ;	genPlusIncr
    02F0 FD 21r1Bs00         870 	ld	iy,#_g_Angle
@@ -872,7 +872,7 @@
    02F7 FD 34 00            872 	inc	0(iy)
    02FA FD 34 00            873 	inc	0(iy)
    02FD FD 34 00            874 	inc	0(iy)
-                            875 ;test.c:253: for(i=0; i<10; i++) // rows
+                            875 ;test.c:259: for(i=0; i<10; i++) // rows
                             876 ;	genAssign
                             877 ;	AOP_STK for _MainLoop_i_1_1
    0300 DD 36 ED 00         878 	ld	-19(ix),#0x00
@@ -886,7 +886,7 @@
    030D DD 7E EE            886 	ld	a,-18(ix)
    0310 DE 00               887 	sbc	a,#0x00
    0312 F2r43s01            888 	jp	P,00115$
-                            889 ;test.c:255: keyLine = GetKeyMatrixLine(i);
+                            889 ;test.c:261: keyLine = GetKeyMatrixLine(i);
                             890 ;	genCast
                             891 ;	AOP_STK for _MainLoop_i_1_1
    0315 DD 5E ED            892 	ld	e,-19(ix)
@@ -902,7 +902,7 @@
                             902 ;	genAssign
                             903 ;	AOP_STK for _MainLoop_keyLine_1_1
    0320 DD 73 EA            904 	ld	-22(ix),e
-                            905 ;test.c:256: for(j=0; j<8; j++) // characters
+                            905 ;test.c:262: for(j=0; j<8; j++) // characters
                             906 ;	genAssign
                             907 ;	AOP_STK for _MainLoop_j_1_1
    0323 DD 36 EB 00         908 	ld	-21(ix),#0x00
@@ -916,7 +916,7 @@
    0330 DD 7E EC            916 	ld	a,-20(ix)
    0333 DE 00               917 	sbc	a,#0x00
    0335 F2r9Ds03            918 	jp	P,00124$
-                            919 ;test.c:258: if(keyLine & 1 << j)
+                            919 ;test.c:264: if(keyLine & 1 << j)
                             920 ;	genLeftShift
                             921 ;	AOP_STK for _MainLoop_j_1_1
    0338 DD 7E EB            922 	ld	a,-21(ix)
@@ -945,7 +945,7 @@
    0354 47                  945 	ld	b,a
    0355 B1                  946 	or	a,c
    0356 28 1E               947 	jr	Z,00113$
-                            948 ;test.c:259: DrawPoint8(10 + j, 10 + i, 0);
+                            948 ;test.c:265: DrawPoint8(10 + j, 10 + i, 0);
                             949 ;	genCast
                             950 ;	AOP_STK for _MainLoop_i_1_1
    0358 DD 4E ED            951 	ld	c,-19(ix)
@@ -982,7 +982,7 @@
    0374 18 1C               982 	jr	00120$
                             983 ;	genLabel
    0376                     984 00113$:
-                            985 ;test.c:261: DrawPoint8(10 + j, 10 + i, 255);
+                            985 ;test.c:267: DrawPoint8(10 + j, 10 + i, 255);
                             986 ;	genCast
                             987 ;	AOP_STK for _MainLoop_i_1_1
    0376 DD 4E ED            988 	ld	c,-19(ix)
@@ -1017,7 +1017,7 @@
    0391 33                 1017 	inc	sp
                            1018 ;	genLabel
    0392                    1019 00120$:
-                           1020 ;test.c:256: for(j=0; j<8; j++) // characters
+                           1020 ;test.c:262: for(j=0; j<8; j++) // characters
                            1021 ;	genPlus
                            1022 ;	AOP_STK for _MainLoop_j_1_1
                            1023 ;	genPlusIncr
@@ -1029,7 +1029,7 @@
    039A C3r2Bs03           1029 	jp	00118$
                            1030 ;	genLabel
    039D                    1031 00124$:
-                           1032 ;test.c:253: for(i=0; i<10; i++) // rows
+                           1032 ;test.c:259: for(i=0; i<10; i++) // rows
                            1033 ;	genPlus
                            1034 ;	AOP_STK for _MainLoop_i_1_1
                            1035 ;	genPlusIncr
@@ -1433,7 +1433,7 @@
    06A7 01 00              1433 	.dw #0x0001
    06A9 01 00              1434 	.dw #0x0001
    06AB 01 00              1435 	.dw #0x0001
-                           1436 ;test.c:288: void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
+                           1436 ;test.c:294: void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
                            1437 ;	genLabel
                            1438 ;	genFunction
                            1439 ;	---------------------------------
@@ -1444,7 +1444,7 @@
    06AD DD E5              1444 	push	ix
    06AF DD 21 00 00        1445 	ld	ix,#0
    06B3 DD 39              1446 	add	ix,sp
-                           1447 ;test.c:290: ret->x = x;
+                           1447 ;test.c:296: ret->x = x;
                            1448 ;	genAssign
                            1449 ;	AOP_STK for 
    06B5 DD 4E 04           1450 	ld	c,4(ix)
@@ -1459,7 +1459,7 @@
    06C1 23                 1459 	inc	hl
    06C2 DD 7E 07           1460 	ld	a,7(ix)
    06C5 77                 1461 	ld	(hl),a
-                           1462 ;test.c:291: ret->y = y;
+                           1462 ;test.c:297: ret->y = y;
                            1463 ;	genPlus
                            1464 ;	genPlusIncr
    06C6 59                 1465 	ld	e,c
@@ -1476,7 +1476,7 @@
    06D0 23                 1476 	inc	hl
    06D1 DD 7E 09           1477 	ld	a,9(ix)
    06D4 77                 1478 	ld	(hl),a
-                           1479 ;test.c:292: ret->z = z;
+                           1479 ;test.c:298: ret->z = z;
                            1480 ;	genPlus
                            1481 ;	genPlusIncr
    06D5 03                 1482 	inc	bc
@@ -1498,7 +1498,7 @@
    06E4 DD E1              1498 	pop	ix
    06E6 C9                 1499 	ret
    06E7                    1500 _SetShortVec_end::
-                           1501 ;test.c:298: void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
+                           1501 ;test.c:304: void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
                            1502 ;	genLabel
                            1503 ;	genFunction
                            1504 ;	---------------------------------
@@ -1512,14 +1512,14 @@
    06EF 21 F3 FF           1512 	ld	hl,#-13
    06F2 39                 1513 	add	hl,sp
    06F3 F9                 1514 	ld	sp,hl
-                           1515 ;test.c:300: g_Angle >>= 2; 
+                           1515 ;test.c:306: g_Angle >>= 2; 
                            1516 ;	genRightShift
                            1517 ;	AOP_STK for 
    06F4 DD 7E 08           1518 	ld	a,8(ix)
    06F7 CB 3F              1519 	srl	a
    06F9 CB 3F              1520 	srl	a
    06FB DD 77 08           1521 	ld	8(ix),a
-                           1522 ;test.c:301: ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
+                           1522 ;test.c:307: ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
                            1523 ;	genAssign
                            1524 ;	AOP_STK for 
    06FE DD 4E 04           1525 	ld	c,4(ix)
@@ -1688,7 +1688,7 @@
    0824 73                 1688 	ld	(hl),e
    0825 23                 1689 	inc	hl
    0826 72                 1690 	ld	(hl),d
-                           1691 ;test.c:302: ret->y = vec->y + pos->y;
+                           1691 ;test.c:308: ret->y = vec->y + pos->y;
                            1692 ;	genPlus
                            1693 ;	AOP_STK for _TransXZ_sloc4_1_0
                            1694 ;	genPlusIncr
@@ -1744,7 +1744,7 @@
    0863 73                 1744 	ld	(hl),e
    0864 23                 1745 	inc	hl
    0865 72                 1746 	ld	(hl),d
-                           1747 ;test.c:303: ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
+                           1747 ;test.c:309: ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
                            1748 ;	genPlus
                            1749 ;	genPlusIncr
    0866 03                 1750 	inc	bc
@@ -1811,7 +1811,7 @@
    08AD DD E1              1811 	pop	ix
    08AF C9                 1812 	ret
    08B0                    1813 _TransXZ_end::
-                           1814 ;test.c:309: void TransXZIndex(i8 i)
+                           1814 ;test.c:315: void TransXZIndex(i8 i)
                            1815 ;	genLabel
                            1816 ;	genFunction
                            1817 ;	---------------------------------
@@ -1825,7 +1825,7 @@
    08B8 21 F3 FF           1825 	ld	hl,#-13
    08BB 39                 1826 	add	hl,sp
    08BC F9                 1827 	ld	sp,hl
-                           1828 ;test.c:311: g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
+                           1828 ;test.c:317: g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
                            1829 ;	genMult
                            1830 ;	AOP_STK for 
    08BD DD 7E 04           1831 	ld	a,4(ix)
@@ -2028,7 +2028,7 @@
    0A15 73                 2028 	ld	(hl),e
    0A16 23                 2029 	inc	hl
    0A17 70                 2030 	ld	(hl),b
-                           2031 ;test.c:312: g_World[i].y = g_Local[i].y + g_Position.y;
+                           2031 ;test.c:318: g_World[i].y = g_Local[i].y + g_Position.y;
                            2032 ;	genPlus
    0A18 3Er4D              2033 	ld	a,#<_g_World
    0A1A 81                 2034 	add	a,c
@@ -2086,7 +2086,7 @@
    0A58 73                 2086 	ld	(hl),e
    0A59 23                 2087 	inc	hl
    0A5A 72                 2088 	ld	(hl),d
-                           2089 ;test.c:313: g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
+                           2089 ;test.c:319: g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
                            2090 ;	genPlus
                            2091 ;	genPlusIncr
    0A5B 03                 2092 	inc	bc
@@ -2183,7 +2183,7 @@
    0ACB DD E1              2183 	pop	ix
    0ACD C9                 2184 	ret
    0ACE                    2185 _TransXZIndex_end::
-                           2186 ;test.c:319: void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
+                           2186 ;test.c:325: void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
                            2187 ;	genLabel
                            2188 ;	genFunction
                            2189 ;	---------------------------------
@@ -2197,7 +2197,7 @@
    0AD6 21 F8 FF           2197 	ld	hl,#-8
    0AD9 39                 2198 	add	hl,sp
    0ADA F9                 2199 	ld	sp,hl
-                           2200 ;test.c:322: ret->z = ((vec->z - cam->z) >> 5);
+                           2200 ;test.c:328: ret->z = ((vec->z - cam->z) >> 5);
                            2201 ;	genAssign
                            2202 ;	AOP_STK for 
    0ADB DD 4E 04           2203 	ld	c,4(ix)
@@ -2291,7 +2291,7 @@
    0B6F 23                 2291 	inc	hl
    0B70 DD 7E FB           2292 	ld	a,-5(ix)
    0B73 77                 2293 	ld	(hl),a
-                           2294 ;test.c:323: ret->x = 128 + (vec->x - cam->x) / ret->z;
+                           2294 ;test.c:329: ret->x = 128 + (vec->x - cam->x) / ret->z;
                            2295 ;	genPointerGet
                            2296 ;	AOP_STK for _Project_sloc1_1_0
                            2297 ;	AOP_STK for _Project_sloc0_1_0
@@ -2348,7 +2348,7 @@
    0BB1 73                 2348 	ld	(hl),e
    0BB2 23                 2349 	inc	hl
    0BB3 72                 2350 	ld	(hl),d
-                           2351 ;test.c:324: ret->y = 106 + (vec->y - cam->y) / ret->z;
+                           2351 ;test.c:330: ret->y = 106 + (vec->y - cam->y) / ret->z;
                            2352 ;	genPlus
                            2353 ;	genPlusIncr
    0BB4 03                 2354 	inc	bc
@@ -2427,7 +2427,7 @@
    0C00 DD E1              2427 	pop	ix
    0C02 C9                 2428 	ret
    0C03                    2429 _Project_end::
-                           2430 ;test.c:343: void Update()
+                           2430 ;test.c:349: void Update()
                            2431 ;	genLabel
                            2432 ;	genFunction
                            2433 ;	---------------------------------
@@ -2441,7 +2441,7 @@
    0C0B 21 FD FF           2441 	ld	hl,#-3
    0C0E 39                 2442 	add	hl,sp
    0C0F F9                 2443 	ld	sp,hl
-                           2444 ;test.c:349: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
+                           2444 ;test.c:355: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
                            2445 ;	genPointerGet
    0C10 21r7Ds00           2446 	ld	hl,#_g_Screen
    0C13 7E                 2447 	ld	a,(hl)
@@ -2494,7 +2494,7 @@
                            2494 ;	genCall
                            2495 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0C5E CDr74s15           2496 	call	_DrawLineSimple
-                           2497 ;test.c:350: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
+                           2497 ;test.c:356: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
                            2498 ;	genPlus
                            2499 ;	genPlusIncr
    0C61 01r83s00           2500 	ld	bc,#_g_Screen + 6
@@ -2553,7 +2553,7 @@
                            2553 ;	genCall
                            2554 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0CB1 CDr74s15           2555 	call	_DrawLineSimple
-                           2556 ;test.c:351: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
+                           2556 ;test.c:357: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
                            2557 ;	genPlus
                            2558 ;	genPlusIncr
    0CB4 01r89s00           2559 	ld	bc,#_g_Screen + 12
@@ -2612,7 +2612,7 @@
                            2612 ;	genCall
                            2613 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0D04 CDr74s15           2614 	call	_DrawLineSimple
-                           2615 ;test.c:352: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
+                           2615 ;test.c:358: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
                            2616 ;	genPlus
                            2617 ;	genPlusIncr
    0D07 01r8Fs00           2618 	ld	bc,#_g_Screen + 18
@@ -2665,7 +2665,7 @@
                            2665 ;	genCall
                            2666 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0D55 CDr74s15           2667 	call	_DrawLineSimple
-                           2668 ;test.c:354: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
+                           2668 ;test.c:360: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
                            2669 ;	genPlus
                            2670 ;	genPlusIncr
    0D58 01r95s00           2671 	ld	bc,#_g_Screen + 24
@@ -2724,7 +2724,7 @@
                            2724 ;	genCall
                            2725 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0DA8 CDr74s15           2726 	call	_DrawLineSimple
-                           2727 ;test.c:355: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
+                           2727 ;test.c:361: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
                            2728 ;	genPlus
                            2729 ;	genPlusIncr
    0DAB 01r9Bs00           2730 	ld	bc,#_g_Screen + 30
@@ -2783,7 +2783,7 @@
                            2783 ;	genCall
                            2784 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0DFB CDr74s15           2785 	call	_DrawLineSimple
-                           2786 ;test.c:356: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
+                           2786 ;test.c:362: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
                            2787 ;	genPlus
                            2788 ;	genPlusIncr
    0DFE 01rA1s00           2789 	ld	bc,#_g_Screen + 36
@@ -2842,7 +2842,7 @@
                            2842 ;	genCall
                            2843 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0E4E CDr74s15           2844 	call	_DrawLineSimple
-                           2845 ;test.c:357: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
+                           2845 ;test.c:363: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
                            2846 ;	genPlus
                            2847 ;	genPlusIncr
    0E51 01rA7s00           2848 	ld	bc,#_g_Screen + 42
@@ -2901,7 +2901,7 @@
                            2901 ;	genCall
                            2902 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0EA1 CDr74s15           2903 	call	_DrawLineSimple
-                           2904 ;test.c:359: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
+                           2904 ;test.c:365: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
                            2905 ;	genPointerGet
    0EA4 21r7Ds00           2906 	ld	hl,#_g_Screen
    0EA7 7E                 2907 	ld	a,(hl)
@@ -2954,7 +2954,7 @@
                            2954 ;	genCall
                            2955 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0EF2 CDr74s15           2956 	call	_DrawLineSimple
-                           2957 ;test.c:360: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
+                           2957 ;test.c:366: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
                            2958 ;	genPlus
                            2959 ;	genPlusIncr
    0EF5 01r83s00           2960 	ld	bc,#_g_Screen + 6
@@ -3013,7 +3013,7 @@
                            3013 ;	genCall
                            3014 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0F45 CDr74s15           3015 	call	_DrawLineSimple
-                           3016 ;test.c:361: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
+                           3016 ;test.c:367: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
                            3017 ;	genPlus
                            3018 ;	genPlusIncr
    0F48 01r89s00           3019 	ld	bc,#_g_Screen + 12
@@ -3072,7 +3072,7 @@
                            3072 ;	genCall
                            3073 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0F98 CDr74s15           3074 	call	_DrawLineSimple
-                           3075 ;test.c:362: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
+                           3075 ;test.c:368: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
                            3076 ;	genPlus
                            3077 ;	genPlusIncr
    0F9B 01r8Fs00           3078 	ld	bc,#_g_Screen + 18
@@ -3131,7 +3131,7 @@
                            3131 ;	genCall
                            3132 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    0FEB CDr74s15           3133 	call	_DrawLineSimple
-                           3134 ;test.c:364: for(i=0; i<POINT_NUM; i++)
+                           3134 ;test.c:370: for(i=0; i<POINT_NUM; i++)
                            3135 ;	genAssign
                            3136 ;	AOP_STK for _Update_i_1_1
    0FEE DD 36 FF 00        3137 	ld	-1(ix),#0x00
@@ -3144,7 +3144,7 @@
    0FF4 DD 7E FF           3144 	ld	a,-1(ix)
    0FF7 D6 08              3145 	sub	a,#0x08
    0FF9 F2rADs10           3146 	jp	P,00104$
-                           3147 ;test.c:367: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
+                           3147 ;test.c:373: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
                            3148 ;	genPlus
                            3149 ;	AOP_STK for _Update_sloc0_1_0
    0FFC 3Er7D              3150 	ld	a,#<_g_Screen
@@ -3196,7 +3196,7 @@
    1031 F1                 3196 	pop	af
    1032 33                 3197 	inc	sp
    1033 C1                 3198 	pop	bc
-                           3199 ;test.c:371: TransXZIndex(i);
+                           3199 ;test.c:377: TransXZIndex(i);
                            3200 ;	genIpush
                            3201 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
    1034 C5                 3202 	push	bc
@@ -3208,7 +3208,7 @@
    103A CDrB0s08           3208 	call	_TransXZIndex
    103D 33                 3209 	inc	sp
    103E C1                 3210 	pop	bc
-                           3211 ;test.c:372: Project(&g_Screen[i], &g_World[i], &g_Camera);
+                           3211 ;test.c:378: Project(&g_Screen[i], &g_World[i], &g_Camera);
                            3212 ;	genPlus
                            3213 ;	AOP_STK for _Update_sloc0_1_0
    103F 3Er4D              3214 	ld	a,#<_g_World
@@ -3244,7 +3244,7 @@
    1068 F1                 3244 	pop	af
    1069 F1                 3245 	pop	af
    106A C1                 3246 	pop	bc
-                           3247 ;test.c:375: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
+                           3247 ;test.c:381: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
                            3248 ;	genPlus
                            3249 ;	AOP_STK for _Update_sloc0_1_0
    106B 3Er7D              3250 	ld	a,#<_g_Screen
@@ -3296,7 +3296,7 @@
    10A0 F1                 3296 	pop	af
    10A1 33                 3297 	inc	sp
    10A2 C1                 3298 	pop	bc
-                           3299 ;test.c:364: for(i=0; i<POINT_NUM; i++)
+                           3299 ;test.c:370: for(i=0; i<POINT_NUM; i++)
                            3300 ;	genPlus
                            3301 ;	genPlusIncr
    10A3 78                 3302 	ld	a,b
@@ -3310,7 +3310,7 @@
    10AA C3rF4s0F           3310 	jp	00101$
                            3311 ;	genLabel
    10AD                    3312 00104$:
-                           3313 ;test.c:378: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
+                           3313 ;test.c:384: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
                            3314 ;	genPointerGet
    10AD 21r7Ds00           3315 	ld	hl,#_g_Screen
    10B0 7E                 3316 	ld	a,(hl)
@@ -3363,7 +3363,7 @@
                            3363 ;	genCall
                            3364 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    10FB CDr74s15           3365 	call	_DrawLineSimple
-                           3366 ;test.c:379: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
+                           3366 ;test.c:385: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
                            3367 ;	genPlus
                            3368 ;	genPlusIncr
    10FE 01r83s00           3369 	ld	bc,#_g_Screen + 6
@@ -3422,7 +3422,7 @@
                            3422 ;	genCall
                            3423 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    114E CDr74s15           3424 	call	_DrawLineSimple
-                           3425 ;test.c:380: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
+                           3425 ;test.c:386: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
                            3426 ;	genPlus
                            3427 ;	genPlusIncr
    1151 01r89s00           3428 	ld	bc,#_g_Screen + 12
@@ -3481,7 +3481,7 @@
                            3481 ;	genCall
                            3482 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    11A1 CDr74s15           3483 	call	_DrawLineSimple
-                           3484 ;test.c:381: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
+                           3484 ;test.c:387: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
                            3485 ;	genPlus
                            3486 ;	genPlusIncr
    11A4 01r8Fs00           3487 	ld	bc,#_g_Screen + 18
@@ -3534,7 +3534,7 @@
                            3534 ;	genCall
                            3535 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    11F2 CDr74s15           3536 	call	_DrawLineSimple
-                           3537 ;test.c:383: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
+                           3537 ;test.c:389: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
                            3538 ;	genPlus
                            3539 ;	genPlusIncr
    11F5 01r95s00           3540 	ld	bc,#_g_Screen + 24
@@ -3593,7 +3593,7 @@
                            3593 ;	genCall
                            3594 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    1245 CDr74s15           3595 	call	_DrawLineSimple
-                           3596 ;test.c:384: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
+                           3596 ;test.c:390: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
                            3597 ;	genPlus
                            3598 ;	genPlusIncr
    1248 01r9Bs00           3599 	ld	bc,#_g_Screen + 30
@@ -3652,7 +3652,7 @@
                            3652 ;	genCall
                            3653 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    1298 CDr74s15           3654 	call	_DrawLineSimple
-                           3655 ;test.c:385: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
+                           3655 ;test.c:391: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
                            3656 ;	genPlus
                            3657 ;	genPlusIncr
    129B 01rA1s00           3658 	ld	bc,#_g_Screen + 36
@@ -3711,7 +3711,7 @@
                            3711 ;	genCall
                            3712 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    12EB CDr74s15           3713 	call	_DrawLineSimple
-                           3714 ;test.c:386: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
+                           3714 ;test.c:392: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
                            3715 ;	genPlus
                            3716 ;	genPlusIncr
    12EE 01rA7s00           3717 	ld	bc,#_g_Screen + 42
@@ -3770,7 +3770,7 @@
                            3770 ;	genCall
                            3771 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    133E CDr74s15           3772 	call	_DrawLineSimple
-                           3773 ;test.c:388: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
+                           3773 ;test.c:394: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
                            3774 ;	genPointerGet
    1341 21r7Ds00           3775 	ld	hl,#_g_Screen
    1344 7E                 3776 	ld	a,(hl)
@@ -3823,7 +3823,7 @@
                            3823 ;	genCall
                            3824 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    138F CDr74s15           3825 	call	_DrawLineSimple
-                           3826 ;test.c:389: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
+                           3826 ;test.c:395: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
                            3827 ;	genPlus
                            3828 ;	genPlusIncr
    1392 01r83s00           3829 	ld	bc,#_g_Screen + 6
@@ -3882,7 +3882,7 @@
                            3882 ;	genCall
                            3883 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    13E2 CDr74s15           3884 	call	_DrawLineSimple
-                           3885 ;test.c:390: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
+                           3885 ;test.c:396: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
                            3886 ;	genPlus
                            3887 ;	genPlusIncr
    13E5 01r89s00           3888 	ld	bc,#_g_Screen + 12
@@ -3941,7 +3941,7 @@
                            3941 ;	genCall
                            3942 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    1435 CDr74s15           3943 	call	_DrawLineSimple
-                           3944 ;test.c:391: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
+                           3944 ;test.c:397: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
                            3945 ;	genPlus
                            3946 ;	genPlusIncr
    1438 01r8Fs00           3947 	ld	bc,#_g_Screen + 18
@@ -4006,7 +4006,7 @@
    148D DD E1              4006 	pop	ix
    148F C9                 4007 	ret
    1490                    4008 _Update_end::
-                           4009 ;test.c:424: void SetScreen8()
+                           4009 ;test.c:430: void SetScreen8()
                            4010 ;	genLabel
                            4011 ;	genFunction
                            4012 ;	---------------------------------
@@ -4014,7 +4014,7 @@
                            4014 ; ---------------------------------
    1490                    4015 _SetScreen8_start::
    1490                    4016 _SetScreen8:
-                           4017 ;test.c:460: _endasm;
+                           4017 ;test.c:466: _endasm;
                            4018 ;	genInline
                            4019 	
                            4020 	
@@ -4055,7 +4055,7 @@
                            4055 ;	genEndFunction
    14BC C9                 4056 	ret
    14BD                    4057 _SetScreen8_end::
-                           4058 ;test.c:466: void SetPage8(i8 page)
+                           4058 ;test.c:472: void SetPage8(i8 page)
                            4059 ;	genLabel
                            4060 ;	genFunction
                            4061 ;	---------------------------------
@@ -4066,7 +4066,7 @@
    14BD DD E5              4066 	push	ix
    14BF DD 21 00 00        4067 	ld	ix,#0
    14C3 DD 39              4068 	add	ix,sp
-                           4069 ;test.c:480: _endasm;
+                           4069 ;test.c:486: _endasm;
                            4070 ;	genInline
                            4071 	
                            4072 	
@@ -4084,7 +4084,7 @@
    14D2 DD E1              4084 	pop	ix
    14D4 C9                 4085 	ret
    14D5                    4086 _SetPage8_end::
-                           4087 ;test.c:486: void DrawPoint8(char posX, char posY, char color)
+                           4087 ;test.c:492: void DrawPoint8(char posX, char posY, char color)
                            4088 ;	genLabel
                            4089 ;	genFunction
                            4090 ;	---------------------------------
@@ -4095,11 +4095,11 @@
    14D5 DD E5              4095 	push	ix
    14D7 DD 21 00 00        4096 	ld	ix,#0
    14DB DD 39              4097 	add	ix,sp
-                           4098 ;test.c:490: WaitForVDP();
+                           4098 ;test.c:496: WaitForVDP();
                            4099 ;	genCall
                            4100 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    14DD CDr38s16           4101 	call	_WaitForVDP
-                           4102 ;test.c:538: _endasm;
+                           4102 ;test.c:544: _endasm;
                            4103 ;	genInline
                            4104 	
                            4105 	
@@ -4153,7 +4153,7 @@
    151A DD E1              4153 	pop	ix
    151C C9                 4154 	ret
    151D                    4155 _DrawPoint8_end::
-                           4156 ;test.c:544: void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
+                           4156 ;test.c:550: void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
                            4157 ;	genLabel
                            4158 ;	genFunction
                            4159 ;	---------------------------------
@@ -4164,7 +4164,7 @@
    151D DD E5              4164 	push	ix
    151F DD 21 00 00        4165 	ld	ix,#0
    1523 DD 39              4166 	add	ix,sp
-                           4167 ;test.c:546: SX  = posX1; 
+                           4167 ;test.c:552: SX  = posX1; 
                            4168 ;	genAssign
                            4169 ;	AOP_STK for 
    1525 DD 7E 04           4170 	ld	a,4(ix)
@@ -4172,7 +4172,7 @@
    152C FD 77 00           4172 	ld	0(iy),a
    152F DD 7E 05           4173 	ld	a,5(ix)
    1532 FD 77 01           4174 	ld	1(iy),a
-                           4175 ;test.c:547: SY  = posY1; 
+                           4175 ;test.c:553: SY  = posY1; 
                            4176 ;	genAssign
                            4177 ;	AOP_STK for 
    1535 DD 7E 06           4178 	ld	a,6(ix)
@@ -4180,7 +4180,7 @@
    153C FD 77 00           4180 	ld	0(iy),a
    153F DD 7E 07           4181 	ld	a,7(ix)
    1542 FD 77 01           4182 	ld	1(iy),a
-                           4183 ;test.c:548: DX  = posX2; 
+                           4183 ;test.c:554: DX  = posX2; 
                            4184 ;	genAssign
                            4185 ;	AOP_STK for 
    1545 DD 7E 08           4186 	ld	a,8(ix)
@@ -4188,7 +4188,7 @@
    154C FD 77 00           4188 	ld	0(iy),a
    154F DD 7E 09           4189 	ld	a,9(ix)
    1552 FD 77 01           4190 	ld	1(iy),a
-                           4191 ;test.c:549: DY  = posY2; 
+                           4191 ;test.c:555: DY  = posY2; 
                            4192 ;	genAssign
                            4193 ;	AOP_STK for 
    1555 DD 7E 0A           4194 	ld	a,10(ix)
@@ -4196,13 +4196,13 @@
    155C FD 77 00           4196 	ld	0(iy),a
    155F DD 7E 0B           4197 	ld	a,11(ix)
    1562 FD 77 01           4198 	ld	1(iy),a
-                           4199 ;test.c:550: CLR = color;
+                           4199 ;test.c:556: CLR = color;
                            4200 ;	genAssign
                            4201 ;	AOP_STK for 
    1565 DD 7E 0C           4202 	ld	a,12(ix)
    1568 FD 21r0Cs00        4203 	ld	iy,#_CLR
    156C FD 77 00           4204 	ld	0(iy),a
-                           4205 ;test.c:552: DrawLineSimple();
+                           4205 ;test.c:558: DrawLineSimple();
                            4206 ;	genCall
                            4207 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                            4208 ;	genLabel
@@ -4210,7 +4210,7 @@
    156F DD E1              4210 	pop	ix
    1571 C3r74s15           4211 	jp	_DrawLineSimple
    1574                    4212 _DrawLine_end::
-                           4213 ;test.c:558: void DrawLineSimple()
+                           4213 ;test.c:564: void DrawLineSimple()
                            4214 ;	genLabel
                            4215 ;	genFunction
                            4216 ;	---------------------------------
@@ -4218,11 +4218,11 @@
                            4218 ; ---------------------------------
    1574                    4219 _DrawLineSimple_start::
    1574                    4220 _DrawLineSimple:
-                           4221 ;test.c:560: WaitForVDP();
+                           4221 ;test.c:566: WaitForVDP();
                            4222 ;	genCall
                            4223 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    1574 CDr38s16           4224 	call	_WaitForVDP
-                           4225 ;test.c:632: _endasm;
+                           4225 ;test.c:638: _endasm;
                            4226 ;	genInline
                            4227 	
                            4228 	
@@ -4298,7 +4298,7 @@
    15D5 32r0Es00           4298 		       ld (_CMD),a ;
                            4299 	
                            4300 		
-                           4301 ;test.c:634: VPDCommand((int)&SX);
+                           4301 ;test.c:640: VPDCommand((int)&SX);
                            4302 ;	genCast
    15D8 0Er00              4303 	ld	c,#<_SX
    15DA 06s00              4304 	ld	b,#>_SX
@@ -4312,7 +4312,7 @@
                            4312 ;	genEndFunction
    15E1 C9                 4313 	ret
    15E2                    4314 _DrawLineSimple_end::
-                           4315 ;test.c:640: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
+                           4315 ;test.c:646: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
                            4316 ;	genLabel
                            4317 ;	genFunction
                            4318 ;	---------------------------------
@@ -4323,7 +4323,7 @@
    15E2 DD E5              4323 	push	ix
    15E4 DD 21 00 00        4324 	ld	ix,#0
    15E8 DD 39              4325 	add	ix,sp
-                           4326 ;test.c:644: WaitForVDP();
+                           4326 ;test.c:650: WaitForVDP();
                            4327 ;	genCall
                            4328 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                            4329 ;	genLabel
@@ -4331,7 +4331,7 @@
    15EA DD E1              4331 	pop	ix
    15EC C3r38s16           4332 	jp	_WaitForVDP
    15EF                    4333 _DrawLine8_end::
-                           4334 ;test.c:778: void VPDCommand(int address)
+                           4334 ;test.c:784: void VPDCommand(int address)
                            4335 ;	genLabel
                            4336 ;	genFunction
                            4337 ;	---------------------------------
@@ -4342,11 +4342,11 @@
    15EF DD E5              4342 	push	ix
    15F1 DD 21 00 00        4343 	ld	ix,#0
    15F5 DD 39              4344 	add	ix,sp
-                           4345 ;test.c:782: WaitForVDP();
+                           4345 ;test.c:788: WaitForVDP();
                            4346 ;	genCall
                            4347 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    15F7 CDr38s16           4348 	call	_WaitForVDP
-                           4349 ;test.c:813: _endasm;
+                           4349 ;test.c:819: _endasm;
                            4350 ;	genInline
                            4351 	
                            4352 	
@@ -4383,7 +4383,7 @@
    162A DD E1              4383 	pop	ix
    162C C9                 4384 	ret
    162D                    4385 _VPDCommand_end::
-                           4386 ;test.c:819: void waitRetrace()
+                           4386 ;test.c:825: void waitRetrace()
                            4387 ;	genLabel
                            4388 ;	genFunction
                            4389 ;	---------------------------------
@@ -4391,7 +4391,7 @@
                            4391 ; ---------------------------------
    162D                    4392 _waitRetrace_start::
    162D                    4393 _waitRetrace:
-                           4394 ;test.c:831: _endasm;
+                           4394 ;test.c:837: _endasm;
                            4395 ;	genInline
                            4396 	
                            4397 	
@@ -4408,7 +4408,7 @@
                            4408 ;	genEndFunction
    1637 C9                 4409 	ret
    1638                    4410 _waitRetrace_end::
-                           4411 ;test.c:837: void WaitForVDP()
+                           4411 ;test.c:843: void WaitForVDP()
                            4412 ;	genLabel
                            4413 ;	genFunction
                            4414 ;	---------------------------------
@@ -4416,7 +4416,7 @@
                            4416 ; ---------------------------------
    1638                    4417 _WaitForVDP_start::
    1638                    4418 _WaitForVDP:
-                           4419 ;test.c:858: _endasm;
+                           4419 ;test.c:864: _endasm;
                            4420 ;	genInline
                            4421 	
                            4422 	
@@ -4442,7 +4442,7 @@
                            4442 ;	genEndFunction
    164F C9                 4443 	ret
    1650                    4444 _WaitForVDP_end::
-                           4445 ;test.c:862: char Joystick(char n)
+                           4445 ;test.c:868: char Joystick(char n)
                            4446 ;	genLabel
                            4447 ;	genFunction
                            4448 ;	---------------------------------
@@ -4453,7 +4453,7 @@
    1650 DD E5              4453 	push	ix
    1652 DD 21 00 00        4454 	ld	ix,#0
    1656 DD 39              4455 	add	ix,sp
-                           4456 ;test.c:869: _endasm;
+                           4456 ;test.c:875: _endasm;
                            4457 ;	genInline
                            4458 	
    1658 DD 7E 04           4459 		 ld a,4(ix)
@@ -4465,7 +4465,7 @@
    165F DD E1              4465 	pop	ix
    1661 C9                 4466 	ret
    1662                    4467 _Joystick_end::
-                           4468 ;test.c:873: char Joytrig(char n)
+                           4468 ;test.c:879: char Joytrig(char n)
                            4469 ;	genLabel
                            4470 ;	genFunction
                            4471 ;	---------------------------------
@@ -4476,7 +4476,7 @@
    1662 DD E5              4476 	push	ix
    1664 DD 21 00 00        4477 	ld	ix,#0
    1668 DD 39              4478 	add	ix,sp
-                           4479 ;test.c:881: _endasm;
+                           4479 ;test.c:887: _endasm;
                            4480 ;	genInline
                            4481 	
    166A DD 7E 04           4482 		 ld a,4(ix)
@@ -4489,7 +4489,7 @@
    1673 DD E1              4489 	pop	ix
    1675 C9                 4490 	ret
    1676                    4491 _Joytrig_end::
-                           4492 ;test.c:885: u8 GetKeyMatrixLine(u8 n)
+                           4492 ;test.c:891: u8 GetKeyMatrixLine(u8 n)
                            4493 ;	genLabel
                            4494 ;	genFunction
                            4495 ;	---------------------------------
@@ -4500,7 +4500,7 @@
    1676 DD E5              4500 	push	ix
    1678 DD 21 00 00        4501 	ld	ix,#0
    167C DD 39              4502 	add	ix,sp
-                           4503 ;test.c:892: _endasm;
+                           4503 ;test.c:898: _endasm;
                            4504 ;	genInline
                            4505 	
    167E DD 7E 04           4506 		 ld a,4(ix)
@@ -4512,7 +4512,7 @@
    1685 DD E1              4512 	pop	ix
    1687 C9                 4513 	ret
    1688                    4514 _GetKeyMatrixLine_end::
-                           4515 ;test.c:899: void WriteToVRAM(u8 x, u8 y, u8 value)
+                           4515 ;test.c:905: void WriteToVRAM(u8 x, u8 y, u8 value)
                            4516 ;	genLabel
                            4517 ;	genFunction
                            4518 ;	---------------------------------
@@ -4523,11 +4523,11 @@
    1688 DD E5              4523 	push	ix
    168A DD 21 00 00        4524 	ld	ix,#0
    168E DD 39              4525 	add	ix,sp
-                           4526 ;test.c:904: WaitForVDP();
+                           4526 ;test.c:910: WaitForVDP();
                            4527 ;	genCall
                            4528 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    1690 CDr38s16           4529 	call	_WaitForVDP
-                           4530 ;test.c:929: _endasm;
+                           4530 ;test.c:935: _endasm;
                            4531 ;	genInline
                            4532 	
    1693 F3                 4533 		 di
