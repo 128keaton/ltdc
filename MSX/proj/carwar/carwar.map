@@ -14,7 +14,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__OVERLAY
      0003    l__BSS
      00AD    l__DATA
-     17BF    l__CODE
+     1835    l__CODE
      4010    s__CODE
      C000    s__DATA
      C0AD    s__BSS
@@ -28,7 +28,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   17BF =   6079. bytes (REL,CON)
+_CODE                              4010   1835 =   6197. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -37,98 +37,101 @@ _CODE                              4010   17BF =   6079. bytes (REL,CON)
      402B    _MainLoop
      402B    _MainLoop_start
      402B    _main_end
-     432D    _MainLoop_end
-     462D    _SetShortVec
-     462D    _SetShortVec_start
-     4667    _SetShortVec_end
-     4667    _TransXZ
-     4667    _TransXZ_start
-     4830    _TransXZIndex
-     4830    _TransXZIndex_start
-     4830    _TransXZ_end
-     4A4E    _Project
-     4A4E    _Project_start
-     4A4E    _TransXZIndex_end
-     4B83    _Project_end
-     4B83    _Update
-     4B83    _Update_start
-     5410    _SetScreen8
-     5410    _SetScreen8_start
-     5410    _Update_end
-     543D    _SetPage8
-     543D    _SetPage8_start
-     543D    _SetScreen8_end
-     5455    _DrawPoint8
-     5455    _DrawPoint8_start
-     5455    _SetPage8_end
-     549D    _DrawLine
-     549D    _DrawLine_start
-     549D    _DrawPoint8_end
-     54F4    _DrawLineSimple
-     54F4    _DrawLineSimple_start
-     54F4    _DrawLine_end
-     5562    _DrawLine8
-     5562    _DrawLine8_start
-     5562    _DrawLineSimple_end
-     556F    _DrawLine8_end
-     556F    _VPDCommand
-     556F    _VPDCommand_start
-     55AD    _VPDCommand_end
-     55AD    _waitRetrace
-     55AD    _waitRetrace_start
-     55B8    _WaitForVDP
-     55B8    _WaitForVDP_start
-     55B8    _waitRetrace_end
-     55D0    _Joystick
-     55D0    _Joystick_start
-     55D0    _WaitForVDP_end
-     55E2    _Joystick_end
-     55E2    _Joytrig
-     55E2    _Joytrig_start
-     55F6    _GetKeyMatrixLine
-     55F6    _GetKeyMatrixLine_start
-     55F6    _Joytrig_end
-     5608    _GetKeyMatrixLine_end
-     5608    _SetTo50Hz
-     5608    _SetTo50Hz_start
-     5616    _SetTo50Hz_end
-     5616    _SetTo60Hz
-     5616    _SetTo60Hz_start
-     5624    _SetTo60Hz_end
-     5624    _WriteToVRAM8
-     5624    _WriteToVRAM8_start
-     5658    _WriteToVRAM8_end
-     5658    __initrleblock
-     567F    __divschar_rrx_s
-     5686    __divschar_rrx_hds
-     568D    __modschar_rrx_s
-     5694    __modschar_rrx_hds
-     569B    __divsint_rrx_s
-     56A7    __divsint_rrx_hds
-     56AF    __modsint_rrx_s
-     56BB    __modsint_rrx_hds
-     56C3    __divuchar_rrx_s
-     56CA    __divuchar_rrx_hds
-     56D1    __moduchar_rrx_s
-     56D8    __moduchar_rrx_hds
-     56DF    __divuint_rrx_s
-     56EB    __divuint_rrx_hds
-     56F3    __moduint_rrx_s
-     56FF    __moduint_rrx_hds
-     5707    .div8
-     5707    .mod8
-     570F    .div16
-     570F    .mod16
-     574C    .divu8
-     574C    .modu8
-     574F    .divu16
-     574F    .modu16
-     5784    __muluchar_rrx_s
-     5797    __mulschar_rrx_s
-     579E    __mulschar_rrx_hds
-     57AA    __mulint_rrx_s
-     57B6    __mulint_rrx_hds
-     57B6    __muluchar_rrx_hds
+     433F    _MainLoop_end
+     463F    _SetShortVec
+     463F    _SetShortVec_start
+     4679    _SetShortVec_end
+     4679    _TransXZ
+     4679    _TransXZ_start
+     4842    _TransXZIndex
+     4842    _TransXZIndex_start
+     4842    _TransXZ_end
+     4A60    _Project
+     4A60    _Project_start
+     4A60    _TransXZIndex_end
+     4B95    _Project_end
+     4B95    _Update
+     4B95    _Update_start
+     5422    _SetScreen8
+     5422    _SetScreen8_start
+     5422    _Update_end
+     544F    _SetPage8
+     544F    _SetPage8_start
+     544F    _SetScreen8_end
+     5467    _DrawPoint8
+     5467    _DrawPoint8_start
+     5467    _SetPage8_end
+     54AF    _DrawLine
+     54AF    _DrawLine_start
+     54AF    _DrawPoint8_end
+     5506    _DrawLineSimple
+     5506    _DrawLineSimple_start
+     5506    _DrawLine_end
+     5574    _DrawLine8
+     5574    _DrawLine8_start
+     5574    _DrawLineSimple_end
+     5581    _DrawLine8_end
+     5581    _VPDCommand
+     5581    _VPDCommand_start
+     55BF    _VPDCommand_end
+     55BF    _waitRetrace
+     55BF    _waitRetrace_start
+     55CA    _WaitForVDP
+     55CA    _WaitForVDP_start
+     55CA    _waitRetrace_end
+     55E2    _Joystick
+     55E2    _Joystick_start
+     55E2    _WaitForVDP_end
+     55F4    _Joystick_end
+     55F4    _Joytrig
+     55F4    _Joytrig_start
+     5608    _GetKeyMatrixLine
+     5608    _GetKeyMatrixLine_start
+     5608    _Joytrig_end
+     561A    _GetKeyMatrixLine_end
+     561A    _SetTo50Hz
+     561A    _SetTo50Hz_start
+     5628    _SetTo50Hz_end
+     5628    _SetTo60Hz
+     5628    _SetTo60Hz_start
+     5636    _SetTo60Hz_end
+     5636    _WriteToVRAM8
+     5636    _WriteToVRAM8_start
+     5666    _Fill8
+     5666    _Fill8_start
+     5666    _WriteToVRAM8_end
+     56CE    _Fill8_end
+     56CE    __initrleblock
+     56F5    __divschar_rrx_s
+     56FC    __divschar_rrx_hds
+     5703    __modschar_rrx_s
+     570A    __modschar_rrx_hds
+     5711    __divsint_rrx_s
+     571D    __divsint_rrx_hds
+     5725    __modsint_rrx_s
+     5731    __modsint_rrx_hds
+     5739    __divuchar_rrx_s
+     5740    __divuchar_rrx_hds
+     5747    __moduchar_rrx_s
+     574E    __moduchar_rrx_hds
+     5755    __divuint_rrx_s
+     5761    __divuint_rrx_hds
+     5769    __moduint_rrx_s
+     5775    __moduint_rrx_hds
+     577D    .div8
+     577D    .mod8
+     5785    .div16
+     5785    .mod16
+     57C2    .divu8
+     57C2    .modu8
+     57C5    .divu16
+     57C5    .modu16
+     57FA    __muluchar_rrx_s
+     580D    __mulschar_rrx_s
+     5814    __mulschar_rrx_hds
+     5820    __mulint_rrx_s
+     582C    __mulint_rrx_hds
+     582C    __muluchar_rrx_hds
 
 Hexadecimal
 
@@ -164,11 +167,11 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE div.o
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010

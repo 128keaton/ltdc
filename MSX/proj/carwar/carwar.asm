@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-; This file was generated Tue Jan 18 01:34:02 2011
+; This file was generated Tue Jan 18 13:51:39 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -47,6 +47,7 @@
 	.globl _SetTo50Hz
 	.globl _SetTo60Hz
 	.globl _WriteToVRAM8
+	.globl _Fill8
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -110,7 +111,7 @@ _g_Screen::
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;carwar.c:152: void main(void)
+;carwar.c:153: void main(void)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -118,14 +119,14 @@ _g_Screen::
 ; ---------------------------------
 _main_start::
 _main:
-;carwar.c:158: _endasm;
+;carwar.c:159: _endasm;
 ;	genInline
 	
 		 di
 		 ld sp, (#0xFC4A)
 		 ei
 		
-;carwar.c:160: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+;carwar.c:161: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 ;	genAnd
 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
 	in	a,(_g_slotPort)
@@ -144,14 +145,14 @@ _main:
 	ld	a,c
 	or	a,b
 	out	(_g_slotPort),a
-;carwar.c:162: MainLoop();
+;carwar.c:163: MainLoop();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 ;	genLabel
 ;	genEndFunction
 	jp	_MainLoop
 _main_end::
-;carwar.c:177: void MainLoop()
+;carwar.c:178: void MainLoop()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -165,7 +166,7 @@ _MainLoop:
 	ld	hl,#-23
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:179: unsigned char clsScreen8[15] = 
+;carwar.c:180: unsigned char clsScreen8[15] = 
 ;	genAddrOf
 	ld	hl,#0x0008
 	add	hl,sp
@@ -182,14 +183,14 @@ _MainLoop:
 	.db	0x01, 0xD4, 0x00, 0x00, 0x00, 0xC0
 	.db	0
 	pop	bc
-;carwar.c:183: u8 x = 128, y = 128;
+;carwar.c:184: u8 x = 128, y = 128;
 ;	genAssign
 ;	AOP_STK for _MainLoop_x_1_1
 	ld	-16(ix),#0x80
 ;	genAssign
 ;	AOP_STK for _MainLoop_y_1_1
 	ld	-17(ix),#0x80
-;carwar.c:190: SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
+;carwar.c:191: SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	ld	hl,#0xFFFFFF00
@@ -209,7 +210,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:191: SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
+;carwar.c:192: SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 6
@@ -231,7 +232,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:192: SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
+;carwar.c:193: SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 12
@@ -253,7 +254,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:193: SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
+;carwar.c:194: SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 18
@@ -275,7 +276,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:194: SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
+;carwar.c:195: SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 24
@@ -297,7 +298,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:195: SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
+;carwar.c:196: SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 30
@@ -319,7 +320,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:196: SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
+;carwar.c:197: SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 36
@@ -341,7 +342,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:197: SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
+;carwar.c:198: SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
 ;	genPlus
 ;	genPlusIncr
 	ld	de,#_g_Local + 42
@@ -363,7 +364,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:199: SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
+;carwar.c:200: SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	ld	hl,#0x0300
@@ -383,7 +384,7 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:201: SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
+;carwar.c:202: SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	ld	hl,#0x0000
@@ -403,19 +404,36 @@ _MainLoop:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:203: g_Angle = 30;
+;carwar.c:204: g_Angle = 30;
 ;	genAssign
 	ld	iy,#_g_Angle
 	ld	0(iy),#0x1E
-;carwar.c:205: SetTo60Hz();
+;carwar.c:206: SetTo60Hz();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_SetTo60Hz
-;carwar.c:206: SetScreen8();
+;carwar.c:207: SetScreen8();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_SetScreen8
-;carwar.c:208: VPDCommand((int)&clsScreen8);
+;carwar.c:209: Fill8(32, 32, 32, 32, 0xB0);
+;	genIpush
+; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+	ld	hl,#0xB020
+	push	hl
+;	genIpush
+	ld	hl,#0x2020
+	push	hl
+;	genIpush
+	ld	a,#0x20
+	push	af
+	inc	sp
+;	genCall
+	call	_Fill8
+	pop	af
+	pop	af
+	inc	sp
+;carwar.c:211: VPDCommand((int)&clsScreen8);
 ;	genAddrOf
 	ld	hl,#0x0008
 	add	hl,sp
@@ -428,10 +446,10 @@ _MainLoop:
 ;	genCall
 	call	_VPDCommand
 	pop	af
-;carwar.c:210: while(bEnd == 0)
+;carwar.c:213: while(bEnd == 0)
 ;	genLabel
 00115$:
-;carwar.c:220: addr = x + (y << 8);
+;carwar.c:223: addr = x + (y << 8);
 ;	genCast
 ;	AOP_STK for _MainLoop_x_1_1
 	ld	e,-16(ix)
@@ -451,7 +469,7 @@ _MainLoop:
 	ld	c,a
 ;	genAssign
 ;	(registers are the same)
-;carwar.c:221: WriteToVRAM8(addr, 0x0F);
+;carwar.c:224: WriteToVRAM8(addr, 0x0F);
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	ld	a,#0x0F
@@ -465,7 +483,7 @@ _MainLoop:
 	call	_WriteToVRAM8
 	pop	af
 	inc	sp
-;carwar.c:224: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+;carwar.c:227: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	ld	a,#0x00
@@ -518,7 +536,7 @@ _MainLoop:
 	ld	a,c
 	or	a,b
 	jp	Z,00111$
-;carwar.c:226: switch (i)
+;carwar.c:229: switch (i)
 ;	genCmpLt
 	ld	a,e
 	sub	a,#0x01
@@ -554,7 +572,7 @@ _MainLoop:
 	jp	00106$
 	jp	00107$
 	jp	00108$
-;carwar.c:228: case 1: y--; break;
+;carwar.c:231: case 1: y--; break;
 ;	genLabel
 00101$:
 ;	genMinus
@@ -562,7 +580,7 @@ _MainLoop:
 	dec	-17(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:229: case 2: y--; x++; break;
+;carwar.c:232: case 2: y--; x++; break;
 ;	genLabel
 00102$:
 ;	genMinus
@@ -574,7 +592,7 @@ _MainLoop:
 	inc	-16(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:230: case 3: x++; break;
+;carwar.c:233: case 3: x++; break;
 ;	genLabel
 00103$:
 ;	genPlus
@@ -583,7 +601,7 @@ _MainLoop:
 	inc	-16(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:231: case 4: y++; x++; break;
+;carwar.c:234: case 4: y++; x++; break;
 ;	genLabel
 00104$:
 ;	genPlus
@@ -596,7 +614,7 @@ _MainLoop:
 	inc	-16(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:232: case 5: y++; break;
+;carwar.c:235: case 5: y++; break;
 ;	genLabel
 00105$:
 ;	genPlus
@@ -605,7 +623,7 @@ _MainLoop:
 	inc	-17(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:233: case 6: y++; x--; break;
+;carwar.c:236: case 6: y++; x--; break;
 ;	genLabel
 00106$:
 ;	genPlus
@@ -617,7 +635,7 @@ _MainLoop:
 	dec	-16(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:234: case 7: x--; break;
+;carwar.c:237: case 7: x--; break;
 ;	genLabel
 00107$:
 ;	genMinus
@@ -625,7 +643,7 @@ _MainLoop:
 	dec	-16(ix)
 ;	genGoto
 	jr	00111$
-;carwar.c:235: case 8: y--; x--; break;
+;carwar.c:238: case 8: y--; x--; break;
 ;	genLabel
 00108$:
 ;	genMinus
@@ -634,10 +652,10 @@ _MainLoop:
 ;	genMinus
 ;	AOP_STK for _MainLoop_x_1_1
 	dec	-16(ix)
-;carwar.c:236: }
+;carwar.c:239: }
 ;	genLabel
 00111$:
-;carwar.c:260: g_AngleIndex = g_Angle >> 2;
+;carwar.c:263: g_AngleIndex = g_Angle >> 2;
 ;	genRightShift
 	ld	iy,#_g_Angle
 	ld	a,0(iy)
@@ -645,7 +663,7 @@ _MainLoop:
 	srl	a
 	ld	iy,#_g_AngleIndex
 	ld	0(iy),a
-;carwar.c:262: g_Angle += 4;
+;carwar.c:265: g_Angle += 4;
 ;	genPlus
 ;	genPlusIncr
 	ld	iy,#_g_Angle
@@ -653,7 +671,7 @@ _MainLoop:
 	inc	0(iy)
 	inc	0(iy)
 	inc	0(iy)
-;carwar.c:264: for(i=0; i<10; i++) // rows
+;carwar.c:267: for(i=0; i<10; i++) // rows
 ;	genAssign
 	ld	de,#0x0000
 ;	genAssign
@@ -669,7 +687,7 @@ _MainLoop:
 	ld	a,-18(ix)
 	sbc	a,#0x00
 	jp	P,00145$
-;carwar.c:266: keyLine = GetKeyMatrixLine(i);
+;carwar.c:269: keyLine = GetKeyMatrixLine(i);
 ;	genCast
 ;	AOP_STK for _MainLoop_i_1_1
 	ld	c,-19(ix)
@@ -684,7 +702,7 @@ _MainLoop:
 	inc	sp
 ;	genAssign
 	ld	e,c
-;carwar.c:267: for(j=0; j<8; j++) // characters
+;carwar.c:270: for(j=0; j<8; j++) // characters
 ;	genAssign
 ;	AOP_STK for _MainLoop_j_1_1
 	ld	-21(ix),#0x00
@@ -698,7 +716,7 @@ _MainLoop:
 	ld	a,-20(ix)
 	sbc	a,#0x00
 	jp	P,00124$
-;carwar.c:269: if(keyLine & 1 << j)
+;carwar.c:272: if(keyLine & 1 << j)
 ;	genLeftShift
 ;	AOP_STK for _MainLoop_j_1_1
 	ld	a,-21(ix)
@@ -729,7 +747,7 @@ _MainLoop:
 	ld	b,a
 	or	a,c
 	jr	Z,00113$
-;carwar.c:270: DrawPoint8(10 + j, 10 + i, 0);
+;carwar.c:273: DrawPoint8(10 + j, 10 + i, 0);
 ;	genCast
 ;	AOP_STK for _MainLoop_i_1_1
 	ld	c,-19(ix)
@@ -768,7 +786,7 @@ _MainLoop:
 	jr	00120$
 ;	genLabel
 00113$:
-;carwar.c:272: DrawPoint8(10 + j, 10 + i, 255);
+;carwar.c:275: DrawPoint8(10 + j, 10 + i, 255);
 ;	genCast
 ;	AOP_STK for _MainLoop_i_1_1
 	ld	c,-19(ix)
@@ -805,7 +823,7 @@ _MainLoop:
 	pop	de
 ;	genLabel
 00120$:
-;carwar.c:267: for(j=0; j<8; j++) // characters
+;carwar.c:270: for(j=0; j<8; j++) // characters
 ;	genPlus
 ;	AOP_STK for _MainLoop_j_1_1
 ;	genPlusIncr
@@ -817,7 +835,7 @@ _MainLoop:
 	jp	00118$
 ;	genLabel
 00124$:
-;carwar.c:264: for(i=0; i<10; i++) // rows
+;carwar.c:267: for(i=0; i<10; i++) // rows
 ;	genPlus
 ;	AOP_STK for _MainLoop_i_1_1
 ;	genPlusIncr
@@ -837,7 +855,7 @@ _MainLoop:
 ;	AOP_STK for _MainLoop_i_1_1
 	ld	e,-19(ix)
 	ld	d,-18(ix)
-;carwar.c:278: for(j=0; j<256; j++) // characters
+;carwar.c:281: for(j=0; j<256; j++) // characters
 ;	genAssign
 ;	AOP_STK for _MainLoop_j_1_1
 	ld	-21(ix),#0x00
@@ -851,7 +869,7 @@ _MainLoop:
 	ld	a,-20(ix)
 	sbc	a,#0x01
 	jp	P,00115$
-;carwar.c:280: DrawPoint8(j, i, j);
+;carwar.c:283: DrawPoint8(j, i, j);
 ;	genCast
 ;	AOP_STK for _MainLoop_j_1_1
 	ld	c,-21(ix)
@@ -875,7 +893,7 @@ _MainLoop:
 	pop	af
 	inc	sp
 	pop	de
-;carwar.c:278: for(j=0; j<256; j++) // characters
+;carwar.c:281: for(j=0; j<256; j++) // characters
 ;	genPlus
 ;	AOP_STK for _MainLoop_j_1_1
 ;	genPlusIncr
@@ -1279,7 +1297,7 @@ _g_ProjectionY:
 	.dw #0x0001
 	.dw #0x0001
 	.dw #0x0001
-;carwar.c:299: void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
+;carwar.c:302: void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -1290,7 +1308,7 @@ _SetShortVec:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:301: ret->x = x;
+;carwar.c:304: ret->x = x;
 ;	genAssign
 ;	AOP_STK for 
 	ld	c,4(ix)
@@ -1305,7 +1323,7 @@ _SetShortVec:
 	inc	hl
 	ld	a,7(ix)
 	ld	(hl),a
-;carwar.c:302: ret->y = y;
+;carwar.c:305: ret->y = y;
 ;	genPlus
 ;	genPlusIncr
 	ld	e,c
@@ -1322,7 +1340,7 @@ _SetShortVec:
 	inc	hl
 	ld	a,9(ix)
 	ld	(hl),a
-;carwar.c:303: ret->z = z;
+;carwar.c:306: ret->z = z;
 ;	genPlus
 ;	genPlusIncr
 	inc	bc
@@ -1344,7 +1362,7 @@ _SetShortVec:
 	pop	ix
 	ret
 _SetShortVec_end::
-;carwar.c:309: void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
+;carwar.c:312: void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -1358,14 +1376,14 @@ _TransXZ:
 	ld	hl,#-13
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:311: g_Angle >>= 2; 
+;carwar.c:314: g_Angle >>= 2; 
 ;	genRightShift
 ;	AOP_STK for 
 	ld	a,8(ix)
 	srl	a
 	srl	a
 	ld	8(ix),a
-;carwar.c:312: ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
+;carwar.c:315: ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
 ;	genAssign
 ;	AOP_STK for 
 	ld	c,4(ix)
@@ -1534,7 +1552,7 @@ _TransXZ:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:313: ret->y = vec->y + pos->y;
+;carwar.c:316: ret->y = vec->y + pos->y;
 ;	genPlus
 ;	AOP_STK for _TransXZ_sloc4_1_0
 ;	genPlusIncr
@@ -1590,7 +1608,7 @@ _TransXZ:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:314: ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
+;carwar.c:317: ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
 ;	genPlus
 ;	genPlusIncr
 	inc	bc
@@ -1657,7 +1675,7 @@ _TransXZ:
 	pop	ix
 	ret
 _TransXZ_end::
-;carwar.c:320: void TransXZIndex(i8 i)
+;carwar.c:323: void TransXZIndex(i8 i)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -1671,7 +1689,7 @@ _TransXZIndex:
 	ld	hl,#-13
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:322: g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
+;carwar.c:325: g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
 ;	genMult
 ;	AOP_STK for 
 	ld	a,4(ix)
@@ -1874,7 +1892,7 @@ _TransXZIndex:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),b
-;carwar.c:323: g_World[i].y = g_Local[i].y + g_Position.y;
+;carwar.c:326: g_World[i].y = g_Local[i].y + g_Position.y;
 ;	genPlus
 	ld	a,#<_g_World
 	add	a,c
@@ -1932,7 +1950,7 @@ _TransXZIndex:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:324: g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
+;carwar.c:327: g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
 ;	genPlus
 ;	genPlusIncr
 	inc	bc
@@ -2029,7 +2047,7 @@ _TransXZIndex:
 	pop	ix
 	ret
 _TransXZIndex_end::
-;carwar.c:330: void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
+;carwar.c:333: void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -2043,7 +2061,7 @@ _Project:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:333: ret->z = ((vec->z - cam->z) >> 5);
+;carwar.c:336: ret->z = ((vec->z - cam->z) >> 5);
 ;	genAssign
 ;	AOP_STK for 
 	ld	c,4(ix)
@@ -2137,7 +2155,7 @@ _Project:
 	inc	hl
 	ld	a,-5(ix)
 	ld	(hl),a
-;carwar.c:334: ret->x = 128 + (vec->x - cam->x) / ret->z;
+;carwar.c:337: ret->x = 128 + (vec->x - cam->x) / ret->z;
 ;	genPointerGet
 ;	AOP_STK for _Project_sloc1_1_0
 ;	AOP_STK for _Project_sloc0_1_0
@@ -2194,7 +2212,7 @@ _Project:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:335: ret->y = 106 + (vec->y - cam->y) / ret->z;
+;carwar.c:338: ret->y = 106 + (vec->y - cam->y) / ret->z;
 ;	genPlus
 ;	genPlusIncr
 	inc	bc
@@ -2273,7 +2291,7 @@ _Project:
 	pop	ix
 	ret
 _Project_end::
-;carwar.c:354: void Update()
+;carwar.c:357: void Update()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -2287,7 +2305,7 @@ _Update:
 	ld	hl,#-3
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:360: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
+;carwar.c:363: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
 ;	genPointerGet
 	ld	hl,#_g_Screen
 	ld	a,(hl)
@@ -2340,7 +2358,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:361: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
+;carwar.c:364: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 6
@@ -2399,7 +2417,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:362: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
+;carwar.c:365: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 12
@@ -2458,7 +2476,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:363: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
+;carwar.c:366: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 18
@@ -2511,7 +2529,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:365: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
+;carwar.c:368: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 24
@@ -2570,7 +2588,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:366: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
+;carwar.c:369: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 30
@@ -2629,7 +2647,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:367: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
+;carwar.c:370: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 36
@@ -2688,7 +2706,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:368: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
+;carwar.c:371: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 42
@@ -2747,7 +2765,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:370: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
+;carwar.c:373: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
 ;	genPointerGet
 	ld	hl,#_g_Screen
 	ld	a,(hl)
@@ -2800,7 +2818,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:371: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
+;carwar.c:374: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 6
@@ -2859,7 +2877,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:372: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
+;carwar.c:375: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 12
@@ -2918,7 +2936,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:373: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
+;carwar.c:376: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 18
@@ -2977,7 +2995,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:375: for(i=0; i<POINT_NUM; i++)
+;carwar.c:378: for(i=0; i<POINT_NUM; i++)
 ;	genAssign
 ;	AOP_STK for _Update_i_1_1
 	ld	-1(ix),#0x00
@@ -2990,7 +3008,7 @@ _Update:
 	ld	a,-1(ix)
 	sub	a,#0x08
 	jp	P,00104$
-;carwar.c:378: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
+;carwar.c:381: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
 ;	genPlus
 ;	AOP_STK for _Update_sloc0_1_0
 	ld	a,#<_g_Screen
@@ -3042,7 +3060,7 @@ _Update:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:382: TransXZIndex(i);
+;carwar.c:385: TransXZIndex(i);
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
 	push	bc
@@ -3054,7 +3072,7 @@ _Update:
 	call	_TransXZIndex
 	inc	sp
 	pop	bc
-;carwar.c:383: Project(&g_Screen[i], &g_World[i], &g_Camera);
+;carwar.c:386: Project(&g_Screen[i], &g_World[i], &g_Camera);
 ;	genPlus
 ;	AOP_STK for _Update_sloc0_1_0
 	ld	a,#<_g_World
@@ -3090,7 +3108,7 @@ _Update:
 	pop	af
 	pop	af
 	pop	bc
-;carwar.c:386: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
+;carwar.c:389: DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
 ;	genPlus
 ;	AOP_STK for _Update_sloc0_1_0
 	ld	a,#<_g_Screen
@@ -3142,7 +3160,7 @@ _Update:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:375: for(i=0; i<POINT_NUM; i++)
+;carwar.c:378: for(i=0; i<POINT_NUM; i++)
 ;	genPlus
 ;	genPlusIncr
 	ld	a,b
@@ -3156,7 +3174,7 @@ _Update:
 	jp	00101$
 ;	genLabel
 00104$:
-;carwar.c:389: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
+;carwar.c:392: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
 ;	genPointerGet
 	ld	hl,#_g_Screen
 	ld	a,(hl)
@@ -3209,7 +3227,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:390: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
+;carwar.c:393: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 6
@@ -3268,7 +3286,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:391: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
+;carwar.c:394: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 12
@@ -3327,7 +3345,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:392: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
+;carwar.c:395: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 18
@@ -3380,7 +3398,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:394: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
+;carwar.c:397: DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 24
@@ -3439,7 +3457,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:395: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
+;carwar.c:398: DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 30
@@ -3498,7 +3516,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:396: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
+;carwar.c:399: DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 36
@@ -3557,7 +3575,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:397: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
+;carwar.c:400: DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 42
@@ -3616,7 +3634,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:399: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
+;carwar.c:402: DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
 ;	genPointerGet
 	ld	hl,#_g_Screen
 	ld	a,(hl)
@@ -3669,7 +3687,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:400: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
+;carwar.c:403: DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 6
@@ -3728,7 +3746,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:401: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
+;carwar.c:404: DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 12
@@ -3787,7 +3805,7 @@ _Update:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_DrawLineSimple
-;carwar.c:402: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
+;carwar.c:405: DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
 ;	genPlus
 ;	genPlusIncr
 	ld	bc,#_g_Screen + 18
@@ -3852,7 +3870,7 @@ _Update:
 	pop	ix
 	ret
 _Update_end::
-;carwar.c:435: void SetScreen8()
+;carwar.c:438: void SetScreen8()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -3860,7 +3878,7 @@ _Update_end::
 ; ---------------------------------
 _SetScreen8_start::
 _SetScreen8:
-;carwar.c:471: _endasm;
+;carwar.c:474: _endasm;
 ;	genInline
 	
 	
@@ -3901,7 +3919,7 @@ _SetScreen8:
 ;	genEndFunction
 	ret
 _SetScreen8_end::
-;carwar.c:477: void SetPage8(i8 page)
+;carwar.c:480: void SetPage8(i8 page)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -3912,7 +3930,7 @@ _SetPage8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:491: _endasm;
+;carwar.c:494: _endasm;
 ;	genInline
 	
 	
@@ -3930,7 +3948,7 @@ _SetPage8:
 	pop	ix
 	ret
 _SetPage8_end::
-;carwar.c:497: void DrawPoint8(char posX, char posY, char color)
+;carwar.c:500: void DrawPoint8(char posX, char posY, char color)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -3941,11 +3959,11 @@ _DrawPoint8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:501: WaitForVDP();
+;carwar.c:504: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:549: _endasm;
+;carwar.c:552: _endasm;
 ;	genInline
 	
 	
@@ -3999,7 +4017,7 @@ _DrawPoint8:
 	pop	ix
 	ret
 _DrawPoint8_end::
-;carwar.c:555: void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
+;carwar.c:558: void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4010,7 +4028,7 @@ _DrawLine:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:557: SX  = posX1; 
+;carwar.c:560: SX  = posX1; 
 ;	genAssign
 ;	AOP_STK for 
 	ld	a,4(ix)
@@ -4018,7 +4036,7 @@ _DrawLine:
 	ld	0(iy),a
 	ld	a,5(ix)
 	ld	1(iy),a
-;carwar.c:558: SY  = posY1; 
+;carwar.c:561: SY  = posY1; 
 ;	genAssign
 ;	AOP_STK for 
 	ld	a,6(ix)
@@ -4026,7 +4044,7 @@ _DrawLine:
 	ld	0(iy),a
 	ld	a,7(ix)
 	ld	1(iy),a
-;carwar.c:559: DX  = posX2; 
+;carwar.c:562: DX  = posX2; 
 ;	genAssign
 ;	AOP_STK for 
 	ld	a,8(ix)
@@ -4034,7 +4052,7 @@ _DrawLine:
 	ld	0(iy),a
 	ld	a,9(ix)
 	ld	1(iy),a
-;carwar.c:560: DY  = posY2; 
+;carwar.c:563: DY  = posY2; 
 ;	genAssign
 ;	AOP_STK for 
 	ld	a,10(ix)
@@ -4042,13 +4060,13 @@ _DrawLine:
 	ld	0(iy),a
 	ld	a,11(ix)
 	ld	1(iy),a
-;carwar.c:561: CLR = color;
+;carwar.c:564: CLR = color;
 ;	genAssign
 ;	AOP_STK for 
 	ld	a,12(ix)
 	ld	iy,#_CLR
 	ld	0(iy),a
-;carwar.c:563: DrawLineSimple();
+;carwar.c:566: DrawLineSimple();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 ;	genLabel
@@ -4056,7 +4074,7 @@ _DrawLine:
 	pop	ix
 	jp	_DrawLineSimple
 _DrawLine_end::
-;carwar.c:569: void DrawLineSimple()
+;carwar.c:572: void DrawLineSimple()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4064,11 +4082,11 @@ _DrawLine_end::
 ; ---------------------------------
 _DrawLineSimple_start::
 _DrawLineSimple:
-;carwar.c:571: WaitForVDP();
+;carwar.c:574: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:643: _endasm;
+;carwar.c:646: _endasm;
 ;	genInline
 	
 	
@@ -4144,7 +4162,7 @@ _DrawLineSimple:
 		       ld (_CMD),a ;
 	
 		
-;carwar.c:645: VPDCommand((int)&SX);
+;carwar.c:648: VPDCommand((int)&SX);
 ;	genCast
 	ld	c,#<_SX
 	ld	b,#>_SX
@@ -4158,7 +4176,7 @@ _DrawLineSimple:
 ;	genEndFunction
 	ret
 _DrawLineSimple_end::
-;carwar.c:651: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
+;carwar.c:654: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4169,7 +4187,7 @@ _DrawLine8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:655: WaitForVDP();
+;carwar.c:658: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 ;	genLabel
@@ -4177,7 +4195,7 @@ _DrawLine8:
 	pop	ix
 	jp	_WaitForVDP
 _DrawLine8_end::
-;carwar.c:789: void VPDCommand(int address)
+;carwar.c:792: void VPDCommand(int address)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4188,11 +4206,11 @@ _VPDCommand:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:793: WaitForVDP();
+;carwar.c:796: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:824: _endasm;
+;carwar.c:827: _endasm;
 ;	genInline
 	
 	
@@ -4229,7 +4247,7 @@ _VPDCommand:
 	pop	ix
 	ret
 _VPDCommand_end::
-;carwar.c:830: void waitRetrace()
+;carwar.c:833: void waitRetrace()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4237,7 +4255,7 @@ _VPDCommand_end::
 ; ---------------------------------
 _waitRetrace_start::
 _waitRetrace:
-;carwar.c:842: _endasm;
+;carwar.c:845: _endasm;
 ;	genInline
 	
 	
@@ -4254,7 +4272,7 @@ _waitRetrace:
 ;	genEndFunction
 	ret
 _waitRetrace_end::
-;carwar.c:848: void WaitForVDP()
+;carwar.c:851: void WaitForVDP()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4262,7 +4280,7 @@ _waitRetrace_end::
 ; ---------------------------------
 _WaitForVDP_start::
 _WaitForVDP:
-;carwar.c:869: _endasm;
+;carwar.c:872: _endasm;
 ;	genInline
 	
 	
@@ -4288,7 +4306,7 @@ _WaitForVDP:
 ;	genEndFunction
 	ret
 _WaitForVDP_end::
-;carwar.c:873: char Joystick(char n)
+;carwar.c:876: char Joystick(char n)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4299,7 +4317,7 @@ _Joystick:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:880: _endasm;
+;carwar.c:883: _endasm;
 ;	genInline
 	
 		 ld a,4(ix)
@@ -4311,7 +4329,7 @@ _Joystick:
 	pop	ix
 	ret
 _Joystick_end::
-;carwar.c:884: char Joytrig(char n)
+;carwar.c:887: char Joytrig(char n)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4322,7 +4340,7 @@ _Joytrig:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:892: _endasm;
+;carwar.c:895: _endasm;
 ;	genInline
 	
 		 ld a,4(ix)
@@ -4335,7 +4353,7 @@ _Joytrig:
 	pop	ix
 	ret
 _Joytrig_end::
-;carwar.c:896: u8 GetKeyMatrixLine(u8 n)
+;carwar.c:899: u8 GetKeyMatrixLine(u8 n)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4346,7 +4364,7 @@ _GetKeyMatrixLine:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:903: _endasm;
+;carwar.c:906: _endasm;
 ;	genInline
 	
 		 ld a,4(ix)
@@ -4358,7 +4376,7 @@ _GetKeyMatrixLine:
 	pop	ix
 	ret
 _GetKeyMatrixLine_end::
-;carwar.c:906: void SetTo50Hz()
+;carwar.c:909: void SetTo50Hz()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4366,11 +4384,11 @@ _GetKeyMatrixLine_end::
 ; ---------------------------------
 _SetTo50Hz_start::
 _SetTo50Hz:
-;carwar.c:908: WaitForVDP();
+;carwar.c:911: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:920: _endasm;
+;carwar.c:923: _endasm;
 ;	genInline
 	
 	
@@ -4387,7 +4405,7 @@ _SetTo50Hz:
 ;	genEndFunction
 	ret
 _SetTo50Hz_end::
-;carwar.c:923: void SetTo60Hz()
+;carwar.c:926: void SetTo60Hz()
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4395,11 +4413,11 @@ _SetTo50Hz_end::
 ; ---------------------------------
 _SetTo60Hz_start::
 _SetTo60Hz:
-;carwar.c:925: WaitForVDP();
+;carwar.c:928: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:937: _endasm;
+;carwar.c:940: _endasm;
 ;	genInline
 	
 	
@@ -4416,7 +4434,7 @@ _SetTo60Hz:
 ;	genEndFunction
 	ret
 _SetTo60Hz_end::
-;carwar.c:943: void WriteToVRAM8(i16 addr, u8 value)
+;carwar.c:946: void WriteToVRAM8(i16 addr, u8 value)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -4427,22 +4445,18 @@ _WriteToVRAM8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:947: WaitForVDP();
+;carwar.c:950: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:978: _endasm;
+;carwar.c:977: _endasm;
 ;	genInline
 	
 		 ;
 		 ld a,5(ix) ;
 		 and #0xC0 ;
-		       rra
-		       rra
-		       rra
-		       rra
-		       rra
-		       rra
+		       rla
+		       rla
 		 di
 		 out (#0x99),a
 		 ld a,#(0x80+14)
@@ -4467,5 +4481,87 @@ _WriteToVRAM8:
 	pop	ix
 	ret
 _WriteToVRAM8_end::
+;carwar.c:1010: void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color)
+;	genLabel
+;	genFunction
+;	---------------------------------
+; Function Fill8
+; ---------------------------------
+_Fill8_start::
+_Fill8:
+	push	ix
+	ld	ix,#0
+	add	ix,sp
+;carwar.c:1014: WaitForVDP();
+;	genCall
+; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+	call	_WaitForVDP
+;carwar.c:1076: _endasm;
+;	genInline
+	
+		 di
+	
+		 ld a,4(ix) ;
+		 out (#0x99),a
+		 ld a,#(0x80+36) ;
+		 out (#0x99),a
+	
+		 xor a ;
+		 out (#0x99),a
+		 ld a,#(0x80+37)
+		 out (#0x99),a ;
+	
+		 ld a,5(ix) ;
+		 out (#0x99),a
+		 ld a,#(0x80+38) ;
+		 out (#0x99),a
+	
+		 xor a ;
+		 out (#0x99),a
+		 ld a,#(0x80+39)
+		 out (#0x99),a ;
+	
+		 ld a,6(ix) ;
+		 out (#0x99),a
+		 ld a,#(0x80+40) ;
+		 out (#0x99),a
+	
+		 xor a ;
+		 out (#0x99),a
+		 ld a,#(0x80+41)
+		 out (#0x99),a ;
+	
+		 ld a,7(ix) ;
+		 out (#0x99),a
+		 ld a,#(0x80+42) ;
+		 out (#0x99),a
+	
+		 xor a ;
+		 out (#0x99),a
+		 ld a,#(0x80+43)
+		 out (#0x99),a ;
+	
+		 ld a,8(ix) ;
+		 out (#0x99),a
+		 ld a,#(0x80+44) ;
+		 out (#0x99),a
+	
+		 xor a ;
+		 out (#0x99),a
+		 ld a,#(0x80+45)
+		 out (#0x99),a
+	
+		 ld a,#0x0F0
+		 out (#0x99),a
+		 ld a,#(0x80+46)
+		 out (#0x99),a
+	
+		 ei
+		
+;	genLabel
+;	genEndFunction
+	pop	ix
+	ret
+_Fill8_end::
 	.area _CODE
 	.area _CABS

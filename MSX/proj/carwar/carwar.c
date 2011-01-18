@@ -118,6 +118,7 @@ u8 GetKeyMatrixLine(u8 n);
 void WriteToVRAM8(i16 addr, u8 value);
 void SetTo50Hz();
 void SetTo60Hz();
+void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color);
 
 //----------------------------------------
 // G L O B A L E S
@@ -204,6 +205,8 @@ void MainLoop()
 
 	SetTo60Hz();
 	SetScreen8();
+
+	Fill8(32, 32, 32, 32, 0xB0);
 
 	VPDCommand((int)&clsScreen8);
 
@@ -951,12 +954,8 @@ void WriteToVRAM8(i16 addr, u8 value)
 		;// Set 0 to register 14 (we don't use address bits 14-16)
 		ld		a,5(ix)     ;// Bits 14-15
 		and		#0xC0		;// Keep only 2 last bits
-        rra
-        rra
-        rra
-        rra
-        rra
-        rra
+        rla
+        rla
 		di
 		out		(VDP_ADDR),a
 		ld		a,VDP_REG(14)
@@ -1004,4 +1003,81 @@ void WriteToVRAM8(i16 addr, u8 value)
 
 }
 
+
+/**
+ *
+ */
+void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color)
+{
+	px; py; sx; sy; color;
+
+	WaitForVDP();
+
+	
+	_asm
+		di
+
+		ld		a,4(ix) ;// px
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(36) ;// DX 7-0
+		out		(VDP_ADDR),a
+		
+		xor		a ;// 0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(37)
+		out		(VDP_ADDR),a ;// DX 8
+
+		ld		a,5(ix) ;// py
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(38) ;// DY 7-0
+		out		(VDP_ADDR),a
+		
+		xor		a ;// 0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(39)
+		out		(VDP_ADDR),a ;// DY 9-8
+
+		ld		a,6(ix) ;// sx
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(40) ;// NX 7-0
+		out		(VDP_ADDR),a
+		
+		xor		a ;// 0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(41)
+		out		(VDP_ADDR),a ;// NX 8
+
+		ld		a,7(ix) ;// sy
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(42) ;// NY 7-0
+		out		(VDP_ADDR),a
+		
+		xor		a ;// 0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(43)
+		out		(VDP_ADDR),a ;// NY 8
+		
+		ld		a,8(ix) ;// color
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(44) ;// CR
+		out		(VDP_ADDR),a
+
+		xor		a ;// 0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(45)
+		out		(VDP_ADDR),a
+
+		ld		a,#0xF0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(46)
+		out		(VDP_ADDR),a
+
+		xor		a ;// 0
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(45)
+		out		(VDP_ADDR),a
+
+		ei
+	_endasm;
+}
 
