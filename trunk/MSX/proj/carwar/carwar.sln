@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ambidex", "ambidex.vcproj", "{DE2AC870-23ED-4B5F-A333-624E76B5A965}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ambidex", "carwar.vcproj", "{DE2AC870-23ED-4B5F-A333-624E76B5A965}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
