@@ -11,22 +11,22 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__GSFINAL
      0000    l__HOME
      0000    l__OVERLAY
-     000B    l__GSINIT
-     001A    l__DATA
-     055E    l__CODE
+     003A    l__GSINIT
+     004F    l__DATA
+     051C    l__CODE
      4010    s__CODE
      8000    s__DATA
-     801A    s__GSINIT
-     801A    s__HOME
-     801A    s__OVERLAY
-     8025    s__CABS
-     8025    s__GSFINAL
+     804F    s__GSINIT
+     804F    s__HOME
+     804F    s__OVERLAY
+     8089    s__CABS
+     8089    s__GSFINAL
 
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   055E =   1374. bytes (REL,CON)
+_CODE                              4010   051C =   1308. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -36,64 +36,64 @@ _CODE                              4010   055E =   1374. bytes (REL,CON)
      402B    _MainLoop_start
      402B    _main_end
      4235    _MainLoop_end
-     4275    _SetScreen8
-     4275    _SetScreen8_start
-     42A2    _SetPage8
-     42A2    _SetPage8_start
-     42A2    _SetScreen8_end
-     42BA    _DrawPoint8
-     42BA    _DrawPoint8_start
-     42BA    _SetPage8_end
-     4302    _DrawLine
-     4302    _DrawLine_start
-     4302    _DrawPoint8_end
-     4359    _DrawLineSimple
-     4359    _DrawLineSimple_start
-     4359    _DrawLine_end
-     43C7    _DrawLine8
-     43C7    _DrawLine8_start
-     43C7    _DrawLineSimple_end
-     43D4    _DrawLine8_end
-     43D4    _VPDCommand
-     43D4    _VPDCommand_start
-     4412    _VPDCommand_end
-     4412    _waitRetrace
-     4412    _waitRetrace_start
-     441D    _WaitForVDP
-     441D    _WaitForVDP_start
-     441D    _waitRetrace_end
-     4435    _Joystick
-     4435    _Joystick_start
-     4435    _WaitForVDP_end
-     4447    _Joystick_end
-     4447    _Joytrig
-     4447    _Joytrig_start
-     445B    _GetKeyMatrixLine
-     445B    _GetKeyMatrixLine_start
-     445B    _Joytrig_end
-     446D    _GetKeyMatrixLine_end
-     446D    _SetTo50Hz
-     446D    _SetTo50Hz_start
-     447B    _SetTo50Hz_end
-     447B    _SetTo60Hz
-     447B    _SetTo60Hz_start
-     4489    _SetTo60Hz_end
-     4489    _WriteToVRAM8
-     4489    _WriteToVRAM8_start
-     44B9    _HMMC
-     44B9    _HMMC_start
-     44B9    _WriteToVRAM8_end
-     4511    _HMMC_end
-     4511    _SetupHMMC
-     4511    _SetupHMMC_start
-     4547    _SetupHMMC_end
-     4547    __initrleblock
+     4235    _SetScreen8
+     4235    _SetScreen8_start
+     4262    _SetPage8
+     4262    _SetPage8_start
+     4262    _SetScreen8_end
+     427A    _DrawPoint8
+     427A    _DrawPoint8_start
+     427A    _SetPage8_end
+     42C2    _DrawLine
+     42C2    _DrawLine_start
+     42C2    _DrawPoint8_end
+     4319    _DrawLineSimple
+     4319    _DrawLineSimple_start
+     4319    _DrawLine_end
+     4387    _DrawLine8
+     4387    _DrawLine8_start
+     4387    _DrawLineSimple_end
+     4394    _DrawLine8_end
+     4394    _VPDCommand
+     4394    _VPDCommand_start
+     43D2    _VPDCommand_end
+     43D2    _waitRetrace
+     43D2    _waitRetrace_start
+     43DD    _WaitForVDP
+     43DD    _WaitForVDP_start
+     43DD    _waitRetrace_end
+     43F5    _Joystick
+     43F5    _Joystick_start
+     43F5    _WaitForVDP_end
+     4407    _Joystick_end
+     4407    _Joytrig
+     4407    _Joytrig_start
+     441B    _GetKeyMatrixLine
+     441B    _GetKeyMatrixLine_start
+     441B    _Joytrig_end
+     442D    _GetKeyMatrixLine_end
+     442D    _SetTo50Hz
+     442D    _SetTo50Hz_start
+     443B    _SetTo50Hz_end
+     443B    _SetTo60Hz
+     443B    _SetTo60Hz_start
+     4449    _SetTo60Hz_end
+     4449    _WriteToVRAM8
+     4449    _WriteToVRAM8_start
+     4479    _HMMC
+     4479    _HMMC_start
+     4479    _WriteToVRAM8_end
+     44DC    _HMMC_end
+     44DC    _SetupHMMC
+     44DC    _SetupHMMC_start
+     4505    _SetupHMMC_end
+     4505    __initrleblock
 
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_DATA                              8000   001A =     26. bytes (REL,CON)
+_DATA                              8000   004F =     79. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -106,7 +106,7 @@ _DATA                              8000   001A =     26. bytes (REL,CON)
      800C    _CLR
      800D    _ARG
      800E    _CMD
-     800F    _g_BitsCopy8
+     800F    _g_Sprite
 
 
 
