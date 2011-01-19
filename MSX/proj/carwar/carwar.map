@@ -9,26 +9,24 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
    --------  --------------------------------
      0000    l__CABS
      0000    l__GSFINAL
-     0000    l__GSINIT
      0000    l__HOME
      0000    l__OVERLAY
-     0003    l__BSS
-     00AD    l__DATA
-     1835    l__CODE
+     000B    l__GSINIT
+     001A    l__DATA
+     055E    l__CODE
      4010    s__CODE
-     C000    s__DATA
-     C0AD    s__BSS
-     C0AD    s__CABS
-     C0AD    s__GSFINAL
-     C0AD    s__GSINIT
-     C0AD    s__HOME
-     C0AD    s__OVERLAY
+     8000    s__DATA
+     801A    s__GSINIT
+     801A    s__HOME
+     801A    s__OVERLAY
+     8025    s__CABS
+     8025    s__GSFINAL
 
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   1835 =   6197. bytes (REL,CON)
+_CODE                              4010   055E =   1374. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -37,127 +35,78 @@ _CODE                              4010   1835 =   6197. bytes (REL,CON)
      402B    _MainLoop
      402B    _MainLoop_start
      402B    _main_end
-     433F    _MainLoop_end
-     463F    _SetShortVec
-     463F    _SetShortVec_start
-     4679    _SetShortVec_end
-     4679    _TransXZ
-     4679    _TransXZ_start
-     4842    _TransXZIndex
-     4842    _TransXZIndex_start
-     4842    _TransXZ_end
-     4A60    _Project
-     4A60    _Project_start
-     4A60    _TransXZIndex_end
-     4B95    _Project_end
-     4B95    _Update
-     4B95    _Update_start
-     5422    _SetScreen8
-     5422    _SetScreen8_start
-     5422    _Update_end
-     544F    _SetPage8
-     544F    _SetPage8_start
-     544F    _SetScreen8_end
-     5467    _DrawPoint8
-     5467    _DrawPoint8_start
-     5467    _SetPage8_end
-     54AF    _DrawLine
-     54AF    _DrawLine_start
-     54AF    _DrawPoint8_end
-     5506    _DrawLineSimple
-     5506    _DrawLineSimple_start
-     5506    _DrawLine_end
-     5574    _DrawLine8
-     5574    _DrawLine8_start
-     5574    _DrawLineSimple_end
-     5581    _DrawLine8_end
-     5581    _VPDCommand
-     5581    _VPDCommand_start
-     55BF    _VPDCommand_end
-     55BF    _waitRetrace
-     55BF    _waitRetrace_start
-     55CA    _WaitForVDP
-     55CA    _WaitForVDP_start
-     55CA    _waitRetrace_end
-     55E2    _Joystick
-     55E2    _Joystick_start
-     55E2    _WaitForVDP_end
-     55F4    _Joystick_end
-     55F4    _Joytrig
-     55F4    _Joytrig_start
-     5608    _GetKeyMatrixLine
-     5608    _GetKeyMatrixLine_start
-     5608    _Joytrig_end
-     561A    _GetKeyMatrixLine_end
-     561A    _SetTo50Hz
-     561A    _SetTo50Hz_start
-     5628    _SetTo50Hz_end
-     5628    _SetTo60Hz
-     5628    _SetTo60Hz_start
-     5636    _SetTo60Hz_end
-     5636    _WriteToVRAM8
-     5636    _WriteToVRAM8_start
-     5666    _Fill8
-     5666    _Fill8_start
-     5666    _WriteToVRAM8_end
-     56CE    _Fill8_end
-     56CE    __initrleblock
-     56F5    __divschar_rrx_s
-     56FC    __divschar_rrx_hds
-     5703    __modschar_rrx_s
-     570A    __modschar_rrx_hds
-     5711    __divsint_rrx_s
-     571D    __divsint_rrx_hds
-     5725    __modsint_rrx_s
-     5731    __modsint_rrx_hds
-     5739    __divuchar_rrx_s
-     5740    __divuchar_rrx_hds
-     5747    __moduchar_rrx_s
-     574E    __moduchar_rrx_hds
-     5755    __divuint_rrx_s
-     5761    __divuint_rrx_hds
-     5769    __moduint_rrx_s
-     5775    __moduint_rrx_hds
-     577D    .div8
-     577D    .mod8
-     5785    .div16
-     5785    .mod16
-     57C2    .divu8
-     57C2    .modu8
-     57C5    .divu16
-     57C5    .modu16
-     57FA    __muluchar_rrx_s
-     580D    __mulschar_rrx_s
-     5814    __mulschar_rrx_hds
-     5820    __mulint_rrx_s
-     582C    __mulint_rrx_hds
-     582C    __muluchar_rrx_hds
+     4235    _MainLoop_end
+     4275    _SetScreen8
+     4275    _SetScreen8_start
+     42A2    _SetPage8
+     42A2    _SetPage8_start
+     42A2    _SetScreen8_end
+     42BA    _DrawPoint8
+     42BA    _DrawPoint8_start
+     42BA    _SetPage8_end
+     4302    _DrawLine
+     4302    _DrawLine_start
+     4302    _DrawPoint8_end
+     4359    _DrawLineSimple
+     4359    _DrawLineSimple_start
+     4359    _DrawLine_end
+     43C7    _DrawLine8
+     43C7    _DrawLine8_start
+     43C7    _DrawLineSimple_end
+     43D4    _DrawLine8_end
+     43D4    _VPDCommand
+     43D4    _VPDCommand_start
+     4412    _VPDCommand_end
+     4412    _waitRetrace
+     4412    _waitRetrace_start
+     441D    _WaitForVDP
+     441D    _WaitForVDP_start
+     441D    _waitRetrace_end
+     4435    _Joystick
+     4435    _Joystick_start
+     4435    _WaitForVDP_end
+     4447    _Joystick_end
+     4447    _Joytrig
+     4447    _Joytrig_start
+     445B    _GetKeyMatrixLine
+     445B    _GetKeyMatrixLine_start
+     445B    _Joytrig_end
+     446D    _GetKeyMatrixLine_end
+     446D    _SetTo50Hz
+     446D    _SetTo50Hz_start
+     447B    _SetTo50Hz_end
+     447B    _SetTo60Hz
+     447B    _SetTo60Hz_start
+     4489    _SetTo60Hz_end
+     4489    _WriteToVRAM8
+     4489    _WriteToVRAM8_start
+     44B9    _HMMC
+     44B9    _HMMC_start
+     44B9    _WriteToVRAM8_end
+     4511    _HMMC_end
+     4511    _SetupHMMC
+     4511    _SetupHMMC_start
+     4547    _SetupHMMC_end
+     4547    __initrleblock
 
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_DATA                              C000   00AD =    173. bytes (REL,CON)
+_DATA                              8000   001A =     26. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
-     C000    _SX
-     C002    _SY
-     C004    _DX
-     C006    _DY
-     C008    _NX
-     C00A    _NY
-     C00C    _CLR
-     C00D    _ARG
-     C00E    _CMD
-     C00F    _g_Camera
-     C015    _g_Position
-     C01B    _g_Angle
-     C01C    _g_AngleIndex
-     C01D    _g_Local
-     C04D    _g_World
-     C07D    _g_Screen
-
+     8000    _SX
+     8002    _SY
+     8004    _DX
+     8006    _DY
+     8008    _NX
+     800A    _NY
+     800C    _CLR
+     800D    _ARG
+     800E    _CMD
+     800F    _g_BitsCopy8
 
 
 
@@ -167,12 +116,8 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
-		MODULE div.o
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
-		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010
-	_DATA = 0xc000
+	_DATA = 0x8000

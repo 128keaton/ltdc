@@ -169,6 +169,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\carwar.sym"
+			>
+		</File>
+		<File
 			RelativePath=".\proj.inc"
 			>
 		</File>

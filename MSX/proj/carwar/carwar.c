@@ -98,11 +98,11 @@ typedef struct
 // P R O T O T Y P E S
 
 void MainLoop();
-void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z);
-void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos);
-void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam);
-void TransXZIndex(i8 i);
-void Update();
+//void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z);
+//void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos);
+//void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam);
+//void TransXZIndex(i8 i);
+//void Update();
 void SetScreen8();
 void SetPage8(i8 page);
 void DrawPoint8(char posX, char posY, char color);
@@ -118,7 +118,9 @@ u8 GetKeyMatrixLine(u8 n);
 void WriteToVRAM8(i16 addr, u8 value);
 void SetTo50Hz();
 void SetTo60Hz();
-void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color);
+//void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color);
+void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
+void SetupHMMC(u16 address);
 
 //----------------------------------------
 // G L O B A L E S
@@ -134,14 +136,14 @@ u8  CLR; // 44
 u8  ARG; // 45
 u8  CMD; // 46
 
-ShortVec g_Camera;
-ShortVec g_Position;
-u8 g_Angle, g_AngleIndex;
+//ShortVec g_Camera;
+//ShortVec g_Position;
+//u8 g_Angle, g_AngleIndex;
 
 #define POINT_NUM 8//5
-ShortVec g_Local[POINT_NUM];
-ShortVec g_World[POINT_NUM];
-ShortVec g_Screen[POINT_NUM];
+//ShortVec g_Local[POINT_NUM];
+//ShortVec g_World[POINT_NUM];
+//ShortVec g_Screen[POINT_NUM];
 //VdpBuffer g_VdpBuffer;
 
 ///
@@ -163,15 +165,31 @@ void main(void)
 	MainLoop();
 }
 
-#include "trigo.inc"
-#include "proj.inc"
+//#include "trigo.inc"
+//#include "proj.inc"
 // Sprites
 // SX : 13
 // SY : 11
 // 16 sprites/car (208 px)
 // 4 cars (44 px)
 
+static const u8 g_Sprite[8*8] =
+{
+	255, 255, 255, 255, 255, 255, 255, 255, 
+	255, 100,   0,   0,   0,   0, 200, 255,
+	255,   0, 100,   0,   0, 200,   0, 255,
+	255,   0,   0, 100, 200,   0,   0, 255,
+	255,   0,   0, 200, 100,   0,   0, 255,
+	255,   0, 200,   0,   0, 100,   0, 255,
+	255, 200,   0,   0,   0,   0, 100, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+};
 
+unsigned char g_BitsCopy8[11] = 
+{// 36 37 38 39 40 41 42 43 44 45 46
+	0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0xF0
+};
+	
 /**
  *
  */
@@ -181,6 +199,7 @@ void MainLoop()
 	{// 32 33 34 35 36 37 38 39 40 41 42   43 44 45 46
 		0, 0, 0, 0, 0, 0, 0, 0,	0, 1, 212, 0, 0, 0, 0xC0
 	};
+
 	u8 x = 128, y = 128;
 	i16 i, j;
 	u8 bEnd = 0/*, keyCode*/;
@@ -188,25 +207,26 @@ void MainLoop()
 	i8 page = 0;
 	u8 keyLine;
 
-	SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
-	SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
-	SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
-	SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
-	SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
-	SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
-	SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
-	SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
+	//SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
+	//SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
+	//SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
+	//SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
+	//SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
+	//SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
+	//SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
+	//SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
 
-	SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
-	
-	SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
-	
-	g_Angle = 30;
+	//SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
+	//
+	//SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
+	//
+	//g_Angle = 30;
 
 	SetTo60Hz();
 	SetScreen8();
 
-	Fill8(32, 32, 32, 32, 0xB0);
+	//Fill8(32, 32, 32, 32, 0xB0);
+	HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
 
 	VPDCommand((int)&clsScreen8);
 
@@ -260,9 +280,9 @@ void MainLoop()
 		DrawPoint8(x - 1, y,     255);
 		DrawPoint8(x,     y + 1, 255);*/
 
-		g_AngleIndex = g_Angle >> 2;
+		//g_AngleIndex = g_Angle >> 2;
 		//Update();
-		g_Angle += 4;
+		//g_Angle += 4;
 
 		for(i=0; i<10; i++) // rows
 		{
@@ -299,138 +319,138 @@ void MainLoop()
 /**
  *
  */
-void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
-{
-	ret->x = x;
-	ret->y = y;
-	ret->z = z;
-}
+//void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
+//{
+//	ret->x = x;
+//	ret->y = y;
+//	ret->z = z;
+//}
 
 /**
  *
  */
-void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
-{
-	g_Angle >>= 2; 
-	ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
-	ret->y = vec->y + pos->y;
-	ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
-}
+//void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
+//{
+//	g_Angle >>= 2; 
+//	ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
+//	ret->y = vec->y + pos->y;
+//	ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
+//}
 
 /**
  * 
  */
-void TransXZIndex(i8 i)
-{
-	g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
-	g_World[i].y = g_Local[i].y + g_Position.y;
-	g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
-}
+//void TransXZIndex(i8 i)
+//{
+//	g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
+//	g_World[i].y = g_Local[i].y + g_Position.y;
+//	g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
+//}
 
 /**
  *
  */
-void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
-{
-#if 1
-	ret->z = ((vec->z - cam->z) >> 5);
-	ret->x = 128 + (vec->x - cam->x) / ret->z;
-	ret->y = 106 + (vec->y - cam->y) / ret->z;
-#else
-	ret->z = ((vec->z - cam->z) >> 5);
-	if(ret->z > 0)
-	{
-		ret->x = 0;
-		ret->y = 0;
-	}
-	else
-	{
-		ret->x = 128 + UxU2(vec->x - cam->x, g_ProjectionX[ret->z]);
-		ret->y = 106 + UxU2(vec->y - cam->y, g_ProjectionY[ret->z]);
-	}
-#endif
-}
+//void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
+//{
+//#if 1
+//	ret->z = ((vec->z - cam->z) >> 5);
+//	ret->x = 128 + (vec->x - cam->x) / ret->z;
+//	ret->y = 106 + (vec->y - cam->y) / ret->z;
+//#else
+//	ret->z = ((vec->z - cam->z) >> 5);
+//	if(ret->z > 0)
+//	{
+//		ret->x = 0;
+//		ret->y = 0;
+//	}
+//	else
+//	{
+//		ret->x = 128 + UxU2(vec->x - cam->x, g_ProjectionX[ret->z]);
+//		ret->y = 106 + UxU2(vec->y - cam->y, g_ProjectionY[ret->z]);
+//	}
+//#endif
+//}
 
 /**
  * Update
  */
-void Update()
-{
-	i8 i;
-
-#define DRAW_LINE(sx, sy, dx, dy, clr) SX = sx; SY = sy; DX = dx; DY= dy; CLR = clr; DrawLineSimple();
-
-	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
-	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
-	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
-	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
-
-	DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
-	DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
-	DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
-	DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
-
-	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
-	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
-	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
-	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
-
-	for(i=0; i<POINT_NUM; i++)
-	{
-		// Clean
-		DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
-
-		// Transform
-		//TransXZ(&g_World[i], &g_Local[i], g_Angle, &g_Position);
-		TransXZIndex(i);
-		Project(&g_Screen[i], &g_World[i], &g_Camera);
-
-		// Draw
-		DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
-	}
-
-	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
-	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
-	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
-	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
-
-	DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
-	DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
-	DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
-	DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
-
-	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
-	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
-	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
-	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
-
-	/*ShortMat4 local2world =
-   {
-       { M2U(1),   0,        0,       0 },
-       { 0,        M2U(1),   0,       0 },
-       { 0,        0,        M2U(1),  0 },
-       { M2U(10),  M2U(10),  M2U(10), 0 },
-   };
-
-   ShortVec g_World[5];
-   loop(i, 5)
-       g_World[i] = Trans(g_Local[i], local2world);
-
-   ShortMat4 world2view =
-   {
-       { M2U(1),   0,        0,       0 },
-       { 0,        M2U(1),   0,       0 },
-       { 0,        0,        M2U(1),  0 },
-       { M2U(10),  M2U(10),  M2U(10), 0 },
-   };
-
-   ShortVec view[5];
-   loop(i, 5)
-       view[i] = Trans(g_World[i], local2world);*/
-
-   //ShortMat4 view2screen;
-   //CreateProfectionMatrix(view2screen);
-}
+//void Update()
+//{
+//	i8 i;
+//
+//#define DRAW_LINE(sx, sy, dx, dy, clr) SX = sx; SY = sy; DX = dx; DY= dy; CLR = clr; DrawLineSimple();
+//
+//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
+//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
+//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
+//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
+//
+//	DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
+//	DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
+//	DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
+//	DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
+//
+//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
+//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
+//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
+//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
+//
+//	for(i=0; i<POINT_NUM; i++)
+//	{
+//		// Clean
+//		DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
+//
+//		// Transform
+//		//TransXZ(&g_World[i], &g_Local[i], g_Angle, &g_Position);
+//		TransXZIndex(i);
+//		Project(&g_Screen[i], &g_World[i], &g_Camera);
+//
+//		// Draw
+//		DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
+//	}
+//
+//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
+//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
+//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
+//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
+//
+//	DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
+//	DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
+//	DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
+//	DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
+//
+//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
+//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
+//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
+//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
+//
+//	/*ShortMat4 local2world =
+//   {
+//       { M2U(1),   0,        0,       0 },
+//       { 0,        M2U(1),   0,       0 },
+//       { 0,        0,        M2U(1),  0 },
+//       { M2U(10),  M2U(10),  M2U(10), 0 },
+//   };
+//
+//   ShortVec g_World[5];
+//   loop(i, 5)
+//       g_World[i] = Trans(g_Local[i], local2world);
+//
+//   ShortMat4 world2view =
+//   {
+//       { M2U(1),   0,        0,       0 },
+//       { 0,        M2U(1),   0,       0 },
+//       { 0,        0,        M2U(1),  0 },
+//       { M2U(10),  M2U(10),  M2U(10), 0 },
+//   };
+//
+//   ShortVec view[5];
+//   loop(i, 5)
+//       view[i] = Trans(g_World[i], local2world);*/
+//
+//   //ShortMat4 view2screen;
+//   //CreateProfectionMatrix(view2screen);
+//}
 
 /**
  *
@@ -1007,77 +1027,135 @@ void WriteToVRAM8(i16 addr, u8 value)
 /**
  *
  */
-void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color)
+//void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color)
+//{
+//	px; py; sx; sy; color;
+//
+//	WaitForVDP();
+//
+//	
+//	_asm
+//		di
+//
+//		ld		a,4(ix) ;// px
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(36) ;// DX 7-0
+//		out		(VDP_ADDR),a
+//		
+//		xor		a ;// 0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(37)
+//		out		(VDP_ADDR),a ;// DX 8
+//
+//		ld		a,5(ix) ;// py
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(38) ;// DY 7-0
+//		out		(VDP_ADDR),a
+//		
+//		xor		a ;// 0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(39)
+//		out		(VDP_ADDR),a ;// DY 9-8
+//
+//		ld		a,6(ix) ;// sx
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(40) ;// NX 7-0
+//		out		(VDP_ADDR),a
+//		
+//		xor		a ;// 0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(41)
+//		out		(VDP_ADDR),a ;// NX 8
+//
+//		ld		a,7(ix) ;// sy
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(42) ;// NY 7-0
+//		out		(VDP_ADDR),a
+//		
+//		xor		a ;// 0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(43)
+//		out		(VDP_ADDR),a ;// NY 8
+//		
+//		ld		a,8(ix) ;// color
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(44) ;// CR
+//		out		(VDP_ADDR),a
+//
+//		xor		a ;// 0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(45)
+//		out		(VDP_ADDR),a
+//
+//		ld		a,#0xF0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(46)
+//		out		(VDP_ADDR),a
+//
+//		xor		a ;// 0
+//		out		(VDP_ADDR),a
+//		ld		a,VDP_REG(45)
+//		out		(VDP_ADDR),a
+//
+//		ei
+//	_endasm;
+//}
+
+void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
-	px; py; sx; sy; color;
+	//DX = dx;
+	//DY = dy + (page * 512);
+	//NX = nx;
+	//NY = ny;
+	//CLR = ((u8*)ram)[0];
+	//ARG = 0;
+	//CMD = 0xF0;
+	//SetupHMMC((int)&DX);
+
+	g_BitsCopy8[ 0] = dx;
+	g_BitsCopy8[ 1] = 0;
+	g_BitsCopy8[ 2] = dy;
+	g_BitsCopy8[ 3] = page;
+	g_BitsCopy8[ 4] = nx;
+	g_BitsCopy8[ 5] = 0;
+	g_BitsCopy8[ 6] = ny;
+	g_BitsCopy8[ 7] = 0;
+	g_BitsCopy8[ 8] = ((u8*)ram)[0];
+	g_BitsCopy8[ 9] = 0;
+	g_BitsCopy8[10] = 0xF0;
+	SetupHMMC((u16)&g_BitsCopy8);
+}
+
+void SetupHMMC(u16 address)
+{
+	address;
 
 	WaitForVDP();
 
-	
 	_asm
+
+		ld l,4(ix)
+		ld h,5(ix)
+
+		//; Envoi données VDP
+		ld	a,#36		//; R36 avec incrémentation
 		di
+		out	(VDP_ADDR),a
+		ld	a,VDP_REG(17)
+		out	(VDP_ADDR),a         //; Ecriture séquentielle
+		ld	c,VDP_ADDR+#2         //; Port séquentiel
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		ei                      //; "EI" anticipé
+		outi
 
-		ld		a,4(ix) ;// px
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(36) ;// DX 7-0
-		out		(VDP_ADDR),a
-		
-		xor		a ;// 0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(37)
-		out		(VDP_ADDR),a ;// DX 8
-
-		ld		a,5(ix) ;// py
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(38) ;// DY 7-0
-		out		(VDP_ADDR),a
-		
-		xor		a ;// 0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(39)
-		out		(VDP_ADDR),a ;// DY 9-8
-
-		ld		a,6(ix) ;// sx
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(40) ;// NX 7-0
-		out		(VDP_ADDR),a
-		
-		xor		a ;// 0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(41)
-		out		(VDP_ADDR),a ;// NX 8
-
-		ld		a,7(ix) ;// sy
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(42) ;// NY 7-0
-		out		(VDP_ADDR),a
-		
-		xor		a ;// 0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(43)
-		out		(VDP_ADDR),a ;// NY 8
-		
-		ld		a,8(ix) ;// color
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(44) ;// CR
-		out		(VDP_ADDR),a
-
-		xor		a ;// 0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(45)
-		out		(VDP_ADDR),a
-
-		ld		a,#0xF0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(46)
-		out		(VDP_ADDR),a
-
-		xor		a ;// 0
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(45)
-		out		(VDP_ADDR),a
-
-		ei
 	_endasm;
 }
-

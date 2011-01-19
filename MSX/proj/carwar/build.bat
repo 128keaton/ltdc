@@ -2,7 +2,8 @@
 SET PROGRAM=carwar
 
 ECHO -- SDCC Compile --
-sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 %PROGRAM%.c
+REM ## sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 %PROGRAM%.c
+sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0x8000 %PROGRAM%.c
 ECHO Compiled
 
 ECHO -- hex2bin --
