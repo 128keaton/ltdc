@@ -120,7 +120,7 @@ void SetTo50Hz();
 void SetTo60Hz();
 //void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color);
 void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
-void SetupHMMC(u16 address);
+void SetupHMMC(/*u16 address*/);
 
 //----------------------------------------
 // G L O B A L E S
@@ -173,7 +173,7 @@ void main(void)
 // 16 sprites/car (208 px)
 // 4 cars (44 px)
 
-static const u8 g_Sprite[8*8] =
+u8 g_Sprite[8*8] =
 {
 	255, 255, 255, 255, 255, 255, 255, 255, 
 	255, 100,   0,   0,   0,   0, 200, 255,
@@ -185,17 +185,12 @@ static const u8 g_Sprite[8*8] =
 	255, 255, 255, 255, 255, 255, 255, 255,
 };
 
-unsigned char g_BitsCopy8[11] = 
-{// 36 37 38 39 40 41 42 43 44 45 46
-	0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0xF0
-};
-	
 /**
  *
  */
 void MainLoop()
 {
-	unsigned char clsScreen8[15] = 
+	u8 clsScreen8[15] = 
 	{// 32 33 34 35 36 37 38 39 40 41 42   43 44 45 46
 		0, 0, 0, 0, 0, 0, 0, 0,	0, 1, 212, 0, 0, 0, 0xC0
 	};
@@ -1103,47 +1098,53 @@ void WriteToVRAM8(i16 addr, u8 value)
 
 void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
-	//DX = dx;
-	//DY = dy + (page * 512);
-	//NX = nx;
-	//NY = ny;
-	//CLR = ((u8*)ram)[0];
-	//ARG = 0;
-	//CMD = 0xF0;
-	//SetupHMMC((int)&DX);
+	page;
 
-	g_BitsCopy8[ 0] = dx;
-	g_BitsCopy8[ 1] = 0;
-	g_BitsCopy8[ 2] = dy;
-	g_BitsCopy8[ 3] = page;
-	g_BitsCopy8[ 4] = nx;
-	g_BitsCopy8[ 5] = 0;
-	g_BitsCopy8[ 6] = ny;
-	g_BitsCopy8[ 7] = 0;
-	g_BitsCopy8[ 8] = ((u8*)ram)[0];
-	g_BitsCopy8[ 9] = 0;
-	g_BitsCopy8[10] = 0xF0;
-	SetupHMMC((u16)&g_BitsCopy8);
+	DX = dx;
+	DY = dy /*+ (page * 512)*/;
+	NX = nx;
+	NY = ny;
+	CLR = ((u8*)ram)[0];
+	ARG = 0;
+	CMD = 0xF0;
+	SetupHMMC(/*(int)&DX*/);
+
+	//u8 bitsCopy8[11] = 
+	//{// 36 37 38 39 40 41 42 43 44 45 46
+	//	0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0xF0
+	//};
+	//bitsCopy8[ 0] = dx;
+	//bitsCopy8[ 1] = 0;
+	//bitsCopy8[ 2] = dy;
+	//bitsCopy8[ 3] = page;
+	//bitsCopy8[ 4] = nx;
+	//bitsCopy8[ 5] = 0;
+	//bitsCopy8[ 6] = ny;
+	//bitsCopy8[ 7] = 0;
+	//bitsCopy8[ 8] = ((u8*)ram)[0];
+	//bitsCopy8[ 9] = 0;
+	//bitsCopy8[10] = 0xF0;
+	//SetupHMMC((u16)&bitsCopy8);
 }
 
-void SetupHMMC(u16 address)
+void SetupHMMC(/*u16 address*/)
 {
-	address;
+	//address;
 
 	WaitForVDP();
 
 	_asm
 
-		ld l,4(ix)
-		ld h,5(ix)
-
-		//; Envoi données VDP
-		ld	a,#36		//; R36 avec incrémentation
+		;//ld l,4(ix)
+		;//ld h,5(ix)
+		ld hl,(_DX)
+		;// Envoi données VDP
+		ld	a,#36		;// R36 avec incrémentation
 		di
 		out	(VDP_ADDR),a
 		ld	a,VDP_REG(17)
-		out	(VDP_ADDR),a         //; Ecriture séquentielle
-		ld	c,VDP_ADDR+#2         //; Port séquentiel
+		out	(VDP_ADDR),a         ;// Ecriture séquentielle
+		ld	c,VDP_ADDR+#2         ;// Port séquentiel
 		outi
 		outi
 		outi
@@ -1154,7 +1155,7 @@ void SetupHMMC(u16 address)
 		outi
 		outi
 		outi
-		ei                      //; "EI" anticipé
+		ei                      ;// "EI" anticipé
 		outi
 
 	_endasm;
