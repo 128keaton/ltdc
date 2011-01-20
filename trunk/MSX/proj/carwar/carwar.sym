@@ -62,11 +62,17 @@
 01:4479 _HMMC
 01:4479 _HMMC_start
 01:4479 _WriteToVRAM8_end
-01:44DC _HMMC_end
-01:44DC _SetupHMMC
-01:44DC _SetupHMMC_start
-01:4505 _SetupHMMC_end
-01:4505 __initrleblock
+01:4562 _HMMC_end
+01:4562 _SetupHMMC
+01:4562 _SetupHMMC_start
+01:4598 _SetupHMMC_end
+01:4598 __initrleblock
+01:45BF __muluchar_rrx_s
+01:45D2 __mulschar_rrx_s
+01:45D9 __mulschar_rrx_hds
+01:45E5 __mulint_rrx_s
+01:45F1 __mulint_rrx_hds
+01:45F1 __muluchar_rrx_hds
 ; Area: _DATA
 00:8000 _SX
 00:8002 _SY

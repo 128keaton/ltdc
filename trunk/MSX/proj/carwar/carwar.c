@@ -80,7 +80,6 @@ typedef struct { i16 x, y, z; } ShortVec;
 //typedef ShortMat3 ShortVec[3];
 //typedef ShortMat4 ShortVec[4];
 
-/*
 typedef struct
 {
 	u16 SX;  // 32-33
@@ -92,7 +91,7 @@ typedef struct
 	u8  CLR; // 44
 	u8  ARG; // 45
 	u8  CMD; // 46
-} VdpBuffer;*/
+} VdpBuffer;
 
 //----------------------------------------
 // P R O T O T Y P E S
@@ -120,7 +119,7 @@ void SetTo50Hz();
 void SetTo60Hz();
 //void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color);
 void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
-void SetupHMMC(/*u16 address*/);
+void SetupHMMC(u16 address);
 
 //----------------------------------------
 // G L O B A L E S
@@ -175,14 +174,14 @@ void main(void)
 
 u8 g_Sprite[8*8] =
 {
-	255, 255, 255, 255, 255, 255, 255, 255, 
-	255, 100,   0,   0,   0,   0, 200, 255,
-	255,   0, 100,   0,   0, 200,   0, 255,
-	255,   0,   0, 100, 200,   0,   0, 255,
-	255,   0,   0, 200, 100,   0,   0, 255,
-	255,   0, 200,   0,   0, 100,   0, 255,
-	255, 200,   0,   0,   0,   0, 100, 255,
-	255, 255, 255, 255, 255, 255, 255, 255,
+	254, 254, 254, 254, 254, 254, 254, 254, 
+	254, 100,   0,   0,   0,   0, 200, 254,
+	254,   0, 100,   0,   0, 200,   0, 254,
+	254,   0,   0, 100, 200,   0,   0, 254,
+	254,   0,   0, 200, 100,   0,   0, 254,
+	254,   0, 200,   0,   0, 100,   0, 254,
+	254, 200,   0,   0,   0,   0, 100, 254,
+	254, 254, 254, 254, 254, 254, 254, 254,
 };
 
 /**
@@ -1098,46 +1097,85 @@ void WriteToVRAM8(i16 addr, u8 value)
 
 void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
+	VdpBuffer buffer;
+	i16 i;
+
 	page;
 
-	DX = dx;
-	DY = dy /*+ (page * 512)*/;
-	NX = nx;
-	NY = ny;
-	CLR = ((u8*)ram)[0];
-	ARG = 0;
-	CMD = 0xF0;
-	SetupHMMC(/*(int)&DX*/);
+	buffer.DX = dx;
+	buffer.DY = dy /*+ (page * 512)*/;
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = 252;//((u8*)ram)[0];
+	buffer.ARG = 0;
+	buffer.CMD = 0xF0;
+	SetupHMMC((u16)&buffer.DX);
+	_asm
 
-	//u8 bitsCopy8[11] = 
-	//{// 36 37 38 39 40 41 42 43 44 45 46
-	//	0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0xF0
-	//};
-	//bitsCopy8[ 0] = dx;
-	//bitsCopy8[ 1] = 0;
-	//bitsCopy8[ 2] = dy;
-	//bitsCopy8[ 3] = page;
-	//bitsCopy8[ 4] = nx;
-	//bitsCopy8[ 5] = 0;
-	//bitsCopy8[ 6] = ny;
-	//bitsCopy8[ 7] = 0;
-	//bitsCopy8[ 8] = ((u8*)ram)[0];
-	//bitsCopy8[ 9] = 0;
-	//bitsCopy8[10] = 0xF0;
-	//SetupHMMC((u16)&bitsCopy8);
+		di
+
+	SEND_NEXT_COLOR:
+
+		;// 3 - envoyer l'octet suivant à mettre en VRAM dans le registre 45 (le premier octet a été traité à l'étape 1) par un OUT du Z80
+		;// Send next color
+		ld		a,#252
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(45)
+		out		(VDP_ADDR),a
+
+		;// 4 - lire le registre d'état 2 (status)
+		;// Get status ragister #2
+		ld		a,#2
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(15)
+		out		(VDP_ADDR),a
+
+	WAIT_COLOR_COPY:	
+
+		nop
+		;// 5 - lire le registre d'état du bit CE, si celui-ci est à 0, alors l'instruction est terminée, sinon on passe à l'étape 6
+		in		a,(VDP_ADDR)
+		rra
+		jr		nc,COLOR_COPY_END
+
+
+		ei
+
+	COLOR_COPY_END:
+
+	_endasm;
+
+
+	//_asm
+	//	di
+	//_endasm;
+	//for(i=0; i<(nx*ny)-1; i++)
+	//{
+	//	WaitForVDP();
+	//	_asm
+
+	//		xor		a ;// 0
+	//		out		(VDP_ADDR),a
+	//		ld		a,VDP_REG(45)
+	//		out		(VDP_ADDR),a
+	//	
+	//	_endasm;
+	//}
+	//_asm
+	//	ei
+	//_endasm;
 }
 
-void SetupHMMC(/*u16 address*/)
+void SetupHMMC(u16 address)
 {
-	//address;
+	address;
 
 	WaitForVDP();
 
 	_asm
 
-		;//ld l,4(ix)
-		;//ld h,5(ix)
-		ld hl,(_DX)
+		ld l,4(ix)
+		ld h,5(ix)
 		;// Envoi données VDP
 		ld	a,#36		;// R36 avec incrémentation
 		di
