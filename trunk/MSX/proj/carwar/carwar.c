@@ -125,15 +125,32 @@ void SetupHMMC(u16 address);
 // G L O B A L E S
 
 // VDP command buffer
-u16 SX;  // 32-33
-u16 SY;  // 34-35
-u16 DX;  // 36-37
-u16 DY;  // 38-39
-u16 NX;  // 40-41
-u16 NY;  // 42-43
-u8  CLR; // 44
-u8  ARG; // 45
-u8  CMD; // 46
+u16 SX = 0;  // 32-33
+u16 SY = 0;  // 34-35
+u16 DX = 0;  // 36-37
+u16 DY = 0;  // 38-39
+u16 NX = 0;  // 40-41
+u16 NY = 0;  // 42-43
+u8  CLR = 0; // 44
+u8  ARG = 0; // 45
+u8  CMD = 0; // 46
+
+// Sprites
+// SX : 13
+// SY : 11
+// 16 sprites/car (208 px)
+// 4 cars (44 px)
+const u8 g_Sprite[8*8] =
+{
+	  1,   2,   3,   4,   5,   6,   7,   8, 
+	254, 100,   0,   0,   0,   0, 200, 254,
+	254,   0, 100,   0,   0, 200,   0, 254,
+	254,   0,   0, 100, 200,   0,   0, 254,
+	254,   0,   0, 200, 100,   0,   0, 254,
+	254,   0, 200,   0,   0, 100,   0, 254,
+	254, 200,   0,   0,   0,   0, 100, 254,
+	254, 254, 254, 254, 254, 254, 254, 254,
+};
 
 //ShortVec g_Camera;
 //ShortVec g_Position;
@@ -166,23 +183,6 @@ void main(void)
 
 //#include "trigo.inc"
 //#include "proj.inc"
-// Sprites
-// SX : 13
-// SY : 11
-// 16 sprites/car (208 px)
-// 4 cars (44 px)
-
-u8 g_Sprite[8*8] =
-{
-	254, 254, 254, 254, 254, 254, 254, 254, 
-	254, 100,   0,   0,   0,   0, 200, 254,
-	254,   0, 100,   0,   0, 200,   0, 254,
-	254,   0,   0, 100, 200,   0,   0, 254,
-	254,   0,   0, 200, 100,   0,   0, 254,
-	254,   0, 200,   0,   0, 100,   0, 254,
-	254, 200,   0,   0,   0,   0, 100, 254,
-	254, 254, 254, 254, 254, 254, 254, 254,
-};
 
 /**
  *
@@ -1105,19 +1105,24 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 	buffer.DY = dy /*+ (page * 512)*/;
 	buffer.NX = nx;
 	buffer.NY = ny;
-	buffer.CLR = 252;//((u8*)ram)[0];
+	buffer.CLR = ((u8*)ram)[0];
 	buffer.ARG = 0;
 	buffer.CMD = 0xF0;
 	SetupHMMC((u16)&buffer.DX);
 	_asm
 
+		ld l,9(ix)
+		ld h,10(ix)
+
 		di
 
 	SEND_NEXT_COLOR:
 
+		inc		hl
+
 		;// 3 - envoyer l'octet suivant à mettre en VRAM dans le registre 45 (le premier octet a été traité à l'étape 1) par un OUT du Z80
 		;// Send next color
-		ld		a,#252
+		ld		a,(hl)
 		out		(VDP_ADDR),a
 		ld		a,VDP_REG(44)
 		out		(VDP_ADDR),a
@@ -1146,6 +1151,12 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 		jp		SEND_NEXT_COLOR
 
 	COLOR_COPY_END:
+
+		;// Clean status ragister #2
+		xor		a
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(15)
+		out		(VDP_ADDR),a
 
 		ei
 

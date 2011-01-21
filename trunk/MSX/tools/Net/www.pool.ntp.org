@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>pool.ntp.org: the internet cluster of ntp servers</title>
+
+<link rel="shortcut icon" href="http://st.pimg.net/ntppool/images/favicon.v717cb32.ico" type="image/x-icon" />
+
+		<link rel="stylesheet" type="text/css" href="http://st.pimg.net/ntppool/css/reset-fonts-grids.va21e2c4.css">
+		<link rel="stylesheet" href="http://st.pimg.net/ntppool/css/master.v949b8a2.css" type="text/css" media="screen" charset="utf-8" />
+		<link rel="stylesheet" href="http://st.pimg.net/ntppool/css/content.v809d37b.css" type="text/css" media="screen" charset="utf-8" />
+		<link rel="icon" href="http://st.pimg.net/ntppool/images/favicon.v717cb32.ico" type="image/x-icon" />
+
+</head>
+<body>
+	
+	
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+		<h1>pool.ntp.org</h1>
+		
+	</div>
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+				<ul id="nav">
+	<li class="join"><a href="/en/join.html">join the pool</a></li>
+	<li class="use"><a href="/en/use.html">use the pool</a></li>
+	<li class="manage"><a href="/manage">manage servers</a></li>
+</ul>
+
+				<br class="clearboth"/>
+				
+<h1 id="tagline">pool.ntp.org: public ntp time server for everyone</h1>
+
+<div class="block">
+	<h3>Introduction</h3>
+		<div id="activity">
+			<h3>Active Servers</h3>
+			<ul id="servers">
+				
+				<li class="area">
+					<span class="location africa ">
+					<a href="/zone/africa">Africa</a>
+					</span>&nbsp;12
+				</li>
+				
+				<li class="area">
+					<span class="location asia ">
+					<a href="/zone/asia">Asia</a>
+					</span>&nbsp;137
+				</li>
+				
+				<li class="area">
+					<span class="location europe ">
+					<a href="/zone/europe">Europe</a>
+					</span>&nbsp;1381
+				</li>
+				
+				<li class="area">
+					<span class="location north-america ">
+					<a href="/zone/north-america">North America</a>
+					</span>&nbsp;601
+				</li>
+				
+				<li class="area">
+					<span class="location oceania ">
+					<a href="/zone/oceania">Oceania</a>
+					</span>&nbsp;78
+				</li>
+				
+				<li class="area">
+					<span class="location south-america ">
+					<a href="/zone/south-america">South America</a>
+					</span>&nbsp;27
+				</li>
+				
+				<li class="area">
+					<span class="location @ global"><b>
+					<a href="/zone/@">Global</a>
+					</b></span>&nbsp;2011
+				</li>
+				
+				<li class="area">
+					<span class="location . global">
+					<a href="/zone/.">All Pool Servers</a>
+					</span>&nbsp;2104
+				</li>
+				
+			</ul>
+			<span class="date">As of 2011-01-21</span>
+		</div>
+
+        	<p>
+	The pool.ntp.org project is a big virtual cluster of timeservers
+	providing reliable <a href="use.html">easy to use</a> NTP service
+        for millions of	clients.
+	</p>
+	<p>
+	The pool is being used by millions or tens of millions of
+	systems around the world.  It's the default "time server" for
+	most of the major Linux distributions and many networked appliances
+	(see <a href="vendors.html">information for vendors</a>).
+	</p>
+        <p>
+        Because of the large number of users we are in need of more
+        servers.  If you have a server with a static IP address always
+        available on the internet, please considering <a href="join.html">
+        adding it to the system</a>.
+        </p>
+	<p>
+	The project is maintained and developed
+	by <a href="http://www.askbjoernhansen.com/">Ask Bj&oslash;rn
+	Hansen</a> and a great group of contributors on
+	the <a href="/mailinglists.html">mailing lists</a>. The code
+	is <a href="http://github.com/abh/ntppool">available</a>.
+        </p>
+
+        <p>
+        Hosting and bandwidth for the "hub" servers are currently
+        provided by <a href="http://develooper.com/">Develooper</a>,
+        <a href="http://www.phyber.com/">Phyber Communications</a> and
+        <a href="http://www.yellowbot.com">YellowBot</a>.
+	</p>
+
+
+	<a href="#top" class="up">go up</a>
+
+</div>
+
+<div class="block">
+	<a name="news"></a>
+        <h3>News</h3>
+        <p>
+
+<a href="http://news.ntppool.org/atom.xml" rel="alternate" type="application/rss+xml"><img width="16" height="16" src="http://st.pimg.net/ntppool/images/feed-icon16x16.vafa1ff4.png" alt="Atom feed" style="vertical-align:middle;border:0"/></a>&nbsp;<a href="http://news.ntppool.org/atom.xml" rel="alternate" type="application/rss+xml">Subscribe in a reader
+</a>
+
+<a href="http://feed.news.ntppool.org/ntppool">
+  <img src="http://feeds2.feedburner.com/~fc/ntppool?bg=FFFFFF&amp;fg=444444&amp;anim=0"
+       height="26" width="88" style="border:0" alt="" />
+</a>
+
+<br/>
+
+<a href="http://www.feedburner.com/fb/a/emailverifySubmit?feedId=1216706&amp;loc=en_US">Subscribe to NTP Pool News by Email</a>
+
+
+</p>
+
+	<ul id="news">
+
+        <li>
+<div id="entry-2726" class="entry-asset asset hentry">
+	<div class="date">September 30, 2010</div>
+        <h4 class="asset-name entry-title"><a href="http://news.ntppool.org/2010/09/brief-outage.html" rel="bookmark">Brief outage</a></h4>
+
+	<div class="asset-content entry-content">
+		
+	        	<div class="asset-body">
+	            		<p>The pool servers are having a 45 minute outage to be moved to a new datacenter. </p>
+
+	        	</div>
+		
+
+		
+
+    	</div>
+</div>
+
+<a class="permalink" href="http://news.ntppool.org/2010/09/brief-outage.html" rel="bookmark">Permalink</a>
+<span class="separator">|</span> <a href="http://news.ntppool.org/2010/09/brief-outage.html#comments">No Comments</a>
+</li>
+
+
+
+<li>
+<div id="entry-2722" class="entry-asset asset hentry">
+	<div class="date">September 26, 2010</div>
+        <h4 class="asset-name entry-title"><a href="http://news.ntppool.org/2010/09/brief-outage-today.html" rel="bookmark">Brief outage today</a></h4>
+
+	<div class="asset-content entry-content">
+		
+	        	<div class="asset-body">
+	            		<p>The primary server in the pool system had a brief outage today after running out of memory.   All is better now.  Because of the distributed nature of the service itself, serving of time to ntp users around the world wasn't materially affected.</p>
+
+	        	</div>
+		
+
+		
+
+    	</div>
+</div>
+
+<a class="permalink" href="http://news.ntppool.org/2010/09/brief-outage-today.html" rel="bookmark">Permalink</a>
+<span class="separator">|</span> <a href="http://news.ntppool.org/2010/09/brief-outage-today.html#comments">No Comments</a>
+</li>
+
+
+
+<li>
+<div id="entry-2636" class="entry-asset asset hentry">
+	<div class="date">May  9, 2010</div>
+        <h4 class="asset-name entry-title"><a href="http://news.ntppool.org/2010/05/mailing-lists-are-moving.html" rel="bookmark">Mailing lists are moving</a></h4>
+
+	<div class="asset-content entry-content">
+		
+	        	<div class="asset-body">
+	            		<p>Adrian von Bidder has generously hosted and maintained the mailing lists since he started the project 7 years ago and it's time for the lists to move.   In the next few days the lists will move from <a href="http://fortytwo.ch/">fortytwo.ch</a> to <a href="http://lists.ntp.org/">lists.ntp.org</a>.</p>
+
+<p>The 'timekeepers', 'i18n' and 'dev' lists will be moved over; but the announcements list will be discontinued since de-facto the <a href="http://news.ntppool.org/">news.ntppool.org</a> site is where the announcements are.  You can subscribe either with the Atom feed or via Feedburner's email feature at <a href="http://www.pool.ntp.org/mailinglists.html">the mailing list page</a>.</p>
+
+	        	</div>
+		
+
+		
+
+    	</div>
+</div>
+
+<a class="permalink" href="http://news.ntppool.org/2010/05/mailing-lists-are-moving.html" rel="bookmark">Permalink</a>
+<span class="separator">|</span> <a href="http://news.ntppool.org/2010/05/mailing-lists-are-moving.html#comments">No Comments</a>
+</li>
+
+
+
+<li>
+<div id="entry-2610" class="entry-asset asset hentry">
+	<div class="date">April 25, 2010</div>
+        <h4 class="asset-name entry-title"><a href="http://news.ntppool.org/2010/04/routing-trouble-at-the-ntp-poo.html" rel="bookmark">Routing trouble at the NTP Pool monitoring server</a></h4>
+
+	<div class="asset-content entry-content">
+		
+	        	<div class="asset-body">
+	            		<p>Since Saturday morning the NTP Pool server have had trouble routing to some servers in the pool system (about 5%).   This was too few to trigger the "help help, something's wrong!" alerts; so thanks to those of you who sent in tickets!</p>
+
+<p>I opened a support with our provider and hopefully the issue will be resolved shortly.</p>
+
+<p>The monitoring server is on the same network as www.pool.ntp.org (in AS 7012) if you have trouble and want to check traceroutes or BGP information from your end.</p>
+
+<p>Due to the distributed nature of the pool system, time serving for clients should not be affected.</p>
+
+<p><em>Update</em> - One of the "upstream" providers were dropping a seemingly random group of networks. Phyber took down the BGP session to them until it's sorted and all is well again as of around 5pm pacific time.</p>
+
+	        	</div>
+		
+
+		
+
+    	</div>
+</div>
+
+<a class="permalink" href="http://news.ntppool.org/2010/04/routing-trouble-at-the-ntp-poo.html" rel="bookmark">Permalink</a>
+<span class="separator">|</span> <a href="http://news.ntppool.org/2010/04/routing-trouble-at-the-ntp-poo.html#comments">No Comments</a>
+</li>
+
+
+
+<li>
+<div id="entry-2501" class="entry-asset asset hentry">
+	<div class="date">November 13, 2009</div>
+        <h4 class="asset-name entry-title"><a href="http://news.ntppool.org/2009/11/wwwpoolntporg-is-ipv6-enabled.html" rel="bookmark">www.pool.ntp.org is ipv6 enabled</a></h4>
+
+	<div class="asset-content entry-content">
+		
+	        	<div class="asset-body">
+	            		<p>If you are IPv6 connected, the www.pool.ntp.org site will now be delivered to you via IPv6. </p>
+
+<p>I did tests on a hundred thousand visitors to the site and nobody who could connect with IPv4 had trouble talking to a site with both "AAAA" and "A" records.  The test only included users with javascript however, so it could still miss appliances, older boxes etc.  More tests are needed to make the pool.ntp.org service "ipv6 enabled".</p>
+	        	</div>
+		
+
+		
+
+    	</div>
+</div>
+
+<a class="permalink" href="http://news.ntppool.org/2009/11/wwwpoolntporg-is-ipv6-enabled.html" rel="bookmark">Permalink</a>
+<span class="separator">|</span> <a href="http://news.ntppool.org/2009/11/wwwpoolntporg-is-ipv6-enabled.html#comments">No Comments</a>
+</li>
+
+
+
+
+		<li class="last">
+			<a href="http://news.ntppool.org/archives.html">Older news...</a>
+		</li>
+	</ul>
+</div>
+
+<div class="block">
+	<a name="links"></a>
+	<h3>Links</h3>
+	<ul>
+	<li>
+	<a href="http://www.ntp.org">NTP home</a> - <i>the</i> website about ntp
+	</li>
+
+	<li><a href="http://www.meinberg.de/english/">Meinberg</a>, makers of incredibly fine 
+	<a href="http://www.meinberg.de/english/products/ntp-time-server.htm">time server</a> systems.
+	</li>
+
+	<li>
+	The <a
+	href="http://groups.google.com/groups?threadm=3E2DBFF7.F9A51614%40udel.edu"
+	>Public servers abuse</a> and the <a
+	href="http://groups.google.com/groups?threadm=cpaznpnzrb1.fsf%40cabernet.nelson.monkey.org"
+	>Fixing the NTP server abuse problem</a> threads on the <a
+	href="news:comp.protocols.time.ntp"
+	>comp.protocols.time.ntp</a> newsgroup have caused this project to be started.
+	</li>
+	<li>
+	Federico Sevilla III also has a <a href="http://archives.free.net.ph/list/timekeepers.en.html">mailing
+	list archive</a> of the timekeepers list - this one is searchable.
+	</li>
+	</ul>
+	<a href="#top" class="up">go up</a>
+</div>
+
+
+
+
+			</div>
+		</div>
+		<div id="sidebar" class="yui-b">
+			<h1><a href="/">pool.ntp.org</a></h1>
+                        			<div id="quickstart" class="mod">
+				<ol>
+				<li><a href="/en/#news">News</a></li>
+				<li><a href="/en/use.html">How do I <i>use</i> pool.ntp.org?</a></li>
+				<li><a href="/en/join.html">How do I <i>join</i> pool.ntp.org?</a></li>
+				<li><a href="/en/vendors.html">Information for vendors</a></li>
+				<li><a href="/en/mailinglists.html">The mailing lists</a></li>
+				<li><a href="/en/#links">Additional links</a></li>
+				</ol>
+			</div>
+
+			<h3>Translations</h3>
+			<ul id="translations" class="mod">
+                                 
+                                   
+                                  
+                                  <li><a href="/en/">English</a></li>
+                                 
+                                  
+                                  <li><a href="/fr/">Français</a></li>
+                                 
+                                  
+                                  <li><a href="/ko/">한국어</a></li>
+                                 
+                                  
+                                  <li><a href="/nl/">Nederlands</a></li>
+                                 
+                                   
+                                  
+                                  <li><a href="/ru/">русский</a></li>
+                                
+                                <br>  
+                                (<a href="/en/translators.html">Can you translate?</a>)
+
+				<!--
+				<li><a href="http://ntp.rondom.org/" title="dutch">nederlands</a></li>
+				<li><a href="http://ntp.robertkehl.de/" title="german">deutsch</a></li> 
+				<li><a href="http://pool.ntp.bitic.net/" title="spanish">espaÃ±ol</a></li>
+				<li><a href="http://ntp.vuntz.net/" title="french">franÃ§ais</a></li>
+				-->
+			</ul>
+
+
+		</div>
+	</div>
+	<div id="ft">
+		Comments and questions to <a href="http://www.askbjoernhansen.com/">Ask Bj&oslash;rn Hansen</a> &#8212;
+		<a href="mailto:ask@develooper.com">ask@develooper.com</a>
+	</div>
+</div>	
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">_uacct = "UA-52057-3";urchinTracker();</script>
+
+
+    <!-- ipv6 testing -->
+<script type="text/javascript" src="http://ipv64.v6test.develooper.com/js/v1/v6test.js"></script>
+
+<script type="text/javascript">
+   // v6.target = '';
+   if (!v6.target) { v6.only_once = true }
+   v6.site = 'EED5EB02-235D-11DF-8ACC-F064064DD970';
+   v6.api_server = 'http://ipv64.v6test.develooper.com';
+   try {
+     v6.test();
+   } catch(err) {}
+</script>
+    </script>
+
+
+</body>
+</html>
+
+
+
+

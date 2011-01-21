@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-; This file was generated Fri Jan 21 00:43:56 2011
+; This file was generated Fri Jan 21 16:08:33 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -10,7 +10,6 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
-	.globl _g_Sprite
 	.globl _CMD
 	.globl _ARG
 	.globl _CLR
@@ -20,6 +19,7 @@
 	.globl _DX
 	.globl _SY
 	.globl _SX
+	.globl _g_Sprite
 	.globl _MainLoop
 	.globl _SetScreen8
 	.globl _SetPage8
@@ -64,8 +64,6 @@ _ARG::
 	.ds 1
 _CMD::
 	.ds 1
-_g_Sprite::
-	.ds 64
 ;--------------------------------------------------------
 ; overlayable items in  ram 
 ;--------------------------------------------------------
@@ -80,21 +78,48 @@ _g_Sprite::
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;carwar.c:175: u8 g_Sprite[8*8] =
-;	genArrayInit
-; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-	ld	hl,#_g_Sprite
-	call	__initrleblock
-	.db	#-9,#0xFE
-	.db	46
-	.db	0x64, 0x00, 0x00, 0x00, 0x00, 0xC8, 0xFE, 0xFE
-	.db	0x00, 0x64, 0x00, 0x00, 0xC8, 0x00, 0xFE, 0xFE
-	.db	0x00, 0x00, 0x64, 0xC8, 0x00, 0x00, 0xFE, 0xFE
-	.db	0x00, 0x00, 0xC8, 0x64, 0x00, 0x00, 0xFE, 0xFE
-	.db	0x00, 0xC8, 0x00, 0x00, 0x64, 0x00, 0xFE, 0xFE
-	.db	0xC8, 0x00, 0x00, 0x00, 0x00, 0x64
-	.db	#-9,#0xFE
-	.db	0
+;carwar.c:128: u16 SX = 0;  // 32-33
+;	genAssign
+	ld	iy,#_SX
+	ld	0(iy),#0x00
+	ld	1(iy),#0x00
+;carwar.c:129: u16 SY = 0;  // 34-35
+;	genAssign
+	ld	iy,#_SY
+	ld	0(iy),#0x00
+	ld	1(iy),#0x00
+;carwar.c:130: u16 DX = 0;  // 36-37
+;	genAssign
+	ld	iy,#_DX
+	ld	0(iy),#0x00
+	ld	1(iy),#0x00
+;carwar.c:131: u16 DY = 0;  // 38-39
+;	genAssign
+	ld	iy,#_DY
+	ld	0(iy),#0x00
+	ld	1(iy),#0x00
+;carwar.c:132: u16 NX = 0;  // 40-41
+;	genAssign
+	ld	iy,#_NX
+	ld	0(iy),#0x00
+	ld	1(iy),#0x00
+;carwar.c:133: u16 NY = 0;  // 42-43
+;	genAssign
+	ld	iy,#_NY
+	ld	0(iy),#0x00
+	ld	1(iy),#0x00
+;carwar.c:134: u8  CLR = 0; // 44
+;	genAssign
+	ld	iy,#_CLR
+	ld	0(iy),#0x00
+;carwar.c:135: u8  ARG = 0; // 45
+;	genAssign
+	ld	iy,#_ARG
+	ld	0(iy),#0x00
+;carwar.c:136: u8  CMD = 0; // 46
+;	genAssign
+	ld	iy,#_CMD
+	ld	0(iy),#0x00
 ;--------------------------------------------------------
 ; Home
 ;--------------------------------------------------------
@@ -104,7 +129,7 @@ _g_Sprite::
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;carwar.c:154: void main(void)
+;carwar.c:171: void main(void)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -112,14 +137,14 @@ _g_Sprite::
 ; ---------------------------------
 _main_start::
 _main:
-;carwar.c:160: _endasm;
+;carwar.c:177: _endasm;
 ;	genInline
 	
 		 di
 		 ld sp, (#0xFC4A)
 		 ei
 		
-;carwar.c:162: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+;carwar.c:179: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 ;	genAnd
 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
 	in	a,(_g_slotPort)
@@ -138,13 +163,78 @@ _main:
 	ld	a,c
 	or	a,b
 	out	(_g_slotPort),a
-;carwar.c:164: MainLoop();
+;carwar.c:181: MainLoop();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 ;	genLabel
 ;	genEndFunction
 	jp	_MainLoop
 _main_end::
+_g_Sprite:
+	.db #0x01
+	.db #0x02
+	.db #0x03
+	.db #0x04
+	.db #0x05
+	.db #0x06
+	.db #0x07
+	.db #0x08
+	.db #0xFE
+	.db #0x64
+	.db #0x00
+	.db #0x00
+	.db #0x00
+	.db #0x00
+	.db #0xC8
+	.db #0xFE
+	.db #0xFE
+	.db #0x00
+	.db #0x64
+	.db #0x00
+	.db #0x00
+	.db #0xC8
+	.db #0x00
+	.db #0xFE
+	.db #0xFE
+	.db #0x00
+	.db #0x00
+	.db #0x64
+	.db #0xC8
+	.db #0x00
+	.db #0x00
+	.db #0xFE
+	.db #0xFE
+	.db #0x00
+	.db #0x00
+	.db #0xC8
+	.db #0x64
+	.db #0x00
+	.db #0x00
+	.db #0xFE
+	.db #0xFE
+	.db #0x00
+	.db #0xC8
+	.db #0x00
+	.db #0x00
+	.db #0x64
+	.db #0x00
+	.db #0xFE
+	.db #0xFE
+	.db #0xC8
+	.db #0x00
+	.db #0x00
+	.db #0x00
+	.db #0x00
+	.db #0x64
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
 ;carwar.c:190: void MainLoop()
 ;	genLabel
 ;	genFunction
@@ -1392,19 +1482,28 @@ _HMMC:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1108: buffer.CLR = 252;//((u8*)ram)[0];
+;carwar.c:1108: buffer.CLR = ((u8*)ram)[0];
 ;	genPlus
+;	AOP_STK for _HMMC_sloc1_1_0
 ;	genPlusIncr
 	ld	a,c
 	add	a,#0x0C
-	ld	e,a
+	ld	-19(ix),a
 	ld	a,b
 	adc	a,#0x00
-	ld	d,a
+	ld	-18(ix),a
+;	genCast
+;	AOP_STK for 
+	ld	e,9(ix)
+	ld	d,10(ix)
+;	genPointerGet
+	ld	a,(de)
 ;	genAssign (pointer)
+;	AOP_STK for _HMMC_sloc1_1_0
 ;	isBitvar = 0
-	ld	a,#0xFC
-	ld	(de),a
+	ld	l,-19(ix)
+	ld	h,-18(ix)
+	ld	(hl),a
 ;carwar.c:1109: buffer.ARG = 0;
 ;	genPlus
 ;	genPlusIncr
@@ -1443,17 +1542,22 @@ _HMMC:
 ;	genCall
 	call	_SetupHMMC
 	pop	af
-;carwar.c:1152: _endasm;
+;carwar.c:1163: _endasm;
 ;	genInline
 	
+	
+		 ld l,9(ix)
+		 ld h,10(ix)
 	
 		 di
 	
 	 SEND_NEXT_COLOR:
 	
+		 inc hl
+	
 		 ;
 		 ;
-		 ld a,#252
+		 ld a,(hl)
 		 out (#0x99),a
 		 ld a,#(0x80+44)
 		 out (#0x99),a
@@ -1483,6 +1587,12 @@ _HMMC:
 	
 	 COLOR_COPY_END:
 	
+		 ;
+		 xor a
+		 out (#0x99),a
+		 ld a,#(0x80+15)
+		 out (#0x99),a
+	
 		 ei
 	
 		
@@ -1492,7 +1602,7 @@ _HMMC:
 	pop	ix
 	ret
 _HMMC_end::
-;carwar.c:1175: void SetupHMMC(u16 address)
+;carwar.c:1186: void SetupHMMC(u16 address)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -1503,11 +1613,11 @@ _SetupHMMC:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1179: WaitForVDP();
+;carwar.c:1190: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:1205: _endasm;
+;carwar.c:1216: _endasm;
 ;	genInline
 	
 	
