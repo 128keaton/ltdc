@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-; This file was generated Thu Jan 20 13:42:12 2011
+; This file was generated Fri Jan 21 00:43:56 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -191,30 +191,7 @@ _MainLoop:
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_SetScreen8
-;carwar.c:223: HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
-;	genCast
-	ld	e,#<_g_Sprite
-	ld	d,#>_g_Sprite
-;	genIpush
-; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-	push	de
-;	genIpush
-	ld	hl,#0x0808
-	push	hl
-;	genIpush
-	ld	hl,#0x6464
-	push	hl
-;	genIpush
-	ld	a,#0x00
-	push	af
-	inc	sp
-;	genCall
-	call	_HMMC
-	pop	af
-	pop	af
-	pop	af
-	inc	sp
-;carwar.c:225: VPDCommand((int)&clsScreen8);
+;carwar.c:224: VPDCommand((int)&clsScreen8);
 ;	genAddrOf
 	ld	hl,#0x0008
 	add	hl,sp
@@ -227,10 +204,10 @@ _MainLoop:
 ;	genCall
 	call	_VPDCommand
 	pop	af
-;carwar.c:227: while(bEnd == 0)
+;carwar.c:226: while(bEnd == 0)
 ;	genLabel
 00115$:
-;carwar.c:237: addr = x + (y << 8);
+;carwar.c:236: addr = x + (y << 8);
 ;	genCast
 ;	AOP_STK for _MainLoop_x_1_1
 	ld	e,-16(ix)
@@ -250,7 +227,7 @@ _MainLoop:
 	ld	c,a
 ;	genAssign
 ;	(registers are the same)
-;carwar.c:238: WriteToVRAM8(addr, 0x0F);
+;carwar.c:237: WriteToVRAM8(addr, 0x0F);
 ;	genIpush
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	ld	a,#0x0F
@@ -262,6 +239,29 @@ _MainLoop:
 	push	hl
 ;	genCall
 	call	_WriteToVRAM8
+	pop	af
+	inc	sp
+;carwar.c:238: HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
+;	genCast
+	ld	c,#<_g_Sprite
+	ld	b,#>_g_Sprite
+;	genIpush
+; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+	push	bc
+;	genIpush
+	ld	hl,#0x0808
+	push	hl
+;	genIpush
+	ld	hl,#0x6464
+	push	hl
+;	genIpush
+	ld	a,#0x00
+	push	af
+	inc	sp
+;	genCall
+	call	_HMMC
+	pop	af
+	pop	af
 	pop	af
 	inc	sp
 ;carwar.c:241: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
@@ -1299,7 +1299,7 @@ _HMMC:
 	ld	hl,#-19
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1105: buffer.DX = dx;
+;carwar.c:1104: buffer.DX = dx;
 ;	genAddrOf
 	ld	hl,#0x0004
 	add	hl,sp
@@ -1326,7 +1326,7 @@ _HMMC:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1106: buffer.DY = dy /*+ (page * 512)*/;
+;carwar.c:1105: buffer.DY = dy /*+ (page * 512)*/;
 ;	genPlus
 ;	AOP_STK for _HMMC_sloc1_1_0
 ;	genPlusIncr
@@ -1348,7 +1348,7 @@ _HMMC:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1107: buffer.NX = nx;
+;carwar.c:1106: buffer.NX = nx;
 ;	genPlus
 ;	AOP_STK for _HMMC_sloc1_1_0
 ;	genPlusIncr
@@ -1370,7 +1370,7 @@ _HMMC:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1108: buffer.NY = ny;
+;carwar.c:1107: buffer.NY = ny;
 ;	genPlus
 ;	AOP_STK for _HMMC_sloc1_1_0
 ;	genPlusIncr
@@ -1392,29 +1392,20 @@ _HMMC:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1109: buffer.CLR = ((u8*)ram)[0];
+;carwar.c:1108: buffer.CLR = 252;//((u8*)ram)[0];
 ;	genPlus
-;	AOP_STK for _HMMC_sloc1_1_0
 ;	genPlusIncr
 	ld	a,c
 	add	a,#0x0C
-	ld	-19(ix),a
+	ld	e,a
 	ld	a,b
 	adc	a,#0x00
-	ld	-18(ix),a
-;	genCast
-;	AOP_STK for 
-	ld	e,9(ix)
-	ld	d,10(ix)
-;	genPointerGet
-	ld	a,(de)
+	ld	d,a
 ;	genAssign (pointer)
-;	AOP_STK for _HMMC_sloc1_1_0
 ;	isBitvar = 0
-	ld	l,-19(ix)
-	ld	h,-18(ix)
-	ld	(hl),a
-;carwar.c:1110: buffer.ARG = 0;
+	ld	a,#0xFC
+	ld	(de),a
+;carwar.c:1109: buffer.ARG = 0;
 ;	genPlus
 ;	genPlusIncr
 	ld	a,c
@@ -1427,7 +1418,7 @@ _HMMC:
 ;	isBitvar = 0
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1111: buffer.CMD = 0xF0;
+;carwar.c:1110: buffer.CMD = 0xF0;
 ;	genPlus
 ;	genPlusIncr
 	ld	a,c
@@ -1440,7 +1431,7 @@ _HMMC:
 ;	isBitvar = 0
 	ld	a,#0xF0
 	ld	(bc),a
-;carwar.c:1112: SetupHMMC((u16)&buffer.DX);
+;carwar.c:1111: SetupHMMC((u16)&buffer.DX);
 ;	genAssign
 ;	AOP_STK for _HMMC_sloc0_1_0
 	ld	c,-17(ix)
@@ -1452,70 +1443,48 @@ _HMMC:
 ;	genCall
 	call	_SetupHMMC
 	pop	af
-;carwar.c:1115: _endasm;
+;carwar.c:1152: _endasm;
 ;	genInline
+	
 	
 		 di
-		
-;carwar.c:1116: for(i=0; i<(nx*ny)-1; i++)
-;	genIpush
-; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-;	AOP_STK for 
-	ld	a,8(ix)
-	push	af
-	inc	sp
-;	genIpush
-;	AOP_STK for 
-	ld	a,7(ix)
-	push	af
-	inc	sp
-;	genCall
-	call	__muluchar_rrx_s
-	ld	b,h
-	ld	c,l
-	pop	af
-;	genMinus
-	dec	bc
-;	genAssign
-	ld	de,#0x0000
-;	genLabel
-00101$:
-;	genCmpLt
-	ld	a,e
-	sub	a,c
-	ld	a,d
-	sbc	a,b
-	jp	P,00104$
-;carwar.c:1118: WaitForVDP();
-;	genCall
-; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 1 deSending: 0
-	push	bc
-	push	de
-	call	_WaitForVDP
-	pop	de
-	pop	bc
-;carwar.c:1126: _endasm;
-;	genInline
 	
+	 SEND_NEXT_COLOR:
 	
-		  xor a ;
-		  out (#0x99),a
-		  ld a,#(0x80+45)
-		  out (#0x99),a
+		 ;
+		 ;
+		 ld a,#252
+		 out (#0x99),a
+		 ld a,#(0x80+44)
+		 out (#0x99),a
 	
-		 
-;carwar.c:1116: for(i=0; i<(nx*ny)-1; i++)
-;	genPlus
-;	genPlusIncr
-	inc	de
-;	genGoto
-	jr	00101$
-;	genLabel
-00104$:
-;carwar.c:1130: _endasm;
-;	genInline
+	 WAIT_REG2:
+	
+		 ;
+		 ;
+		 ld a,#2
+		 out (#0x99),a
+		 ld a,#(0x80+15)
+		 out (#0x99),a
+	
+		 ;
+		 nop
+		 in a,(#0x99)
+		 ld b,a ;
+		 rra ;
+		 jr nc,COLOR_COPY_END
+	
+		 ;
+		 ;
+		 ld a,b ;
+		 rla ;
+		 jr nc,WAIT_REG2
+		 jp SEND_NEXT_COLOR
+	
+	 COLOR_COPY_END:
 	
 		 ei
+	
 		
 ;	genLabel
 ;	genEndFunction
@@ -1523,7 +1492,7 @@ _HMMC:
 	pop	ix
 	ret
 _HMMC_end::
-;carwar.c:1133: void SetupHMMC(u16 address)
+;carwar.c:1175: void SetupHMMC(u16 address)
 ;	genLabel
 ;	genFunction
 ;	---------------------------------
@@ -1534,11 +1503,11 @@ _SetupHMMC:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1137: WaitForVDP();
+;carwar.c:1179: WaitForVDP();
 ;	genCall
 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
 	call	_WaitForVDP
-;carwar.c:1163: _endasm;
+;carwar.c:1205: _endasm;
 ;	genInline
 	
 	

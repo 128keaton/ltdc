@@ -220,7 +220,6 @@ void MainLoop()
 	SetScreen8();
 
 	//Fill8(32, 32, 32, 32, 0xB0);
-	HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
 
 	VPDCommand((int)&clsScreen8);
 
@@ -236,6 +235,7 @@ void MainLoop()
 		//addr += x;
 		addr = x + (y << 8);
 		WriteToVRAM8(addr, 0x0F);
+		HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
 
 		//x++;
 	    if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
@@ -1098,9 +1098,8 @@ void WriteToVRAM8(i16 addr, u8 value)
 void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
 	VdpBuffer buffer;
-	i16 i;
-
-	page;
+	
+	page; ram;
 
 	buffer.DX = dx;
 	buffer.DY = dy /*+ (page * 512)*/;
@@ -1120,8 +1119,10 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 		;// Send next color
 		ld		a,#252
 		out		(VDP_ADDR),a
-		ld		a,VDP_REG(45)
+		ld		a,VDP_REG(44)
 		out		(VDP_ADDR),a
+
+	WAIT_REG2:	
 
 		;// 4 - lire le registre d'état 2 (status)
 		;// Get status ragister #2
@@ -1130,18 +1131,23 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 		ld		a,VDP_REG(15)
 		out		(VDP_ADDR),a
 
-	WAIT_COLOR_COPY:	
-
-		nop
 		;// 5 - lire le registre d'état du bit CE, si celui-ci est à 0, alors l'instruction est terminée, sinon on passe à l'étape 6
+		nop
 		in		a,(VDP_ADDR)
-		rra
+		ld		b,a ;// backup reg#2
+		rra     ;// send CE bit into Carry
 		jr		nc,COLOR_COPY_END
 
-
-		ei
+		;// 6 - tester l'état du bit TR, si celui-ci se trouve à 0, alors le processeur vidéo n'est pas
+		;// prêt à recevoir l'octet suivant, recommencer en 4. Si par contre, ce bit est à 1, reprendre toute l'opération au niveau 3
+		ld		a,b ;// restore reg#2
+		rla     ;// send TR bit in the Carry
+		jr		nc,WAIT_REG2
+		jp		SEND_NEXT_COLOR
 
 	COLOR_COPY_END:
+
+		ei
 
 	_endasm;
 

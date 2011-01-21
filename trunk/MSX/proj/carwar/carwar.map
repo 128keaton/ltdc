@@ -13,7 +13,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__OVERLAY
      003A    l__GSINIT
      004F    l__DATA
-     05FA    l__CODE
+     0592    l__CODE
      4010    s__CODE
      8000    s__DATA
      804F    s__GSINIT
@@ -26,7 +26,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   05FA =   1530. bytes (REL,CON)
+_CODE                              4010   0592 =   1426. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -83,17 +83,11 @@ _CODE                              4010   05FA =   1530. bytes (REL,CON)
      4479    _HMMC
      4479    _HMMC_start
      4479    _WriteToVRAM8_end
-     4562    _HMMC_end
-     4562    _SetupHMMC
-     4562    _SetupHMMC_start
-     4598    _SetupHMMC_end
-     4598    __initrleblock
-     45BF    __muluchar_rrx_s
-     45D2    __mulschar_rrx_s
-     45D9    __mulschar_rrx_hds
-     45E5    __mulint_rrx_s
-     45F1    __mulint_rrx_hds
-     45F1    __muluchar_rrx_hds
+     4545    _HMMC_end
+     4545    _SetupHMMC
+     4545    _SetupHMMC_start
+     457B    _SetupHMMC_end
+     457B    __initrleblock
 
 Hexadecimal
 
@@ -122,10 +116,8 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
-		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010
 	_DATA = 0x8000
