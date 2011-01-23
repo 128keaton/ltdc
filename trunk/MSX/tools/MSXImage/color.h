@@ -24,5 +24,11 @@ struct RGB24
 
 	RGB24(): R(0), G(0), B(0) {}
 	RGB24(u8 a, u8 b, u8 c): R(a), G(b), B(c) {}
+	RGB24(u32 RGBA)
+	{
+		R = (RGBA >> 24) & 0xFF;
+		G = (RGBA >> 16) & 0xFF;
+		B = (RGBA >> 8) & 0xFF;
+	}
 	RGB24(RGB8 color);
 };

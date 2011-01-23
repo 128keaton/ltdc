@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="FreeImage.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -132,6 +133,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="FreeImage.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -176,6 +178,10 @@
 			</File>
 			<File
 				RelativePath=".\color.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FreeImage.h"
 				>
 			</File>
 			<File
