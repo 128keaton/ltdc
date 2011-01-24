@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-; This file was generated Fri Jan 21 17:04:52 2011
+; This file was generated Sun Jan 23 15:39:42 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -10,22 +10,11 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
-	.globl _CMD
-	.globl _ARG
-	.globl _CLR
-	.globl _NY
-	.globl _NX
-	.globl _DY
-	.globl _DX
-	.globl _SY
-	.globl _SX
 	.globl _g_Sprite
 	.globl _MainLoop
 	.globl _SetScreen8
 	.globl _SetPage8
 	.globl _DrawPoint8
-	.globl _DrawLine
-	.globl _DrawLineSimple
 	.globl _DrawLine8
 	.globl _VPDCommand
 	.globl _waitRetrace
@@ -46,24 +35,6 @@ _g_slotPort	=	0x00a8
 ;  ram data
 ;--------------------------------------------------------
 	.area _DATA
-_SX::
-	.ds 2
-_SY::
-	.ds 2
-_DX::
-	.ds 2
-_DY::
-	.ds 2
-_NX::
-	.ds 2
-_NY::
-	.ds 2
-_CLR::
-	.ds 1
-_ARG::
-	.ds 1
-_CMD::
-	.ds 1
 ;--------------------------------------------------------
 ; overlayable items in  ram 
 ;--------------------------------------------------------
@@ -78,48 +49,6 @@ _CMD::
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;carwar.c:128: u16 SX = 0;  // 32-33
-;	genAssign
-	ld	iy,#_SX
-	ld	0(iy),#0x00
-	ld	1(iy),#0x00
-;carwar.c:129: u16 SY = 0;  // 34-35
-;	genAssign
-	ld	iy,#_SY
-	ld	0(iy),#0x00
-	ld	1(iy),#0x00
-;carwar.c:130: u16 DX = 0;  // 36-37
-;	genAssign
-	ld	iy,#_DX
-	ld	0(iy),#0x00
-	ld	1(iy),#0x00
-;carwar.c:131: u16 DY = 0;  // 38-39
-;	genAssign
-	ld	iy,#_DY
-	ld	0(iy),#0x00
-	ld	1(iy),#0x00
-;carwar.c:132: u16 NX = 0;  // 40-41
-;	genAssign
-	ld	iy,#_NX
-	ld	0(iy),#0x00
-	ld	1(iy),#0x00
-;carwar.c:133: u16 NY = 0;  // 42-43
-;	genAssign
-	ld	iy,#_NY
-	ld	0(iy),#0x00
-	ld	1(iy),#0x00
-;carwar.c:134: u8  CLR = 0; // 44
-;	genAssign
-	ld	iy,#_CLR
-	ld	0(iy),#0x00
-;carwar.c:135: u8  ARG = 0; // 45
-;	genAssign
-	ld	iy,#_ARG
-	ld	0(iy),#0x00
-;carwar.c:136: u8  CMD = 0; // 46
-;	genAssign
-	ld	iy,#_CMD
-	ld	0(iy),#0x00
 ;--------------------------------------------------------
 ; Home
 ;--------------------------------------------------------
@@ -171,14 +100,14 @@ _main:
 	jp	_MainLoop
 _main_end::
 _g_Sprite:
-	.db #0x01
-	.db #0x02
-	.db #0x03
-	.db #0x04
-	.db #0x05
-	.db #0x06
-	.db #0x07
-	.db #0x08
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
+	.db #0xFE
 	.db #0xFE
 	.db #0x64
 	.db #0x00
@@ -911,165 +840,6 @@ _DrawPoint8:
 	pop	ix
 	ret
 _DrawPoint8_end::
-;carwar.c:572: void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
-;	genLabel
-;	genFunction
-;	---------------------------------
-; Function DrawLine
-; ---------------------------------
-_DrawLine_start::
-_DrawLine:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:574: SX  = posX1; 
-;	genAssign
-;	AOP_STK for 
-	ld	a,4(ix)
-	ld	iy,#_SX
-	ld	0(iy),a
-	ld	a,5(ix)
-	ld	1(iy),a
-;carwar.c:575: SY  = posY1; 
-;	genAssign
-;	AOP_STK for 
-	ld	a,6(ix)
-	ld	iy,#_SY
-	ld	0(iy),a
-	ld	a,7(ix)
-	ld	1(iy),a
-;carwar.c:576: DX  = posX2; 
-;	genAssign
-;	AOP_STK for 
-	ld	a,8(ix)
-	ld	iy,#_DX
-	ld	0(iy),a
-	ld	a,9(ix)
-	ld	1(iy),a
-;carwar.c:577: DY  = posY2; 
-;	genAssign
-;	AOP_STK for 
-	ld	a,10(ix)
-	ld	iy,#_DY
-	ld	0(iy),a
-	ld	a,11(ix)
-	ld	1(iy),a
-;carwar.c:578: CLR = color;
-;	genAssign
-;	AOP_STK for 
-	ld	a,12(ix)
-	ld	iy,#_CLR
-	ld	0(iy),a
-;carwar.c:580: DrawLineSimple();
-;	genCall
-; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-;	genLabel
-;	genEndFunction
-	pop	ix
-	jp	_DrawLineSimple
-_DrawLine_end::
-;carwar.c:586: void DrawLineSimple()
-;	genLabel
-;	genFunction
-;	---------------------------------
-; Function DrawLineSimple
-; ---------------------------------
-_DrawLineSimple_start::
-_DrawLineSimple:
-;carwar.c:588: WaitForVDP();
-;	genCall
-; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-	call	_WaitForVDP
-;carwar.c:660: _endasm;
-;	genInline
-	
-	
-;
-;
-;
-;
-	
-	Do_Line_VDP:
-;
-		       xor a ;
-		       ld hl,(_DY)
-		       ld de,(_SY)
-		       sbc hl,de ;
-	
-		       rla ;
-		       ld (_ARG),a
-	
-		       and a ;
-		       jp z,DeltaX ;
-		       ex de,hl ;
-		 ld hl,#0 ;
-		       sbc hl,de ;
-	
-;
-	DeltaX:
-	push	hl ;
-		       xor a ;
-		       ld hl,(_DX)
-		       ld de,(_SX)
-		       sbc hl,de ;
-	
-		       ld a,(_ARG)
-		       rla
-		       rla ;
-		       ld (_ARG),a
-	
-		       bit 1,a ;
-		       jp z,cpHLDE ;
-		       ex de,hl ;
-		 ld hl,#0 ;
-		       sbc hl,de ;
-	
-;
-	cpHLDE:
-	pop	de ;
-		       xor a ;
-	
-		       push hl
-		       sbc hl,de ;
-		       pop hl
-	
-		       ld a,(_ARG)
-		       rla ;
-		       ld (_ARG),a
-	
-		       bit 0,a ;
-		       jp z,DoIt ;
-		       ex de,hl ;
-	
-;
-	DoIt:
-	ld	(_NX),hl
-		       ld (_NY),de
-	
-		       ld hl,(_SX)
-		       ld (_DX),hl
-	
-		       ld hl,(_SY)
-		       ld (_DY),hl
-	
-		       ld a,#0x70 ;
-		       ld (_CMD),a ;
-	
-		
-;carwar.c:662: VPDCommand((int)&SX);
-;	genCast
-	ld	c,#<_SX
-	ld	b,#>_SX
-;	genIpush
-; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-	push	bc
-;	genCall
-	call	_VPDCommand
-	pop	af
-;	genLabel
-;	genEndFunction
-	ret
-_DrawLineSimple_end::
 ;carwar.c:668: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 ;	genLabel
 ;	genFunction

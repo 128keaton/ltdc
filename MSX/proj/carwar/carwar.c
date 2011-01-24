@@ -122,18 +122,18 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
 void SetupHMMC(u16 address);
 
 //----------------------------------------
-// G L O B A L E S
+// D A T A
 
 // VDP command buffer
-u16 SX = 0;  // 32-33
-u16 SY = 0;  // 34-35
-u16 DX = 0;  // 36-37
-u16 DY = 0;  // 38-39
-u16 NX = 0;  // 40-41
-u16 NY = 0;  // 42-43
-u8  CLR = 0; // 44
-u8  ARG = 0; // 45
-u8  CMD = 0; // 46
+//u16 SX = 0;  // 32-33
+//u16 SY = 0;  // 34-35
+//u16 DX = 0;  // 36-37
+//u16 DY = 0;  // 38-39
+//u16 NX = 0;  // 40-41
+//u16 NY = 0;  // 42-43
+//u8  CLR = 0; // 44
+//u8  ARG = 0; // 45
+//u8  CMD = 0; // 46
 
 // Sprites
 // SX : 13
@@ -142,7 +142,7 @@ u8  CMD = 0; // 46
 // 4 cars (44 px)
 const u8 g_Sprite[8*8] =
 {
-	  1,   2,   3,   4,   5,   6,   7,   8, 
+	254, 254, 254, 254, 254, 254, 254, 254,
 	254, 100,   0,   0,   0,   0, 200, 254,
 	254,   0, 100,   0,   0, 200,   0, 254,
 	254,   0,   0, 100, 200,   0,   0, 254,
@@ -569,98 +569,98 @@ void DrawPoint8(char posX, char posY, char color)
 /**
  *
  */
-void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
-{
-	SX  = posX1; 
-	SY  = posY1; 
-	DX  = posX2; 
-	DY  = posY2; 
-	CLR = color;
-
-	DrawLineSimple();
-}
+//void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
+//{
+//	SX  = posX1; 
+//	SY  = posY1; 
+//	DX  = posX2; 
+//	DY  = posY2; 
+//	CLR = color;
+//
+//	DrawLineSimple();
+//}
 
 /**
  *
  */
-void DrawLineSimple()
-{
-	WaitForVDP();
-
-	_asm
-
-;//-----------------------------------------------------------
-;// Commande LINE du VDP
-;// Entrée : (SX,SY)-(DX,DY),R44
-;//-----------------------------------------------------------
-
-Do_Line_VDP:
-;// Calcul de DeltaY
-        xor     a               ;// RAZ du carry flag
-        ld      hl,(_DY)
-        ld      de,(_SY)
-        sbc     hl,de           ;// HL = DY-SY
-
-        rla                     ;// Préparation valeur R45 (DIY)
-        ld      (_ARG),a
-
-        and     a               ;// Test du résultat
-        jp      z,DeltaX        ;// si DeltaY est positif on passe à DeltaX
-        ex      de,hl           ;// sinon
-		ld      hl,#0            ;// on inverse
-        sbc     hl,de           ;// le résultat
-
-;// Calcul de DeltaX
-DeltaX: push    hl              ;// sauvegarde de DeltaY
-        xor     a               ;// RAZ du carry flag
-        ld      hl,(_DX)
-        ld      de,(_SX)
-        sbc     hl,de           ;// HL = DX-SX
-
-        ld      a,(_ARG)
-        rla
-        rla                     ;// Préparation valeur R45 (DIX)
-        ld      (_ARG),a
-
-        bit     1,a             ;// Test du résultat
-        jp      z,cpHLDE        ;// si DeltaX est positif on passe à MAJ
-        ex      de,hl           ;// sinon
-		ld      hl,#0            ;// on inverse
-        sbc     hl,de           ;// le résultat
-
-;// Calcul de MAJ
-cpHLDE: pop     de              ;// HL=abs(DeltaX) / DE=abs(DeltaY)
-        xor     a               ;// RAZ du carry flag
-
-        push    hl
-        sbc     hl,de           ;// Comparaison HL / DE
-        pop     hl
-
-        ld      a,(_ARG)
-        rla                     ;// Préparation valeur R45 (MAJ)
-        ld      (_ARG),a
-
-        bit     0,a             ;// Test du résultat
-        jp      z,DoIt          ;// si HL>DE on y va
-        ex      de,hl           ;// sinon on inverse les valeurs
-
-;// Exécution commande
-DoIt:   ld      (_NX),hl
-        ld      (_NY),de
-
-        ld      hl,(_SX)
-        ld      (_DX),hl
-
-        ld      hl,(_SY)
-        ld      (_DY),hl
-
-        ld      a,#0x70 ;//01110000b
-        ld      (_CMD),a         ;// Commande LINE
-
-	_endasm;
-
-	VPDCommand((int)&SX);
-}
+//void DrawLineSimple()
+//{
+//	WaitForVDP();
+//
+//	_asm
+//
+//;//-----------------------------------------------------------
+//;// Commande LINE du VDP
+//;// Entrée : (SX,SY)-(DX,DY),R44
+//;//-----------------------------------------------------------
+//
+//Do_Line_VDP:
+//;// Calcul de DeltaY
+//        xor     a               ;// RAZ du carry flag
+//        ld      hl,(_DY)
+//        ld      de,(_SY)
+//        sbc     hl,de           ;// HL = DY-SY
+//
+//        rla                     ;// Préparation valeur R45 (DIY)
+//        ld      (_ARG),a
+//
+//        and     a               ;// Test du résultat
+//        jp      z,DeltaX        ;// si DeltaY est positif on passe à DeltaX
+//        ex      de,hl           ;// sinon
+//		ld      hl,#0            ;// on inverse
+//        sbc     hl,de           ;// le résultat
+//
+//;// Calcul de DeltaX
+//DeltaX: push    hl              ;// sauvegarde de DeltaY
+//        xor     a               ;// RAZ du carry flag
+//        ld      hl,(_DX)
+//        ld      de,(_SX)
+//        sbc     hl,de           ;// HL = DX-SX
+//
+//        ld      a,(_ARG)
+//        rla
+//        rla                     ;// Préparation valeur R45 (DIX)
+//        ld      (_ARG),a
+//
+//        bit     1,a             ;// Test du résultat
+//        jp      z,cpHLDE        ;// si DeltaX est positif on passe à MAJ
+//        ex      de,hl           ;// sinon
+//		ld      hl,#0            ;// on inverse
+//        sbc     hl,de           ;// le résultat
+//
+//;// Calcul de MAJ
+//cpHLDE: pop     de              ;// HL=abs(DeltaX) / DE=abs(DeltaY)
+//        xor     a               ;// RAZ du carry flag
+//
+//        push    hl
+//        sbc     hl,de           ;// Comparaison HL / DE
+//        pop     hl
+//
+//        ld      a,(_ARG)
+//        rla                     ;// Préparation valeur R45 (MAJ)
+//        ld      (_ARG),a
+//
+//        bit     0,a             ;// Test du résultat
+//        jp      z,DoIt          ;// si HL>DE on y va
+//        ex      de,hl           ;// sinon on inverse les valeurs
+//
+//;// Exécution commande
+//DoIt:   ld      (_NX),hl
+//        ld      (_NY),de
+//
+//        ld      hl,(_SX)
+//        ld      (_DX),hl
+//
+//        ld      hl,(_SY)
+//        ld      (_DY),hl
+//
+//        ld      a,#0x70 ;//01110000b
+//        ld      (_CMD),a         ;// Commande LINE
+//
+//	_endasm;
+//
+//	VPDCommand((int)&SX);
+//}
 
 /**
  * LINE (128,96),(190,56),255

@@ -1,7 +1,7 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : free open source ANSI-C Compiler
                               3 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-                              4 ; This file was generated Fri Jan 21 17:04:52 2011
+                              4 ; This file was generated Sun Jan 23 15:39:42 2011
                               5 ;--------------------------------------------------------
                               6 	.module carwar
                               7 	.optsdcc -mz80
@@ -10,1644 +10,1414 @@
                              10 ; Public variables in this module
                              11 ;--------------------------------------------------------
                              12 	.globl _main
-                             13 	.globl _CMD
-                             14 	.globl _ARG
-                             15 	.globl _CLR
-                             16 	.globl _NY
-                             17 	.globl _NX
-                             18 	.globl _DY
-                             19 	.globl _DX
-                             20 	.globl _SY
-                             21 	.globl _SX
-                             22 	.globl _g_Sprite
-                             23 	.globl _MainLoop
-                             24 	.globl _SetScreen8
-                             25 	.globl _SetPage8
-                             26 	.globl _DrawPoint8
-                             27 	.globl _DrawLine
-                             28 	.globl _DrawLineSimple
-                             29 	.globl _DrawLine8
-                             30 	.globl _VPDCommand
-                             31 	.globl _waitRetrace
-                             32 	.globl _WaitForVDP
-                             33 	.globl _Joystick
-                             34 	.globl _Joytrig
-                             35 	.globl _GetKeyMatrixLine
-                             36 	.globl _SetTo50Hz
-                             37 	.globl _SetTo60Hz
-                             38 	.globl _WriteToVRAM8
-                             39 	.globl _HMMC
-                             40 	.globl _SetupHMMC
-                             41 ;--------------------------------------------------------
-                             42 ; special function registers
-                             43 ;--------------------------------------------------------
-                    00A8     44 _g_slotPort	=	0x00a8
+                             13 	.globl _g_Sprite
+                             14 	.globl _MainLoop
+                             15 	.globl _SetScreen8
+                             16 	.globl _SetPage8
+                             17 	.globl _DrawPoint8
+                             18 	.globl _DrawLine8
+                             19 	.globl _VPDCommand
+                             20 	.globl _waitRetrace
+                             21 	.globl _WaitForVDP
+                             22 	.globl _Joystick
+                             23 	.globl _Joytrig
+                             24 	.globl _GetKeyMatrixLine
+                             25 	.globl _SetTo50Hz
+                             26 	.globl _SetTo60Hz
+                             27 	.globl _WriteToVRAM8
+                             28 	.globl _HMMC
+                             29 	.globl _SetupHMMC
+                             30 ;--------------------------------------------------------
+                             31 ; special function registers
+                             32 ;--------------------------------------------------------
+                    00A8     33 _g_slotPort	=	0x00a8
+                             34 ;--------------------------------------------------------
+                             35 ;  ram data
+                             36 ;--------------------------------------------------------
+                             37 	.area _DATA
+                             38 ;--------------------------------------------------------
+                             39 ; overlayable items in  ram 
+                             40 ;--------------------------------------------------------
+                             41 	.area _OVERLAY
+                             42 ;--------------------------------------------------------
+                             43 ; external initialized ram data
+                             44 ;--------------------------------------------------------
                              45 ;--------------------------------------------------------
-                             46 ;  ram data
+                             46 ; global & static initialisations
                              47 ;--------------------------------------------------------
-                             48 	.area _DATA
-   0000                      49 _SX::
-   0000                      50 	.ds 2
-   0002                      51 _SY::
-   0002                      52 	.ds 2
-   0004                      53 _DX::
-   0004                      54 	.ds 2
-   0006                      55 _DY::
-   0006                      56 	.ds 2
-   0008                      57 _NX::
-   0008                      58 	.ds 2
-   000A                      59 _NY::
-   000A                      60 	.ds 2
-   000C                      61 _CLR::
-   000C                      62 	.ds 1
-   000D                      63 _ARG::
-   000D                      64 	.ds 1
-   000E                      65 _CMD::
-   000E                      66 	.ds 1
-                             67 ;--------------------------------------------------------
-                             68 ; overlayable items in  ram 
-                             69 ;--------------------------------------------------------
-                             70 	.area _OVERLAY
-                             71 ;--------------------------------------------------------
-                             72 ; external initialized ram data
-                             73 ;--------------------------------------------------------
-                             74 ;--------------------------------------------------------
-                             75 ; global & static initialisations
-                             76 ;--------------------------------------------------------
-                             77 	.area _HOME
-                             78 	.area _GSINIT
-                             79 	.area _GSFINAL
-                             80 	.area _GSINIT
-                             81 ;carwar.c:128: u16 SX = 0;  // 32-33
-                             82 ;	genAssign
-   0000 FD 21r00s00          83 	ld	iy,#_SX
-   0004 FD 36 00 00          84 	ld	0(iy),#0x00
-   0008 FD 36 01 00          85 	ld	1(iy),#0x00
-                             86 ;carwar.c:129: u16 SY = 0;  // 34-35
-                             87 ;	genAssign
-   000C FD 21r02s00          88 	ld	iy,#_SY
-   0010 FD 36 00 00          89 	ld	0(iy),#0x00
-   0014 FD 36 01 00          90 	ld	1(iy),#0x00
-                             91 ;carwar.c:130: u16 DX = 0;  // 36-37
-                             92 ;	genAssign
-   0018 FD 21r04s00          93 	ld	iy,#_DX
-   001C FD 36 00 00          94 	ld	0(iy),#0x00
-   0020 FD 36 01 00          95 	ld	1(iy),#0x00
-                             96 ;carwar.c:131: u16 DY = 0;  // 38-39
-                             97 ;	genAssign
-   0024 FD 21r06s00          98 	ld	iy,#_DY
-   0028 FD 36 00 00          99 	ld	0(iy),#0x00
-   002C FD 36 01 00         100 	ld	1(iy),#0x00
-                            101 ;carwar.c:132: u16 NX = 0;  // 40-41
-                            102 ;	genAssign
-   0030 FD 21r08s00         103 	ld	iy,#_NX
-   0034 FD 36 00 00         104 	ld	0(iy),#0x00
-   0038 FD 36 01 00         105 	ld	1(iy),#0x00
-                            106 ;carwar.c:133: u16 NY = 0;  // 42-43
-                            107 ;	genAssign
-   003C FD 21r0As00         108 	ld	iy,#_NY
-   0040 FD 36 00 00         109 	ld	0(iy),#0x00
-   0044 FD 36 01 00         110 	ld	1(iy),#0x00
-                            111 ;carwar.c:134: u8  CLR = 0; // 44
-                            112 ;	genAssign
-   0048 FD 21r0Cs00         113 	ld	iy,#_CLR
-   004C FD 36 00 00         114 	ld	0(iy),#0x00
-                            115 ;carwar.c:135: u8  ARG = 0; // 45
-                            116 ;	genAssign
-   0050 FD 21r0Ds00         117 	ld	iy,#_ARG
-   0054 FD 36 00 00         118 	ld	0(iy),#0x00
-                            119 ;carwar.c:136: u8  CMD = 0; // 46
-                            120 ;	genAssign
-   0058 FD 21r0Es00         121 	ld	iy,#_CMD
-   005C FD 36 00 00         122 	ld	0(iy),#0x00
-                            123 ;--------------------------------------------------------
-                            124 ; Home
-                            125 ;--------------------------------------------------------
-                            126 	.area _HOME
-                            127 	.area _HOME
-                            128 ;--------------------------------------------------------
-                            129 ; code
-                            130 ;--------------------------------------------------------
-                            131 	.area _CODE
-                            132 ;carwar.c:171: void main(void)
-                            133 ;	genLabel
-                            134 ;	genFunction
-                            135 ;	---------------------------------
-                            136 ; Function main
-                            137 ; ---------------------------------
-   0000                     138 _main_start::
-   0000                     139 _main:
-                            140 ;carwar.c:177: _endasm;
-                            141 ;	genInline
-                            142 	
-   0000 F3                  143 		 di
-   0001 ED 7B 4A FC         144 		 ld sp, (#0xFC4A)
-   0005 FB                  145 		 ei
-                            146 		
-                            147 ;carwar.c:179: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
-                            148 ;	genAnd
-                            149 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
-   0006 DB A8               150 	in	a,(_g_slotPort)
-   0008 E6 CF               151 	and	a,#0xCF
-   000A 4F                  152 	ld	c,a
-                            153 ;	genAnd
-                            154 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
-   000B DB A8               155 	in	a,(_g_slotPort)
-   000D E6 0C               156 	and	a,#0x0C
-   000F 47                  157 	ld	b,a
-                            158 ;	genLeftShift
-   0010 CB 20               159 	sla	b
-   0012 CB 20               160 	sla	b
-                            161 ;	genOr
-                            162 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
-   0014 79                  163 	ld	a,c
-   0015 B0                  164 	or	a,b
-   0016 D3 A8               165 	out	(_g_slotPort),a
-                            166 ;carwar.c:181: MainLoop();
-                            167 ;	genCall
-                            168 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-                            169 ;	genLabel
-                            170 ;	genEndFunction
-   0018 C3r5Bs00            171 	jp	_MainLoop
-   001B                     172 _main_end::
-   001B                     173 _g_Sprite:
-   001B 01                  174 	.db #0x01
-   001C 02                  175 	.db #0x02
-   001D 03                  176 	.db #0x03
-   001E 04                  177 	.db #0x04
-   001F 05                  178 	.db #0x05
-   0020 06                  179 	.db #0x06
-   0021 07                  180 	.db #0x07
-   0022 08                  181 	.db #0x08
-   0023 FE                  182 	.db #0xFE
-   0024 64                  183 	.db #0x64
-   0025 00                  184 	.db #0x00
-   0026 00                  185 	.db #0x00
-   0027 00                  186 	.db #0x00
-   0028 00                  187 	.db #0x00
-   0029 C8                  188 	.db #0xC8
-   002A FE                  189 	.db #0xFE
-   002B FE                  190 	.db #0xFE
-   002C 00                  191 	.db #0x00
-   002D 64                  192 	.db #0x64
-   002E 00                  193 	.db #0x00
-   002F 00                  194 	.db #0x00
-   0030 C8                  195 	.db #0xC8
-   0031 00                  196 	.db #0x00
-   0032 FE                  197 	.db #0xFE
-   0033 FE                  198 	.db #0xFE
-   0034 00                  199 	.db #0x00
-   0035 00                  200 	.db #0x00
-   0036 64                  201 	.db #0x64
-   0037 C8                  202 	.db #0xC8
-   0038 00                  203 	.db #0x00
-   0039 00                  204 	.db #0x00
-   003A FE                  205 	.db #0xFE
-   003B FE                  206 	.db #0xFE
-   003C 00                  207 	.db #0x00
-   003D 00                  208 	.db #0x00
-   003E C8                  209 	.db #0xC8
-   003F 64                  210 	.db #0x64
-   0040 00                  211 	.db #0x00
-   0041 00                  212 	.db #0x00
-   0042 FE                  213 	.db #0xFE
-   0043 FE                  214 	.db #0xFE
-   0044 00                  215 	.db #0x00
-   0045 C8                  216 	.db #0xC8
-   0046 00                  217 	.db #0x00
-   0047 00                  218 	.db #0x00
-   0048 64                  219 	.db #0x64
-   0049 00                  220 	.db #0x00
-   004A FE                  221 	.db #0xFE
-   004B FE                  222 	.db #0xFE
-   004C C8                  223 	.db #0xC8
-   004D 00                  224 	.db #0x00
-   004E 00                  225 	.db #0x00
-   004F 00                  226 	.db #0x00
-   0050 00                  227 	.db #0x00
-   0051 64                  228 	.db #0x64
-   0052 FE                  229 	.db #0xFE
-   0053 FE                  230 	.db #0xFE
-   0054 FE                  231 	.db #0xFE
-   0055 FE                  232 	.db #0xFE
-   0056 FE                  233 	.db #0xFE
-   0057 FE                  234 	.db #0xFE
-   0058 FE                  235 	.db #0xFE
-   0059 FE                  236 	.db #0xFE
-   005A FE                  237 	.db #0xFE
-                            238 ;carwar.c:190: void MainLoop()
-                            239 ;	genLabel
-                            240 ;	genFunction
-                            241 ;	---------------------------------
-                            242 ; Function MainLoop
-                            243 ; ---------------------------------
-   005B                     244 _MainLoop_start::
-   005B                     245 _MainLoop:
-   005B DD E5               246 	push	ix
-   005D DD 21 00 00         247 	ld	ix,#0
-   0061 DD 39               248 	add	ix,sp
-   0063 21 E9 FF            249 	ld	hl,#-23
-   0066 39                  250 	add	hl,sp
-   0067 F9                  251 	ld	sp,hl
-                            252 ;carwar.c:192: u8 clsScreen8[15] = 
-                            253 ;	genAddrOf
-   0068 21 08 00            254 	ld	hl,#0x0008
-   006B 39                  255 	add	hl,sp
-   006C 4D                  256 	ld	c,l
-   006D 44                  257 	ld	b,h
-                            258 ;	genArrayInit
-                            259 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
-   006E C5                  260 	push	bc
-   006F 69                  261 	ld	l,c
-   0070 60                  262 	ld	h,b
-   0071 CDr00s00            263 	call	__initrleblock
-   0074 F7 00               264 	.db	#-9,#0x00
-   0076 06                  265 	.db	6
-   0077 01 D4 00 00 00 C0   266 	.db	0x01, 0xD4, 0x00, 0x00, 0x00, 0xC0
-   007D 00                  267 	.db	0
-   007E C1                  268 	pop	bc
-                            269 ;carwar.c:197: u8 x = 128, y = 128;
-                            270 ;	genAssign
-                            271 ;	AOP_STK for _MainLoop_x_1_1
-   007F DD 36 F0 80         272 	ld	-16(ix),#0x80
-                            273 ;	genAssign
-                            274 ;	AOP_STK for _MainLoop_y_1_1
-   0083 DD 36 EF 80         275 	ld	-17(ix),#0x80
-                            276 ;carwar.c:219: SetTo60Hz();
-                            277 ;	genCall
-                            278 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   0087 CDr6Bs04            279 	call	_SetTo60Hz
-                            280 ;carwar.c:220: SetScreen8();
-                            281 ;	genCall
-                            282 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   008A CDr65s02            283 	call	_SetScreen8
-                            284 ;carwar.c:224: VPDCommand((int)&clsScreen8);
-                            285 ;	genAddrOf
-   008D 21 08 00            286 	ld	hl,#0x0008
-   0090 39                  287 	add	hl,sp
-   0091 5D                  288 	ld	e,l
-   0092 54                  289 	ld	d,h
-                            290 ;	genCast
-                            291 ;	genIpush
-                            292 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   0093 D5                  293 	push	de
-                            294 ;	genCall
-   0094 CDrC4s03            295 	call	_VPDCommand
-   0097 F1                  296 	pop	af
-                            297 ;carwar.c:226: while(bEnd == 0)
-                            298 ;	genLabel
-   0098                     299 00115$:
-                            300 ;carwar.c:236: addr = x + (y << 8);
-                            301 ;	genCast
-                            302 ;	AOP_STK for _MainLoop_x_1_1
-   0098 DD 5E F0            303 	ld	e,-16(ix)
-   009B 16 00               304 	ld	d,#0x00
-                            305 ;	genCast
-                            306 ;	AOP_STK for _MainLoop_y_1_1
-   009D DD 46 EF            307 	ld	b,-17(ix)
-                            308 ;	genLeftShift
-   00A0 48                  309 	ld	c,b
-   00A1 06 00               310 	ld	b,#0x00
-                            311 ;	genPlus
-   00A3 7B                  312 	ld	a,e
-   00A4 80                  313 	add	a,b
-   00A5 47                  314 	ld	b,a
-   00A6 7A                  315 	ld	a,d
-   00A7 89                  316 	adc	a,c
-   00A8 4F                  317 	ld	c,a
-                            318 ;	genAssign
-                            319 ;	(registers are the same)
-                            320 ;carwar.c:237: WriteToVRAM8(addr, 0x0F);
-                            321 ;	genIpush
-                            322 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   00A9 3E 0F               323 	ld	a,#0x0F
-   00AB F5                  324 	push	af
-   00AC 33                  325 	inc	sp
-                            326 ;	genIpush
-   00AD 68                  327 	ld	l,b
-   00AE 61                  328 	ld	h,c
-   00AF E5                  329 	push	hl
-                            330 ;	genCall
-   00B0 CDr79s04            331 	call	_WriteToVRAM8
-   00B3 F1                  332 	pop	af
-   00B4 33                  333 	inc	sp
-                            334 ;carwar.c:238: HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
-                            335 ;	genCast
-   00B5 0Er1B               336 	ld	c,#<_g_Sprite
-   00B7 06s00               337 	ld	b,#>_g_Sprite
-                            338 ;	genIpush
-                            339 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   00B9 C5                  340 	push	bc
-                            341 ;	genIpush
-   00BA 21 08 08            342 	ld	hl,#0x0808
-   00BD E5                  343 	push	hl
-                            344 ;	genIpush
-   00BE 21 64 64            345 	ld	hl,#0x6464
-   00C1 E5                  346 	push	hl
-                            347 ;	genIpush
-   00C2 3E 00               348 	ld	a,#0x00
-   00C4 F5                  349 	push	af
-   00C5 33                  350 	inc	sp
-                            351 ;	genCall
-   00C6 CDrA9s04            352 	call	_HMMC
-   00C9 F1                  353 	pop	af
-   00CA F1                  354 	pop	af
-   00CB F1                  355 	pop	af
-   00CC 33                  356 	inc	sp
-                            357 ;carwar.c:241: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
-                            358 ;	genIpush
-                            359 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   00CD 3E 00               360 	ld	a,#0x00
-   00CF F5                  361 	push	af
-   00D0 33                  362 	inc	sp
-                            363 ;	genCall
-   00D1 CDr25s04            364 	call	_Joystick
-   00D4 4D                  365 	ld	c,l
-   00D5 33                  366 	inc	sp
-                            367 ;	genIpush
-                            368 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
-   00D6 C5                  369 	push	bc
-   00D7 3E 01               370 	ld	a,#0x01
-   00D9 F5                  371 	push	af
-   00DA 33                  372 	inc	sp
-                            373 ;	genCall
-   00DB CDr25s04            374 	call	_Joystick
-   00DE 45                  375 	ld	b,l
-   00DF 33                  376 	inc	sp
-   00E0 78                  377 	ld	a,b
-   00E1 C1                  378 	pop	bc
-                            379 ;	genOr
-   00E2 47                  380 	ld	b,a
-   00E3 B1                  381 	or	a,c
-   00E4 4F                  382 	ld	c,a
-                            383 ;	genIpush
-                            384 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
-   00E5 C5                  385 	push	bc
-   00E6 3E 02               386 	ld	a,#0x02
-   00E8 F5                  387 	push	af
-   00E9 33                  388 	inc	sp
-                            389 ;	genCall
-   00EA CDr25s04            390 	call	_Joystick
-   00ED 45                  391 	ld	b,l
-   00EE 33                  392 	inc	sp
-   00EF 78                  393 	ld	a,b
-   00F0 C1                  394 	pop	bc
-                            395 ;	genOr
-   00F1 47                  396 	ld	b,a
-   00F2 B1                  397 	or	a,c
-                            398 ;	genCast
-   00F3 4F                  399 	ld	c,a
-   00F4 17                  400 	rla	
-   00F5 9F                  401 	sbc	a,a
-   00F6 47                  402 	ld	b,a
-                            403 ;	genAssign
-   00F7 59                  404 	ld	e,c
-   00F8 50                  405 	ld	d,b
-                            406 ;	genIfx
-   00F9 79                  407 	ld	a,c
-   00FA B0                  408 	or	a,b
-   00FB CAr6As01            409 	jp	Z,00111$
-                            410 ;carwar.c:243: switch (i)
-                            411 ;	genCmpLt
-   00FE 7B                  412 	ld	a,e
-   00FF D6 01               413 	sub	a,#0x01
-   0101 7A                  414 	ld	a,d
-   0102 DE 00               415 	sbc	a,#0x00
-   0104 FAr6As01            416 	jp	M,00111$
-                            417 ;	genCmpGt
-   0107 3E 08               418 	ld	a,#0x08
-   0109 93                  419 	sub	a,e
-   010A 3E 00               420 	ld	a,#0x00
-   010C 9A                  421 	sbc	a,d
-   010D FAr6As01            422 	jp	M,00111$
-                            423 ;	genMinus
-   0110 7B                  424 	ld	a,e
-   0111 C6 FF               425 	add	a,#0xFF
-   0113 4F                  426 	ld	c,a
-                            427 ;	genJumpTab
-   0114 D5                  428 	push	de
-   0115 59                  429 	ld	e,c
-   0116 16 00               430 	ld	d,#0x00
-   0118 21r20s01            431 	ld	hl,#00146$
-   011B 19                  432 	add	hl,de
-   011C 19                  433 	add	hl,de
-   011D 19                  434 	add	hl,de
-   011E D1                  435 	pop	de
-   011F E9                  436 	jp	(hl)
-   0120                     437 00146$:
-   0120 C3r38s01            438 	jp	00101$
-   0123 C3r3Ds01            439 	jp	00102$
-   0126 C3r45s01            440 	jp	00103$
-   0129 C3r4As01            441 	jp	00104$
-   012C C3r52s01            442 	jp	00105$
-   012F C3r57s01            443 	jp	00106$
-   0132 C3r5Fs01            444 	jp	00107$
-   0135 C3r64s01            445 	jp	00108$
-                            446 ;carwar.c:245: case 1: y--; break;
+                             48 	.area _HOME
+                             49 	.area _GSINIT
+                             50 	.area _GSFINAL
+                             51 	.area _GSINIT
+                             52 ;--------------------------------------------------------
+                             53 ; Home
+                             54 ;--------------------------------------------------------
+                             55 	.area _HOME
+                             56 	.area _HOME
+                             57 ;--------------------------------------------------------
+                             58 ; code
+                             59 ;--------------------------------------------------------
+                             60 	.area _CODE
+                             61 ;carwar.c:171: void main(void)
+                             62 ;	genLabel
+                             63 ;	genFunction
+                             64 ;	---------------------------------
+                             65 ; Function main
+                             66 ; ---------------------------------
+   0000                      67 _main_start::
+   0000                      68 _main:
+                             69 ;carwar.c:177: _endasm;
+                             70 ;	genInline
+                             71 	
+   0000 F3                   72 		 di
+   0001 ED 7B 4A FC          73 		 ld sp, (#0xFC4A)
+   0005 FB                   74 		 ei
+                             75 		
+                             76 ;carwar.c:179: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+                             77 ;	genAnd
+                             78 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
+   0006 DB A8                79 	in	a,(_g_slotPort)
+   0008 E6 CF                80 	and	a,#0xCF
+   000A 4F                   81 	ld	c,a
+                             82 ;	genAnd
+                             83 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
+   000B DB A8                84 	in	a,(_g_slotPort)
+   000D E6 0C                85 	and	a,#0x0C
+   000F 47                   86 	ld	b,a
+                             87 ;	genLeftShift
+   0010 CB 20                88 	sla	b
+   0012 CB 20                89 	sla	b
+                             90 ;	genOr
+                             91 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
+   0014 79                   92 	ld	a,c
+   0015 B0                   93 	or	a,b
+   0016 D3 A8                94 	out	(_g_slotPort),a
+                             95 ;carwar.c:181: MainLoop();
+                             96 ;	genCall
+                             97 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+                             98 ;	genLabel
+                             99 ;	genEndFunction
+   0018 C3r5Bs00            100 	jp	_MainLoop
+   001B                     101 _main_end::
+   001B                     102 _g_Sprite:
+   001B FE                  103 	.db #0xFE
+   001C FE                  104 	.db #0xFE
+   001D FE                  105 	.db #0xFE
+   001E FE                  106 	.db #0xFE
+   001F FE                  107 	.db #0xFE
+   0020 FE                  108 	.db #0xFE
+   0021 FE                  109 	.db #0xFE
+   0022 FE                  110 	.db #0xFE
+   0023 FE                  111 	.db #0xFE
+   0024 64                  112 	.db #0x64
+   0025 00                  113 	.db #0x00
+   0026 00                  114 	.db #0x00
+   0027 00                  115 	.db #0x00
+   0028 00                  116 	.db #0x00
+   0029 C8                  117 	.db #0xC8
+   002A FE                  118 	.db #0xFE
+   002B FE                  119 	.db #0xFE
+   002C 00                  120 	.db #0x00
+   002D 64                  121 	.db #0x64
+   002E 00                  122 	.db #0x00
+   002F 00                  123 	.db #0x00
+   0030 C8                  124 	.db #0xC8
+   0031 00                  125 	.db #0x00
+   0032 FE                  126 	.db #0xFE
+   0033 FE                  127 	.db #0xFE
+   0034 00                  128 	.db #0x00
+   0035 00                  129 	.db #0x00
+   0036 64                  130 	.db #0x64
+   0037 C8                  131 	.db #0xC8
+   0038 00                  132 	.db #0x00
+   0039 00                  133 	.db #0x00
+   003A FE                  134 	.db #0xFE
+   003B FE                  135 	.db #0xFE
+   003C 00                  136 	.db #0x00
+   003D 00                  137 	.db #0x00
+   003E C8                  138 	.db #0xC8
+   003F 64                  139 	.db #0x64
+   0040 00                  140 	.db #0x00
+   0041 00                  141 	.db #0x00
+   0042 FE                  142 	.db #0xFE
+   0043 FE                  143 	.db #0xFE
+   0044 00                  144 	.db #0x00
+   0045 C8                  145 	.db #0xC8
+   0046 00                  146 	.db #0x00
+   0047 00                  147 	.db #0x00
+   0048 64                  148 	.db #0x64
+   0049 00                  149 	.db #0x00
+   004A FE                  150 	.db #0xFE
+   004B FE                  151 	.db #0xFE
+   004C C8                  152 	.db #0xC8
+   004D 00                  153 	.db #0x00
+   004E 00                  154 	.db #0x00
+   004F 00                  155 	.db #0x00
+   0050 00                  156 	.db #0x00
+   0051 64                  157 	.db #0x64
+   0052 FE                  158 	.db #0xFE
+   0053 FE                  159 	.db #0xFE
+   0054 FE                  160 	.db #0xFE
+   0055 FE                  161 	.db #0xFE
+   0056 FE                  162 	.db #0xFE
+   0057 FE                  163 	.db #0xFE
+   0058 FE                  164 	.db #0xFE
+   0059 FE                  165 	.db #0xFE
+   005A FE                  166 	.db #0xFE
+                            167 ;carwar.c:190: void MainLoop()
+                            168 ;	genLabel
+                            169 ;	genFunction
+                            170 ;	---------------------------------
+                            171 ; Function MainLoop
+                            172 ; ---------------------------------
+   005B                     173 _MainLoop_start::
+   005B                     174 _MainLoop:
+   005B DD E5               175 	push	ix
+   005D DD 21 00 00         176 	ld	ix,#0
+   0061 DD 39               177 	add	ix,sp
+   0063 21 E9 FF            178 	ld	hl,#-23
+   0066 39                  179 	add	hl,sp
+   0067 F9                  180 	ld	sp,hl
+                            181 ;carwar.c:192: u8 clsScreen8[15] = 
+                            182 ;	genAddrOf
+   0068 21 08 00            183 	ld	hl,#0x0008
+   006B 39                  184 	add	hl,sp
+   006C 4D                  185 	ld	c,l
+   006D 44                  186 	ld	b,h
+                            187 ;	genArrayInit
+                            188 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   006E C5                  189 	push	bc
+   006F 69                  190 	ld	l,c
+   0070 60                  191 	ld	h,b
+   0071 CDr00s00            192 	call	__initrleblock
+   0074 F7 00               193 	.db	#-9,#0x00
+   0076 06                  194 	.db	6
+   0077 01 D4 00 00 00 C0   195 	.db	0x01, 0xD4, 0x00, 0x00, 0x00, 0xC0
+   007D 00                  196 	.db	0
+   007E C1                  197 	pop	bc
+                            198 ;carwar.c:197: u8 x = 128, y = 128;
+                            199 ;	genAssign
+                            200 ;	AOP_STK for _MainLoop_x_1_1
+   007F DD 36 F0 80         201 	ld	-16(ix),#0x80
+                            202 ;	genAssign
+                            203 ;	AOP_STK for _MainLoop_y_1_1
+   0083 DD 36 EF 80         204 	ld	-17(ix),#0x80
+                            205 ;carwar.c:219: SetTo60Hz();
+                            206 ;	genCall
+                            207 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0087 CDrA6s03            208 	call	_SetTo60Hz
+                            209 ;carwar.c:220: SetScreen8();
+                            210 ;	genCall
+                            211 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   008A CDr65s02            212 	call	_SetScreen8
+                            213 ;carwar.c:224: VPDCommand((int)&clsScreen8);
+                            214 ;	genAddrOf
+   008D 21 08 00            215 	ld	hl,#0x0008
+   0090 39                  216 	add	hl,sp
+   0091 5D                  217 	ld	e,l
+   0092 54                  218 	ld	d,h
+                            219 ;	genCast
+                            220 ;	genIpush
+                            221 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0093 D5                  222 	push	de
+                            223 ;	genCall
+   0094 CDrFFs02            224 	call	_VPDCommand
+   0097 F1                  225 	pop	af
+                            226 ;carwar.c:226: while(bEnd == 0)
+                            227 ;	genLabel
+   0098                     228 00115$:
+                            229 ;carwar.c:236: addr = x + (y << 8);
+                            230 ;	genCast
+                            231 ;	AOP_STK for _MainLoop_x_1_1
+   0098 DD 5E F0            232 	ld	e,-16(ix)
+   009B 16 00               233 	ld	d,#0x00
+                            234 ;	genCast
+                            235 ;	AOP_STK for _MainLoop_y_1_1
+   009D DD 46 EF            236 	ld	b,-17(ix)
+                            237 ;	genLeftShift
+   00A0 48                  238 	ld	c,b
+   00A1 06 00               239 	ld	b,#0x00
+                            240 ;	genPlus
+   00A3 7B                  241 	ld	a,e
+   00A4 80                  242 	add	a,b
+   00A5 47                  243 	ld	b,a
+   00A6 7A                  244 	ld	a,d
+   00A7 89                  245 	adc	a,c
+   00A8 4F                  246 	ld	c,a
+                            247 ;	genAssign
+                            248 ;	(registers are the same)
+                            249 ;carwar.c:237: WriteToVRAM8(addr, 0x0F);
+                            250 ;	genIpush
+                            251 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00A9 3E 0F               252 	ld	a,#0x0F
+   00AB F5                  253 	push	af
+   00AC 33                  254 	inc	sp
+                            255 ;	genIpush
+   00AD 68                  256 	ld	l,b
+   00AE 61                  257 	ld	h,c
+   00AF E5                  258 	push	hl
+                            259 ;	genCall
+   00B0 CDrB4s03            260 	call	_WriteToVRAM8
+   00B3 F1                  261 	pop	af
+   00B4 33                  262 	inc	sp
+                            263 ;carwar.c:238: HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
+                            264 ;	genCast
+   00B5 0Er1B               265 	ld	c,#<_g_Sprite
+   00B7 06s00               266 	ld	b,#>_g_Sprite
+                            267 ;	genIpush
+                            268 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00B9 C5                  269 	push	bc
+                            270 ;	genIpush
+   00BA 21 08 08            271 	ld	hl,#0x0808
+   00BD E5                  272 	push	hl
+                            273 ;	genIpush
+   00BE 21 64 64            274 	ld	hl,#0x6464
+   00C1 E5                  275 	push	hl
+                            276 ;	genIpush
+   00C2 3E 00               277 	ld	a,#0x00
+   00C4 F5                  278 	push	af
+   00C5 33                  279 	inc	sp
+                            280 ;	genCall
+   00C6 CDrE4s03            281 	call	_HMMC
+   00C9 F1                  282 	pop	af
+   00CA F1                  283 	pop	af
+   00CB F1                  284 	pop	af
+   00CC 33                  285 	inc	sp
+                            286 ;carwar.c:241: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+                            287 ;	genIpush
+                            288 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00CD 3E 00               289 	ld	a,#0x00
+   00CF F5                  290 	push	af
+   00D0 33                  291 	inc	sp
+                            292 ;	genCall
+   00D1 CDr60s03            293 	call	_Joystick
+   00D4 4D                  294 	ld	c,l
+   00D5 33                  295 	inc	sp
+                            296 ;	genIpush
+                            297 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   00D6 C5                  298 	push	bc
+   00D7 3E 01               299 	ld	a,#0x01
+   00D9 F5                  300 	push	af
+   00DA 33                  301 	inc	sp
+                            302 ;	genCall
+   00DB CDr60s03            303 	call	_Joystick
+   00DE 45                  304 	ld	b,l
+   00DF 33                  305 	inc	sp
+   00E0 78                  306 	ld	a,b
+   00E1 C1                  307 	pop	bc
+                            308 ;	genOr
+   00E2 47                  309 	ld	b,a
+   00E3 B1                  310 	or	a,c
+   00E4 4F                  311 	ld	c,a
+                            312 ;	genIpush
+                            313 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   00E5 C5                  314 	push	bc
+   00E6 3E 02               315 	ld	a,#0x02
+   00E8 F5                  316 	push	af
+   00E9 33                  317 	inc	sp
+                            318 ;	genCall
+   00EA CDr60s03            319 	call	_Joystick
+   00ED 45                  320 	ld	b,l
+   00EE 33                  321 	inc	sp
+   00EF 78                  322 	ld	a,b
+   00F0 C1                  323 	pop	bc
+                            324 ;	genOr
+   00F1 47                  325 	ld	b,a
+   00F2 B1                  326 	or	a,c
+                            327 ;	genCast
+   00F3 4F                  328 	ld	c,a
+   00F4 17                  329 	rla	
+   00F5 9F                  330 	sbc	a,a
+   00F6 47                  331 	ld	b,a
+                            332 ;	genAssign
+   00F7 59                  333 	ld	e,c
+   00F8 50                  334 	ld	d,b
+                            335 ;	genIfx
+   00F9 79                  336 	ld	a,c
+   00FA B0                  337 	or	a,b
+   00FB CAr6As01            338 	jp	Z,00111$
+                            339 ;carwar.c:243: switch (i)
+                            340 ;	genCmpLt
+   00FE 7B                  341 	ld	a,e
+   00FF D6 01               342 	sub	a,#0x01
+   0101 7A                  343 	ld	a,d
+   0102 DE 00               344 	sbc	a,#0x00
+   0104 FAr6As01            345 	jp	M,00111$
+                            346 ;	genCmpGt
+   0107 3E 08               347 	ld	a,#0x08
+   0109 93                  348 	sub	a,e
+   010A 3E 00               349 	ld	a,#0x00
+   010C 9A                  350 	sbc	a,d
+   010D FAr6As01            351 	jp	M,00111$
+                            352 ;	genMinus
+   0110 7B                  353 	ld	a,e
+   0111 C6 FF               354 	add	a,#0xFF
+   0113 4F                  355 	ld	c,a
+                            356 ;	genJumpTab
+   0114 D5                  357 	push	de
+   0115 59                  358 	ld	e,c
+   0116 16 00               359 	ld	d,#0x00
+   0118 21r20s01            360 	ld	hl,#00146$
+   011B 19                  361 	add	hl,de
+   011C 19                  362 	add	hl,de
+   011D 19                  363 	add	hl,de
+   011E D1                  364 	pop	de
+   011F E9                  365 	jp	(hl)
+   0120                     366 00146$:
+   0120 C3r38s01            367 	jp	00101$
+   0123 C3r3Ds01            368 	jp	00102$
+   0126 C3r45s01            369 	jp	00103$
+   0129 C3r4As01            370 	jp	00104$
+   012C C3r52s01            371 	jp	00105$
+   012F C3r57s01            372 	jp	00106$
+   0132 C3r5Fs01            373 	jp	00107$
+   0135 C3r64s01            374 	jp	00108$
+                            375 ;carwar.c:245: case 1: y--; break;
+                            376 ;	genLabel
+   0138                     377 00101$:
+                            378 ;	genMinus
+                            379 ;	AOP_STK for _MainLoop_y_1_1
+   0138 DD 35 EF            380 	dec	-17(ix)
+                            381 ;	genGoto
+   013B 18 2D               382 	jr	00111$
+                            383 ;carwar.c:246: case 2: y--; x++; break;
+                            384 ;	genLabel
+   013D                     385 00102$:
+                            386 ;	genMinus
+                            387 ;	AOP_STK for _MainLoop_y_1_1
+   013D DD 35 EF            388 	dec	-17(ix)
+                            389 ;	genPlus
+                            390 ;	AOP_STK for _MainLoop_x_1_1
+                            391 ;	genPlusIncr
+   0140 DD 34 F0            392 	inc	-16(ix)
+                            393 ;	genGoto
+   0143 18 25               394 	jr	00111$
+                            395 ;carwar.c:247: case 3: x++; break;
+                            396 ;	genLabel
+   0145                     397 00103$:
+                            398 ;	genPlus
+                            399 ;	AOP_STK for _MainLoop_x_1_1
+                            400 ;	genPlusIncr
+   0145 DD 34 F0            401 	inc	-16(ix)
+                            402 ;	genGoto
+   0148 18 20               403 	jr	00111$
+                            404 ;carwar.c:248: case 4: y++; x++; break;
+                            405 ;	genLabel
+   014A                     406 00104$:
+                            407 ;	genPlus
+                            408 ;	AOP_STK for _MainLoop_y_1_1
+                            409 ;	genPlusIncr
+   014A DD 34 EF            410 	inc	-17(ix)
+                            411 ;	genPlus
+                            412 ;	AOP_STK for _MainLoop_x_1_1
+                            413 ;	genPlusIncr
+   014D DD 34 F0            414 	inc	-16(ix)
+                            415 ;	genGoto
+   0150 18 18               416 	jr	00111$
+                            417 ;carwar.c:249: case 5: y++; break;
+                            418 ;	genLabel
+   0152                     419 00105$:
+                            420 ;	genPlus
+                            421 ;	AOP_STK for _MainLoop_y_1_1
+                            422 ;	genPlusIncr
+   0152 DD 34 EF            423 	inc	-17(ix)
+                            424 ;	genGoto
+   0155 18 13               425 	jr	00111$
+                            426 ;carwar.c:250: case 6: y++; x--; break;
+                            427 ;	genLabel
+   0157                     428 00106$:
+                            429 ;	genPlus
+                            430 ;	AOP_STK for _MainLoop_y_1_1
+                            431 ;	genPlusIncr
+   0157 DD 34 EF            432 	inc	-17(ix)
+                            433 ;	genMinus
+                            434 ;	AOP_STK for _MainLoop_x_1_1
+   015A DD 35 F0            435 	dec	-16(ix)
+                            436 ;	genGoto
+   015D 18 0B               437 	jr	00111$
+                            438 ;carwar.c:251: case 7: x--; break;
+                            439 ;	genLabel
+   015F                     440 00107$:
+                            441 ;	genMinus
+                            442 ;	AOP_STK for _MainLoop_x_1_1
+   015F DD 35 F0            443 	dec	-16(ix)
+                            444 ;	genGoto
+   0162 18 06               445 	jr	00111$
+                            446 ;carwar.c:252: case 8: y--; x--; break;
                             447 ;	genLabel
-   0138                     448 00101$:
+   0164                     448 00108$:
                             449 ;	genMinus
                             450 ;	AOP_STK for _MainLoop_y_1_1
-   0138 DD 35 EF            451 	dec	-17(ix)
-                            452 ;	genGoto
-   013B 18 2D               453 	jr	00111$
-                            454 ;carwar.c:246: case 2: y--; x++; break;
-                            455 ;	genLabel
-   013D                     456 00102$:
-                            457 ;	genMinus
-                            458 ;	AOP_STK for _MainLoop_y_1_1
-   013D DD 35 EF            459 	dec	-17(ix)
-                            460 ;	genPlus
-                            461 ;	AOP_STK for _MainLoop_x_1_1
-                            462 ;	genPlusIncr
-   0140 DD 34 F0            463 	inc	-16(ix)
-                            464 ;	genGoto
-   0143 18 25               465 	jr	00111$
-                            466 ;carwar.c:247: case 3: x++; break;
-                            467 ;	genLabel
-   0145                     468 00103$:
-                            469 ;	genPlus
-                            470 ;	AOP_STK for _MainLoop_x_1_1
-                            471 ;	genPlusIncr
-   0145 DD 34 F0            472 	inc	-16(ix)
-                            473 ;	genGoto
-   0148 18 20               474 	jr	00111$
-                            475 ;carwar.c:248: case 4: y++; x++; break;
-                            476 ;	genLabel
-   014A                     477 00104$:
-                            478 ;	genPlus
-                            479 ;	AOP_STK for _MainLoop_y_1_1
-                            480 ;	genPlusIncr
-   014A DD 34 EF            481 	inc	-17(ix)
-                            482 ;	genPlus
-                            483 ;	AOP_STK for _MainLoop_x_1_1
-                            484 ;	genPlusIncr
-   014D DD 34 F0            485 	inc	-16(ix)
-                            486 ;	genGoto
-   0150 18 18               487 	jr	00111$
-                            488 ;carwar.c:249: case 5: y++; break;
-                            489 ;	genLabel
-   0152                     490 00105$:
-                            491 ;	genPlus
-                            492 ;	AOP_STK for _MainLoop_y_1_1
-                            493 ;	genPlusIncr
-   0152 DD 34 EF            494 	inc	-17(ix)
-                            495 ;	genGoto
-   0155 18 13               496 	jr	00111$
-                            497 ;carwar.c:250: case 6: y++; x--; break;
-                            498 ;	genLabel
-   0157                     499 00106$:
-                            500 ;	genPlus
-                            501 ;	AOP_STK for _MainLoop_y_1_1
-                            502 ;	genPlusIncr
-   0157 DD 34 EF            503 	inc	-17(ix)
-                            504 ;	genMinus
-                            505 ;	AOP_STK for _MainLoop_x_1_1
-   015A DD 35 F0            506 	dec	-16(ix)
-                            507 ;	genGoto
-   015D 18 0B               508 	jr	00111$
-                            509 ;carwar.c:251: case 7: x--; break;
-                            510 ;	genLabel
-   015F                     511 00107$:
-                            512 ;	genMinus
-                            513 ;	AOP_STK for _MainLoop_x_1_1
-   015F DD 35 F0            514 	dec	-16(ix)
-                            515 ;	genGoto
-   0162 18 06               516 	jr	00111$
-                            517 ;carwar.c:252: case 8: y--; x--; break;
-                            518 ;	genLabel
-   0164                     519 00108$:
-                            520 ;	genMinus
-                            521 ;	AOP_STK for _MainLoop_y_1_1
-   0164 DD 35 EF            522 	dec	-17(ix)
-                            523 ;	genMinus
-                            524 ;	AOP_STK for _MainLoop_x_1_1
-   0167 DD 35 F0            525 	dec	-16(ix)
-                            526 ;carwar.c:253: }
-                            527 ;	genLabel
-   016A                     528 00111$:
-                            529 ;carwar.c:281: for(i=0; i<10; i++) // rows
-                            530 ;	genAssign
-   016A 11 00 00            531 	ld	de,#0x0000
-                            532 ;	genAssign
-                            533 ;	AOP_STK for _MainLoop_i_1_1
-   016D DD 36 ED 00         534 	ld	-19(ix),#0x00
-   0171 DD 36 EE 00         535 	ld	-18(ix),#0x00
-                            536 ;	genLabel
-   0175                     537 00122$:
-                            538 ;	genCmpLt
-                            539 ;	AOP_STK for _MainLoop_i_1_1
-   0175 DD 7E ED            540 	ld	a,-19(ix)
-   0178 D6 0A               541 	sub	a,#0x0A
-   017A DD 7E EE            542 	ld	a,-18(ix)
-   017D DE 00               543 	sbc	a,#0x00
-   017F F2r28s02            544 	jp	P,00145$
-                            545 ;carwar.c:283: keyLine = GetKeyMatrixLine(i);
-                            546 ;	genCast
-                            547 ;	AOP_STK for _MainLoop_i_1_1
-   0182 DD 4E ED            548 	ld	c,-19(ix)
-                            549 ;	genIpush
-                            550 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   0185 79                  551 	ld	a,c
-   0186 F5                  552 	push	af
-   0187 33                  553 	inc	sp
-                            554 ;	genCall
-   0188 CDr4Bs04            555 	call	_GetKeyMatrixLine
-   018B 4D                  556 	ld	c,l
-   018C 33                  557 	inc	sp
-                            558 ;	genAssign
-   018D 59                  559 	ld	e,c
-                            560 ;carwar.c:284: for(j=0; j<8; j++) // characters
-                            561 ;	genAssign
-                            562 ;	AOP_STK for _MainLoop_j_1_1
-   018E DD 36 EB 00         563 	ld	-21(ix),#0x00
-   0192 DD 36 EC 00         564 	ld	-20(ix),#0x00
-                            565 ;	genLabel
-   0196                     566 00118$:
-                            567 ;	genCmpLt
-                            568 ;	AOP_STK for _MainLoop_j_1_1
-   0196 DD 7E EB            569 	ld	a,-21(ix)
-   0199 D6 08               570 	sub	a,#0x08
-   019B DD 7E EC            571 	ld	a,-20(ix)
-   019E DE 00               572 	sbc	a,#0x00
-   01A0 F2r17s02            573 	jp	P,00124$
-                            574 ;carwar.c:286: if(keyLine & 1 << j)
-                            575 ;	genLeftShift
-                            576 ;	AOP_STK for _MainLoop_j_1_1
-   01A3 DD 7E EB            577 	ld	a,-21(ix)
-   01A6 3C                  578 	inc	a
-                            579 ;	AOP_STK for _MainLoop_sloc0_1_0
-   01A7 F5                  580 	push	af
-   01A8 DD 36 E9 01         581 	ld	-23(ix),#0x01
-   01AC DD 36 EA 00         582 	ld	-22(ix),#0x00
-   01B0 F1                  583 	pop	af
-   01B1 18 08               584 	jr	00148$
-   01B3                     585 00147$:
-   01B3 DD CB E9 26         586 	sla	-23(ix)
-   01B7 DD CB EA 16         587 	rl	-22(ix)
-   01BB                     588 00148$:
-   01BB 3D                  589 	dec	a
-   01BC 20 F5               590 	jr	NZ,00147$
-                            591 ;	genCast
-   01BE 4B                  592 	ld	c,e
-   01BF 06 00               593 	ld	b,#0x00
-                            594 ;	genAnd
-                            595 ;	AOP_STK for _MainLoop_sloc0_1_0
-   01C1 79                  596 	ld	a,c
-   01C2 DD A6 E9            597 	and	a,-23(ix)
-   01C5 4F                  598 	ld	c,a
-   01C6 78                  599 	ld	a,b
-   01C7 DD A6 EA            600 	and	a,-22(ix)
-                            601 ;	genIfx
-   01CA 47                  602 	ld	b,a
-   01CB B1                  603 	or	a,c
-   01CC 28 20               604 	jr	Z,00113$
-                            605 ;carwar.c:287: DrawPoint8(10 + j, 10 + i, 0);
-                            606 ;	genCast
-                            607 ;	AOP_STK for _MainLoop_i_1_1
-   01CE DD 4E ED            608 	ld	c,-19(ix)
-                            609 ;	genPlus
-                            610 ;	genPlusIncr
-   01D1 79                  611 	ld	a,c
-   01D2 C6 0A               612 	add	a,#0x0A
-   01D4 4F                  613 	ld	c,a
-                            614 ;	genCast
-                            615 ;	AOP_STK for _MainLoop_j_1_1
-   01D5 DD 46 EB            616 	ld	b,-21(ix)
-                            617 ;	genPlus
-                            618 ;	genPlusIncr
-   01D8 78                  619 	ld	a,b
-   01D9 C6 0A               620 	add	a,#0x0A
-   01DB 47                  621 	ld	b,a
-                            622 ;	genIpush
-                            623 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
-   01DC D5                  624 	push	de
-   01DD 3E 00               625 	ld	a,#0x00
-   01DF F5                  626 	push	af
-   01E0 33                  627 	inc	sp
-                            628 ;	genIpush
-   01E1 79                  629 	ld	a,c
-   01E2 F5                  630 	push	af
-   01E3 33                  631 	inc	sp
-                            632 ;	genIpush
-   01E4 C5                  633 	push	bc
-   01E5 33                  634 	inc	sp
-                            635 ;	genCall
-   01E6 CDrAAs02            636 	call	_DrawPoint8
-   01E9 F1                  637 	pop	af
-   01EA 33                  638 	inc	sp
-   01EB D1                  639 	pop	de
-                            640 ;	genGoto
-   01EC 18 1E               641 	jr	00120$
-                            642 ;	genLabel
-   01EE                     643 00113$:
-                            644 ;carwar.c:289: DrawPoint8(10 + j, 10 + i, 255);
-                            645 ;	genCast
-                            646 ;	AOP_STK for _MainLoop_i_1_1
-   01EE DD 4E ED            647 	ld	c,-19(ix)
-                            648 ;	genPlus
-                            649 ;	genPlusIncr
-   01F1 79                  650 	ld	a,c
-   01F2 C6 0A               651 	add	a,#0x0A
-   01F4 4F                  652 	ld	c,a
-                            653 ;	genCast
-                            654 ;	AOP_STK for _MainLoop_j_1_1
-   01F5 DD 46 EB            655 	ld	b,-21(ix)
-                            656 ;	genPlus
-                            657 ;	genPlusIncr
-   01F8 78                  658 	ld	a,b
-   01F9 C6 0A               659 	add	a,#0x0A
-   01FB 47                  660 	ld	b,a
-                            661 ;	genIpush
-                            662 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
-   01FC D5                  663 	push	de
-   01FD 3E FF               664 	ld	a,#0xFF
-   01FF F5                  665 	push	af
-   0200 33                  666 	inc	sp
-                            667 ;	genIpush
-   0201 79                  668 	ld	a,c
-   0202 F5                  669 	push	af
-   0203 33                  670 	inc	sp
+   0164 DD 35 EF            451 	dec	-17(ix)
+                            452 ;	genMinus
+                            453 ;	AOP_STK for _MainLoop_x_1_1
+   0167 DD 35 F0            454 	dec	-16(ix)
+                            455 ;carwar.c:253: }
+                            456 ;	genLabel
+   016A                     457 00111$:
+                            458 ;carwar.c:281: for(i=0; i<10; i++) // rows
+                            459 ;	genAssign
+   016A 11 00 00            460 	ld	de,#0x0000
+                            461 ;	genAssign
+                            462 ;	AOP_STK for _MainLoop_i_1_1
+   016D DD 36 ED 00         463 	ld	-19(ix),#0x00
+   0171 DD 36 EE 00         464 	ld	-18(ix),#0x00
+                            465 ;	genLabel
+   0175                     466 00122$:
+                            467 ;	genCmpLt
+                            468 ;	AOP_STK for _MainLoop_i_1_1
+   0175 DD 7E ED            469 	ld	a,-19(ix)
+   0178 D6 0A               470 	sub	a,#0x0A
+   017A DD 7E EE            471 	ld	a,-18(ix)
+   017D DE 00               472 	sbc	a,#0x00
+   017F F2r28s02            473 	jp	P,00145$
+                            474 ;carwar.c:283: keyLine = GetKeyMatrixLine(i);
+                            475 ;	genCast
+                            476 ;	AOP_STK for _MainLoop_i_1_1
+   0182 DD 4E ED            477 	ld	c,-19(ix)
+                            478 ;	genIpush
+                            479 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0185 79                  480 	ld	a,c
+   0186 F5                  481 	push	af
+   0187 33                  482 	inc	sp
+                            483 ;	genCall
+   0188 CDr86s03            484 	call	_GetKeyMatrixLine
+   018B 4D                  485 	ld	c,l
+   018C 33                  486 	inc	sp
+                            487 ;	genAssign
+   018D 59                  488 	ld	e,c
+                            489 ;carwar.c:284: for(j=0; j<8; j++) // characters
+                            490 ;	genAssign
+                            491 ;	AOP_STK for _MainLoop_j_1_1
+   018E DD 36 EB 00         492 	ld	-21(ix),#0x00
+   0192 DD 36 EC 00         493 	ld	-20(ix),#0x00
+                            494 ;	genLabel
+   0196                     495 00118$:
+                            496 ;	genCmpLt
+                            497 ;	AOP_STK for _MainLoop_j_1_1
+   0196 DD 7E EB            498 	ld	a,-21(ix)
+   0199 D6 08               499 	sub	a,#0x08
+   019B DD 7E EC            500 	ld	a,-20(ix)
+   019E DE 00               501 	sbc	a,#0x00
+   01A0 F2r17s02            502 	jp	P,00124$
+                            503 ;carwar.c:286: if(keyLine & 1 << j)
+                            504 ;	genLeftShift
+                            505 ;	AOP_STK for _MainLoop_j_1_1
+   01A3 DD 7E EB            506 	ld	a,-21(ix)
+   01A6 3C                  507 	inc	a
+                            508 ;	AOP_STK for _MainLoop_sloc0_1_0
+   01A7 F5                  509 	push	af
+   01A8 DD 36 E9 01         510 	ld	-23(ix),#0x01
+   01AC DD 36 EA 00         511 	ld	-22(ix),#0x00
+   01B0 F1                  512 	pop	af
+   01B1 18 08               513 	jr	00148$
+   01B3                     514 00147$:
+   01B3 DD CB E9 26         515 	sla	-23(ix)
+   01B7 DD CB EA 16         516 	rl	-22(ix)
+   01BB                     517 00148$:
+   01BB 3D                  518 	dec	a
+   01BC 20 F5               519 	jr	NZ,00147$
+                            520 ;	genCast
+   01BE 4B                  521 	ld	c,e
+   01BF 06 00               522 	ld	b,#0x00
+                            523 ;	genAnd
+                            524 ;	AOP_STK for _MainLoop_sloc0_1_0
+   01C1 79                  525 	ld	a,c
+   01C2 DD A6 E9            526 	and	a,-23(ix)
+   01C5 4F                  527 	ld	c,a
+   01C6 78                  528 	ld	a,b
+   01C7 DD A6 EA            529 	and	a,-22(ix)
+                            530 ;	genIfx
+   01CA 47                  531 	ld	b,a
+   01CB B1                  532 	or	a,c
+   01CC 28 20               533 	jr	Z,00113$
+                            534 ;carwar.c:287: DrawPoint8(10 + j, 10 + i, 0);
+                            535 ;	genCast
+                            536 ;	AOP_STK for _MainLoop_i_1_1
+   01CE DD 4E ED            537 	ld	c,-19(ix)
+                            538 ;	genPlus
+                            539 ;	genPlusIncr
+   01D1 79                  540 	ld	a,c
+   01D2 C6 0A               541 	add	a,#0x0A
+   01D4 4F                  542 	ld	c,a
+                            543 ;	genCast
+                            544 ;	AOP_STK for _MainLoop_j_1_1
+   01D5 DD 46 EB            545 	ld	b,-21(ix)
+                            546 ;	genPlus
+                            547 ;	genPlusIncr
+   01D8 78                  548 	ld	a,b
+   01D9 C6 0A               549 	add	a,#0x0A
+   01DB 47                  550 	ld	b,a
+                            551 ;	genIpush
+                            552 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   01DC D5                  553 	push	de
+   01DD 3E 00               554 	ld	a,#0x00
+   01DF F5                  555 	push	af
+   01E0 33                  556 	inc	sp
+                            557 ;	genIpush
+   01E1 79                  558 	ld	a,c
+   01E2 F5                  559 	push	af
+   01E3 33                  560 	inc	sp
+                            561 ;	genIpush
+   01E4 C5                  562 	push	bc
+   01E5 33                  563 	inc	sp
+                            564 ;	genCall
+   01E6 CDrAAs02            565 	call	_DrawPoint8
+   01E9 F1                  566 	pop	af
+   01EA 33                  567 	inc	sp
+   01EB D1                  568 	pop	de
+                            569 ;	genGoto
+   01EC 18 1E               570 	jr	00120$
+                            571 ;	genLabel
+   01EE                     572 00113$:
+                            573 ;carwar.c:289: DrawPoint8(10 + j, 10 + i, 255);
+                            574 ;	genCast
+                            575 ;	AOP_STK for _MainLoop_i_1_1
+   01EE DD 4E ED            576 	ld	c,-19(ix)
+                            577 ;	genPlus
+                            578 ;	genPlusIncr
+   01F1 79                  579 	ld	a,c
+   01F2 C6 0A               580 	add	a,#0x0A
+   01F4 4F                  581 	ld	c,a
+                            582 ;	genCast
+                            583 ;	AOP_STK for _MainLoop_j_1_1
+   01F5 DD 46 EB            584 	ld	b,-21(ix)
+                            585 ;	genPlus
+                            586 ;	genPlusIncr
+   01F8 78                  587 	ld	a,b
+   01F9 C6 0A               588 	add	a,#0x0A
+   01FB 47                  589 	ld	b,a
+                            590 ;	genIpush
+                            591 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   01FC D5                  592 	push	de
+   01FD 3E FF               593 	ld	a,#0xFF
+   01FF F5                  594 	push	af
+   0200 33                  595 	inc	sp
+                            596 ;	genIpush
+   0201 79                  597 	ld	a,c
+   0202 F5                  598 	push	af
+   0203 33                  599 	inc	sp
+                            600 ;	genIpush
+   0204 C5                  601 	push	bc
+   0205 33                  602 	inc	sp
+                            603 ;	genCall
+   0206 CDrAAs02            604 	call	_DrawPoint8
+   0209 F1                  605 	pop	af
+   020A 33                  606 	inc	sp
+   020B D1                  607 	pop	de
+                            608 ;	genLabel
+   020C                     609 00120$:
+                            610 ;carwar.c:284: for(j=0; j<8; j++) // characters
+                            611 ;	genPlus
+                            612 ;	AOP_STK for _MainLoop_j_1_1
+                            613 ;	genPlusIncr
+   020C DD 34 EB            614 	inc	-21(ix)
+   020F 20 03               615 	jr	NZ,00149$
+   0211 DD 34 EC            616 	inc	-20(ix)
+   0214                     617 00149$:
+                            618 ;	genGoto
+   0214 C3r96s01            619 	jp	00118$
+                            620 ;	genLabel
+   0217                     621 00124$:
+                            622 ;carwar.c:281: for(i=0; i<10; i++) // rows
+                            623 ;	genPlus
+                            624 ;	AOP_STK for _MainLoop_i_1_1
+                            625 ;	genPlusIncr
+   0217 DD 34 ED            626 	inc	-19(ix)
+   021A 20 03               627 	jr	NZ,00150$
+   021C DD 34 EE            628 	inc	-18(ix)
+   021F                     629 00150$:
+                            630 ;	genAssign
+                            631 ;	AOP_STK for _MainLoop_i_1_1
+   021F DD 5E ED            632 	ld	e,-19(ix)
+   0222 DD 56 EE            633 	ld	d,-18(ix)
+                            634 ;	genGoto
+   0225 C3r75s01            635 	jp	00122$
+                            636 ;	genLabel
+   0228                     637 00145$:
+                            638 ;	genAssign
+                            639 ;	AOP_STK for _MainLoop_i_1_1
+   0228 DD 5E ED            640 	ld	e,-19(ix)
+   022B DD 56 EE            641 	ld	d,-18(ix)
+                            642 ;carwar.c:295: for(j=0; j<256; j++) // characters
+                            643 ;	genAssign
+                            644 ;	AOP_STK for _MainLoop_j_1_1
+   022E DD 36 EB 00         645 	ld	-21(ix),#0x00
+   0232 DD 36 EC 00         646 	ld	-20(ix),#0x00
+                            647 ;	genLabel
+   0236                     648 00126$:
+                            649 ;	genCmpLt
+                            650 ;	AOP_STK for _MainLoop_j_1_1
+   0236 DD 7E EB            651 	ld	a,-21(ix)
+   0239 D6 00               652 	sub	a,#0x00
+   023B DD 7E EC            653 	ld	a,-20(ix)
+   023E DE 01               654 	sbc	a,#0x01
+   0240 F2r98s00            655 	jp	P,00115$
+                            656 ;carwar.c:297: DrawPoint8(j, i, j);
+                            657 ;	genCast
+                            658 ;	AOP_STK for _MainLoop_j_1_1
+   0243 DD 4E EB            659 	ld	c,-21(ix)
+                            660 ;	genCast
+   0246 43                  661 	ld	b,e
+                            662 ;	genIpush
+                            663 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   0247 D5                  664 	push	de
+   0248 79                  665 	ld	a,c
+   0249 F5                  666 	push	af
+   024A 33                  667 	inc	sp
+                            668 ;	genIpush
+   024B C5                  669 	push	bc
+   024C 33                  670 	inc	sp
                             671 ;	genIpush
-   0204 C5                  672 	push	bc
-   0205 33                  673 	inc	sp
-                            674 ;	genCall
-   0206 CDrAAs02            675 	call	_DrawPoint8
-   0209 F1                  676 	pop	af
-   020A 33                  677 	inc	sp
-   020B D1                  678 	pop	de
-                            679 ;	genLabel
-   020C                     680 00120$:
-                            681 ;carwar.c:284: for(j=0; j<8; j++) // characters
-                            682 ;	genPlus
-                            683 ;	AOP_STK for _MainLoop_j_1_1
-                            684 ;	genPlusIncr
-   020C DD 34 EB            685 	inc	-21(ix)
-   020F 20 03               686 	jr	NZ,00149$
-   0211 DD 34 EC            687 	inc	-20(ix)
-   0214                     688 00149$:
-                            689 ;	genGoto
-   0214 C3r96s01            690 	jp	00118$
-                            691 ;	genLabel
-   0217                     692 00124$:
-                            693 ;carwar.c:281: for(i=0; i<10; i++) // rows
-                            694 ;	genPlus
-                            695 ;	AOP_STK for _MainLoop_i_1_1
-                            696 ;	genPlusIncr
-   0217 DD 34 ED            697 	inc	-19(ix)
-   021A 20 03               698 	jr	NZ,00150$
-   021C DD 34 EE            699 	inc	-18(ix)
-   021F                     700 00150$:
-                            701 ;	genAssign
-                            702 ;	AOP_STK for _MainLoop_i_1_1
-   021F DD 5E ED            703 	ld	e,-19(ix)
-   0222 DD 56 EE            704 	ld	d,-18(ix)
-                            705 ;	genGoto
-   0225 C3r75s01            706 	jp	00122$
-                            707 ;	genLabel
-   0228                     708 00145$:
-                            709 ;	genAssign
-                            710 ;	AOP_STK for _MainLoop_i_1_1
-   0228 DD 5E ED            711 	ld	e,-19(ix)
-   022B DD 56 EE            712 	ld	d,-18(ix)
-                            713 ;carwar.c:295: for(j=0; j<256; j++) // characters
-                            714 ;	genAssign
-                            715 ;	AOP_STK for _MainLoop_j_1_1
-   022E DD 36 EB 00         716 	ld	-21(ix),#0x00
-   0232 DD 36 EC 00         717 	ld	-20(ix),#0x00
-                            718 ;	genLabel
-   0236                     719 00126$:
-                            720 ;	genCmpLt
-                            721 ;	AOP_STK for _MainLoop_j_1_1
-   0236 DD 7E EB            722 	ld	a,-21(ix)
-   0239 D6 00               723 	sub	a,#0x00
-   023B DD 7E EC            724 	ld	a,-20(ix)
-   023E DE 01               725 	sbc	a,#0x01
-   0240 F2r98s00            726 	jp	P,00115$
-                            727 ;carwar.c:297: DrawPoint8(j, i, j);
-                            728 ;	genCast
-                            729 ;	AOP_STK for _MainLoop_j_1_1
-   0243 DD 4E EB            730 	ld	c,-21(ix)
-                            731 ;	genCast
-   0246 43                  732 	ld	b,e
-                            733 ;	genIpush
-                            734 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
-   0247 D5                  735 	push	de
-   0248 79                  736 	ld	a,c
-   0249 F5                  737 	push	af
-   024A 33                  738 	inc	sp
-                            739 ;	genIpush
-   024B C5                  740 	push	bc
-   024C 33                  741 	inc	sp
-                            742 ;	genIpush
-   024D 79                  743 	ld	a,c
-   024E F5                  744 	push	af
-   024F 33                  745 	inc	sp
-                            746 ;	genCall
-   0250 CDrAAs02            747 	call	_DrawPoint8
-   0253 F1                  748 	pop	af
-   0254 33                  749 	inc	sp
-   0255 D1                  750 	pop	de
-                            751 ;carwar.c:295: for(j=0; j<256; j++) // characters
-                            752 ;	genPlus
-                            753 ;	AOP_STK for _MainLoop_j_1_1
-                            754 ;	genPlusIncr
-   0256 DD 34 EB            755 	inc	-21(ix)
-   0259 20 03               756 	jr	NZ,00151$
-   025B DD 34 EC            757 	inc	-20(ix)
-   025E                     758 00151$:
-                            759 ;	genGoto
-   025E 18 D6               760 	jr	00126$
-                            761 ;	genLabel
-                            762 ;	genEndFunction
-   0260 DD F9               763 	ld	sp,ix
-   0262 DD E1               764 	pop	ix
-   0264 C9                  765 	ret
-   0265                     766 _MainLoop_end::
-                            767 ;carwar.c:452: void SetScreen8()
-                            768 ;	genLabel
-                            769 ;	genFunction
-                            770 ;	---------------------------------
-                            771 ; Function SetScreen8
-                            772 ; ---------------------------------
-   0265                     773 _SetScreen8_start::
-   0265                     774 _SetScreen8:
-                            775 ;carwar.c:488: _endasm;
-                            776 ;	genInline
-                            777 	
-                            778 	
-                            779 	
-                            780 	
-   0265 3A DF F3            781 		 ld a,(#0xF3DF)
-   0268 CB DF               782 		 set #3,a
-   026A CB D7               783 		 set #2,a
-   026C CB CF               784 		 set #1,a
-   026E 32 DF F3            785 		 ld (#0xF3DF),a
-                            786 	
-   0271 F3                  787 		 di
-                            788 	
-   0272 D3 99               789 		 out (#0x99),a
-   0274 3E 80               790 		 ld a,#(0x80+0)
-   0276 D3 99               791 		 out (#0x99),a
+   024D 79                  672 	ld	a,c
+   024E F5                  673 	push	af
+   024F 33                  674 	inc	sp
+                            675 ;	genCall
+   0250 CDrAAs02            676 	call	_DrawPoint8
+   0253 F1                  677 	pop	af
+   0254 33                  678 	inc	sp
+   0255 D1                  679 	pop	de
+                            680 ;carwar.c:295: for(j=0; j<256; j++) // characters
+                            681 ;	genPlus
+                            682 ;	AOP_STK for _MainLoop_j_1_1
+                            683 ;	genPlusIncr
+   0256 DD 34 EB            684 	inc	-21(ix)
+   0259 20 03               685 	jr	NZ,00151$
+   025B DD 34 EC            686 	inc	-20(ix)
+   025E                     687 00151$:
+                            688 ;	genGoto
+   025E 18 D6               689 	jr	00126$
+                            690 ;	genLabel
+                            691 ;	genEndFunction
+   0260 DD F9               692 	ld	sp,ix
+   0262 DD E1               693 	pop	ix
+   0264 C9                  694 	ret
+   0265                     695 _MainLoop_end::
+                            696 ;carwar.c:452: void SetScreen8()
+                            697 ;	genLabel
+                            698 ;	genFunction
+                            699 ;	---------------------------------
+                            700 ; Function SetScreen8
+                            701 ; ---------------------------------
+   0265                     702 _SetScreen8_start::
+   0265                     703 _SetScreen8:
+                            704 ;carwar.c:488: _endasm;
+                            705 ;	genInline
+                            706 	
+                            707 	
+                            708 	
+                            709 	
+   0265 3A DF F3            710 		 ld a,(#0xF3DF)
+   0268 CB DF               711 		 set #3,a
+   026A CB D7               712 		 set #2,a
+   026C CB CF               713 		 set #1,a
+   026E 32 DF F3            714 		 ld (#0xF3DF),a
+                            715 	
+   0271 F3                  716 		 di
+                            717 	
+   0272 D3 99               718 		 out (#0x99),a
+   0274 3E 80               719 		 ld a,#(0x80+0)
+   0276 D3 99               720 		 out (#0x99),a
+                            721 	
+                            722 	
+   0278 3A E0 F3            723 		 ld a,(#0xF3E0)
+   027B CB A7               724 		 res #4,a
+   027D CB 9F               725 		 res #3,a
+   027F 32 E0 F3            726 		 ld (#0xF3E0),a
+                            727 	
+   0282 D3 99               728 		 out (#0x99),a
+   0284 3E 81               729 		 ld a,#(0x80+1)
+   0286 D3 99               730 		 out (#0x99),a
+                            731 	
+                            732 	
+   0288 3E 1F               733 		 ld a,#0x1F
+   028A D3 99               734 		 out (#0x99),a
+   028C 3E 82               735 		 ld a,#(0x80+2)
+   028E D3 99               736 		 out (#0x99),a
+                            737 	
+   0290 FB                  738 		 ei
+                            739 	
+                            740 		
+                            741 ;	genLabel
+                            742 ;	genEndFunction
+   0291 C9                  743 	ret
+   0292                     744 _SetScreen8_end::
+                            745 ;carwar.c:494: void SetPage8(i8 page)
+                            746 ;	genLabel
+                            747 ;	genFunction
+                            748 ;	---------------------------------
+                            749 ; Function SetPage8
+                            750 ; ---------------------------------
+   0292                     751 _SetPage8_start::
+   0292                     752 _SetPage8:
+   0292 DD E5               753 	push	ix
+   0294 DD 21 00 00         754 	ld	ix,#0
+   0298 DD 39               755 	add	ix,sp
+                            756 ;carwar.c:508: _endasm;
+                            757 ;	genInline
+                            758 	
+                            759 	
+   029A DD 7E 04            760 		 ld a,4(ix)
+   029D F6 1F               761 		 or #0x1F
+   029F F3                  762 		 di
+   02A0 D3 99               763 		 out (#0x99),a
+   02A2 3E 82               764 		 ld a,#(0x80+2)
+   02A4 D3 99               765 		 out (#0x99),a
+   02A6 FB                  766 		 ei
+                            767 	
+                            768 		
+                            769 ;	genLabel
+                            770 ;	genEndFunction
+   02A7 DD E1               771 	pop	ix
+   02A9 C9                  772 	ret
+   02AA                     773 _SetPage8_end::
+                            774 ;carwar.c:514: void DrawPoint8(char posX, char posY, char color)
+                            775 ;	genLabel
+                            776 ;	genFunction
+                            777 ;	---------------------------------
+                            778 ; Function DrawPoint8
+                            779 ; ---------------------------------
+   02AA                     780 _DrawPoint8_start::
+   02AA                     781 _DrawPoint8:
+   02AA DD E5               782 	push	ix
+   02AC DD 21 00 00         783 	ld	ix,#0
+   02B0 DD 39               784 	add	ix,sp
+                            785 ;carwar.c:518: WaitForVDP();
+                            786 ;	genCall
+                            787 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   02B2 CDr48s03            788 	call	_WaitForVDP
+                            789 ;carwar.c:566: _endasm;
+                            790 ;	genInline
+                            791 	
                             792 	
                             793 	
-   0278 3A E0 F3            794 		 ld a,(#0xF3E0)
-   027B CB A7               795 		 res #4,a
-   027D CB 9F               796 		 res #3,a
-   027F 32 E0 F3            797 		 ld (#0xF3E0),a
-                            798 	
-   0282 D3 99               799 		 out (#0x99),a
-   0284 3E 81               800 		 ld a,#(0x80+1)
-   0286 D3 99               801 		 out (#0x99),a
-                            802 	
-                            803 	
-   0288 3E 1F               804 		 ld a,#0x1F
-   028A D3 99               805 		 out (#0x99),a
-   028C 3E 82               806 		 ld a,#(0x80+2)
-   028E D3 99               807 		 out (#0x99),a
-                            808 	
-   0290 FB                  809 		 ei
-                            810 	
-                            811 		
-                            812 ;	genLabel
-                            813 ;	genEndFunction
-   0291 C9                  814 	ret
-   0292                     815 _SetScreen8_end::
-                            816 ;carwar.c:494: void SetPage8(i8 page)
-                            817 ;	genLabel
-                            818 ;	genFunction
-                            819 ;	---------------------------------
-                            820 ; Function SetPage8
-                            821 ; ---------------------------------
-   0292                     822 _SetPage8_start::
-   0292                     823 _SetPage8:
-   0292 DD E5               824 	push	ix
-   0294 DD 21 00 00         825 	ld	ix,#0
-   0298 DD 39               826 	add	ix,sp
-                            827 ;carwar.c:508: _endasm;
-                            828 ;	genInline
+                            794 	
+   02B5 DD 7E 04            795 		 ld a,4(ix)
+   02B8 F3                  796 		 di
+   02B9 D3 99               797 		 out (#0x99),a
+   02BB 3E A4               798 		 ld a,#(0x80+36)
+   02BD D3 99               799 		 out (#0x99),a
+                            800 	
+   02BF AF                  801 		 xor a
+   02C0 D3 99               802 		 out (#0x99),a
+   02C2 3E A5               803 		 ld a,#(0x80+37)
+   02C4 D3 99               804 		 out (#0x99),a
+                            805 	
+                            806 	
+   02C6 DD 7E 05            807 		 ld a,5(ix)
+   02C9 D3 99               808 		 out (#0x99),a
+   02CB 3E A6               809 		 ld a,#(0x80+38)
+   02CD D3 99               810 		 out (#0x99),a
+                            811 	
+   02CF AF                  812 		 xor a
+   02D0 D3 99               813 		 out (#0x99),a
+   02D2 3E A7               814 		 ld a,#(0x80+39)
+   02D4 D3 99               815 		 out (#0x99),a
+                            816 	
+                            817 	
+   02D6 DD 7E 06            818 		 ld a,6(ix)
+   02D9 D3 99               819 		 out (#0x99),a
+   02DB 3E AC               820 		 ld a,#(0x80+44)
+   02DD D3 99               821 		 out (#0x99),a
+                            822 	
+                            823 	
+   02DF AF                  824 		 xor a
+   02E0 D3 99               825 		 out (#0x99),a
+   02E2 3E AD               826 		 ld a,#(0x80+45)
+   02E4 D3 99               827 		 out (#0x99),a
+                            828 	
                             829 	
-                            830 	
-   029A DD 7E 04            831 		 ld a,4(ix)
-   029D F6 1F               832 		 or #0x1F
-   029F F3                  833 		 di
-   02A0 D3 99               834 		 out (#0x99),a
-   02A2 3E 82               835 		 ld a,#(0x80+2)
-   02A4 D3 99               836 		 out (#0x99),a
-   02A6 FB                  837 		 ei
-                            838 	
-                            839 		
-                            840 ;	genLabel
-                            841 ;	genEndFunction
-   02A7 DD E1               842 	pop	ix
-   02A9 C9                  843 	ret
-   02AA                     844 _SetPage8_end::
-                            845 ;carwar.c:514: void DrawPoint8(char posX, char posY, char color)
-                            846 ;	genLabel
-                            847 ;	genFunction
-                            848 ;	---------------------------------
-                            849 ; Function DrawPoint8
-                            850 ; ---------------------------------
-   02AA                     851 _DrawPoint8_start::
-   02AA                     852 _DrawPoint8:
-   02AA DD E5               853 	push	ix
-   02AC DD 21 00 00         854 	ld	ix,#0
-   02B0 DD 39               855 	add	ix,sp
-                            856 ;carwar.c:518: WaitForVDP();
-                            857 ;	genCall
-                            858 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   02B2 CDr0Ds04            859 	call	_WaitForVDP
-                            860 ;carwar.c:566: _endasm;
-                            861 ;	genInline
-                            862 	
-                            863 	
-                            864 	
-                            865 	
-   02B5 DD 7E 04            866 		 ld a,4(ix)
-   02B8 F3                  867 		 di
-   02B9 D3 99               868 		 out (#0x99),a
-   02BB 3E A4               869 		 ld a,#(0x80+36)
-   02BD D3 99               870 		 out (#0x99),a
-                            871 	
-   02BF AF                  872 		 xor a
-   02C0 D3 99               873 		 out (#0x99),a
-   02C2 3E A5               874 		 ld a,#(0x80+37)
-   02C4 D3 99               875 		 out (#0x99),a
-                            876 	
-                            877 	
-   02C6 DD 7E 05            878 		 ld a,5(ix)
-   02C9 D3 99               879 		 out (#0x99),a
-   02CB 3E A6               880 		 ld a,#(0x80+38)
-   02CD D3 99               881 		 out (#0x99),a
-                            882 	
-   02CF AF                  883 		 xor a
-   02D0 D3 99               884 		 out (#0x99),a
-   02D2 3E A7               885 		 ld a,#(0x80+39)
-   02D4 D3 99               886 		 out (#0x99),a
-                            887 	
-                            888 	
-   02D6 DD 7E 06            889 		 ld a,6(ix)
-   02D9 D3 99               890 		 out (#0x99),a
-   02DB 3E AC               891 		 ld a,#(0x80+44)
-   02DD D3 99               892 		 out (#0x99),a
-                            893 	
-                            894 	
-   02DF AF                  895 		 xor a
-   02E0 D3 99               896 		 out (#0x99),a
-   02E2 3E AD               897 		 ld a,#(0x80+45)
-   02E4 D3 99               898 		 out (#0x99),a
-                            899 	
-                            900 	
-   02E6 3E 50               901 		 ld a,#0x50
-   02E8 D3 99               902 		 out (#0x99),a
-   02EA 3E AE               903 		 ld a,#(0x80+46)
-   02EC D3 99               904 		 out (#0x99),a
-                            905 	
-   02EE FB                  906 		 ei
+   02E6 3E 50               830 		 ld a,#0x50
+   02E8 D3 99               831 		 out (#0x99),a
+   02EA 3E AE               832 		 ld a,#(0x80+46)
+   02EC D3 99               833 		 out (#0x99),a
+                            834 	
+   02EE FB                  835 		 ei
+                            836 	
+                            837 		
+                            838 ;	genLabel
+                            839 ;	genEndFunction
+   02EF DD E1               840 	pop	ix
+   02F1 C9                  841 	ret
+   02F2                     842 _DrawPoint8_end::
+                            843 ;carwar.c:668: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
+                            844 ;	genLabel
+                            845 ;	genFunction
+                            846 ;	---------------------------------
+                            847 ; Function DrawLine8
+                            848 ; ---------------------------------
+   02F2                     849 _DrawLine8_start::
+   02F2                     850 _DrawLine8:
+   02F2 DD E5               851 	push	ix
+   02F4 DD 21 00 00         852 	ld	ix,#0
+   02F8 DD 39               853 	add	ix,sp
+                            854 ;carwar.c:672: WaitForVDP();
+                            855 ;	genCall
+                            856 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+                            857 ;	genLabel
+                            858 ;	genEndFunction
+   02FA DD E1               859 	pop	ix
+   02FC C3r48s03            860 	jp	_WaitForVDP
+   02FF                     861 _DrawLine8_end::
+                            862 ;carwar.c:806: void VPDCommand(int address)
+                            863 ;	genLabel
+                            864 ;	genFunction
+                            865 ;	---------------------------------
+                            866 ; Function VPDCommand
+                            867 ; ---------------------------------
+   02FF                     868 _VPDCommand_start::
+   02FF                     869 _VPDCommand:
+   02FF DD E5               870 	push	ix
+   0301 DD 21 00 00         871 	ld	ix,#0
+   0305 DD 39               872 	add	ix,sp
+                            873 ;carwar.c:810: WaitForVDP();
+                            874 ;	genCall
+                            875 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0307 CDr48s03            876 	call	_WaitForVDP
+                            877 ;carwar.c:841: _endasm;
+                            878 ;	genInline
+                            879 	
+                            880 	
+   030A DD 6E 04            881 		 ld l,4(ix)
+   030D DD 66 05            882 		 ld h,5(ix)
+                            883 	
+                            884 	
+   0310 3E 20               885 		 ld a,#32
+   0312 F3                  886 		 di
+   0313 D3 99               887 		 out (#0x99),a
+   0315 3E 91               888 		 ld a,#(0x80+17)
+   0317 D3 99               889 		 out (#0x99),a
+   0319 0E 9B               890 		 ld c,#0x99 +#2
+   031B ED A3               891 		 outi
+   031D ED A3               892 		 outi
+   031F ED A3               893 		 outi
+   0321 ED A3               894 		 outi
+   0323 ED A3               895 		 outi
+   0325 ED A3               896 		 outi
+   0327 ED A3               897 		 outi
+   0329 ED A3               898 		 outi
+   032B ED A3               899 		 outi
+   032D ED A3               900 		 outi
+   032F ED A3               901 		 outi
+   0331 ED A3               902 		 outi
+   0333 ED A3               903 		 outi
+   0335 ED A3               904 		 outi
+   0337 FB                  905 		 ei
+   0338 ED A3               906 		 outi
                             907 	
                             908 		
                             909 ;	genLabel
                             910 ;	genEndFunction
-   02EF DD E1               911 	pop	ix
-   02F1 C9                  912 	ret
-   02F2                     913 _DrawPoint8_end::
-                            914 ;carwar.c:572: void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
+   033A DD E1               911 	pop	ix
+   033C C9                  912 	ret
+   033D                     913 _VPDCommand_end::
+                            914 ;carwar.c:847: void waitRetrace()
                             915 ;	genLabel
                             916 ;	genFunction
                             917 ;	---------------------------------
-                            918 ; Function DrawLine
+                            918 ; Function waitRetrace
                             919 ; ---------------------------------
-   02F2                     920 _DrawLine_start::
-   02F2                     921 _DrawLine:
-   02F2 DD E5               922 	push	ix
-   02F4 DD 21 00 00         923 	ld	ix,#0
-   02F8 DD 39               924 	add	ix,sp
-                            925 ;carwar.c:574: SX  = posX1; 
-                            926 ;	genAssign
-                            927 ;	AOP_STK for 
-   02FA DD 7E 04            928 	ld	a,4(ix)
-   02FD FD 21r00s00         929 	ld	iy,#_SX
-   0301 FD 77 00            930 	ld	0(iy),a
-   0304 DD 7E 05            931 	ld	a,5(ix)
-   0307 FD 77 01            932 	ld	1(iy),a
-                            933 ;carwar.c:575: SY  = posY1; 
-                            934 ;	genAssign
-                            935 ;	AOP_STK for 
-   030A DD 7E 06            936 	ld	a,6(ix)
-   030D FD 21r02s00         937 	ld	iy,#_SY
-   0311 FD 77 00            938 	ld	0(iy),a
-   0314 DD 7E 07            939 	ld	a,7(ix)
-   0317 FD 77 01            940 	ld	1(iy),a
-                            941 ;carwar.c:576: DX  = posX2; 
-                            942 ;	genAssign
-                            943 ;	AOP_STK for 
-   031A DD 7E 08            944 	ld	a,8(ix)
-   031D FD 21r04s00         945 	ld	iy,#_DX
-   0321 FD 77 00            946 	ld	0(iy),a
-   0324 DD 7E 09            947 	ld	a,9(ix)
-   0327 FD 77 01            948 	ld	1(iy),a
-                            949 ;carwar.c:577: DY  = posY2; 
-                            950 ;	genAssign
-                            951 ;	AOP_STK for 
-   032A DD 7E 0A            952 	ld	a,10(ix)
-   032D FD 21r06s00         953 	ld	iy,#_DY
-   0331 FD 77 00            954 	ld	0(iy),a
-   0334 DD 7E 0B            955 	ld	a,11(ix)
-   0337 FD 77 01            956 	ld	1(iy),a
-                            957 ;carwar.c:578: CLR = color;
-                            958 ;	genAssign
-                            959 ;	AOP_STK for 
-   033A DD 7E 0C            960 	ld	a,12(ix)
-   033D FD 21r0Cs00         961 	ld	iy,#_CLR
-   0341 FD 77 00            962 	ld	0(iy),a
-                            963 ;carwar.c:580: DrawLineSimple();
-                            964 ;	genCall
-                            965 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-                            966 ;	genLabel
-                            967 ;	genEndFunction
-   0344 DD E1               968 	pop	ix
-   0346 C3r49s03            969 	jp	_DrawLineSimple
-   0349                     970 _DrawLine_end::
-                            971 ;carwar.c:586: void DrawLineSimple()
-                            972 ;	genLabel
-                            973 ;	genFunction
-                            974 ;	---------------------------------
-                            975 ; Function DrawLineSimple
-                            976 ; ---------------------------------
-   0349                     977 _DrawLineSimple_start::
-   0349                     978 _DrawLineSimple:
-                            979 ;carwar.c:588: WaitForVDP();
-                            980 ;	genCall
-                            981 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   0349 CDr0Ds04            982 	call	_WaitForVDP
-                            983 ;carwar.c:660: _endasm;
-                            984 ;	genInline
-                            985 	
+   033D                     920 _waitRetrace_start::
+   033D                     921 _waitRetrace:
+                            922 ;carwar.c:859: _endasm;
+                            923 ;	genInline
+                            924 	
+                            925 	
+   033D F3                  926 		 di
+   033E                     927 	 WAIT_RETRACE:
+   033E DB 99               928 		 in a,(0x99)
+   0340 E6 80               929 		 and #0x80
+   0342 FE 00               930 		 cp #0
+   0344 28 F8               931 		 jr z, WAIT_RETRACE
+   0346 FB                  932 		 ei
+                            933 	
+                            934 		
+                            935 ;	genLabel
+                            936 ;	genEndFunction
+   0347 C9                  937 	ret
+   0348                     938 _waitRetrace_end::
+                            939 ;carwar.c:865: void WaitForVDP()
+                            940 ;	genLabel
+                            941 ;	genFunction
+                            942 ;	---------------------------------
+                            943 ; Function WaitForVDP
+                            944 ; ---------------------------------
+   0348                     945 _WaitForVDP_start::
+   0348                     946 _WaitForVDP:
+                            947 ;carwar.c:886: _endasm;
+                            948 ;	genInline
+                            949 	
+                            950 	
+                            951 	
+   0348 3E 02               952 		 ld a,#2
+   034A F3                  953 		 di
+   034B D3 99               954 		 out (#0x99),a
+   034D 3E 8F               955 		 ld a,#(0x80+15)
+   034F D3 99               956 		 out (#0x99),a
+   0351                     957 	 WAIT_VDP:
+   0351 00                  958 		 nop
+   0352 DB 99               959 		 in a,(#0x99)
+   0354 1F                  960 		 rra
+   0355 38 FA               961 		 jr c,WAIT_VDP
+   0357 AF                  962 		 xor a
+   0358 D3 99               963 		 out (#0x99),a
+   035A 3E 8F               964 		 ld a,#(0x80+15)
+   035C D3 99               965 		 out (#0x99),a
+   035E FB                  966 		 ei
+                            967 	
+                            968 		
+                            969 ;	genLabel
+                            970 ;	genEndFunction
+   035F C9                  971 	ret
+   0360                     972 _WaitForVDP_end::
+                            973 ;carwar.c:890: char Joystick(char n)
+                            974 ;	genLabel
+                            975 ;	genFunction
+                            976 ;	---------------------------------
+                            977 ; Function Joystick
+                            978 ; ---------------------------------
+   0360                     979 _Joystick_start::
+   0360                     980 _Joystick:
+   0360 DD E5               981 	push	ix
+   0362 DD 21 00 00         982 	ld	ix,#0
+   0366 DD 39               983 	add	ix,sp
+                            984 ;carwar.c:897: _endasm;
+                            985 ;	genInline
                             986 	
-                            987 ;
-                            988 ;
-                            989 ;
-                            990 ;
-                            991 	
-   034C                     992 	Do_Line_VDP:
-                            993 ;
-   034C AF                  994 		       xor a ;
-   034D 2Ar06s00            995 		       ld hl,(_DY)
-   0350 ED 5Br02s00         996 		       ld de,(_SY)
-   0354 ED 52               997 		       sbc hl,de ;
-                            998 	
-   0356 17                  999 		       rla ;
-   0357 32r0Ds00           1000 		       ld (_ARG),a
-                           1001 	
-   035A A7                 1002 		       and a ;
-   035B CAr64s03           1003 		       jp z,DeltaX ;
-   035E EB                 1004 		       ex de,hl ;
-   035F 21 00 00           1005 		 ld hl,#0 ;
-   0362 ED 52              1006 		       sbc hl,de ;
-                           1007 	
-                           1008 ;
-   0364                    1009 	DeltaX:
-   0364 E5                 1010 	push	hl ;
-   0365 AF                 1011 		       xor a ;
-   0366 2Ar04s00           1012 		       ld hl,(_DX)
-   0369 ED 5Br00s00        1013 		       ld de,(_SX)
-   036D ED 52              1014 		       sbc hl,de ;
-                           1015 	
-   036F 3Ar0Ds00           1016 		       ld a,(_ARG)
-   0372 17                 1017 		       rla
-   0373 17                 1018 		       rla ;
-   0374 32r0Ds00           1019 		       ld (_ARG),a
-                           1020 	
-   0377 CB 4F              1021 		       bit 1,a ;
-   0379 CAr82s03           1022 		       jp z,cpHLDE ;
-   037C EB                 1023 		       ex de,hl ;
-   037D 21 00 00           1024 		 ld hl,#0 ;
-   0380 ED 52              1025 		       sbc hl,de ;
-                           1026 	
-                           1027 ;
-   0382                    1028 	cpHLDE:
-   0382 D1                 1029 	pop	de ;
-   0383 AF                 1030 		       xor a ;
-                           1031 	
-   0384 E5                 1032 		       push hl
-   0385 ED 52              1033 		       sbc hl,de ;
-   0387 E1                 1034 		       pop hl
-                           1035 	
-   0388 3Ar0Ds00           1036 		       ld a,(_ARG)
-   038B 17                 1037 		       rla ;
-   038C 32r0Ds00           1038 		       ld (_ARG),a
-                           1039 	
-   038F CB 47              1040 		       bit 0,a ;
-   0391 CAr95s03           1041 		       jp z,DoIt ;
-   0394 EB                 1042 		       ex de,hl ;
-                           1043 	
-                           1044 ;
-   0395                    1045 	DoIt:
-   0395 22r08s00           1046 	ld	(_NX),hl
-   0398 ED 53r0As00        1047 		       ld (_NY),de
-                           1048 	
-   039C 2Ar00s00           1049 		       ld hl,(_SX)
-   039F 22r04s00           1050 		       ld (_DX),hl
-                           1051 	
-   03A2 2Ar02s00           1052 		       ld hl,(_SY)
-   03A5 22r06s00           1053 		       ld (_DY),hl
-                           1054 	
-   03A8 3E 70              1055 		       ld a,#0x70 ;
-   03AA 32r0Es00           1056 		       ld (_CMD),a ;
+   0368 DD 7E 04            987 		 ld a,4(ix)
+   036B CD D5 00            988 		 call 0x00d5
+   036E 6F                  989 		 ld l,a
+                            990 		
+                            991 ;	genLabel
+                            992 ;	genEndFunction
+   036F DD E1               993 	pop	ix
+   0371 C9                  994 	ret
+   0372                     995 _Joystick_end::
+                            996 ;carwar.c:901: char Joytrig(char n)
+                            997 ;	genLabel
+                            998 ;	genFunction
+                            999 ;	---------------------------------
+                           1000 ; Function Joytrig
+                           1001 ; ---------------------------------
+   0372                    1002 _Joytrig_start::
+   0372                    1003 _Joytrig:
+   0372 DD E5              1004 	push	ix
+   0374 DD 21 00 00        1005 	ld	ix,#0
+   0378 DD 39              1006 	add	ix,sp
+                           1007 ;carwar.c:909: _endasm;
+                           1008 ;	genInline
+                           1009 	
+   037A DD 7E 04           1010 		 ld a,4(ix)
+   037D CD D8 00           1011 		 call 0x00d8
+   0380 26 00              1012 		 ld h,#0x00
+   0382 6F                 1013 		 ld l,a
+                           1014 		
+                           1015 ;	genLabel
+                           1016 ;	genEndFunction
+   0383 DD E1              1017 	pop	ix
+   0385 C9                 1018 	ret
+   0386                    1019 _Joytrig_end::
+                           1020 ;carwar.c:913: u8 GetKeyMatrixLine(u8 n)
+                           1021 ;	genLabel
+                           1022 ;	genFunction
+                           1023 ;	---------------------------------
+                           1024 ; Function GetKeyMatrixLine
+                           1025 ; ---------------------------------
+   0386                    1026 _GetKeyMatrixLine_start::
+   0386                    1027 _GetKeyMatrixLine:
+   0386 DD E5              1028 	push	ix
+   0388 DD 21 00 00        1029 	ld	ix,#0
+   038C DD 39              1030 	add	ix,sp
+                           1031 ;carwar.c:920: _endasm;
+                           1032 ;	genInline
+                           1033 	
+   038E DD 7E 04           1034 		 ld a,4(ix)
+   0391 CD 41 01           1035 		 call 0x0141
+   0394 6F                 1036 		 ld l,a
+                           1037 		
+                           1038 ;	genLabel
+                           1039 ;	genEndFunction
+   0395 DD E1              1040 	pop	ix
+   0397 C9                 1041 	ret
+   0398                    1042 _GetKeyMatrixLine_end::
+                           1043 ;carwar.c:923: void SetTo50Hz()
+                           1044 ;	genLabel
+                           1045 ;	genFunction
+                           1046 ;	---------------------------------
+                           1047 ; Function SetTo50Hz
+                           1048 ; ---------------------------------
+   0398                    1049 _SetTo50Hz_start::
+   0398                    1050 _SetTo50Hz:
+                           1051 ;carwar.c:925: WaitForVDP();
+                           1052 ;	genCall
+                           1053 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0398 CDr48s03           1054 	call	_WaitForVDP
+                           1055 ;carwar.c:937: _endasm;
+                           1056 ;	genInline
                            1057 	
-                           1058 		
-                           1059 ;carwar.c:662: VPDCommand((int)&SX);
-                           1060 ;	genCast
-   03AD 0Er00              1061 	ld	c,#<_SX
-   03AF 06s00              1062 	ld	b,#>_SX
-                           1063 ;	genIpush
-                           1064 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   03B1 C5                 1065 	push	bc
-                           1066 ;	genCall
-   03B2 CDrC4s03           1067 	call	_VPDCommand
-   03B5 F1                 1068 	pop	af
-                           1069 ;	genLabel
-                           1070 ;	genEndFunction
-   03B6 C9                 1071 	ret
-   03B7                    1072 _DrawLineSimple_end::
-                           1073 ;carwar.c:668: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
-                           1074 ;	genLabel
-                           1075 ;	genFunction
-                           1076 ;	---------------------------------
-                           1077 ; Function DrawLine8
-                           1078 ; ---------------------------------
-   03B7                    1079 _DrawLine8_start::
-   03B7                    1080 _DrawLine8:
-   03B7 DD E5              1081 	push	ix
-   03B9 DD 21 00 00        1082 	ld	ix,#0
-   03BD DD 39              1083 	add	ix,sp
-                           1084 ;carwar.c:672: WaitForVDP();
-                           1085 ;	genCall
-                           1086 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-                           1087 ;	genLabel
-                           1088 ;	genEndFunction
-   03BF DD E1              1089 	pop	ix
-   03C1 C3r0Ds04           1090 	jp	_WaitForVDP
-   03C4                    1091 _DrawLine8_end::
-                           1092 ;carwar.c:806: void VPDCommand(int address)
-                           1093 ;	genLabel
-                           1094 ;	genFunction
-                           1095 ;	---------------------------------
-                           1096 ; Function VPDCommand
-                           1097 ; ---------------------------------
-   03C4                    1098 _VPDCommand_start::
-   03C4                    1099 _VPDCommand:
-   03C4 DD E5              1100 	push	ix
-   03C6 DD 21 00 00        1101 	ld	ix,#0
-   03CA DD 39              1102 	add	ix,sp
-                           1103 ;carwar.c:810: WaitForVDP();
-                           1104 ;	genCall
-                           1105 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   03CC CDr0Ds04           1106 	call	_WaitForVDP
-                           1107 ;carwar.c:841: _endasm;
-                           1108 ;	genInline
-                           1109 	
-                           1110 	
-   03CF DD 6E 04           1111 		 ld l,4(ix)
-   03D2 DD 66 05           1112 		 ld h,5(ix)
-                           1113 	
-                           1114 	
-   03D5 3E 20              1115 		 ld a,#32
-   03D7 F3                 1116 		 di
-   03D8 D3 99              1117 		 out (#0x99),a
-   03DA 3E 91              1118 		 ld a,#(0x80+17)
-   03DC D3 99              1119 		 out (#0x99),a
-   03DE 0E 9B              1120 		 ld c,#0x99 +#2
-   03E0 ED A3              1121 		 outi
-   03E2 ED A3              1122 		 outi
-   03E4 ED A3              1123 		 outi
-   03E6 ED A3              1124 		 outi
-   03E8 ED A3              1125 		 outi
-   03EA ED A3              1126 		 outi
-   03EC ED A3              1127 		 outi
-   03EE ED A3              1128 		 outi
-   03F0 ED A3              1129 		 outi
-   03F2 ED A3              1130 		 outi
-   03F4 ED A3              1131 		 outi
-   03F6 ED A3              1132 		 outi
-   03F8 ED A3              1133 		 outi
-   03FA ED A3              1134 		 outi
-   03FC FB                 1135 		 ei
-   03FD ED A3              1136 		 outi
-                           1137 	
-                           1138 		
-                           1139 ;	genLabel
-                           1140 ;	genEndFunction
-   03FF DD E1              1141 	pop	ix
-   0401 C9                 1142 	ret
-   0402                    1143 _VPDCommand_end::
-                           1144 ;carwar.c:847: void waitRetrace()
-                           1145 ;	genLabel
-                           1146 ;	genFunction
-                           1147 ;	---------------------------------
-                           1148 ; Function waitRetrace
-                           1149 ; ---------------------------------
-   0402                    1150 _waitRetrace_start::
-   0402                    1151 _waitRetrace:
-                           1152 ;carwar.c:859: _endasm;
-                           1153 ;	genInline
-                           1154 	
-                           1155 	
-   0402 F3                 1156 		 di
-   0403                    1157 	 WAIT_RETRACE:
-   0403 DB 99              1158 		 in a,(0x99)
-   0405 E6 80              1159 		 and #0x80
-   0407 FE 00              1160 		 cp #0
-   0409 28 F8              1161 		 jr z, WAIT_RETRACE
-   040B FB                 1162 		 ei
-                           1163 	
-                           1164 		
-                           1165 ;	genLabel
-                           1166 ;	genEndFunction
-   040C C9                 1167 	ret
-   040D                    1168 _waitRetrace_end::
-                           1169 ;carwar.c:865: void WaitForVDP()
-                           1170 ;	genLabel
-                           1171 ;	genFunction
-                           1172 ;	---------------------------------
-                           1173 ; Function WaitForVDP
-                           1174 ; ---------------------------------
-   040D                    1175 _WaitForVDP_start::
-   040D                    1176 _WaitForVDP:
-                           1177 ;carwar.c:886: _endasm;
-                           1178 ;	genInline
-                           1179 	
-                           1180 	
-                           1181 	
-   040D 3E 02              1182 		 ld a,#2
-   040F F3                 1183 		 di
-   0410 D3 99              1184 		 out (#0x99),a
-   0412 3E 8F              1185 		 ld a,#(0x80+15)
-   0414 D3 99              1186 		 out (#0x99),a
-   0416                    1187 	 WAIT_VDP:
-   0416 00                 1188 		 nop
-   0417 DB 99              1189 		 in a,(#0x99)
-   0419 1F                 1190 		 rra
-   041A 38 FA              1191 		 jr c,WAIT_VDP
-   041C AF                 1192 		 xor a
-   041D D3 99              1193 		 out (#0x99),a
-   041F 3E 8F              1194 		 ld a,#(0x80+15)
-   0421 D3 99              1195 		 out (#0x99),a
-   0423 FB                 1196 		 ei
-                           1197 	
-                           1198 		
-                           1199 ;	genLabel
-                           1200 ;	genEndFunction
-   0424 C9                 1201 	ret
-   0425                    1202 _WaitForVDP_end::
-                           1203 ;carwar.c:890: char Joystick(char n)
-                           1204 ;	genLabel
-                           1205 ;	genFunction
-                           1206 ;	---------------------------------
-                           1207 ; Function Joystick
-                           1208 ; ---------------------------------
-   0425                    1209 _Joystick_start::
-   0425                    1210 _Joystick:
-   0425 DD E5              1211 	push	ix
-   0427 DD 21 00 00        1212 	ld	ix,#0
-   042B DD 39              1213 	add	ix,sp
-                           1214 ;carwar.c:897: _endasm;
-                           1215 ;	genInline
-                           1216 	
-   042D DD 7E 04           1217 		 ld a,4(ix)
-   0430 CD D5 00           1218 		 call 0x00d5
-   0433 6F                 1219 		 ld l,a
-                           1220 		
-                           1221 ;	genLabel
-                           1222 ;	genEndFunction
-   0434 DD E1              1223 	pop	ix
-   0436 C9                 1224 	ret
-   0437                    1225 _Joystick_end::
-                           1226 ;carwar.c:901: char Joytrig(char n)
-                           1227 ;	genLabel
-                           1228 ;	genFunction
-                           1229 ;	---------------------------------
-                           1230 ; Function Joytrig
-                           1231 ; ---------------------------------
-   0437                    1232 _Joytrig_start::
-   0437                    1233 _Joytrig:
-   0437 DD E5              1234 	push	ix
-   0439 DD 21 00 00        1235 	ld	ix,#0
-   043D DD 39              1236 	add	ix,sp
-                           1237 ;carwar.c:909: _endasm;
-                           1238 ;	genInline
-                           1239 	
-   043F DD 7E 04           1240 		 ld a,4(ix)
-   0442 CD D8 00           1241 		 call 0x00d8
-   0445 26 00              1242 		 ld h,#0x00
-   0447 6F                 1243 		 ld l,a
-                           1244 		
-                           1245 ;	genLabel
-                           1246 ;	genEndFunction
-   0448 DD E1              1247 	pop	ix
-   044A C9                 1248 	ret
-   044B                    1249 _Joytrig_end::
-                           1250 ;carwar.c:913: u8 GetKeyMatrixLine(u8 n)
-                           1251 ;	genLabel
-                           1252 ;	genFunction
-                           1253 ;	---------------------------------
-                           1254 ; Function GetKeyMatrixLine
-                           1255 ; ---------------------------------
-   044B                    1256 _GetKeyMatrixLine_start::
-   044B                    1257 _GetKeyMatrixLine:
-   044B DD E5              1258 	push	ix
-   044D DD 21 00 00        1259 	ld	ix,#0
-   0451 DD 39              1260 	add	ix,sp
-                           1261 ;carwar.c:920: _endasm;
-                           1262 ;	genInline
-                           1263 	
-   0453 DD 7E 04           1264 		 ld a,4(ix)
-   0456 CD 41 01           1265 		 call 0x0141
-   0459 6F                 1266 		 ld l,a
-                           1267 		
-                           1268 ;	genLabel
-                           1269 ;	genEndFunction
-   045A DD E1              1270 	pop	ix
-   045C C9                 1271 	ret
-   045D                    1272 _GetKeyMatrixLine_end::
-                           1273 ;carwar.c:923: void SetTo50Hz()
-                           1274 ;	genLabel
-                           1275 ;	genFunction
-                           1276 ;	---------------------------------
-                           1277 ; Function SetTo50Hz
-                           1278 ; ---------------------------------
-   045D                    1279 _SetTo50Hz_start::
-   045D                    1280 _SetTo50Hz:
-                           1281 ;carwar.c:925: WaitForVDP();
-                           1282 ;	genCall
-                           1283 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   045D CDr0Ds04           1284 	call	_WaitForVDP
-                           1285 ;carwar.c:937: _endasm;
-                           1286 ;	genInline
-                           1287 	
-                           1288 	
-   0460 3E 02              1289 		 ld a,#2
-   0462 F3                 1290 		 di
-   0463 D3 99              1291 		 out (#0x99),a ;
-                           1292 	
-   0465 3E 89              1293 		 ld a,#(0x80+9)
-   0467 D3 99              1294 		 out (#0x99),a ;
-                           1295 	
-   0469 FB                 1296 		 ei
-                           1297 		
-                           1298 ;	genLabel
-                           1299 ;	genEndFunction
-   046A C9                 1300 	ret
-   046B                    1301 _SetTo50Hz_end::
-                           1302 ;carwar.c:940: void SetTo60Hz()
-                           1303 ;	genLabel
-                           1304 ;	genFunction
-                           1305 ;	---------------------------------
-                           1306 ; Function SetTo60Hz
-                           1307 ; ---------------------------------
-   046B                    1308 _SetTo60Hz_start::
-   046B                    1309 _SetTo60Hz:
-                           1310 ;carwar.c:942: WaitForVDP();
-                           1311 ;	genCall
-                           1312 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   046B CDr0Ds04           1313 	call	_WaitForVDP
-                           1314 ;carwar.c:954: _endasm;
-                           1315 ;	genInline
-                           1316 	
+                           1058 	
+   039B 3E 02              1059 		 ld a,#2
+   039D F3                 1060 		 di
+   039E D3 99              1061 		 out (#0x99),a ;
+                           1062 	
+   03A0 3E 89              1063 		 ld a,#(0x80+9)
+   03A2 D3 99              1064 		 out (#0x99),a ;
+                           1065 	
+   03A4 FB                 1066 		 ei
+                           1067 		
+                           1068 ;	genLabel
+                           1069 ;	genEndFunction
+   03A5 C9                 1070 	ret
+   03A6                    1071 _SetTo50Hz_end::
+                           1072 ;carwar.c:940: void SetTo60Hz()
+                           1073 ;	genLabel
+                           1074 ;	genFunction
+                           1075 ;	---------------------------------
+                           1076 ; Function SetTo60Hz
+                           1077 ; ---------------------------------
+   03A6                    1078 _SetTo60Hz_start::
+   03A6                    1079 _SetTo60Hz:
+                           1080 ;carwar.c:942: WaitForVDP();
+                           1081 ;	genCall
+                           1082 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   03A6 CDr48s03           1083 	call	_WaitForVDP
+                           1084 ;carwar.c:954: _endasm;
+                           1085 ;	genInline
+                           1086 	
+                           1087 	
+   03A9 3E 00              1088 		 ld a,#0
+   03AB F3                 1089 		 di
+   03AC D3 99              1090 		 out (#0x99),a ;
+                           1091 	
+   03AE 3E 89              1092 		 ld a,#(0x80+9)
+   03B0 D3 99              1093 		 out (#0x99),a ;
+                           1094 	
+   03B2 FB                 1095 		 ei
+                           1096 		
+                           1097 ;	genLabel
+                           1098 ;	genEndFunction
+   03B3 C9                 1099 	ret
+   03B4                    1100 _SetTo60Hz_end::
+                           1101 ;carwar.c:960: void WriteToVRAM8(i16 addr, u8 value)
+                           1102 ;	genLabel
+                           1103 ;	genFunction
+                           1104 ;	---------------------------------
+                           1105 ; Function WriteToVRAM8
+                           1106 ; ---------------------------------
+   03B4                    1107 _WriteToVRAM8_start::
+   03B4                    1108 _WriteToVRAM8:
+   03B4 DD E5              1109 	push	ix
+   03B6 DD 21 00 00        1110 	ld	ix,#0
+   03BA DD 39              1111 	add	ix,sp
+                           1112 ;carwar.c:964: WaitForVDP();
+                           1113 ;	genCall
+                           1114 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   03BC CDr48s03           1115 	call	_WaitForVDP
+                           1116 ;carwar.c:991: _endasm;
+                           1117 ;	genInline
+                           1118 	
+                           1119 		 ;
+   03BF DD 7E 05           1120 		 ld a,5(ix) ;
+   03C2 E6 C0              1121 		 and #0xC0 ;
+   03C4 17                 1122 		       rla
+   03C5 17                 1123 		       rla
+   03C6 F3                 1124 		 di
+   03C7 D3 99              1125 		 out (#0x99),a
+   03C9 3E 8E              1126 		 ld a,#(0x80+14)
+   03CB D3 99              1127 		 out (#0x99),a
+                           1128 	
+   03CD DD 7E 04           1129 		 ld a,4(ix) ;
+   03D0 D3 99              1130 		 out (#0x99),a
+                           1131 	
+   03D2 DD 7E 05           1132 		 ld a,5(ix) ;
+   03D5 E6 3F              1133 		 and #0x3F ;
+   03D7 F6 40              1134 		 or #0x40 ;
+   03D9 D3 99              1135 		 out (#0x99),a
+                           1136 	
+                           1137 		 ;
+   03DB DD 7E 06           1138 		 ld a,6(ix)
+   03DE D3 98              1139 		 out (#0x98),a
+                           1140 	
+   03E0 FB                 1141 		 ei
+                           1142 		
+                           1143 ;	genLabel
+                           1144 ;	genEndFunction
+   03E1 DD E1              1145 	pop	ix
+   03E3 C9                 1146 	ret
+   03E4                    1147 _WriteToVRAM8_end::
+                           1148 ;carwar.c:1098: void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+                           1149 ;	genLabel
+                           1150 ;	genFunction
+                           1151 ;	---------------------------------
+                           1152 ; Function HMMC
+                           1153 ; ---------------------------------
+   03E4                    1154 _HMMC_start::
+   03E4                    1155 _HMMC:
+   03E4 DD E5              1156 	push	ix
+   03E6 DD 21 00 00        1157 	ld	ix,#0
+   03EA DD 39              1158 	add	ix,sp
+   03EC 21 ED FF           1159 	ld	hl,#-19
+   03EF 39                 1160 	add	hl,sp
+   03F0 F9                 1161 	ld	sp,hl
+                           1162 ;carwar.c:1104: buffer.DX = dx;
+                           1163 ;	genAddrOf
+   03F1 21 04 00           1164 	ld	hl,#0x0004
+   03F4 39                 1165 	add	hl,sp
+   03F5 4D                 1166 	ld	c,l
+   03F6 44                 1167 	ld	b,h
+                           1168 ;	genPlus
+                           1169 ;	AOP_STK for _HMMC_sloc0_1_0
+                           1170 ;	genPlusIncr
+   03F7 79                 1171 	ld	a,c
+   03F8 C6 04              1172 	add	a,#0x04
+   03FA DD 77 EF           1173 	ld	-17(ix),a
+   03FD 78                 1174 	ld	a,b
+   03FE CE 00              1175 	adc	a,#0x00
+   0400 DD 77 F0           1176 	ld	-16(ix),a
+                           1177 ;	genCast
+                           1178 ;	AOP_STK for 
+   0403 DD 5E 05           1179 	ld	e,5(ix)
+   0406 16 00              1180 	ld	d,#0x00
+                           1181 ;	genAssign (pointer)
+                           1182 ;	AOP_STK for _HMMC_sloc0_1_0
+                           1183 ;	isBitvar = 0
+   0408 DD 6E EF           1184 	ld	l,-17(ix)
+   040B DD 66 F0           1185 	ld	h,-16(ix)
+   040E 73                 1186 	ld	(hl),e
+   040F 23                 1187 	inc	hl
+   0410 72                 1188 	ld	(hl),d
+                           1189 ;carwar.c:1105: buffer.DY = dy /*+ (page * 512)*/;
+                           1190 ;	genPlus
+                           1191 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1192 ;	genPlusIncr
+   0411 79                 1193 	ld	a,c
+   0412 C6 06              1194 	add	a,#0x06
+   0414 DD 77 ED           1195 	ld	-19(ix),a
+   0417 78                 1196 	ld	a,b
+   0418 CE 00              1197 	adc	a,#0x00
+   041A DD 77 EE           1198 	ld	-18(ix),a
+                           1199 ;	genCast
+                           1200 ;	AOP_STK for 
+   041D DD 5E 06           1201 	ld	e,6(ix)
+   0420 16 00              1202 	ld	d,#0x00
+                           1203 ;	genAssign (pointer)
+                           1204 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1205 ;	isBitvar = 0
+   0422 DD 6E ED           1206 	ld	l,-19(ix)
+   0425 DD 66 EE           1207 	ld	h,-18(ix)
+   0428 73                 1208 	ld	(hl),e
+   0429 23                 1209 	inc	hl
+   042A 72                 1210 	ld	(hl),d
+                           1211 ;carwar.c:1106: buffer.NX = nx;
+                           1212 ;	genPlus
+                           1213 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1214 ;	genPlusIncr
+   042B 79                 1215 	ld	a,c
+   042C C6 08              1216 	add	a,#0x08
+   042E DD 77 ED           1217 	ld	-19(ix),a
+   0431 78                 1218 	ld	a,b
+   0432 CE 00              1219 	adc	a,#0x00
+   0434 DD 77 EE           1220 	ld	-18(ix),a
+                           1221 ;	genCast
+                           1222 ;	AOP_STK for 
+   0437 DD 5E 07           1223 	ld	e,7(ix)
+   043A 16 00              1224 	ld	d,#0x00
+                           1225 ;	genAssign (pointer)
+                           1226 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1227 ;	isBitvar = 0
+   043C DD 6E ED           1228 	ld	l,-19(ix)
+   043F DD 66 EE           1229 	ld	h,-18(ix)
+   0442 73                 1230 	ld	(hl),e
+   0443 23                 1231 	inc	hl
+   0444 72                 1232 	ld	(hl),d
+                           1233 ;carwar.c:1107: buffer.NY = ny;
+                           1234 ;	genPlus
+                           1235 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1236 ;	genPlusIncr
+   0445 79                 1237 	ld	a,c
+   0446 C6 0A              1238 	add	a,#0x0A
+   0448 DD 77 ED           1239 	ld	-19(ix),a
+   044B 78                 1240 	ld	a,b
+   044C CE 00              1241 	adc	a,#0x00
+   044E DD 77 EE           1242 	ld	-18(ix),a
+                           1243 ;	genCast
+                           1244 ;	AOP_STK for 
+   0451 DD 5E 08           1245 	ld	e,8(ix)
+   0454 16 00              1246 	ld	d,#0x00
+                           1247 ;	genAssign (pointer)
+                           1248 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1249 ;	isBitvar = 0
+   0456 DD 6E ED           1250 	ld	l,-19(ix)
+   0459 DD 66 EE           1251 	ld	h,-18(ix)
+   045C 73                 1252 	ld	(hl),e
+   045D 23                 1253 	inc	hl
+   045E 72                 1254 	ld	(hl),d
+                           1255 ;carwar.c:1108: buffer.CLR = ((u8*)ram)[0];
+                           1256 ;	genPlus
+                           1257 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1258 ;	genPlusIncr
+   045F 79                 1259 	ld	a,c
+   0460 C6 0C              1260 	add	a,#0x0C
+   0462 DD 77 ED           1261 	ld	-19(ix),a
+   0465 78                 1262 	ld	a,b
+   0466 CE 00              1263 	adc	a,#0x00
+   0468 DD 77 EE           1264 	ld	-18(ix),a
+                           1265 ;	genCast
+                           1266 ;	AOP_STK for 
+   046B DD 5E 09           1267 	ld	e,9(ix)
+   046E DD 56 0A           1268 	ld	d,10(ix)
+                           1269 ;	genPointerGet
+   0471 1A                 1270 	ld	a,(de)
+                           1271 ;	genAssign (pointer)
+                           1272 ;	AOP_STK for _HMMC_sloc1_1_0
+                           1273 ;	isBitvar = 0
+   0472 DD 6E ED           1274 	ld	l,-19(ix)
+   0475 DD 66 EE           1275 	ld	h,-18(ix)
+   0478 77                 1276 	ld	(hl),a
+                           1277 ;carwar.c:1109: buffer.ARG = 0;
+                           1278 ;	genPlus
+                           1279 ;	genPlusIncr
+   0479 79                 1280 	ld	a,c
+   047A C6 0D              1281 	add	a,#0x0D
+   047C 5F                 1282 	ld	e,a
+   047D 78                 1283 	ld	a,b
+   047E CE 00              1284 	adc	a,#0x00
+   0480 57                 1285 	ld	d,a
+                           1286 ;	genAssign (pointer)
+                           1287 ;	isBitvar = 0
+   0481 3E 00              1288 	ld	a,#0x00
+   0483 12                 1289 	ld	(de),a
+                           1290 ;carwar.c:1110: buffer.CMD = 0xF0;
+                           1291 ;	genPlus
+                           1292 ;	genPlusIncr
+   0484 79                 1293 	ld	a,c
+   0485 C6 0E              1294 	add	a,#0x0E
+   0487 4F                 1295 	ld	c,a
+   0488 78                 1296 	ld	a,b
+   0489 CE 00              1297 	adc	a,#0x00
+   048B 47                 1298 	ld	b,a
+                           1299 ;	genAssign (pointer)
+                           1300 ;	isBitvar = 0
+   048C 3E F0              1301 	ld	a,#0xF0
+   048E 02                 1302 	ld	(bc),a
+                           1303 ;carwar.c:1111: SetupHMMC((u16)&buffer.DX);
+                           1304 ;	genAssign
+                           1305 ;	AOP_STK for _HMMC_sloc0_1_0
+   048F DD 4E EF           1306 	ld	c,-17(ix)
+   0492 DD 46 F0           1307 	ld	b,-16(ix)
+                           1308 ;	genCast
+                           1309 ;	genIpush
+                           1310 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0495 C5                 1311 	push	bc
+                           1312 ;	genCall
+   0496 CDrCCs04           1313 	call	_SetupHMMC
+   0499 F1                 1314 	pop	af
+                           1315 ;carwar.c:1163: _endasm;
+                           1316 ;	genInline
                            1317 	
-   046E 3E 00              1318 		 ld a,#0
-   0470 F3                 1319 		 di
-   0471 D3 99              1320 		 out (#0x99),a ;
+                           1318 	
+   049A DD 6E 09           1319 		 ld l,9(ix)
+   049D DD 66 0A           1320 		 ld h,10(ix)
                            1321 	
-   0473 3E 89              1322 		 ld a,#(0x80+9)
-   0475 D3 99              1323 		 out (#0x99),a ;
-                           1324 	
-   0477 FB                 1325 		 ei
-                           1326 		
-                           1327 ;	genLabel
-                           1328 ;	genEndFunction
-   0478 C9                 1329 	ret
-   0479                    1330 _SetTo60Hz_end::
-                           1331 ;carwar.c:960: void WriteToVRAM8(i16 addr, u8 value)
-                           1332 ;	genLabel
-                           1333 ;	genFunction
-                           1334 ;	---------------------------------
-                           1335 ; Function WriteToVRAM8
-                           1336 ; ---------------------------------
-   0479                    1337 _WriteToVRAM8_start::
-   0479                    1338 _WriteToVRAM8:
-   0479 DD E5              1339 	push	ix
-   047B DD 21 00 00        1340 	ld	ix,#0
-   047F DD 39              1341 	add	ix,sp
-                           1342 ;carwar.c:964: WaitForVDP();
-                           1343 ;	genCall
-                           1344 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   0481 CDr0Ds04           1345 	call	_WaitForVDP
-                           1346 ;carwar.c:991: _endasm;
-                           1347 ;	genInline
-                           1348 	
-                           1349 		 ;
-   0484 DD 7E 05           1350 		 ld a,5(ix) ;
-   0487 E6 C0              1351 		 and #0xC0 ;
-   0489 17                 1352 		       rla
-   048A 17                 1353 		       rla
-   048B F3                 1354 		 di
-   048C D3 99              1355 		 out (#0x99),a
-   048E 3E 8E              1356 		 ld a,#(0x80+14)
-   0490 D3 99              1357 		 out (#0x99),a
-                           1358 	
-   0492 DD 7E 04           1359 		 ld a,4(ix) ;
-   0495 D3 99              1360 		 out (#0x99),a
-                           1361 	
-   0497 DD 7E 05           1362 		 ld a,5(ix) ;
-   049A E6 3F              1363 		 and #0x3F ;
-   049C F6 40              1364 		 or #0x40 ;
-   049E D3 99              1365 		 out (#0x99),a
-                           1366 	
-                           1367 		 ;
-   04A0 DD 7E 06           1368 		 ld a,6(ix)
-   04A3 D3 98              1369 		 out (#0x98),a
-                           1370 	
-   04A5 FB                 1371 		 ei
-                           1372 		
-                           1373 ;	genLabel
-                           1374 ;	genEndFunction
-   04A6 DD E1              1375 	pop	ix
-   04A8 C9                 1376 	ret
-   04A9                    1377 _WriteToVRAM8_end::
-                           1378 ;carwar.c:1098: void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
-                           1379 ;	genLabel
-                           1380 ;	genFunction
-                           1381 ;	---------------------------------
-                           1382 ; Function HMMC
-                           1383 ; ---------------------------------
-   04A9                    1384 _HMMC_start::
-   04A9                    1385 _HMMC:
-   04A9 DD E5              1386 	push	ix
-   04AB DD 21 00 00        1387 	ld	ix,#0
-   04AF DD 39              1388 	add	ix,sp
-   04B1 21 ED FF           1389 	ld	hl,#-19
-   04B4 39                 1390 	add	hl,sp
-   04B5 F9                 1391 	ld	sp,hl
-                           1392 ;carwar.c:1104: buffer.DX = dx;
-                           1393 ;	genAddrOf
-   04B6 21 04 00           1394 	ld	hl,#0x0004
-   04B9 39                 1395 	add	hl,sp
-   04BA 4D                 1396 	ld	c,l
-   04BB 44                 1397 	ld	b,h
-                           1398 ;	genPlus
-                           1399 ;	AOP_STK for _HMMC_sloc0_1_0
-                           1400 ;	genPlusIncr
-   04BC 79                 1401 	ld	a,c
-   04BD C6 04              1402 	add	a,#0x04
-   04BF DD 77 EF           1403 	ld	-17(ix),a
-   04C2 78                 1404 	ld	a,b
-   04C3 CE 00              1405 	adc	a,#0x00
-   04C5 DD 77 F0           1406 	ld	-16(ix),a
-                           1407 ;	genCast
-                           1408 ;	AOP_STK for 
-   04C8 DD 5E 05           1409 	ld	e,5(ix)
-   04CB 16 00              1410 	ld	d,#0x00
-                           1411 ;	genAssign (pointer)
-                           1412 ;	AOP_STK for _HMMC_sloc0_1_0
-                           1413 ;	isBitvar = 0
-   04CD DD 6E EF           1414 	ld	l,-17(ix)
-   04D0 DD 66 F0           1415 	ld	h,-16(ix)
-   04D3 73                 1416 	ld	(hl),e
-   04D4 23                 1417 	inc	hl
-   04D5 72                 1418 	ld	(hl),d
-                           1419 ;carwar.c:1105: buffer.DY = dy /*+ (page * 512)*/;
-                           1420 ;	genPlus
-                           1421 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1422 ;	genPlusIncr
-   04D6 79                 1423 	ld	a,c
-   04D7 C6 06              1424 	add	a,#0x06
-   04D9 DD 77 ED           1425 	ld	-19(ix),a
-   04DC 78                 1426 	ld	a,b
-   04DD CE 00              1427 	adc	a,#0x00
-   04DF DD 77 EE           1428 	ld	-18(ix),a
-                           1429 ;	genCast
-                           1430 ;	AOP_STK for 
-   04E2 DD 5E 06           1431 	ld	e,6(ix)
-   04E5 16 00              1432 	ld	d,#0x00
-                           1433 ;	genAssign (pointer)
-                           1434 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1435 ;	isBitvar = 0
-   04E7 DD 6E ED           1436 	ld	l,-19(ix)
-   04EA DD 66 EE           1437 	ld	h,-18(ix)
-   04ED 73                 1438 	ld	(hl),e
-   04EE 23                 1439 	inc	hl
-   04EF 72                 1440 	ld	(hl),d
-                           1441 ;carwar.c:1106: buffer.NX = nx;
-                           1442 ;	genPlus
-                           1443 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1444 ;	genPlusIncr
-   04F0 79                 1445 	ld	a,c
-   04F1 C6 08              1446 	add	a,#0x08
-   04F3 DD 77 ED           1447 	ld	-19(ix),a
-   04F6 78                 1448 	ld	a,b
-   04F7 CE 00              1449 	adc	a,#0x00
-   04F9 DD 77 EE           1450 	ld	-18(ix),a
-                           1451 ;	genCast
-                           1452 ;	AOP_STK for 
-   04FC DD 5E 07           1453 	ld	e,7(ix)
-   04FF 16 00              1454 	ld	d,#0x00
-                           1455 ;	genAssign (pointer)
-                           1456 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1457 ;	isBitvar = 0
-   0501 DD 6E ED           1458 	ld	l,-19(ix)
-   0504 DD 66 EE           1459 	ld	h,-18(ix)
-   0507 73                 1460 	ld	(hl),e
-   0508 23                 1461 	inc	hl
-   0509 72                 1462 	ld	(hl),d
-                           1463 ;carwar.c:1107: buffer.NY = ny;
-                           1464 ;	genPlus
-                           1465 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1466 ;	genPlusIncr
-   050A 79                 1467 	ld	a,c
-   050B C6 0A              1468 	add	a,#0x0A
-   050D DD 77 ED           1469 	ld	-19(ix),a
-   0510 78                 1470 	ld	a,b
-   0511 CE 00              1471 	adc	a,#0x00
-   0513 DD 77 EE           1472 	ld	-18(ix),a
-                           1473 ;	genCast
-                           1474 ;	AOP_STK for 
-   0516 DD 5E 08           1475 	ld	e,8(ix)
-   0519 16 00              1476 	ld	d,#0x00
-                           1477 ;	genAssign (pointer)
-                           1478 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1479 ;	isBitvar = 0
-   051B DD 6E ED           1480 	ld	l,-19(ix)
-   051E DD 66 EE           1481 	ld	h,-18(ix)
-   0521 73                 1482 	ld	(hl),e
-   0522 23                 1483 	inc	hl
-   0523 72                 1484 	ld	(hl),d
-                           1485 ;carwar.c:1108: buffer.CLR = ((u8*)ram)[0];
-                           1486 ;	genPlus
-                           1487 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1488 ;	genPlusIncr
-   0524 79                 1489 	ld	a,c
-   0525 C6 0C              1490 	add	a,#0x0C
-   0527 DD 77 ED           1491 	ld	-19(ix),a
-   052A 78                 1492 	ld	a,b
-   052B CE 00              1493 	adc	a,#0x00
-   052D DD 77 EE           1494 	ld	-18(ix),a
-                           1495 ;	genCast
-                           1496 ;	AOP_STK for 
-   0530 DD 5E 09           1497 	ld	e,9(ix)
-   0533 DD 56 0A           1498 	ld	d,10(ix)
-                           1499 ;	genPointerGet
-   0536 1A                 1500 	ld	a,(de)
-                           1501 ;	genAssign (pointer)
-                           1502 ;	AOP_STK for _HMMC_sloc1_1_0
-                           1503 ;	isBitvar = 0
-   0537 DD 6E ED           1504 	ld	l,-19(ix)
-   053A DD 66 EE           1505 	ld	h,-18(ix)
-   053D 77                 1506 	ld	(hl),a
-                           1507 ;carwar.c:1109: buffer.ARG = 0;
-                           1508 ;	genPlus
-                           1509 ;	genPlusIncr
-   053E 79                 1510 	ld	a,c
-   053F C6 0D              1511 	add	a,#0x0D
-   0541 5F                 1512 	ld	e,a
-   0542 78                 1513 	ld	a,b
-   0543 CE 00              1514 	adc	a,#0x00
-   0545 57                 1515 	ld	d,a
-                           1516 ;	genAssign (pointer)
-                           1517 ;	isBitvar = 0
-   0546 3E 00              1518 	ld	a,#0x00
-   0548 12                 1519 	ld	(de),a
-                           1520 ;carwar.c:1110: buffer.CMD = 0xF0;
-                           1521 ;	genPlus
-                           1522 ;	genPlusIncr
-   0549 79                 1523 	ld	a,c
-   054A C6 0E              1524 	add	a,#0x0E
-   054C 4F                 1525 	ld	c,a
-   054D 78                 1526 	ld	a,b
-   054E CE 00              1527 	adc	a,#0x00
-   0550 47                 1528 	ld	b,a
-                           1529 ;	genAssign (pointer)
-                           1530 ;	isBitvar = 0
-   0551 3E F0              1531 	ld	a,#0xF0
-   0553 02                 1532 	ld	(bc),a
-                           1533 ;carwar.c:1111: SetupHMMC((u16)&buffer.DX);
-                           1534 ;	genAssign
-                           1535 ;	AOP_STK for _HMMC_sloc0_1_0
-   0554 DD 4E EF           1536 	ld	c,-17(ix)
-   0557 DD 46 F0           1537 	ld	b,-16(ix)
-                           1538 ;	genCast
-                           1539 ;	genIpush
-                           1540 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   055A C5                 1541 	push	bc
-                           1542 ;	genCall
-   055B CDr91s05           1543 	call	_SetupHMMC
-   055E F1                 1544 	pop	af
-                           1545 ;carwar.c:1163: _endasm;
-                           1546 ;	genInline
-                           1547 	
-                           1548 	
-   055F DD 6E 09           1549 		 ld l,9(ix)
-   0562 DD 66 0A           1550 		 ld h,10(ix)
-                           1551 	
-   0565 F3                 1552 		 di
-                           1553 	
-   0566                    1554 	 SEND_NEXT_COLOR:
-                           1555 	
-   0566 23                 1556 		 inc hl
-                           1557 	
-                           1558 		 ;
-                           1559 		 ;
-   0567 7E                 1560 		 ld a,(hl)
-   0568 D3 99              1561 		 out (#0x99),a
-   056A 3E AC              1562 		 ld a,#(0x80+44)
-   056C D3 99              1563 		 out (#0x99),a
-                           1564 	
-   056E                    1565 	 WAIT_REG2:
-                           1566 	
-                           1567 		 ;
-                           1568 		 ;
-   056E 3E 02              1569 		 ld a,#2
-   0570 D3 99              1570 		 out (#0x99),a
-   0572 3E 8F              1571 		 ld a,#(0x80+15)
-   0574 D3 99              1572 		 out (#0x99),a
-                           1573 	
-                           1574 		 ;
-   0576 00                 1575 		 nop
-   0577 DB 99              1576 		 in a,(#0x99)
-   0579 47                 1577 		 ld b,a ;
-   057A 1F                 1578 		 rra ;
-   057B 30 07              1579 		 jr nc,COLOR_COPY_END
-                           1580 	
-                           1581 		 ;
-                           1582 		 ;
-   057D 78                 1583 		 ld a,b ;
-   057E 17                 1584 		 rla ;
-   057F 30 ED              1585 		 jr nc,WAIT_REG2
-   0581 C3r66s05           1586 		 jp SEND_NEXT_COLOR
-                           1587 	
-   0584                    1588 	 COLOR_COPY_END:
-                           1589 	
-                           1590 		 ;
-   0584 AF                 1591 		 xor a
-   0585 D3 99              1592 		 out (#0x99),a
-   0587 3E 8F              1593 		 ld a,#(0x80+15)
-   0589 D3 99              1594 		 out (#0x99),a
-                           1595 	
-   058B FB                 1596 		 ei
-                           1597 	
-                           1598 		
-                           1599 ;	genLabel
-                           1600 ;	genEndFunction
-   058C DD F9              1601 	ld	sp,ix
-   058E DD E1              1602 	pop	ix
-   0590 C9                 1603 	ret
-   0591                    1604 _HMMC_end::
-                           1605 ;carwar.c:1186: void SetupHMMC(u16 address)
-                           1606 ;	genLabel
-                           1607 ;	genFunction
-                           1608 ;	---------------------------------
-                           1609 ; Function SetupHMMC
-                           1610 ; ---------------------------------
-   0591                    1611 _SetupHMMC_start::
-   0591                    1612 _SetupHMMC:
-   0591 DD E5              1613 	push	ix
-   0593 DD 21 00 00        1614 	ld	ix,#0
-   0597 DD 39              1615 	add	ix,sp
-                           1616 ;carwar.c:1190: WaitForVDP();
-                           1617 ;	genCall
-                           1618 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
-   0599 CDr0Ds04           1619 	call	_WaitForVDP
-                           1620 ;carwar.c:1216: _endasm;
-                           1621 ;	genInline
-                           1622 	
-                           1623 	
-   059C DD 6E 04           1624 		 ld l,4(ix)
-   059F DD 66 05           1625 		 ld h,5(ix)
-                           1626 		 ;
-   05A2 3E 24              1627 		 ld a,#36 ;
-   05A4 F3                 1628 		 di
-   05A5 D3 99              1629 		 out (#0x99),a
-   05A7 3E 91              1630 		 ld a,#(0x80+17)
-   05A9 D3 99              1631 		 out (#0x99),a ;
-   05AB 0E 9B              1632 		 ld c,#0x99 +#2 ;
-   05AD ED A3              1633 		 outi
-   05AF ED A3              1634 		 outi
-   05B1 ED A3              1635 		 outi
-   05B3 ED A3              1636 		 outi
-   05B5 ED A3              1637 		 outi
-   05B7 ED A3              1638 		 outi
-   05B9 ED A3              1639 		 outi
-   05BB ED A3              1640 		 outi
-   05BD ED A3              1641 		 outi
-   05BF ED A3              1642 		 outi
-   05C1 FB                 1643 		 ei ;
-   05C2 ED A3              1644 		 outi
-                           1645 	
-                           1646 		
-                           1647 ;	genLabel
-                           1648 ;	genEndFunction
-   05C4 DD E1              1649 	pop	ix
-   05C6 C9                 1650 	ret
-   05C7                    1651 _SetupHMMC_end::
-                           1652 	.area _CODE
-                           1653 	.area _CABS
+   04A0 F3                 1322 		 di
+                           1323 	
+   04A1                    1324 	 SEND_NEXT_COLOR:
+                           1325 	
+   04A1 23                 1326 		 inc hl
+                           1327 	
+                           1328 		 ;
+                           1329 		 ;
+   04A2 7E                 1330 		 ld a,(hl)
+   04A3 D3 99              1331 		 out (#0x99),a
+   04A5 3E AC              1332 		 ld a,#(0x80+44)
+   04A7 D3 99              1333 		 out (#0x99),a
+                           1334 	
+   04A9                    1335 	 WAIT_REG2:
+                           1336 	
+                           1337 		 ;
+                           1338 		 ;
+   04A9 3E 02              1339 		 ld a,#2
+   04AB D3 99              1340 		 out (#0x99),a
+   04AD 3E 8F              1341 		 ld a,#(0x80+15)
+   04AF D3 99              1342 		 out (#0x99),a
+                           1343 	
+                           1344 		 ;
+   04B1 00                 1345 		 nop
+   04B2 DB 99              1346 		 in a,(#0x99)
+   04B4 47                 1347 		 ld b,a ;
+   04B5 1F                 1348 		 rra ;
+   04B6 30 07              1349 		 jr nc,COLOR_COPY_END
+                           1350 	
+                           1351 		 ;
+                           1352 		 ;
+   04B8 78                 1353 		 ld a,b ;
+   04B9 17                 1354 		 rla ;
+   04BA 30 ED              1355 		 jr nc,WAIT_REG2
+   04BC C3rA1s04           1356 		 jp SEND_NEXT_COLOR
+                           1357 	
+   04BF                    1358 	 COLOR_COPY_END:
+                           1359 	
+                           1360 		 ;
+   04BF AF                 1361 		 xor a
+   04C0 D3 99              1362 		 out (#0x99),a
+   04C2 3E 8F              1363 		 ld a,#(0x80+15)
+   04C4 D3 99              1364 		 out (#0x99),a
+                           1365 	
+   04C6 FB                 1366 		 ei
+                           1367 	
+                           1368 		
+                           1369 ;	genLabel
+                           1370 ;	genEndFunction
+   04C7 DD F9              1371 	ld	sp,ix
+   04C9 DD E1              1372 	pop	ix
+   04CB C9                 1373 	ret
+   04CC                    1374 _HMMC_end::
+                           1375 ;carwar.c:1186: void SetupHMMC(u16 address)
+                           1376 ;	genLabel
+                           1377 ;	genFunction
+                           1378 ;	---------------------------------
+                           1379 ; Function SetupHMMC
+                           1380 ; ---------------------------------
+   04CC                    1381 _SetupHMMC_start::
+   04CC                    1382 _SetupHMMC:
+   04CC DD E5              1383 	push	ix
+   04CE DD 21 00 00        1384 	ld	ix,#0
+   04D2 DD 39              1385 	add	ix,sp
+                           1386 ;carwar.c:1190: WaitForVDP();
+                           1387 ;	genCall
+                           1388 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   04D4 CDr48s03           1389 	call	_WaitForVDP
+                           1390 ;carwar.c:1216: _endasm;
+                           1391 ;	genInline
+                           1392 	
+                           1393 	
+   04D7 DD 6E 04           1394 		 ld l,4(ix)
+   04DA DD 66 05           1395 		 ld h,5(ix)
+                           1396 		 ;
+   04DD 3E 24              1397 		 ld a,#36 ;
+   04DF F3                 1398 		 di
+   04E0 D3 99              1399 		 out (#0x99),a
+   04E2 3E 91              1400 		 ld a,#(0x80+17)
+   04E4 D3 99              1401 		 out (#0x99),a ;
+   04E6 0E 9B              1402 		 ld c,#0x99 +#2 ;
+   04E8 ED A3              1403 		 outi
+   04EA ED A3              1404 		 outi
+   04EC ED A3              1405 		 outi
+   04EE ED A3              1406 		 outi
+   04F0 ED A3              1407 		 outi
+   04F2 ED A3              1408 		 outi
+   04F4 ED A3              1409 		 outi
+   04F6 ED A3              1410 		 outi
+   04F8 ED A3              1411 		 outi
+   04FA ED A3              1412 		 outi
+   04FC FB                 1413 		 ei ;
+   04FD ED A3              1414 		 outi
+                           1415 	
+                           1416 		
+                           1417 ;	genLabel
+                           1418 ;	genEndFunction
+   04FF DD E1              1419 	pop	ix
+   0501 C9                 1420 	ret
+   0502                    1421 _SetupHMMC_end::
+                           1422 	.area _CODE
+                           1423 	.area _CABS
