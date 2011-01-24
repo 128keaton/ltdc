@@ -8,25 +8,25 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
       Value  Global
    --------  --------------------------------
      0000    l__CABS
+     0000    l__DATA
      0000    l__GSFINAL
+     0000    l__GSINIT
      0000    l__HOME
      0000    l__OVERLAY
-     000F    l__DATA
-     0060    l__GSINIT
-     05EE    l__CODE
+     0529    l__CODE
      4010    s__CODE
-     8000    s__DATA
-     800F    s__GSINIT
-     800F    s__HOME
-     800F    s__OVERLAY
-     806F    s__CABS
-     806F    s__GSFINAL
+     C000    s__CABS
+     C000    s__DATA
+     C000    s__GSFINAL
+     C000    s__GSINIT
+     C000    s__HOME
+     C000    s__OVERLAY
 
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   05EE =   1518. bytes (REL,CON)
+_CODE                              4010   0529 =   1321. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -45,68 +45,45 @@ _CODE                              4010   05EE =   1518. bytes (REL,CON)
      42BA    _DrawPoint8
      42BA    _DrawPoint8_start
      42BA    _SetPage8_end
-     4302    _DrawLine
-     4302    _DrawLine_start
+     4302    _DrawLine8
+     4302    _DrawLine8_start
      4302    _DrawPoint8_end
-     4359    _DrawLineSimple
-     4359    _DrawLineSimple_start
-     4359    _DrawLine_end
-     43C7    _DrawLine8
-     43C7    _DrawLine8_start
-     43C7    _DrawLineSimple_end
-     43D4    _DrawLine8_end
-     43D4    _VPDCommand
-     43D4    _VPDCommand_start
-     4412    _VPDCommand_end
-     4412    _waitRetrace
-     4412    _waitRetrace_start
-     441D    _WaitForVDP
-     441D    _WaitForVDP_start
-     441D    _waitRetrace_end
-     4435    _Joystick
-     4435    _Joystick_start
-     4435    _WaitForVDP_end
-     4447    _Joystick_end
-     4447    _Joytrig
-     4447    _Joytrig_start
-     445B    _GetKeyMatrixLine
-     445B    _GetKeyMatrixLine_start
-     445B    _Joytrig_end
-     446D    _GetKeyMatrixLine_end
-     446D    _SetTo50Hz
-     446D    _SetTo50Hz_start
-     447B    _SetTo50Hz_end
-     447B    _SetTo60Hz
-     447B    _SetTo60Hz_start
-     4489    _SetTo60Hz_end
-     4489    _WriteToVRAM8
-     4489    _WriteToVRAM8_start
-     44B9    _HMMC
-     44B9    _HMMC_start
-     44B9    _WriteToVRAM8_end
-     45A1    _HMMC_end
-     45A1    _SetupHMMC
-     45A1    _SetupHMMC_start
-     45D7    _SetupHMMC_end
-     45D7    __initrleblock
+     430F    _DrawLine8_end
+     430F    _VPDCommand
+     430F    _VPDCommand_start
+     434D    _VPDCommand_end
+     434D    _waitRetrace
+     434D    _waitRetrace_start
+     4358    _WaitForVDP
+     4358    _WaitForVDP_start
+     4358    _waitRetrace_end
+     4370    _Joystick
+     4370    _Joystick_start
+     4370    _WaitForVDP_end
+     4382    _Joystick_end
+     4382    _Joytrig
+     4382    _Joytrig_start
+     4396    _GetKeyMatrixLine
+     4396    _GetKeyMatrixLine_start
+     4396    _Joytrig_end
+     43A8    _GetKeyMatrixLine_end
+     43A8    _SetTo50Hz
+     43A8    _SetTo50Hz_start
+     43B6    _SetTo50Hz_end
+     43B6    _SetTo60Hz
+     43B6    _SetTo60Hz_start
+     43C4    _SetTo60Hz_end
+     43C4    _WriteToVRAM8
+     43C4    _WriteToVRAM8_start
+     43F4    _HMMC
+     43F4    _HMMC_start
+     43F4    _WriteToVRAM8_end
+     44DC    _HMMC_end
+     44DC    _SetupHMMC
+     44DC    _SetupHMMC_start
+     4512    _SetupHMMC_end
+     4512    __initrleblock
 
-Hexadecimal
-
-Area                               Addr   Size   Decimal Bytes (Attributes)
---------------------------------   ----   ----   ------- ----- ------------
-_DATA                              8000   000F =     15. bytes (REL,CON)
-
-      Value  Global
-   --------  --------------------------------
-     8000    _SX
-     8002    _SY
-     8004    _DX
-     8006    _DY
-     8008    _NX
-     800A    _NY
-     800C    _CLR
-     800D    _ARG
-     800E    _CMD
 
 
 
@@ -116,8 +93,8 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
 USERBASEDEF
 	_CODE = 0x4010
-	_DATA = 0x8000
+	_DATA = 0xc000
