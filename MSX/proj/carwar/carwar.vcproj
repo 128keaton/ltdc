@@ -177,6 +177,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\data\sprt_car_1.h"
+			>
+		</File>
+		<File
 			RelativePath=".\trigo.inc"
 			>
 		</File>
