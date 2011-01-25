@@ -1,0 +1,238 @@
+ViewMSX v0.06                                                 (c) 2005-2008 t00b
+--------------------------------------------------------------------------------
+
+
+
+Introduction
+------------
+
+ViewMSX is a simple MSX graphics viewer for the Win32 environment. ViewMSX was
+designed to allow for quick viewing of MSX graphics files on Windows Computers,
+without having the bulky feel of some other graphics viewers. ViewMSX is not a
+big application, but a small tool that's able to do just what it needs to do,
+view a number of MSX graphics formats at the click of a button.
+
+ViewMSX can be integrated into your Windows system by associating the desired
+filetypes to the program, after which you can view any MSX graphics file by
+simply doubleclicking the filename. You can also drag and drop files onto the
+ViewMSX main window, or the executable itself if you prefer to work directly
+from the windows explorer.
+
+With ViewMSX you can quickly view a file, or browse through files in a directory
+you are viewing a file in. You can also use ViewMSX to copy MSX graphics files
+to the clipboard or save them as bitmaps. ViewMSX does not resample or antialias
+the graphics, so you can easily use it to 'export' graphics for editing.
+
+
+
+Installation
+------------
+
+ViewMSX is usable as a single-file executable. It does not need to be installed,
+simply placing the executable in a directory will do the trick. If you want to
+associate file types with ViewMSX however, you will need to make sure you do not
+move the ViewMSX application to a different path. If you do wish to move the
+executable at some point, be sure to re-associate the files you had previously
+associated with the executable placed in the new location.
+
+
+
+Function Overview
+-----------------
+
+After starting ViewMSX, you can begin loading files either by dropping them on
+the main view window (the dark area in the middle of the window) or by using the
+file menu, selecting open and doubleclicking on the file you wish to open. You
+can also start ViewMSX by dropping a file directly on the executable.
+
+Once you have started ViewMSX, and the picture was successfully displayed, you
+can save it as a bitmap by selecting the corresponding option from the file menu
+or by pressing the CTRL-S key combination. ViewMSX will create a new .bmp file
+in the directory of the original file with the same name. You can copy the image
+to the clipboard by pressing the CTRL-C key combination or by using the menu.
+
+If the picture is for a screenmode with double horizontal resolution and is not
+displayed correctly, you can select the '1:2 Aspect Ratio' option from the view
+menu or press the CTRL-A key combination to correct the aspect ratio. For files
+that measure 512x212 pixels, ViewMSX will do this automatically unless you have
+disabled this in the Preferences dialog.
+
+If the picture is 256x212 pixels or smaller, ViewMSX will automatically zoom the
+picture by a factor 2. You can toggle the zoom option by either selecting 'Zoom'
+in the view menu or by pressing CTRL-Z. ViewMSX will not zoom images that are
+larger than 256x212 pixels. When browsing through a directory, you may leave the
+zoom option on and ViewMSX will automatically determine if it should zoom.
+
+If you are viewing a paletted image, you may view the palette by selecting the
+'View Palette' option from the View menu or by pressing CTRL-P. To view the RGB
+value of a color, simply move the cursor over the color square on the bottom of
+the window. To hide the palette again, simply press CTRL-P again. It is not yet
+possible to view the palette of 64-color G9B files.
+
+If you wish to store the palette of a file, you can press CTRL-T or select the
+'Store Palette' option from the edit menu. You can then later apply this palette
+to a different file by pressing CTRL-R or selecting 'Restore Pallete' from the
+edit menu. Both files must have the same color-count in order for this option to
+work properly. It is automatically disabled for fixed-palette files.
+
+If you are viewing a file that is in a directory with more MSX graphics files,
+you can 'browse' through these files by using the Page Up and Page Down buttons.
+ViewMSX will cycle through all images in the directory in the order in which the
+images appear in the directory. Press Home to go to the first file, or End to go
+to the last file in the directory.
+
+If you wish to view the details of the file you are viewing, you can select the
+'Image Info' option from the view menu or press CTRL-I. If you wish to close the
+program, select Exit from the file menu or press [ESC] if you have enabled this
+in the preferences menu. Select close from the file menu if you only wish to
+close the file you are currently viewing.
+
+
+
+Preferences
+-----------
+
+ViewMSX has a number of settings that can be adjusted in the Preferences menu.
+Before you use this function, make sure you have copied or moved ViewMSX to the
+directory from which you will want to run it in the future, and have executed
+the program from that directory. ViewMSX will save these settings in the Windows
+registry. You may want to do a registry backup in case something goes wrong.
+
+Always center window - Check this box if you want ViewMSX to center itself on 
+the screen after loading an image.
+
+ESC key exits program - Check this box if you want to be able to close ViewMSX
+by pressing the Escape key. 
+
+Shortcuts without CTRL - Check this box if you want to be able to use shortcuts
+without having to press CRTL.
+
+Disable auto aspect ratio - Check this box if you want to disable the automatic
+aspect ratio detection of ViewMSX.
+
+Associated file types - Check each of the boxes of any file types you want to 
+associate with ViewMSX.
+
+Be sure to press the Save Preferences button after you are done configuring the
+ViewMSX settings or associations.
+
+
+
+Video Formats
+-------------
+
+Since version 0.04 ViewMSX now also has some experimental support for video
+formats. The first is the famous EVA format for MSX. While still very experimen-
+tal and somewhat unstable, it should be possible on most PCs to replay EVA files
+in ViewMSX. You may however encounter some sound-issues, while under WINE this
+new function will not work at all.
+
+The second Video format is VID, which is used by the SymbOS OS, both on the CPC
+version and the MSX version. At this time both MODE 1 CPC videos and MSX Screen7
+videos are supported. Along with VID, support was also added for SGX files, here
+too for both the native CPC modes and the MSX2 modes it supports.
+
+
+
+Known Issues
+------------
+
+This version of ViewMSX is still not final, so it may well contain bugs and/or
+other problems. While this version of ViewMSX boasts new rendering functions
+and a new BitBuster decompression routine, there are still a lot of small issues
+I hope to resolve in a future version. Most likely the user interface will be
+changed a little too, this to allow for even quicker use of the program,
+
+The experimental EVA function new to this version, is just that; experimental.
+There is a good chance this will not yet work on your computer, since there
+doesn't seem to be a proper windows API which can be used to play buffered PCM
+data on. Right now, ViewMSX uses the main system timer to sync the audio to the
+video, which means that ViewMSX hogs a lot of time when playing EVAs.
+
+Furthermore, there is a good chance that the timer latency is too high on your
+computer, meaning the audio data will skip, or not play at all. Just give the
+EVA function a try if you want, but like said, it's still quite experimental and
+there's a chance it will not work properly on your system. Playing EVA movies is
+not possible under WINE at this time, nor is it under Windows 95/98.
+
+If you find any bugs or have any feature requests, you can find me on the IRC
+channel #msx on the rizon network. Use your favorite IRC client and/or the link
+below to access this channel.
+
+http://searchirc.com/searchirc.php?T=chan&F=exact&N=178&I=%23msx
+
+
+
+Awknowledgements
+----------------
+
+Special thanks to wolf_ for testing the first beta-versions of this little app
+and his many feature-requests and suggestions...
+
+Further special thanks to [D-Tail] for providing me with some EVA movies to play
+around with, and for beta testing the EVA routines.
+
+Thanks to Prodatron for providing the technical specs on the SGX and VID formats
+which we'll hopefully be using in the MSX port of his great SymbOS.
+
+
+
+Version History
+---------------
+
+19-10-2005     v0.01     Initial release of the first public version of ViewMSX
+20-10-2005     v0.02     Added support for VSCREEN files and palette files
+27-10-2005     v0.03     Added 'Color Count' function and large G9B file support
+23-03-2006     v0.04     Added EVA, VID & SGX support, new renderer/debitbuster
+31-05-2007     v0.04b    Added experimental Screen 7 HAM file support
+08-07-2007     v0.05     Added 16-color VID & SGX support, supressed errors
+19-07-2008     v0.06     Fixed SC2/SC4 colortable error reported by hap
+
+
+
+Supported File Types
+--------------------
+
+ViewMSX supports a wide range of graphics, from standard BSAVE formats as used
+in BASIC to some of the most popular editor formats such as Graph Saurus, AGE
+and even the ancient Dynamic Publisher. One of the newer formats supported, is
+Team Bomba's G9B format. This file-format can store graphics for many of the
+different GFX9000 bitmap modes and conveniently compresses the bitmap data using
+bitbuster. See TeamBomba's website (www.teambomba.net) for more information on
+this very nice file format.
+
+ViewMSX currently supports the following filetypes:
+
++----------------+-----------------------+----------+----------+
+| File Type      | Description           | Paletted | Crunched |
++----------------+-----------------------+----------+----------+
+| .GE5           | DD-Graph BLOAD file   | yes      | no       |
+| .DAT           | DD-Graph COPY file    | optional | no       |
+| .CMP           | DD-Graph .CMP file    | no       | yes      |
+| .PCT           | Dyn.Publisher file    | no       | yes      |
+| .STP           | Dyn.Publisher file    | no       | no       |
+| .PIC           | Designer Plus file    | no       | no       |
+| .SC2 .SR2      | Screen 2 BLOAD file   | no       | no       |
+| .SC4 .SR4      | Screen 4 BLOAD file   | optional | no       |
+| .SC5 .SR5      | Screen 5 BLOAD file   | optional | optional |
+| .SC6 .SR6      | Screen 6 BLOAD file   | optional | no       |
+| .SC7 .SR7      | Screen 7 BLOAD file   | optional | optional |
+| .SC8 .SR8      | Screen 8 BLOAD file   | no       | optional |
+| .SCA .SRA .S10 | Screen10 BLOAD file   | optional | no       |
+| .SCB .SRB .S11 | Screen11 BLOAD file   | optional | no       |
+| .SCC .SRC .S12 | Screen12 BLOAD file   | no       | optional |
+| .GL5           | Screen 5 COPY file    | no       | no       |
+| .GL6           | Screen 6 COPY file    | no       | no       |
+| .GL7           | Screen 7 COPY file    | no       | no       |
+| .GL8           | Screen 8 COPY file    | no       | no       |
+| .GLA           | Screen10 COPY file    | no       | no       |
+| .GLB           | Screen11 COPY file    | no       | no       |
+| .GLC           | Screen12 COPY file    | no       | no       |
+| .SGX           | SymbOS bitmap file    | no       | no       |
+| .G9B           | Team Bomba G9B file   | yes      | optional |
+| .SC4 .SCR .TGS | VSCREEN level file    | optional | no       |
+| .HAM           | Screen 7 HAM file     | yes      | optional |
++----------------+-----------------------+----------+----------+
+| .EVA .EV8      | EVA video file        | no       | no       |
+| .VID           | SymbOS video file     | no       | no       |
++----------------+-----------------------+----------+----------+
