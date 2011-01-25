@@ -93,15 +93,23 @@ typedef struct
 	u8  CMD; // 46
 } VdpBuffer;
 
+typedef struct
+{
+	u8 rotSpeed;
+	u8 accel;
+} Car;
+
+typedef struct
+{
+	u8 car; // car index
+	u8 rot; // rotation
+	u8 speed;
+} Player;
+
 //----------------------------------------
 // P R O T O T Y P E S
 
 void MainLoop();
-//void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z);
-//void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos);
-//void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam);
-//void TransXZIndex(i8 i);
-//void Update();
 void SetScreen8();
 void SetPage8(i8 page);
 void DrawPoint8(char posX, char posY, char color);
@@ -117,52 +125,24 @@ u8 GetKeyMatrixLine(u8 n);
 void WriteToVRAM8(i16 addr, u8 value);
 void SetTo50Hz();
 void SetTo60Hz();
-//void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color);
 void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
+void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color);
 void SetupHMMC(u16 address);
 
 //----------------------------------------
 // D A T A
-
-// VDP command buffer
-//u16 SX = 0;  // 32-33
-//u16 SY = 0;  // 34-35
-//u16 DX = 0;  // 36-37
-//u16 DY = 0;  // 38-39
-//u16 NX = 0;  // 40-41
-//u16 NY = 0;  // 42-43
-//u8  CLR = 0; // 44
-//u8  ARG = 0; // 45
-//u8  CMD = 0; // 46
 
 // Sprites
 // SX : 13
 // SY : 11
 // 16 sprites/car (208 px)
 // 4 cars (44 px)
-const u8 g_Sprite[8*8] =
-{
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-	0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
-	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
-	0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
-	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-	0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F,
-};
-
 #include "data/sprt_car_1.h"
+#include "data/sprt_car_2.h"
+#include "data/sprt_car_3.h"
+#include "data/sprt_car_4.h"
 
-//ShortVec g_Camera;
-//ShortVec g_Position;
-//u8 g_Angle, g_AngleIndex;
-
-#define POINT_NUM 8//5
-//ShortVec g_Local[POINT_NUM];
-//ShortVec g_World[POINT_NUM];
-//ShortVec g_Screen[POINT_NUM];
-//VdpBuffer g_VdpBuffer;
+#include "trigo16.inc"
 
 ///
 sfr at 0xA8 g_slotPort;
@@ -183,9 +163,6 @@ void main(void)
 	MainLoop();
 }
 
-//#include "trigo.inc"
-//#include "proj.inc"
-
 /**
  *
  */
@@ -196,27 +173,15 @@ void MainLoop()
 		0, 0, 0, 0, 0, 0, 0, 0,	0, 1, 212, 0, 0, 0, 0xC0
 	};
 
-	u8 x = 128, y = 128;
+	//u8 x = 128, y = 128;
 	i16 i, j;
 	u8 bEnd = 0/*, keyCode*/;
 	i16 addr;
 	i8 page = 0;
 	u8 keyLine;
-
-	//SetShortVec(&g_Local[0], M2U(1),  M2U(1),  M2U(-1));
-	//SetShortVec(&g_Local[1], M2U(1),  M2U(-1), M2U(-1));
-	//SetShortVec(&g_Local[2], M2U(-1), M2U(-1), M2U(-1));
-	//SetShortVec(&g_Local[3], M2U(-1), M2U(1),  M2U(-1));
-	//SetShortVec(&g_Local[4], M2U(1),  M2U(1),  M2U(1));
-	//SetShortVec(&g_Local[5], M2U(1),  M2U(-1), M2U(1));
-	//SetShortVec(&g_Local[6], M2U(-1), M2U(-1), M2U(1));
-	//SetShortVec(&g_Local[7], M2U(-1), M2U(1),  M2U(1));
-
-	//SetShortVec(&g_Camera, M2U(0), M2U(0), M2U(3));
-	//
-	//SetShortVec(&g_Position, M2U(0), M2U(0), M2U(0));
-	//
-	//g_Angle = 30;
+	u8 rot = 0;
+	u16 posX = 128 << 8, posY = 128 << 8, dx ,dy;
+	i8 speed = 0;
 
 	SetTo60Hz();
 	SetScreen8();
@@ -227,60 +192,78 @@ void MainLoop()
 
 	while(bEnd == 0)
 	{
-	/*	DrawPoint8(x,     y - 1, 0);
-		DrawPoint8(x + 1, y,     0);
-		DrawPoint8(x - 1, y,     0);
-		DrawPoint8(x,     y + 1, 0);*/
+		Fill8(0, posX >> 8, posY >> 8, 13, 11, 0);
 
-		//addr = y;
-		//addr <<= 8;
-		//addr += x;
-		addr = x + (y << 8);
-		WriteToVRAM8(addr, 0x0F);
-		HMMC(0, 100, 100, 8, 8, (u16)&g_Sprite);
-		HMMC(0, 50, 100, 13, 11, (u16)&tempName);
-
-
-		//x++;
-	    if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+		speed--;
+		if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
 		{
 			switch (i)
 			{
-			case 1: y--; break;
-			case 2: y--; x++; break;
-			case 3: x++; break;
-			case 4: y++; x++; break;
-			case 5: y++; break;
-			case 6: y++; x--; break;
-			case 7: x--; break;
-			case 8: y--; x--; break;
+			case 1: // up
+				dx = g_Cosinus[rot];
+				dy = g_Sinus[rot];
+				speed += 2;
+				break;
+			case 2: // up-right
+				dx = g_Cosinus[rot];
+				dy = g_Sinus[rot];
+				speed += 2;
+				rot--; 
+				break;
+			case 3: // right
+				rot--; 
+				break;
+			case 4: // down-right
+				rot--; 
+				break;
+			case 5: // down
+				break;
+			case 6: // down-left
+				rot++; 
+				break;
+			case 7: // left
+				rot++; 
+				break;
+			case 8:// up-left
+				dx = g_Cosinus[rot];
+				dy = g_Sinus[rot];
+				speed++;
+				rot++; 
+				break;
 			}
-
-			//switch (i)
-			//{
-		 //       case 1: // ↑
-			//		g_Position.y -= 10;
-			//		break;
-		 //       case 3: // →
-			//		g_Position.x += 10;
-			//		break;
-			//	case 5: // ↓
-			//		g_Position.y += 10;
-			//		break;
-		 //       case 7: // ←
-			//		g_Position.x -= 10;
-			//		break;
-			//}
 		}
 
-	/*	DrawPoint8(x,     y - 1, 255);
-		DrawPoint8(x + 1, y,     255);
-		DrawPoint8(x - 1, y,     255);
-		DrawPoint8(x,     y + 1, 255);*/
+		rot &= 0x0F;
+		if(speed < 0)
+			speed = 0;
+		else if(speed > 10)
+			speed = 10;
 
-		//g_AngleIndex = g_Angle >> 2;
-		//Update();
-		//g_Angle += 4;
+		posX += speed * dx;
+		posY -= speed * dy;
+
+		HMMC(0, posX >> 8, posY >> 8, 13, 11, (u16)&car1[rot * 13 * 11]);
+
+
+		HMMC(0, 20, 20, 13, 11, (u16)&car2[rot * 13 * 11]);
+		HMMC(0, 40, 20, 13, 11, (u16)&car3[rot * 13 * 11]);
+		HMMC(0, 60, 20, 13, 11, (u16)&car4[rot * 13 * 11]);
+		
+		
+		//   if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+		//{
+		//	switch (i)
+		//	{
+		//	case 1: y--; break; // up
+		//	case 2: y--; x++; break;
+		//	case 3: x++; break; // right
+		//	case 4: y++; x++; break;
+		//	case 5: y++; break; // down
+		//	case 6: y++; x--; break;
+		//	case 7: x--; break; // left
+		//	case 8: y--; x--; break;
+		//	}
+		//}
 
 		for(i=0; i<10; i++) // rows
 		{
@@ -1185,6 +1168,69 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 	//_asm
 	//	ei
 	//_endasm;
+}
+
+void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
+{
+	VdpBuffer buffer;
+	
+	page;
+
+	buffer.DX = dx;
+	buffer.DY = dy /*+ (page * 512)*/;
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = color;
+	buffer.ARG = 0;
+	buffer.CMD = 0xF0;
+	SetupHMMC((u16)&buffer.DX);
+	_asm
+
+		di
+
+	FILL_SEND_NEXT_COLOR:
+
+		;// 3 - envoyer l'octet suivant à mettre en VRAM dans le registre 45 (le premier octet a été traité à l'étape 1) par un OUT du Z80
+		;// Send next color
+		ld		a,9(ix)
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(44)
+		out		(VDP_ADDR),a
+
+	FILL_WAIT_REG2:	
+
+		;// 4 - lire le registre d'état 2 (status)
+		;// Get status ragister #2
+		ld		a,#2
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(15)
+		out		(VDP_ADDR),a
+
+		;// 5 - lire le registre d'état du bit CE, si celui-ci est à 0, alors l'instruction est terminée, sinon on passe à l'étape 6
+		nop
+		in		a,(VDP_ADDR)
+		ld		b,a ;// backup reg#2
+		rra     ;// send CE bit into Carry
+		jr		nc,FILL_COLOR_COPY_END
+
+		;// 6 - tester l'état du bit TR, si celui-ci se trouve à 0, alors le processeur vidéo n'est pas
+		;// prêt à recevoir l'octet suivant, recommencer en 4. Si par contre, ce bit est à 1, reprendre toute l'opération au niveau 3
+		ld		a,b ;// restore reg#2
+		rla     ;// send TR bit in the Carry
+		jr		nc,FILL_WAIT_REG2
+		jp		FILL_SEND_NEXT_COLOR
+
+	FILL_COLOR_COPY_END:
+
+		;// Clean status ragister #2
+		xor		a
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(15)
+		out		(VDP_ADDR),a
+
+		ei
+
+	_endasm;
 }
 
 void SetupHMMC(u16 address)
