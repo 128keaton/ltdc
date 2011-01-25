@@ -1,7 +1,7 @@
 #include "color.h"
 
 
-RGB8::RGB8(RGB24 color)
+GRB8::GRB8(RGB24 color)
 {
 	i32 r, g, b;
 	
@@ -9,10 +9,10 @@ RGB8::RGB8(RGB24 color)
 	g = color.G * 7 / 255;
 	b = color.B * 3 / 255;
 
-	RGB = u8((r << 5) + (g << 2) + b);
+	RGB = u8((g << 5) + (r << 2) + b);
 }
 
-RGB24::RGB24(RGB8 color)
+RGB24::RGB24(GRB8 color)
 {
 	i32 r, g, b;
 

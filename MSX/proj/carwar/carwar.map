@@ -13,7 +13,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__GSINIT
      0000    l__HOME
      0000    l__OVERLAY
-     05D0    l__CODE
+     2B89    l__CODE
      4010    s__CODE
      C000    s__CABS
      C000    s__DATA
@@ -26,64 +26,75 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   05D0 =   1488. bytes (REL,CON)
+_CODE                              4010   2B89 =  11145. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
      4010    _main
      4010    _main_start
-     402B    _g_Sprite
+     402B    _car1
      402B    _main_end
-     406B    _tempName
-     40FA    _MainLoop
-     40FA    _MainLoop_start
-     431C    _MainLoop_end
-     431C    _SetScreen8
-     431C    _SetScreen8_start
-     4349    _SetPage8
-     4349    _SetPage8_start
-     4349    _SetScreen8_end
-     4361    _DrawPoint8
-     4361    _DrawPoint8_start
-     4361    _SetPage8_end
-     43A9    _DrawLine8
-     43A9    _DrawLine8_start
-     43A9    _DrawPoint8_end
-     43B6    _DrawLine8_end
-     43B6    _VPDCommand
-     43B6    _VPDCommand_start
-     43F4    _VPDCommand_end
-     43F4    _waitRetrace
-     43F4    _waitRetrace_start
-     43FF    _WaitForVDP
-     43FF    _WaitForVDP_start
-     43FF    _waitRetrace_end
-     4417    _Joystick
-     4417    _Joystick_start
-     4417    _WaitForVDP_end
-     4429    _Joystick_end
-     4429    _Joytrig
-     4429    _Joytrig_start
-     443D    _GetKeyMatrixLine
-     443D    _GetKeyMatrixLine_start
-     443D    _Joytrig_end
-     444F    _GetKeyMatrixLine_end
-     444F    _SetTo50Hz
-     444F    _SetTo50Hz_start
-     445D    _SetTo50Hz_end
-     445D    _SetTo60Hz
-     445D    _SetTo60Hz_start
-     446B    _SetTo60Hz_end
-     446B    _WriteToVRAM8
-     446B    _WriteToVRAM8_start
-     449B    _HMMC
-     449B    _HMMC_start
-     449B    _WriteToVRAM8_end
-     4583    _HMMC_end
-     4583    _SetupHMMC
-     4583    _SetupHMMC_start
-     45B9    _SetupHMMC_end
-     45B9    __initrleblock
+     491B    _car2
+     520B    _car3
+     5AFB    _car4
+     642B    _MainLoop
+     642B    _MainLoop_start
+     67B5    _MainLoop_end
+     67B5    _SetScreen8
+     67B5    _SetScreen8_start
+     67E2    _SetPage8
+     67E2    _SetPage8_start
+     67E2    _SetScreen8_end
+     67FA    _DrawPoint8
+     67FA    _DrawPoint8_start
+     67FA    _SetPage8_end
+     6842    _DrawLine8
+     6842    _DrawLine8_start
+     6842    _DrawPoint8_end
+     684F    _DrawLine8_end
+     684F    _VPDCommand
+     684F    _VPDCommand_start
+     688D    _VPDCommand_end
+     688D    _waitRetrace
+     688D    _waitRetrace_start
+     6898    _WaitForVDP
+     6898    _WaitForVDP_start
+     6898    _waitRetrace_end
+     68B0    _Joystick
+     68B0    _Joystick_start
+     68B0    _WaitForVDP_end
+     68C2    _Joystick_end
+     68C2    _Joytrig
+     68C2    _Joytrig_start
+     68D6    _GetKeyMatrixLine
+     68D6    _GetKeyMatrixLine_start
+     68D6    _Joytrig_end
+     68E8    _GetKeyMatrixLine_end
+     68E8    _SetTo50Hz
+     68E8    _SetTo50Hz_start
+     68F6    _SetTo50Hz_end
+     68F6    _SetTo60Hz
+     68F6    _SetTo60Hz_start
+     6904    _SetTo60Hz_end
+     6904    _WriteToVRAM8
+     6904    _WriteToVRAM8_start
+     6934    _HMMC
+     6934    _HMMC_start
+     6934    _WriteToVRAM8_end
+     6A1C    _Fill8
+     6A1C    _Fill8_start
+     6A1C    _HMMC_end
+     6AF1    _Fill8_end
+     6AF1    _SetupHMMC
+     6AF1    _SetupHMMC_start
+     6B27    _SetupHMMC_end
+     6B27    __initrleblock
+     6B4E    __muluchar_rrx_s
+     6B61    __mulschar_rrx_s
+     6B68    __mulschar_rrx_hds
+     6B74    __mulint_rrx_s
+     6B80    __mulint_rrx_hds
+     6B80    __muluchar_rrx_hds
 
 
 
@@ -94,8 +105,10 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010
 	_DATA = 0xc000

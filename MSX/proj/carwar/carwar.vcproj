@@ -156,6 +156,26 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="data"
+			>
+			<File
+				RelativePath=".\data\sprt_car_1.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\sprt_car_2.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\sprt_car_3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\sprt_car_4.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\build.bat"
 			>
@@ -173,15 +193,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\proj.inc"
-			>
-		</File>
-		<File
-			RelativePath=".\data\sprt_car_1.h"
-			>
-		</File>
-		<File
-			RelativePath=".\trigo.inc"
+			RelativePath=".\trigo16.inc"
 			>
 		</File>
 	</Files>

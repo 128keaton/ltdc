@@ -2,17 +2,17 @@
 
 // color types
 
-struct RGB8;
+struct GRB8;
 struct RGB24;
 
-/** R3 G3 B2 color type */
-struct RGB8
+/** G3 R3 B2 color type */
+struct GRB8
 {
 	u8 RGB;
 
-	RGB8(): RGB(0) {}
-	RGB8(u8 a): RGB(a) {}
-	RGB8(RGB24 color);
+	GRB8(): RGB(0) {}
+	GRB8(u8 a): RGB(a) {}
+	GRB8(RGB24 color);
 
 	operator u8() { return RGB; }
 };
@@ -30,5 +30,5 @@ struct RGB24
 		G = (RGBA >> 8) & 0xFF;
 		B = (RGBA >> 0) & 0xFF;
 	}
-	RGB24(RGB8 color);
+	RGB24(GRB8 color);
 };
