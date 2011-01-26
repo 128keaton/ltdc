@@ -105,9 +105,9 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE crt0_rle.o
-	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010

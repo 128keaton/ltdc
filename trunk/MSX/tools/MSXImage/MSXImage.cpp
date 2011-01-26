@@ -78,12 +78,14 @@ bool SaveImage(FIBITMAP* dib, const char* lpszPathName)
 //-----------------------------------------------------------------------------
 
 /***/
-void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 numX, i32 numY, i32 colorNum)
+void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 numX, i32 numY, i32 colorNum, u32 transColor)
 {
 	FIBITMAP *dib, *dib32;
 	i32 i, j, nx, ny;
 	std::string outData;
 	char tempData[1024];
+	RGB24 c24;
+	GRB8 c8;
 		
 	dib = LoadImage(inFile); // open and load the file using the default load option
 	if(dib != NULL)
@@ -116,9 +118,22 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 						// convert to 8 bits GRB
 						i32 pixel = posX + i + (nx * sizeX) + ((posY + j + (ny * sizeY)) * imageX);
 						u32 argb = ((u32*)bits)[pixel];
-						RGB24 c24 = RGB24(argb);
-						GRB8 c8 = GRB8(c24);
-
+						if((argb & 0xFFFFFF) == transColor)
+						{
+							c8 = 0;
+						}
+						else
+						{
+							c24 = RGB24(argb);
+							c8 = GRB8(c24);
+							if(c8 == 0)
+							{
+								if(c24.G > c24.R)
+									c8 = 0x20;
+								else
+									c8 = 0x04;
+							}
+						}
 						sprintf_s(tempData, 1024, "0x%02X, ", (u8)c8);
 						outData += tempData;
 					}
@@ -197,7 +212,7 @@ int main(int argc, const char* argv[])
 	FreeImage_Initialise();
 
 	const char *inFile, *outFile;
-	i32 i, colorNum = 256, posX = 0, posY = 0, sizeX = 0, sizeY = 0, numX = 1, numY = 1;
+	i32 i, colorNum = 256, posX = 0, posY = 0, sizeX = 0, sizeY = 0, numX = 1, numY = 1, transColor = 0;
 
 	for(i=0; i<argc; i++)
 	{
@@ -228,6 +243,10 @@ int main(int argc, const char* argv[])
 		{
 			colorNum = atoi(argv[++i]);
 		}
+		else if(_stricmp(argv[i], "-trans") == 0)
+		{
+			sscanf_s(argv[++i], "%i", &transColor);
+		}
 	}
 
 	// Create palette
@@ -245,7 +264,7 @@ int main(int argc, const char* argv[])
 	{
 		if(strstr(outFile, ".h") ||strstr(outFile, ".H"))
 		{
-			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum);
+			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum, transColor);
 		}
 		else
 		{
