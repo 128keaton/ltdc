@@ -82,6 +82,17 @@ typedef struct { i16 x, y, z; } ShortVec;
 
 typedef struct
 {
+	u16 DX;  // 36-37
+	u16 DY;  // 38-39
+	u16 NX;  // 40-41
+	u16 NY;  // 42-43
+	u8  CLR; // 44
+	u8  ARG; // 45
+	u8  CMD; // 46
+} VdpBuffer36;
+
+typedef struct
+{
 	u16 SX;  // 32-33
 	u16 SY;  // 34-35
 	u16 DX;  // 36-37
@@ -91,7 +102,7 @@ typedef struct
 	u8  CLR; // 44
 	u8  ARG; // 45
 	u8  CMD; // 46
-} VdpBuffer;
+} VdpBuffer32;
 
 typedef struct
 {
@@ -102,6 +113,8 @@ typedef struct
 typedef struct
 {
 	u8 car; // car index
+	u16 posX;
+	u16 posY;
 	u8 rot; // rotation
 	u8 speed;
 } Player;
@@ -116,7 +129,6 @@ void DrawPoint8(char posX, char posY, char color);
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
 void DrawLine(int posX1, int posY1, int posX2, int posY2, char color);
 void DrawLineSimple();
-void VPDCommand(int address);
 void waitRetrace();
 void WaitForVDP();
 char Joystick(char n);
@@ -125,9 +137,13 @@ u8 GetKeyMatrixLine(u8 n);
 void WriteToVRAM8(i16 addr, u8 value);
 void SetTo50Hz();
 void SetTo60Hz();
-void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
+void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
+void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
 void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color);
-void SetupHMMC(u16 address);
+
+void VPDCommand32(u16 address);
+void VPDCommand36(u16 address);
+void VPDCommandLoop(u16 address);
 
 //----------------------------------------
 // D A T A
@@ -168,31 +184,29 @@ void main(void)
  */
 void MainLoop()
 {
-	u8 clsScreen8[15] = 
-	{// 32 33 34 35 36 37 38 39 40 41 42   43 44 45 46
-		0, 0, 0, 0, 0, 0, 0, 0,	0, 1, 212, 0, 0, 0, 0xC0
-	};
-
-	//u8 x = 128, y = 128;
-	i16 i, j;
+	i16 i;
 	u8 bEnd = 0/*, keyCode*/;
-	i16 addr;
-	i8 page = 0;
-	u8 keyLine;
+	u8 page = 0;
+	//u8 keyLine;
 	u8 rot = 0;
-	u16 posX = 128 << 8, posY = 128 << 8, dx ,dy;
+	u16 posX = 128 << 8, posY = 128 << 8, dx = 0,dy = 0;
 	i8 speed = 0;
 
 	SetTo60Hz();
 	SetScreen8();
 
-	//Fill8(32, 32, 32, 32, 0xB0);
-
-	VPDCommand((int)&clsScreen8);
+	Fill8(0, 0, 0, 256, 212, 0x92);
+	Fill8(1, 0, 0, 256, 212, 0x92);
 
 	while(bEnd == 0)
 	{
-		Fill8(0, posX >> 8, posY >> 8, 13, 11, 0);
+		SetPage8(page << 5);
+		page = 1 - page;
+
+		Fill8(page, posX >> 8, posY >> 8, 13, 11, 0x92);
+		Fill8(page, 20, 50, 13, 11, 0x92);
+		Fill8(page, 40, 50, 13, 11, 0x92);
+		Fill8(page, 60, 50, 13, 11, 0x92);
 
 		speed--;
 		if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
@@ -242,58 +256,35 @@ void MainLoop()
 		posX += speed * dx;
 		posY -= speed * dy;
 
-		HMMC(0, posX >> 8, posY >> 8, 13, 11, (u16)&car1[rot * 13 * 11]);
+		RAMtoVRAMTrans(page, posX >> 8, posY >> 8, 13, 11, (u16)&car1[rot * 13 * 11]);
+		RAMtoVRAMTrans(page, 20, 50, 13, 11, (u16)&car2[rot * 13 * 11]);
+		RAMtoVRAMTrans(page, 40, 50, 13, 11, (u16)&car3[rot * 13 * 11]);
+		RAMtoVRAMTrans(page, 60, 50, 13, 11, (u16)&car4[rot * 13 * 11]);
 
-
-		HMMC(0, 20, 20, 13, 11, (u16)&car2[rot * 13 * 11]);
-		HMMC(0, 40, 20, 13, 11, (u16)&car3[rot * 13 * 11]);
-		HMMC(0, 60, 20, 13, 11, (u16)&car4[rot * 13 * 11]);
-		
-		
-		//   if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+		// Keyboard
+		//for(i=0; i<10; i++) // rows
 		//{
-		//	switch (i)
+		//	keyLine = GetKeyMatrixLine(i);
+		//	for(j=0; j<8; j++) // characters
 		//	{
-		//	case 1: y--; break; // up
-		//	case 2: y--; x++; break;
-		//	case 3: x++; break; // right
-		//	case 4: y++; x++; break;
-		//	case 5: y++; break; // down
-		//	case 6: y++; x--; break;
-		//	case 7: x--; break; // left
-		//	case 8: y--; x--; break;
+		//		if(keyLine & 1 << j)
+		//			DrawPoint8(10 + j, 10 + i, 0);
+		//		else
+		//			DrawPoint8(10 + j, 10 + i, 255);
 		//	}
 		//}
 
-		for(i=0; i<10; i++) // rows
-		{
-			keyLine = GetKeyMatrixLine(i);
-			for(j=0; j<8; j++) // characters
-			{
-				if(keyLine & 1 << j)
-					DrawPoint8(10 + j, 10 + i, 0);
-				else
-					DrawPoint8(10 + j, 10 + i, 255);
-			}
-		}
-
-		//for(i=0; i<10; i++) // rows
+		//for(j=0; j<256; j++) // characters
 		//{
-			for(j=0; j<256; j++) // characters
-			{
-				DrawPoint8(j, i, j);
-			}
+		//	DrawPoint8(j, i, j);
 		//}
 
 
-		//page = DISP_PAGE - page;
-		//SetPage8(page);
+		waitRetrace();
 
-		//waitRetrace();
-
-		/*keyCode = KeyPressed();
-		if(keyCode == 13)
-			bEnd = 1;*/
+		//keyCode = KeyPressed();
+		//if(keyCode == 13)
+		//	bEnd = 1;
 	}
 }
 
@@ -485,6 +476,9 @@ void SetPage8(i8 page)
 	_asm
 		//; - modification registre 2 -
 		ld      a,4(ix)       //; donnee
+		;//rla
+		;//rla
+		;//rla
 		or		#0x1F         //; += 00011111b
 		di                    //; on interdit les interruptions
 		out		(VDP_ADDR),a  
@@ -646,7 +640,7 @@ void DrawPoint8(char posX, char posY, char color)
 //
 //	_endasm;
 //
-//	VPDCommand((int)&SX);
+//	VPDCommand32((int)&SX);
 //}
 
 /**
@@ -785,47 +779,6 @@ void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 
 	_endasm;
 */
-}
-
-/**
- * Commande VDP (écriture registres 32 à 46)
- */ 
-void VPDCommand(int address)
-{
-	address;
-
-	WaitForVDP();
-
-	_asm
-
-		ld l,4(ix)
-		ld h,5(ix)
-
-		//; Envoi données VDP
-		ld	a,#32		//; R32 avec incrémentation
-		di
-		out	(VDP_ADDR),a
-		ld	a,VDP_REG(17)
-		out	(VDP_ADDR),a         //; Ecriture séquentielle
-		ld	c,VDP_ADDR+#2         //; Port séquentiel
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		outi
-		ei                      //; "EI" anticipé
-		outi
-
-	_endasm;
 }
 
 /**
@@ -1082,24 +1035,19 @@ void WriteToVRAM8(i16 addr, u8 value)
 //	_endasm;
 //}
 
-void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
-{
-	VdpBuffer buffer;
-	
-	page; ram;
 
-	buffer.DX = dx;
-	buffer.DY = dy /*+ (page * 512)*/;
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = ((u8*)ram)[0];
-	buffer.ARG = 0;
-	buffer.CMD = 0xF0;
-	SetupHMMC((u16)&buffer.DX);
+
+/**
+ *
+ */ 
+void VPDCommandLoop(u16 address)
+{
+	address;
+
 	_asm
 
-		ld l,9(ix)
-		ld h,10(ix)
+		ld l,4(ix)
+		ld h,5(ix)
 
 		di
 
@@ -1148,92 +1096,112 @@ void HMMC(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 		ei
 
 	_endasm;
+}
+
+void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+{
+	VdpBuffer36 buffer;
+	
+	page; ram;
+
+	buffer.DX = dx;
+	buffer.DY = dy + ((u16)page << 8);
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = ((u8*)ram)[0];
+	buffer.ARG = 0;
+	buffer.CMD = 0xF0;
+	VPDCommand36((u16)&buffer);
+	VPDCommandLoop(ram);
+}
 
 
-	//_asm
-	//	di
-	//_endasm;
-	//for(i=0; i<(nx*ny)-1; i++)
-	//{
-	//	WaitForVDP();
-	//	_asm
+void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+{
+	VdpBuffer36 buffer;
+	
+	page; ram;
 
-	//		xor		a ;// 0
-	//		out		(VDP_ADDR),a
-	//		ld		a,VDP_REG(45)
-	//		out		(VDP_ADDR),a
-	//	
-	//	_endasm;
-	//}
-	//_asm
-	//	ei
-	//_endasm;
+	buffer.DX = dx;
+	buffer.DY = dy + ((u16)page << 8);
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = ((u8*)ram)[0];
+	buffer.ARG = 0;
+	buffer.CMD = 0xB8;
+	VPDCommand36((u16)&buffer);
+	VPDCommandLoop(ram);
 }
 
 void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
 {
-	VdpBuffer buffer;
+	VdpBuffer36 buffer;
 	
 	page;
 
 	buffer.DX = dx;
-	buffer.DY = dy /*+ (page * 512)*/;
+	buffer.DY = dy + ((u16)page << 8);
 	buffer.NX = nx;
 	buffer.NY = ny;
 	buffer.CLR = color;
 	buffer.ARG = 0;
-	buffer.CMD = 0xF0;
-	SetupHMMC((u16)&buffer.DX);
+	buffer.CMD = 0xC0;
+	VPDCommand36((u16)&buffer);
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * Commande VDP (écriture registres 32 à 46)
+ */ 
+void VPDCommand32(u16 address)
+{
+	address;
+
+	WaitForVDP();
+
 	_asm
 
+		ld l,4(ix)
+		ld h,5(ix)
+		//; Envoi données VDP
+		ld	a,#32		//; R32 avec incrémentation
 		di
-
-	FILL_SEND_NEXT_COLOR:
-
-		;// 3 - envoyer l'octet suivant à mettre en VRAM dans le registre 45 (le premier octet a été traité à l'étape 1) par un OUT du Z80
-		;// Send next color
-		ld		a,9(ix)
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(44)
-		out		(VDP_ADDR),a
-
-	FILL_WAIT_REG2:	
-
-		;// 4 - lire le registre d'état 2 (status)
-		;// Get status ragister #2
-		ld		a,#2
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(15)
-		out		(VDP_ADDR),a
-
-		;// 5 - lire le registre d'état du bit CE, si celui-ci est à 0, alors l'instruction est terminée, sinon on passe à l'étape 6
-		nop
-		in		a,(VDP_ADDR)
-		ld		b,a ;// backup reg#2
-		rra     ;// send CE bit into Carry
-		jr		nc,FILL_COLOR_COPY_END
-
-		;// 6 - tester l'état du bit TR, si celui-ci se trouve à 0, alors le processeur vidéo n'est pas
-		;// prêt à recevoir l'octet suivant, recommencer en 4. Si par contre, ce bit est à 1, reprendre toute l'opération au niveau 3
-		ld		a,b ;// restore reg#2
-		rla     ;// send TR bit in the Carry
-		jr		nc,FILL_WAIT_REG2
-		jp		FILL_SEND_NEXT_COLOR
-
-	FILL_COLOR_COPY_END:
-
-		;// Clean status ragister #2
-		xor		a
-		out		(VDP_ADDR),a
-		ld		a,VDP_REG(15)
-		out		(VDP_ADDR),a
-
-		ei
+		out	(VDP_ADDR),a
+		ld	a,VDP_REG(17)
+		out	(VDP_ADDR),a         //; Ecriture séquentielle
+		ld	c,VDP_ADDR+#2         //; Port séquentiel
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		outi
+		ei                      //; "EI" anticipé
+		outi
 
 	_endasm;
 }
 
-void SetupHMMC(u16 address)
+/**
+ * Commande VDP (écriture registres 36 à 46)
+ */ 
+void VPDCommand36(u16 address)
 {
 	address;
 
