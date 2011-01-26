@@ -112,11 +112,14 @@ typedef struct
 
 typedef struct
 {
-	u8 car; // car index
-	u16 posX;
-	u16 posY;
-	u8 rot; // rotation
-	u8 speed;
+	u8 car;    // car index
+	u16 posX;  // position X
+	u16 posY;  // position Y
+	u16 prevX; // previous position X
+	u16 prevY; // previous position Y
+	u16 rot;   // rotation
+	u16 dX;    // velocity X
+	u16 dY;    // velocity Y
 } Player;
 
 //----------------------------------------

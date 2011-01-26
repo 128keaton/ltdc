@@ -1,7 +1,7 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : free open source ANSI-C Compiler
                               3 ; Version 2.8.0 #5117 (Mar 23 2008) (MINGW32)
-                              4 ; This file was generated Thu Jan 27 00:27:49 2011
+                              4 ; This file was generated Thu Jan 27 00:44:18 2011
                               5 ;--------------------------------------------------------
                               6 	.module carwar
                               7 	.optsdcc -mz80
@@ -64,7 +64,7 @@
                              64 ; code
                              65 ;--------------------------------------------------------
                              66 	.area _CODE
-                             67 ;carwar.c:169: void main(void)
+                             67 ;carwar.c:172: void main(void)
                              68 ;	genLabel
                              69 ;	genFunction
                              70 ;	---------------------------------
@@ -72,14 +72,14 @@
                              72 ; ---------------------------------
    0000                      73 _main_start::
    0000                      74 _main:
-                             75 ;carwar.c:175: _endasm;
+                             75 ;carwar.c:178: _endasm;
                              76 ;	genInline
                              77 	
    0000 F3                   78 		 di
    0001 ED 7B 4A FC          79 		 ld sp, (#0xFC4A)
    0005 FB                   80 		 ei
                              81 		
-                             82 ;carwar.c:177: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+                             82 ;carwar.c:180: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
                              83 ;	genAnd
                              84 ;Z80 AOP_SFR for _g_slotPort banked:0 bc:1 de:0
    0006 DB A8                85 	in	a,(_g_slotPort)
@@ -98,7 +98,7 @@
    0014 79                   98 	ld	a,c
    0015 B0                   99 	or	a,b
    0016 D3 A8               100 	out	(_g_slotPort),a
-                            101 ;carwar.c:179: MainLoop();
+                            101 ;carwar.c:182: MainLoop();
                             102 ;	genCall
                             103 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                             104 ;	genLabel
@@ -9295,7 +9295,7 @@
    2415 61 00              9295 	.dw #0x0061
    2417 B5 00              9296 	.dw #0x00B5
    2419 EC 00              9297 	.dw #0x00EC
-                           9298 ;carwar.c:185: void MainLoop()
+                           9298 ;carwar.c:188: void MainLoop()
                            9299 ;	genLabel
                            9300 ;	genFunction
                            9301 ;	---------------------------------
@@ -9309,15 +9309,15 @@
    2423 21 F2 FF           9309 	ld	hl,#-14
    2426 39                 9310 	add	hl,sp
    2427 F9                 9311 	ld	sp,hl
-                           9312 ;carwar.c:189: u8 page = 0;
+                           9312 ;carwar.c:192: u8 page = 0;
                            9313 ;	genAssign
                            9314 ;	AOP_STK for _MainLoop_page_1_1
    2428 DD 36 FF 00        9315 	ld	-1(ix),#0x00
-                           9316 ;carwar.c:191: u8 rot = 0;
+                           9316 ;carwar.c:194: u8 rot = 0;
                            9317 ;	genAssign
                            9318 ;	AOP_STK for _MainLoop_rot_1_1
    242C DD 36 FE 00        9319 	ld	-2(ix),#0x00
-                           9320 ;carwar.c:192: u16 posX = 128 << 8, posY = 128 << 8, dx = 0,dy = 0;
+                           9320 ;carwar.c:195: u16 posX = 128 << 8, posY = 128 << 8, dx = 0,dy = 0;
                            9321 ;	genAssign
                            9322 ;	AOP_STK for _MainLoop_posX_1_1
    2430 DD 36 FC 00        9323 	ld	-4(ix),#0x00
@@ -9334,19 +9334,19 @@
                            9334 ;	AOP_STK for _MainLoop_sloc0_1_0
    2448 DD 36 F7 00        9335 	ld	-9(ix),#0x00
    244C DD 36 F8 00        9336 	ld	-8(ix),#0x00
-                           9337 ;carwar.c:193: i8 speed = 0;
+                           9337 ;carwar.c:196: i8 speed = 0;
                            9338 ;	genAssign
                            9339 ;	AOP_STK for _MainLoop_speed_1_1
    2450 DD 36 F9 00        9340 	ld	-7(ix),#0x00
-                           9341 ;carwar.c:195: SetTo60Hz();
+                           9341 ;carwar.c:198: SetTo60Hz();
                            9342 ;	genCall
                            9343 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2454 CDr34s28           9344 	call	_SetTo60Hz
-                           9345 ;carwar.c:196: SetScreen8();
+                           9345 ;carwar.c:199: SetScreen8();
                            9346 ;	genCall
                            9347 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2457 CDr31s27           9348 	call	_SetScreen8
-                           9349 ;carwar.c:198: Fill8(0, 0, 0, 256, 212, 0x92);
+                           9349 ;carwar.c:201: Fill8(0, 0, 0, 256, 212, 0x92);
                            9350 ;	genIpush
                            9351 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    245A 21 D4 92           9352 	ld	hl,#0x92D4
@@ -9362,7 +9362,7 @@
    2469 F1                 9362 	pop	af
    246A F1                 9363 	pop	af
    246B F1                 9364 	pop	af
-                           9365 ;carwar.c:199: Fill8(1, 0, 0, 256, 212, 0x92);
+                           9365 ;carwar.c:202: Fill8(1, 0, 0, 256, 212, 0x92);
                            9366 ;	genIpush
                            9367 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    246C 21 D4 92           9368 	ld	hl,#0x92D4
@@ -9378,10 +9378,10 @@
    247B F1                 9378 	pop	af
    247C F1                 9379 	pop	af
    247D F1                 9380 	pop	af
-                           9381 ;carwar.c:201: while(bEnd == 0)
+                           9381 ;carwar.c:204: while(bEnd == 0)
                            9382 ;	genLabel
    247E                    9383 00117$:
-                           9384 ;carwar.c:203: SetPage8(page << 5);
+                           9384 ;carwar.c:206: SetPage8(page << 5);
                            9385 ;	genLeftShift
                            9386 ;	AOP_STK for _MainLoop_page_1_1
    247E DD 7E FF           9387 	ld	a,-1(ix)
@@ -9397,13 +9397,13 @@
                            9397 ;	genCall
    2489 CDr5Es27           9398 	call	_SetPage8
    248C 33                 9399 	inc	sp
-                           9400 ;carwar.c:204: page = 1 - page;
+                           9400 ;carwar.c:207: page = 1 - page;
                            9401 ;	genMinus
                            9402 ;	AOP_STK for _MainLoop_page_1_1
    248D 3E 01              9403 	ld	a,#0x01
    248F DD 96 FF           9404 	sub	a,-1(ix)
    2492 DD 77 FF           9405 	ld	-1(ix),a
-                           9406 ;carwar.c:206: Fill8(page, posX >> 8, posY >> 8, 13, 11, 0x92);
+                           9406 ;carwar.c:209: Fill8(page, posX >> 8, posY >> 8, 13, 11, 0x92);
                            9407 ;	genRightShift
                            9408 ;	AOP_STK for _MainLoop_posY_1_1
    2495 DD 4E FB           9409 	ld	c,-5(ix)
@@ -9440,7 +9440,7 @@
    24B5 F1                 9440 	pop	af
    24B6 F1                 9441 	pop	af
    24B7 F1                 9442 	pop	af
-                           9443 ;carwar.c:207: Fill8(page, 20, 50, 13, 11, 0x92);
+                           9443 ;carwar.c:210: Fill8(page, 20, 50, 13, 11, 0x92);
                            9444 ;	genIpush
                            9445 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    24B8 21 0B 92           9446 	ld	hl,#0x920B
@@ -9462,7 +9462,7 @@
    24CC F1                 9462 	pop	af
    24CD F1                 9463 	pop	af
    24CE F1                 9464 	pop	af
-                           9465 ;carwar.c:208: Fill8(page, 40, 50, 13, 11, 0x92);
+                           9465 ;carwar.c:211: Fill8(page, 40, 50, 13, 11, 0x92);
                            9466 ;	genIpush
                            9467 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    24CF 21 0B 92           9468 	ld	hl,#0x920B
@@ -9484,7 +9484,7 @@
    24E3 F1                 9484 	pop	af
    24E4 F1                 9485 	pop	af
    24E5 F1                 9486 	pop	af
-                           9487 ;carwar.c:209: Fill8(page, 60, 50, 13, 11, 0x92);
+                           9487 ;carwar.c:212: Fill8(page, 60, 50, 13, 11, 0x92);
                            9488 ;	genIpush
                            9489 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    24E6 21 0B 92           9490 	ld	hl,#0x920B
@@ -9506,11 +9506,11 @@
    24FA F1                 9506 	pop	af
    24FB F1                 9507 	pop	af
    24FC F1                 9508 	pop	af
-                           9509 ;carwar.c:211: speed--;
+                           9509 ;carwar.c:214: speed--;
                            9510 ;	genMinus
                            9511 ;	AOP_STK for _MainLoop_speed_1_1
    24FD DD 35 F9           9512 	dec	-7(ix)
-                           9513 ;carwar.c:212: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+                           9513 ;carwar.c:215: if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
                            9514 ;	genIpush
                            9515 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2500 3E 00              9516 	ld	a,#0x00
@@ -9563,7 +9563,7 @@
    252C 79                 9563 	ld	a,c
    252D B0                 9564 	or	a,b
    252E CAr1Es26           9565 	jp	Z,00111$
-                           9566 ;carwar.c:214: switch (i)
+                           9566 ;carwar.c:217: switch (i)
                            9567 ;	genCmpLt
    2531 7B                 9568 	ld	a,e
    2532 D6 01              9569 	sub	a,#0x01
@@ -9598,10 +9598,10 @@
    2561 C3rE2s25           9598 	jp	00106$
    2564 C3rE7s25           9599 	jp	00107$
    2567 C3rECs25           9600 	jp	00108$
-                           9601 ;carwar.c:216: case 1: // up
+                           9601 ;carwar.c:219: case 1: // up
                            9602 ;	genLabel
    256A                    9603 00101$:
-                           9604 ;carwar.c:217: dx = g_Cosinus[rot];
+                           9604 ;carwar.c:220: dx = g_Cosinus[rot];
                            9605 ;	genLeftShift
                            9606 ;	AOP_STK for _MainLoop_rot_1_1
    256A DD 7E FE           9607 	ld	a,-2(ix)
@@ -9623,7 +9623,7 @@
                            9623 ;	AOP_STK for _MainLoop_sloc2_1_0
    257C DD 73 F4           9624 	ld	-12(ix),e
    257F DD 72 F5           9625 	ld	-11(ix),d
-                           9626 ;carwar.c:218: dy = g_Sinus[rot];
+                           9626 ;carwar.c:221: dy = g_Sinus[rot];
                            9627 ;	genPlus
    2582 3ErDB              9628 	ld	a,#<_g_Sinus
    2584 81                 9629 	add	a,c
@@ -9641,19 +9641,19 @@
                            9641 ;	AOP_STK for _MainLoop_sloc0_1_0
    2590 DD 71 F7           9642 	ld	-9(ix),c
    2593 DD 70 F8           9643 	ld	-8(ix),b
-                           9644 ;carwar.c:219: speed += 2;
+                           9644 ;carwar.c:222: speed += 2;
                            9645 ;	genPlus
                            9646 ;	AOP_STK for _MainLoop_speed_1_1
                            9647 ;	genPlusIncr
    2596 DD 34 F9           9648 	inc	-7(ix)
    2599 DD 34 F9           9649 	inc	-7(ix)
-                           9650 ;carwar.c:220: break;
+                           9650 ;carwar.c:223: break;
                            9651 ;	genGoto
    259C C3r1Es26           9652 	jp	00111$
-                           9653 ;carwar.c:221: case 2: // up-right
+                           9653 ;carwar.c:224: case 2: // up-right
                            9654 ;	genLabel
    259F                    9655 00102$:
-                           9656 ;carwar.c:222: dx = g_Cosinus[rot];
+                           9656 ;carwar.c:225: dx = g_Cosinus[rot];
                            9657 ;	genLeftShift
                            9658 ;	AOP_STK for _MainLoop_rot_1_1
    259F DD 7E FE           9659 	ld	a,-2(ix)
@@ -9675,7 +9675,7 @@
                            9675 ;	AOP_STK for _MainLoop_sloc2_1_0
    25B1 DD 73 F4           9676 	ld	-12(ix),e
    25B4 DD 72 F5           9677 	ld	-11(ix),d
-                           9678 ;carwar.c:223: dy = g_Sinus[rot];
+                           9678 ;carwar.c:226: dy = g_Sinus[rot];
                            9679 ;	genPlus
    25B7 3ErDB              9680 	ld	a,#<_g_Sinus
    25B9 81                 9681 	add	a,c
@@ -9693,71 +9693,71 @@
                            9693 ;	AOP_STK for _MainLoop_sloc0_1_0
    25C5 DD 71 F7           9694 	ld	-9(ix),c
    25C8 DD 70 F8           9695 	ld	-8(ix),b
-                           9696 ;carwar.c:224: speed += 2;
+                           9696 ;carwar.c:227: speed += 2;
                            9697 ;	genPlus
                            9698 ;	AOP_STK for _MainLoop_speed_1_1
                            9699 ;	genPlusIncr
    25CB DD 34 F9           9700 	inc	-7(ix)
    25CE DD 34 F9           9701 	inc	-7(ix)
-                           9702 ;carwar.c:225: rot--; 
+                           9702 ;carwar.c:228: rot--; 
                            9703 ;	genMinus
                            9704 ;	AOP_STK for _MainLoop_rot_1_1
    25D1 DD 35 FE           9705 	dec	-2(ix)
-                           9706 ;carwar.c:226: break;
+                           9706 ;carwar.c:229: break;
                            9707 ;	genGoto
    25D4 18 48              9708 	jr	00111$
-                           9709 ;carwar.c:227: case 3: // right
+                           9709 ;carwar.c:230: case 3: // right
                            9710 ;	genLabel
    25D6                    9711 00103$:
-                           9712 ;carwar.c:228: rot--; 
+                           9712 ;carwar.c:231: rot--; 
                            9713 ;	genMinus
                            9714 ;	AOP_STK for _MainLoop_rot_1_1
    25D6 DD 35 FE           9715 	dec	-2(ix)
-                           9716 ;carwar.c:229: break;
+                           9716 ;carwar.c:232: break;
                            9717 ;	genGoto
    25D9 18 43              9718 	jr	00111$
-                           9719 ;carwar.c:230: case 4: // down-right
+                           9719 ;carwar.c:233: case 4: // down-right
                            9720 ;	genLabel
    25DB                    9721 00104$:
-                           9722 ;carwar.c:231: rot--; 
+                           9722 ;carwar.c:234: rot--; 
                            9723 ;	genMinus
                            9724 ;	AOP_STK for _MainLoop_rot_1_1
    25DB DD 35 FE           9725 	dec	-2(ix)
-                           9726 ;carwar.c:232: break;
+                           9726 ;carwar.c:235: break;
                            9727 ;	genGoto
    25DE 18 3E              9728 	jr	00111$
-                           9729 ;carwar.c:233: case 5: // down
+                           9729 ;carwar.c:236: case 5: // down
                            9730 ;	genLabel
    25E0                    9731 00105$:
-                           9732 ;carwar.c:234: break;
+                           9732 ;carwar.c:237: break;
                            9733 ;	genGoto
    25E0 18 3C              9734 	jr	00111$
-                           9735 ;carwar.c:235: case 6: // down-left
+                           9735 ;carwar.c:238: case 6: // down-left
                            9736 ;	genLabel
    25E2                    9737 00106$:
-                           9738 ;carwar.c:236: rot++; 
+                           9738 ;carwar.c:239: rot++; 
                            9739 ;	genPlus
                            9740 ;	AOP_STK for _MainLoop_rot_1_1
                            9741 ;	genPlusIncr
    25E2 DD 34 FE           9742 	inc	-2(ix)
-                           9743 ;carwar.c:237: break;
+                           9743 ;carwar.c:240: break;
                            9744 ;	genGoto
    25E5 18 37              9745 	jr	00111$
-                           9746 ;carwar.c:238: case 7: // left
+                           9746 ;carwar.c:241: case 7: // left
                            9747 ;	genLabel
    25E7                    9748 00107$:
-                           9749 ;carwar.c:239: rot++; 
+                           9749 ;carwar.c:242: rot++; 
                            9750 ;	genPlus
                            9751 ;	AOP_STK for _MainLoop_rot_1_1
                            9752 ;	genPlusIncr
    25E7 DD 34 FE           9753 	inc	-2(ix)
-                           9754 ;carwar.c:240: break;
+                           9754 ;carwar.c:243: break;
                            9755 ;	genGoto
    25EA 18 32              9756 	jr	00111$
-                           9757 ;carwar.c:241: case 8:// up-left
+                           9757 ;carwar.c:244: case 8:// up-left
                            9758 ;	genLabel
    25EC                    9759 00108$:
-                           9760 ;carwar.c:242: dx = g_Cosinus[rot];
+                           9760 ;carwar.c:245: dx = g_Cosinus[rot];
                            9761 ;	genLeftShift
                            9762 ;	AOP_STK for _MainLoop_rot_1_1
    25EC DD 7E FE           9763 	ld	a,-2(ix)
@@ -9779,7 +9779,7 @@
                            9779 ;	AOP_STK for _MainLoop_sloc2_1_0
    25FE DD 73 F4           9780 	ld	-12(ix),e
    2601 DD 72 F5           9781 	ld	-11(ix),d
-                           9782 ;carwar.c:243: dy = g_Sinus[rot];
+                           9782 ;carwar.c:246: dy = g_Sinus[rot];
                            9783 ;	genPlus
    2604 3ErDB              9784 	ld	a,#<_g_Sinus
    2606 81                 9785 	add	a,c
@@ -9797,32 +9797,32 @@
                            9797 ;	AOP_STK for _MainLoop_sloc0_1_0
    2612 DD 71 F7           9798 	ld	-9(ix),c
    2615 DD 70 F8           9799 	ld	-8(ix),b
-                           9800 ;carwar.c:244: speed++;
+                           9800 ;carwar.c:247: speed++;
                            9801 ;	genPlus
                            9802 ;	AOP_STK for _MainLoop_speed_1_1
                            9803 ;	genPlusIncr
    2618 DD 34 F9           9804 	inc	-7(ix)
-                           9805 ;carwar.c:245: rot++; 
+                           9805 ;carwar.c:248: rot++; 
                            9806 ;	genPlus
                            9807 ;	AOP_STK for _MainLoop_rot_1_1
                            9808 ;	genPlusIncr
    261B DD 34 FE           9809 	inc	-2(ix)
-                           9810 ;carwar.c:247: }
+                           9810 ;carwar.c:250: }
                            9811 ;	genLabel
    261E                    9812 00111$:
-                           9813 ;carwar.c:250: rot &= 0x0F;
+                           9813 ;carwar.c:253: rot &= 0x0F;
                            9814 ;	genAnd
                            9815 ;	AOP_STK for _MainLoop_rot_1_1
    261E DD 7E FE           9816 	ld	a,-2(ix)
    2621 E6 0F              9817 	and	a,#0x0F
    2623 DD 77 FE           9818 	ld	-2(ix),a
-                           9819 ;carwar.c:251: if(speed < 0)
+                           9819 ;carwar.c:254: if(speed < 0)
                            9820 ;	genCmpLt
                            9821 ;	AOP_STK for _MainLoop_speed_1_1
    2626 DD 7E F9           9822 	ld	a,-7(ix)
    2629 CB 7F              9823 	bit	7,a
    262B 28 06              9824 	jr	Z,00115$
-                           9825 ;carwar.c:252: speed = 0;
+                           9825 ;carwar.c:255: speed = 0;
                            9826 ;	genAssign
                            9827 ;	AOP_STK for _MainLoop_speed_1_1
    262D DD 36 F9 00        9828 	ld	-7(ix),#0x00
@@ -9830,19 +9830,19 @@
    2631 18 0C              9830 	jr	00116$
                            9831 ;	genLabel
    2633                    9832 00115$:
-                           9833 ;carwar.c:253: else if(speed > 10)
+                           9833 ;carwar.c:256: else if(speed > 10)
                            9834 ;	genCmpGt
                            9835 ;	AOP_STK for _MainLoop_speed_1_1
    2633 3E 0A              9836 	ld	a,#0x0A
    2635 DD 96 F9           9837 	sub	a,-7(ix)
    2638 F2r3Fs26           9838 	jp	P,00116$
-                           9839 ;carwar.c:254: speed = 10;
+                           9839 ;carwar.c:257: speed = 10;
                            9840 ;	genAssign
                            9841 ;	AOP_STK for _MainLoop_speed_1_1
    263B DD 36 F9 0A        9842 	ld	-7(ix),#0x0A
                            9843 ;	genLabel
    263F                    9844 00116$:
-                           9845 ;carwar.c:256: posX += speed * dx;
+                           9845 ;carwar.c:259: posX += speed * dx;
                            9846 ;	genCast
                            9847 ;	AOP_STK for _MainLoop_speed_1_1
    263F DD 4E F9           9848 	ld	c,-7(ix)
@@ -9874,7 +9874,7 @@
    2660 DD 7E FD           9874 	ld	a,-3(ix)
    2663 8A                 9875 	adc	a,d
    2664 DD 77 FD           9876 	ld	-3(ix),a
-                           9877 ;carwar.c:257: posY -= speed * dy;
+                           9877 ;carwar.c:260: posY -= speed * dy;
                            9878 ;	genIpush
                            9879 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                            9880 ;	AOP_STK for _MainLoop_sloc0_1_0
@@ -9897,7 +9897,7 @@
    267D DD 7E FB           9897 	ld	a,-5(ix)
    2680 98                 9898 	sbc	a,b
    2681 DD 77 FB           9899 	ld	-5(ix),a
-                           9900 ;carwar.c:259: RAMtoVRAMTrans(page, posX >> 8, posY >> 8, 13, 11, (u16)&car1[rot * 13 * 11]);
+                           9900 ;carwar.c:262: RAMtoVRAMTrans(page, posX >> 8, posY >> 8, 13, 11, (u16)&car1[rot * 13 * 11]);
                            9901 ;	genMult
                            9902 ;	AOP_STK for _MainLoop_rot_1_1
    2684 DD 5E FE           9903 	ld	e,-2(ix)
@@ -9968,7 +9968,7 @@
    26CE F1                 9968 	pop	af
    26CF 33                 9969 	inc	sp
    26D0 C1                 9970 	pop	bc
-                           9971 ;carwar.c:260: RAMtoVRAMTrans(page, 20, 50, 13, 11, (u16)&car2[rot * 13 * 11]);
+                           9971 ;carwar.c:263: RAMtoVRAMTrans(page, 20, 50, 13, 11, (u16)&car2[rot * 13 * 11]);
                            9972 ;	genPlus
    26D1 21r0Bs09           9973 	ld	hl,#_car2
    26D4 09                 9974 	add	hl,bc
@@ -9997,7 +9997,7 @@
    26EB F1                 9997 	pop	af
    26EC 33                 9998 	inc	sp
    26ED C1                 9999 	pop	bc
-                          10000 ;carwar.c:261: RAMtoVRAMTrans(page, 40, 50, 13, 11, (u16)&car3[rot * 13 * 11]);
+                          10000 ;carwar.c:264: RAMtoVRAMTrans(page, 40, 50, 13, 11, (u16)&car3[rot * 13 * 11]);
                           10001 ;	genPlus
    26EE 21rFBs11          10002 	ld	hl,#_car3
    26F1 09                10003 	add	hl,bc
@@ -10026,7 +10026,7 @@
    2708 F1                10026 	pop	af
    2709 33                10027 	inc	sp
    270A C1                10028 	pop	bc
-                          10029 ;carwar.c:262: RAMtoVRAMTrans(page, 60, 50, 13, 11, (u16)&car4[rot * 13 * 11]);
+                          10029 ;carwar.c:265: RAMtoVRAMTrans(page, 60, 50, 13, 11, (u16)&car4[rot * 13 * 11]);
                           10030 ;	genPlus
    270B 21rEBs1A          10031 	ld	hl,#_car4
    270E 09                10032 	add	hl,bc
@@ -10053,7 +10053,7 @@
    2723 F1                10053 	pop	af
    2724 F1                10054 	pop	af
    2725 33                10055 	inc	sp
-                          10056 ;carwar.c:283: waitRetrace();
+                          10056 ;carwar.c:286: waitRetrace();
                           10057 ;	genCall
                           10058 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2726 CDrCBs27          10059 	call	_waitRetrace
@@ -10065,7 +10065,7 @@
    272E DD E1             10065 	pop	ix
    2730 C9                10066 	ret
    2731                   10067 _MainLoop_end::
-                          10068 ;carwar.c:430: void SetScreen8()
+                          10068 ;carwar.c:433: void SetScreen8()
                           10069 ;	genLabel
                           10070 ;	genFunction
                           10071 ;	---------------------------------
@@ -10073,7 +10073,7 @@
                           10073 ; ---------------------------------
    2731                   10074 _SetScreen8_start::
    2731                   10075 _SetScreen8:
-                          10076 ;carwar.c:466: _endasm;
+                          10076 ;carwar.c:469: _endasm;
                           10077 ;	genInline
                           10078 	
                           10079 	
@@ -10114,7 +10114,7 @@
                           10114 ;	genEndFunction
    275D C9                10115 	ret
    275E                   10116 _SetScreen8_end::
-                          10117 ;carwar.c:472: void SetPage8(i8 page)
+                          10117 ;carwar.c:475: void SetPage8(i8 page)
                           10118 ;	genLabel
                           10119 ;	genFunction
                           10120 ;	---------------------------------
@@ -10125,7 +10125,7 @@
    275E DD E5             10125 	push	ix
    2760 DD 21 00 00       10126 	ld	ix,#0
    2764 DD 39             10127 	add	ix,sp
-                          10128 ;carwar.c:489: _endasm;
+                          10128 ;carwar.c:492: _endasm;
                           10129 ;	genInline
                           10130 	
                           10131 	
@@ -10146,7 +10146,7 @@
    2773 DD E1             10146 	pop	ix
    2775 C9                10147 	ret
    2776                   10148 _SetPage8_end::
-                          10149 ;carwar.c:495: void DrawPoint8(char posX, char posY, char color)
+                          10149 ;carwar.c:498: void DrawPoint8(char posX, char posY, char color)
                           10150 ;	genLabel
                           10151 ;	genFunction
                           10152 ;	---------------------------------
@@ -10157,11 +10157,11 @@
    2776 DD E5             10157 	push	ix
    2778 DD 21 00 00       10158 	ld	ix,#0
    277C DD 39             10159 	add	ix,sp
-                          10160 ;carwar.c:499: WaitForVDP();
+                          10160 ;carwar.c:502: WaitForVDP();
                           10161 ;	genCall
                           10162 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    277E CDrD6s27          10163 	call	_WaitForVDP
-                          10164 ;carwar.c:547: _endasm;
+                          10164 ;carwar.c:550: _endasm;
                           10165 ;	genInline
                           10166 	
                           10167 	
@@ -10215,7 +10215,7 @@
    27BB DD E1             10215 	pop	ix
    27BD C9                10216 	ret
    27BE                   10217 _DrawPoint8_end::
-                          10218 ;carwar.c:649: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
+                          10218 ;carwar.c:652: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
                           10219 ;	genLabel
                           10220 ;	genFunction
                           10221 ;	---------------------------------
@@ -10226,7 +10226,7 @@
    27BE DD E5             10226 	push	ix
    27C0 DD 21 00 00       10227 	ld	ix,#0
    27C4 DD 39             10228 	add	ix,sp
-                          10229 ;carwar.c:653: WaitForVDP();
+                          10229 ;carwar.c:656: WaitForVDP();
                           10230 ;	genCall
                           10231 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                           10232 ;	genLabel
@@ -10234,7 +10234,7 @@
    27C6 DD E1             10234 	pop	ix
    27C8 C3rD6s27          10235 	jp	_WaitForVDP
    27CB                   10236 _DrawLine8_end::
-                          10237 ;carwar.c:787: void waitRetrace()
+                          10237 ;carwar.c:790: void waitRetrace()
                           10238 ;	genLabel
                           10239 ;	genFunction
                           10240 ;	---------------------------------
@@ -10242,7 +10242,7 @@
                           10242 ; ---------------------------------
    27CB                   10243 _waitRetrace_start::
    27CB                   10244 _waitRetrace:
-                          10245 ;carwar.c:799: _endasm;
+                          10245 ;carwar.c:802: _endasm;
                           10246 ;	genInline
                           10247 	
                           10248 	
@@ -10259,7 +10259,7 @@
                           10259 ;	genEndFunction
    27D5 C9                10260 	ret
    27D6                   10261 _waitRetrace_end::
-                          10262 ;carwar.c:805: void WaitForVDP()
+                          10262 ;carwar.c:808: void WaitForVDP()
                           10263 ;	genLabel
                           10264 ;	genFunction
                           10265 ;	---------------------------------
@@ -10267,7 +10267,7 @@
                           10267 ; ---------------------------------
    27D6                   10268 _WaitForVDP_start::
    27D6                   10269 _WaitForVDP:
-                          10270 ;carwar.c:826: _endasm;
+                          10270 ;carwar.c:829: _endasm;
                           10271 ;	genInline
                           10272 	
                           10273 	
@@ -10293,7 +10293,7 @@
                           10293 ;	genEndFunction
    27ED C9                10294 	ret
    27EE                   10295 _WaitForVDP_end::
-                          10296 ;carwar.c:830: char Joystick(char n)
+                          10296 ;carwar.c:833: char Joystick(char n)
                           10297 ;	genLabel
                           10298 ;	genFunction
                           10299 ;	---------------------------------
@@ -10304,7 +10304,7 @@
    27EE DD E5             10304 	push	ix
    27F0 DD 21 00 00       10305 	ld	ix,#0
    27F4 DD 39             10306 	add	ix,sp
-                          10307 ;carwar.c:837: _endasm;
+                          10307 ;carwar.c:840: _endasm;
                           10308 ;	genInline
                           10309 	
    27F6 DD 7E 04          10310 		 ld a,4(ix)
@@ -10316,7 +10316,7 @@
    27FD DD E1             10316 	pop	ix
    27FF C9                10317 	ret
    2800                   10318 _Joystick_end::
-                          10319 ;carwar.c:841: char Joytrig(char n)
+                          10319 ;carwar.c:844: char Joytrig(char n)
                           10320 ;	genLabel
                           10321 ;	genFunction
                           10322 ;	---------------------------------
@@ -10327,7 +10327,7 @@
    2800 DD E5             10327 	push	ix
    2802 DD 21 00 00       10328 	ld	ix,#0
    2806 DD 39             10329 	add	ix,sp
-                          10330 ;carwar.c:849: _endasm;
+                          10330 ;carwar.c:852: _endasm;
                           10331 ;	genInline
                           10332 	
    2808 DD 7E 04          10333 		 ld a,4(ix)
@@ -10340,7 +10340,7 @@
    2811 DD E1             10340 	pop	ix
    2813 C9                10341 	ret
    2814                   10342 _Joytrig_end::
-                          10343 ;carwar.c:853: u8 GetKeyMatrixLine(u8 n)
+                          10343 ;carwar.c:856: u8 GetKeyMatrixLine(u8 n)
                           10344 ;	genLabel
                           10345 ;	genFunction
                           10346 ;	---------------------------------
@@ -10351,7 +10351,7 @@
    2814 DD E5             10351 	push	ix
    2816 DD 21 00 00       10352 	ld	ix,#0
    281A DD 39             10353 	add	ix,sp
-                          10354 ;carwar.c:860: _endasm;
+                          10354 ;carwar.c:863: _endasm;
                           10355 ;	genInline
                           10356 	
    281C DD 7E 04          10357 		 ld a,4(ix)
@@ -10363,7 +10363,7 @@
    2823 DD E1             10363 	pop	ix
    2825 C9                10364 	ret
    2826                   10365 _GetKeyMatrixLine_end::
-                          10366 ;carwar.c:863: void SetTo50Hz()
+                          10366 ;carwar.c:866: void SetTo50Hz()
                           10367 ;	genLabel
                           10368 ;	genFunction
                           10369 ;	---------------------------------
@@ -10371,11 +10371,11 @@
                           10371 ; ---------------------------------
    2826                   10372 _SetTo50Hz_start::
    2826                   10373 _SetTo50Hz:
-                          10374 ;carwar.c:865: WaitForVDP();
+                          10374 ;carwar.c:868: WaitForVDP();
                           10375 ;	genCall
                           10376 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2826 CDrD6s27          10377 	call	_WaitForVDP
-                          10378 ;carwar.c:877: _endasm;
+                          10378 ;carwar.c:880: _endasm;
                           10379 ;	genInline
                           10380 	
                           10381 	
@@ -10392,7 +10392,7 @@
                           10392 ;	genEndFunction
    2833 C9                10393 	ret
    2834                   10394 _SetTo50Hz_end::
-                          10395 ;carwar.c:880: void SetTo60Hz()
+                          10395 ;carwar.c:883: void SetTo60Hz()
                           10396 ;	genLabel
                           10397 ;	genFunction
                           10398 ;	---------------------------------
@@ -10400,11 +10400,11 @@
                           10400 ; ---------------------------------
    2834                   10401 _SetTo60Hz_start::
    2834                   10402 _SetTo60Hz:
-                          10403 ;carwar.c:882: WaitForVDP();
+                          10403 ;carwar.c:885: WaitForVDP();
                           10404 ;	genCall
                           10405 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2834 CDrD6s27          10406 	call	_WaitForVDP
-                          10407 ;carwar.c:894: _endasm;
+                          10407 ;carwar.c:897: _endasm;
                           10408 ;	genInline
                           10409 	
                           10410 	
@@ -10421,7 +10421,7 @@
                           10421 ;	genEndFunction
    2841 C9                10422 	ret
    2842                   10423 _SetTo60Hz_end::
-                          10424 ;carwar.c:900: void WriteToVRAM8(i16 addr, u8 value)
+                          10424 ;carwar.c:903: void WriteToVRAM8(i16 addr, u8 value)
                           10425 ;	genLabel
                           10426 ;	genFunction
                           10427 ;	---------------------------------
@@ -10432,11 +10432,11 @@
    2842 DD E5             10432 	push	ix
    2844 DD 21 00 00       10433 	ld	ix,#0
    2848 DD 39             10434 	add	ix,sp
-                          10435 ;carwar.c:904: WaitForVDP();
+                          10435 ;carwar.c:907: WaitForVDP();
                           10436 ;	genCall
                           10437 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    284A CDrD6s27          10438 	call	_WaitForVDP
-                          10439 ;carwar.c:931: _endasm;
+                          10439 ;carwar.c:934: _endasm;
                           10440 ;	genInline
                           10441 	
                           10442 		 ;
@@ -10468,7 +10468,7 @@
    286F DD E1             10468 	pop	ix
    2871 C9                10469 	ret
    2872                   10470 _WriteToVRAM8_end::
-                          10471 ;carwar.c:1043: void VPDCommandLoop(u16 address)
+                          10471 ;carwar.c:1046: void VPDCommandLoop(u16 address)
                           10472 ;	genLabel
                           10473 ;	genFunction
                           10474 ;	---------------------------------
@@ -10479,7 +10479,7 @@
    2872 DD E5             10479 	push	ix
    2874 DD 21 00 00       10480 	ld	ix,#0
    2878 DD 39             10481 	add	ix,sp
-                          10482 ;carwar.c:1098: _endasm;
+                          10482 ;carwar.c:1101: _endasm;
                           10483 ;	genInline
                           10484 	
                           10485 	
@@ -10538,7 +10538,7 @@
    28A7 DD E1             10538 	pop	ix
    28A9 C9                10539 	ret
    28AA                   10540 _VPDCommandLoop_end::
-                          10541 ;carwar.c:1101: void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+                          10541 ;carwar.c:1104: void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
                           10542 ;	genLabel
                           10543 ;	genFunction
                           10544 ;	---------------------------------
@@ -10552,7 +10552,7 @@
    28B2 21 F1 FF          10552 	ld	hl,#-15
    28B5 39                10553 	add	hl,sp
    28B6 F9                10554 	ld	sp,hl
-                          10555 ;carwar.c:1107: buffer.DX = dx;
+                          10555 ;carwar.c:1110: buffer.DX = dx;
                           10556 ;	genAddrOf
    28B7 21 04 00          10557 	ld	hl,#0x0004
    28BA 39                10558 	add	hl,sp
@@ -10569,7 +10569,7 @@
    28C4 73                10569 	ld	(hl),e
    28C5 23                10570 	inc	hl
    28C6 72                10571 	ld	(hl),d
-                          10572 ;carwar.c:1108: buffer.DY = dy + ((u16)page << 8);
+                          10572 ;carwar.c:1111: buffer.DY = dy + ((u16)page << 8);
                           10573 ;	genAddrOf
    28C7 21 04 00          10574 	ld	hl,#0x0004
    28CA 39                10575 	add	hl,sp
@@ -10612,7 +10612,7 @@
    28F9 73                10612 	ld	(hl),e
    28FA 23                10613 	inc	hl
    28FB 72                10614 	ld	(hl),d
-                          10615 ;carwar.c:1109: buffer.NX = nx;
+                          10615 ;carwar.c:1112: buffer.NX = nx;
                           10616 ;	genPlus
                           10617 ;	AOP_STK for _RAMtoVRAM_sloc1_1_0
                           10618 ;	genPlusIncr
@@ -10634,7 +10634,7 @@
    2913 73                10634 	ld	(hl),e
    2914 23                10635 	inc	hl
    2915 72                10636 	ld	(hl),d
-                          10637 ;carwar.c:1110: buffer.NY = ny;
+                          10637 ;carwar.c:1113: buffer.NY = ny;
                           10638 ;	genPlus
                           10639 ;	AOP_STK for _RAMtoVRAM_sloc1_1_0
                           10640 ;	genPlusIncr
@@ -10656,7 +10656,7 @@
    292D 73                10656 	ld	(hl),e
    292E 23                10657 	inc	hl
    292F 72                10658 	ld	(hl),d
-                          10659 ;carwar.c:1111: buffer.CLR = ((u8*)ram)[0];
+                          10659 ;carwar.c:1114: buffer.CLR = ((u8*)ram)[0];
                           10660 ;	genPlus
                           10661 ;	AOP_STK for _RAMtoVRAM_sloc1_1_0
                           10662 ;	genPlusIncr
@@ -10678,7 +10678,7 @@
    2943 DD 6E F1          10678 	ld	l,-15(ix)
    2946 DD 66 F2          10679 	ld	h,-14(ix)
    2949 77                10680 	ld	(hl),a
-                          10681 ;carwar.c:1112: buffer.ARG = 0;
+                          10681 ;carwar.c:1115: buffer.ARG = 0;
                           10682 ;	genPlus
                           10683 ;	genPlusIncr
    294A 79                10684 	ld	a,c
@@ -10691,7 +10691,7 @@
                           10691 ;	isBitvar = 0
    2952 3E 00             10692 	ld	a,#0x00
    2954 12                10693 	ld	(de),a
-                          10694 ;carwar.c:1113: buffer.CMD = 0xF0;
+                          10694 ;carwar.c:1116: buffer.CMD = 0xF0;
                           10695 ;	genPlus
                           10696 ;	genPlusIncr
    2955 79                10697 	ld	a,c
@@ -10704,7 +10704,7 @@
                           10704 ;	isBitvar = 0
    295D 3E F0             10705 	ld	a,#0xF0
    295F 12                10706 	ld	(de),a
-                          10707 ;carwar.c:1114: VPDCommand36((u16)&buffer);
+                          10707 ;carwar.c:1117: VPDCommand36((u16)&buffer);
                           10708 ;	genAssign
                           10709 ;	(registers are the same)
                           10710 ;	genCast
@@ -10714,7 +10714,7 @@
                           10714 ;	genCall
    2961 CDr30s2B          10715 	call	_VPDCommand36
    2964 F1                10716 	pop	af
-                          10717 ;carwar.c:1115: VPDCommandLoop(ram);
+                          10717 ;carwar.c:1118: VPDCommandLoop(ram);
                           10718 ;	genIpush
                           10719 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                           10720 ;	AOP_STK for 
@@ -10730,7 +10730,7 @@
    2972 DD E1             10730 	pop	ix
    2974 C9                10731 	ret
    2975                   10732 _RAMtoVRAM_end::
-                          10733 ;carwar.c:1119: void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+                          10733 ;carwar.c:1122: void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
                           10734 ;	genLabel
                           10735 ;	genFunction
                           10736 ;	---------------------------------
@@ -10744,7 +10744,7 @@
    297D 21 F1 FF          10744 	ld	hl,#-15
    2980 39                10745 	add	hl,sp
    2981 F9                10746 	ld	sp,hl
-                          10747 ;carwar.c:1125: buffer.DX = dx;
+                          10747 ;carwar.c:1128: buffer.DX = dx;
                           10748 ;	genAddrOf
    2982 21 04 00          10749 	ld	hl,#0x0004
    2985 39                10750 	add	hl,sp
@@ -10761,7 +10761,7 @@
    298F 73                10761 	ld	(hl),e
    2990 23                10762 	inc	hl
    2991 72                10763 	ld	(hl),d
-                          10764 ;carwar.c:1126: buffer.DY = dy + ((u16)page << 8);
+                          10764 ;carwar.c:1129: buffer.DY = dy + ((u16)page << 8);
                           10765 ;	genAddrOf
    2992 21 04 00          10766 	ld	hl,#0x0004
    2995 39                10767 	add	hl,sp
@@ -10804,7 +10804,7 @@
    29C4 73                10804 	ld	(hl),e
    29C5 23                10805 	inc	hl
    29C6 72                10806 	ld	(hl),d
-                          10807 ;carwar.c:1127: buffer.NX = nx;
+                          10807 ;carwar.c:1130: buffer.NX = nx;
                           10808 ;	genPlus
                           10809 ;	AOP_STK for _RAMtoVRAMTrans_sloc1_1_0
                           10810 ;	genPlusIncr
@@ -10826,7 +10826,7 @@
    29DE 73                10826 	ld	(hl),e
    29DF 23                10827 	inc	hl
    29E0 72                10828 	ld	(hl),d
-                          10829 ;carwar.c:1128: buffer.NY = ny;
+                          10829 ;carwar.c:1131: buffer.NY = ny;
                           10830 ;	genPlus
                           10831 ;	AOP_STK for _RAMtoVRAMTrans_sloc1_1_0
                           10832 ;	genPlusIncr
@@ -10848,7 +10848,7 @@
    29F8 73                10848 	ld	(hl),e
    29F9 23                10849 	inc	hl
    29FA 72                10850 	ld	(hl),d
-                          10851 ;carwar.c:1129: buffer.CLR = ((u8*)ram)[0];
+                          10851 ;carwar.c:1132: buffer.CLR = ((u8*)ram)[0];
                           10852 ;	genPlus
                           10853 ;	AOP_STK for _RAMtoVRAMTrans_sloc1_1_0
                           10854 ;	genPlusIncr
@@ -10870,7 +10870,7 @@
    2A0E DD 6E F1          10870 	ld	l,-15(ix)
    2A11 DD 66 F2          10871 	ld	h,-14(ix)
    2A14 77                10872 	ld	(hl),a
-                          10873 ;carwar.c:1130: buffer.ARG = 0;
+                          10873 ;carwar.c:1133: buffer.ARG = 0;
                           10874 ;	genPlus
                           10875 ;	genPlusIncr
    2A15 79                10876 	ld	a,c
@@ -10883,7 +10883,7 @@
                           10883 ;	isBitvar = 0
    2A1D 3E 00             10884 	ld	a,#0x00
    2A1F 12                10885 	ld	(de),a
-                          10886 ;carwar.c:1131: buffer.CMD = 0xB8;
+                          10886 ;carwar.c:1134: buffer.CMD = 0xB8;
                           10887 ;	genPlus
                           10888 ;	genPlusIncr
    2A20 79                10889 	ld	a,c
@@ -10896,7 +10896,7 @@
                           10896 ;	isBitvar = 0
    2A28 3E B8             10897 	ld	a,#0xB8
    2A2A 12                10898 	ld	(de),a
-                          10899 ;carwar.c:1132: VPDCommand36((u16)&buffer);
+                          10899 ;carwar.c:1135: VPDCommand36((u16)&buffer);
                           10900 ;	genAssign
                           10901 ;	(registers are the same)
                           10902 ;	genCast
@@ -10906,7 +10906,7 @@
                           10906 ;	genCall
    2A2C CDr30s2B          10907 	call	_VPDCommand36
    2A2F F1                10908 	pop	af
-                          10909 ;carwar.c:1133: VPDCommandLoop(ram);
+                          10909 ;carwar.c:1136: VPDCommandLoop(ram);
                           10910 ;	genIpush
                           10911 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
                           10912 ;	AOP_STK for 
@@ -10922,7 +10922,7 @@
    2A3D DD E1             10922 	pop	ix
    2A3F C9                10923 	ret
    2A40                   10924 _RAMtoVRAMTrans_end::
-                          10925 ;carwar.c:1136: void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
+                          10925 ;carwar.c:1139: void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
                           10926 ;	genLabel
                           10927 ;	genFunction
                           10928 ;	---------------------------------
@@ -10936,7 +10936,7 @@
    2A48 21 F1 FF          10936 	ld	hl,#-15
    2A4B 39                10937 	add	hl,sp
    2A4C F9                10938 	ld	sp,hl
-                          10939 ;carwar.c:1142: buffer.DX = dx;
+                          10939 ;carwar.c:1145: buffer.DX = dx;
                           10940 ;	genAddrOf
    2A4D 21 04 00          10941 	ld	hl,#0x0004
    2A50 39                10942 	add	hl,sp
@@ -10953,7 +10953,7 @@
    2A5A 73                10953 	ld	(hl),e
    2A5B 23                10954 	inc	hl
    2A5C 72                10955 	ld	(hl),d
-                          10956 ;carwar.c:1143: buffer.DY = dy + ((u16)page << 8);
+                          10956 ;carwar.c:1146: buffer.DY = dy + ((u16)page << 8);
                           10957 ;	genAddrOf
    2A5D 21 04 00          10958 	ld	hl,#0x0004
    2A60 39                10959 	add	hl,sp
@@ -10996,7 +10996,7 @@
    2A8F 73                10996 	ld	(hl),e
    2A90 23                10997 	inc	hl
    2A91 72                10998 	ld	(hl),d
-                          10999 ;carwar.c:1144: buffer.NX = nx;
+                          10999 ;carwar.c:1147: buffer.NX = nx;
                           11000 ;	genPlus
                           11001 ;	AOP_STK for _Fill8_sloc1_1_0
                           11002 ;	genPlusIncr
@@ -11018,7 +11018,7 @@
    2AA9 73                11018 	ld	(hl),e
    2AAA 23                11019 	inc	hl
    2AAB 72                11020 	ld	(hl),d
-                          11021 ;carwar.c:1145: buffer.NY = ny;
+                          11021 ;carwar.c:1148: buffer.NY = ny;
                           11022 ;	genPlus
                           11023 ;	AOP_STK for _Fill8_sloc1_1_0
                           11024 ;	genPlusIncr
@@ -11040,7 +11040,7 @@
    2AC3 73                11040 	ld	(hl),e
    2AC4 23                11041 	inc	hl
    2AC5 72                11042 	ld	(hl),d
-                          11043 ;carwar.c:1146: buffer.CLR = color;
+                          11043 ;carwar.c:1149: buffer.CLR = color;
                           11044 ;	genPlus
                           11045 ;	genPlusIncr
    2AC6 79                11046 	ld	a,c
@@ -11054,7 +11054,7 @@
                           11054 ;	isBitvar = 0
    2ACE DD 7E 09          11055 	ld	a,9(ix)
    2AD1 12                11056 	ld	(de),a
-                          11057 ;carwar.c:1147: buffer.ARG = 0;
+                          11057 ;carwar.c:1150: buffer.ARG = 0;
                           11058 ;	genPlus
                           11059 ;	genPlusIncr
    2AD2 79                11060 	ld	a,c
@@ -11067,7 +11067,7 @@
                           11067 ;	isBitvar = 0
    2ADA 3E 00             11068 	ld	a,#0x00
    2ADC 12                11069 	ld	(de),a
-                          11070 ;carwar.c:1148: buffer.CMD = 0xC0;
+                          11070 ;carwar.c:1151: buffer.CMD = 0xC0;
                           11071 ;	genPlus
                           11072 ;	genPlusIncr
    2ADD 79                11073 	ld	a,c
@@ -11080,7 +11080,7 @@
                           11080 ;	isBitvar = 0
    2AE5 3E C0             11081 	ld	a,#0xC0
    2AE7 12                11082 	ld	(de),a
-                          11083 ;carwar.c:1149: VPDCommand36((u16)&buffer);
+                          11083 ;carwar.c:1152: VPDCommand36((u16)&buffer);
                           11084 ;	genAssign
                           11085 ;	(registers are the same)
                           11086 ;	genCast
@@ -11096,7 +11096,7 @@
    2AEF DD E1             11096 	pop	ix
    2AF1 C9                11097 	ret
    2AF2                   11098 _Fill8_end::
-                          11099 ;carwar.c:1164: void VPDCommand32(u16 address)
+                          11099 ;carwar.c:1167: void VPDCommand32(u16 address)
                           11100 ;	genLabel
                           11101 ;	genFunction
                           11102 ;	---------------------------------
@@ -11107,11 +11107,11 @@
    2AF2 DD E5             11107 	push	ix
    2AF4 DD 21 00 00       11108 	ld	ix,#0
    2AF8 DD 39             11109 	add	ix,sp
-                          11110 ;carwar.c:1168: WaitForVDP();
+                          11110 ;carwar.c:1171: WaitForVDP();
                           11111 ;	genCall
                           11112 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2AFA CDrD6s27          11113 	call	_WaitForVDP
-                          11114 ;carwar.c:1198: _endasm;
+                          11114 ;carwar.c:1201: _endasm;
                           11115 ;	genInline
                           11116 	
                           11117 	
@@ -11147,7 +11147,7 @@
    2B2D DD E1             11147 	pop	ix
    2B2F C9                11148 	ret
    2B30                   11149 _VPDCommand32_end::
-                          11150 ;carwar.c:1204: void VPDCommand36(u16 address)
+                          11150 ;carwar.c:1207: void VPDCommand36(u16 address)
                           11151 ;	genLabel
                           11152 ;	genFunction
                           11153 ;	---------------------------------
@@ -11158,11 +11158,11 @@
    2B30 DD E5             11158 	push	ix
    2B32 DD 21 00 00       11159 	ld	ix,#0
    2B36 DD 39             11160 	add	ix,sp
-                          11161 ;carwar.c:1208: WaitForVDP();
+                          11161 ;carwar.c:1211: WaitForVDP();
                           11162 ;	genCall
                           11163 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
    2B38 CDrD6s27          11164 	call	_WaitForVDP
-                          11165 ;carwar.c:1234: _endasm;
+                          11165 ;carwar.c:1237: _endasm;
                           11166 ;	genInline
                           11167 	
                           11168 	
