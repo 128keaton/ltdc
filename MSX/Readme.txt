@@ -1,0 +1,1 @@
+You need to set an environment variable named MSX_ROOT pointing to this directory
