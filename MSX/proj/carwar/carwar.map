@@ -13,7 +13,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__GSINIT
      0000    l__HOME
      0000    l__OVERLAY
-     2BB1    l__CODE
+     31BA    l__CODE
      4010    s__CODE
      C000    s__CABS
      C000    s__DATA
@@ -26,7 +26,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   2BB1 =  11185. bytes (REL,CON)
+_CODE                              4010   31BA =  12730. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -39,67 +39,70 @@ _CODE                              4010   2BB1 =  11185. bytes (REL,CON)
      5AFB    _car4
      642B    _MainLoop
      642B    _MainLoop_start
-     6741    _MainLoop_end
-     6741    _SetScreen8
-     6741    _SetScreen8_start
-     676E    _SetPage8
-     676E    _SetPage8_start
-     676E    _SetScreen8_end
-     6786    _DrawPoint8
-     6786    _DrawPoint8_start
-     6786    _SetPage8_end
-     67CE    _DrawLine8
-     67CE    _DrawLine8_start
-     67CE    _DrawPoint8_end
-     67DB    _DrawLine8_end
-     67DB    _waitRetrace
-     67DB    _waitRetrace_start
-     67E6    _WaitForVDP
-     67E6    _WaitForVDP_start
-     67E6    _waitRetrace_end
-     67FE    _Joystick
-     67FE    _Joystick_start
-     67FE    _WaitForVDP_end
-     6810    _Joystick_end
-     6810    _Joytrig
-     6810    _Joytrig_start
-     6824    _GetKeyMatrixLine
-     6824    _GetKeyMatrixLine_start
-     6824    _Joytrig_end
-     6836    _GetKeyMatrixLine_end
-     6836    _SetTo50Hz
-     6836    _SetTo50Hz_start
-     6844    _SetTo50Hz_end
-     6844    _SetTo60Hz
-     6844    _SetTo60Hz_start
-     6852    _SetTo60Hz_end
-     6852    _WriteToVRAM8
-     6852    _WriteToVRAM8_start
-     6882    _VPDCommandLoop
-     6882    _VPDCommandLoop_start
-     6882    _WriteToVRAM8_end
-     68BA    _RAMtoVRAM
-     68BA    _RAMtoVRAM_start
-     68BA    _VPDCommandLoop_end
-     6985    _RAMtoVRAMTrans
-     6985    _RAMtoVRAMTrans_start
-     6985    _RAMtoVRAM_end
-     6A50    _Fill8
-     6A50    _Fill8_start
-     6A50    _RAMtoVRAMTrans_end
-     6B02    _Fill8_end
-     6B02    _VPDCommand32
-     6B02    _VPDCommand32_start
-     6B40    _VPDCommand32_end
-     6B40    _VPDCommand36
-     6B40    _VPDCommand36_start
-     6B76    _VPDCommand36_end
-     6B76    __muluchar_rrx_s
-     6B89    __mulschar_rrx_s
-     6B90    __mulschar_rrx_hds
-     6B9C    __mulint_rrx_s
-     6BA8    __mulint_rrx_hds
-     6BA8    __muluchar_rrx_hds
+     6C82    _InitializePlayer
+     6C82    _InitializePlayer_start
+     6C82    _MainLoop_end
+     6D4A    _InitializePlayer_end
+     6D4A    _SetScreen8
+     6D4A    _SetScreen8_start
+     6D77    _SetPage8
+     6D77    _SetPage8_start
+     6D77    _SetScreen8_end
+     6D8F    _DrawPoint8
+     6D8F    _DrawPoint8_start
+     6D8F    _SetPage8_end
+     6DD7    _DrawLine8
+     6DD7    _DrawLine8_start
+     6DD7    _DrawPoint8_end
+     6DE4    _DrawLine8_end
+     6DE4    _waitRetrace
+     6DE4    _waitRetrace_start
+     6DEF    _WaitForVDP
+     6DEF    _WaitForVDP_start
+     6DEF    _waitRetrace_end
+     6E07    _Joystick
+     6E07    _Joystick_start
+     6E07    _WaitForVDP_end
+     6E19    _Joystick_end
+     6E19    _Joytrig
+     6E19    _Joytrig_start
+     6E2D    _GetKeyMatrixLine
+     6E2D    _GetKeyMatrixLine_start
+     6E2D    _Joytrig_end
+     6E3F    _GetKeyMatrixLine_end
+     6E3F    _SetTo50Hz
+     6E3F    _SetTo50Hz_start
+     6E4D    _SetTo50Hz_end
+     6E4D    _SetTo60Hz
+     6E4D    _SetTo60Hz_start
+     6E5B    _SetTo60Hz_end
+     6E5B    _WriteToVRAM8
+     6E5B    _WriteToVRAM8_start
+     6E8B    _VPDCommandLoop
+     6E8B    _VPDCommandLoop_start
+     6E8B    _WriteToVRAM8_end
+     6EC3    _RAMtoVRAM
+     6EC3    _RAMtoVRAM_start
+     6EC3    _VPDCommandLoop_end
+     6F8E    _RAMtoVRAMTrans
+     6F8E    _RAMtoVRAMTrans_start
+     6F8E    _RAMtoVRAM_end
+     7059    _Fill8
+     7059    _Fill8_start
+     7059    _RAMtoVRAMTrans_end
+     710B    _Fill8_end
+     710B    _VPDCommand32
+     710B    _VPDCommand32_start
+     7149    _VPDCommand32_end
+     7149    _VPDCommand36
+     7149    _VPDCommand36_start
+     717F    _VPDCommand36_end
+     717F    __muluchar_rrx_s
+     7192    __mulschar_rrx_s
+     7199    __mulschar_rrx_hds
+     71A5    __mulint_rrx_s
+     71B1    __mulint_rrx_hds
+     71B1    __muluchar_rrx_hds
 
 
 
@@ -110,7 +113,7 @@ MODULES
 	FILE carwar.o
 		NAME carwar
 LIBRARIES
-	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
+	LIBRARY E:\dev\Private\MSX\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE mul.o
 USERBASEDEF
 	_CODE = 0x4010
