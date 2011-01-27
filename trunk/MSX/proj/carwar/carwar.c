@@ -12,8 +12,6 @@
 #define VDP_PALT #0x9A   // VDP palette latch (write only)
 #define VDP_REGS #0x9B   // VDP register access (write only)
 
-#define VDP_REG(num) #(0x80+num)
-
 #define PSG_REGS #0xA0   // PSG register write port
 #define PSG_DATA #0xA1   // PSG value write port
 #define PSG_STAT #0xA2   // PSG value read port
@@ -55,8 +53,12 @@
 
 #define DISP_PAGE	(1 << 5)
 
+#include "keyboard.h"
+
 //----------------------------------------
 // M A C R O S
+
+#define VDP_REG(num) #(0x80+num)
 
 #define POSI(a)    (a)
 #define NEGA(a)    ((^a)++)
@@ -65,6 +67,9 @@
 #define U2M(a)     ((a) >> 8)
 #define UxU(a, b)  (((a) >> 4) * ((b) >> 4))
 #define UxU2(a, b) ((((a) >> 4) * (b)) >> 4)
+
+#define ScrPosX(a) ((a >> 8) - 6)
+#define ScrPosY(a) ((a >> 8) - 5)
 
 //----------------------------------------
 // T Y P E S
@@ -120,12 +125,14 @@ typedef struct
 	u16 rot;   // rotation
 	u16 dX;    // velocity X
 	u16 dY;    // velocity Y
+	i8 speed;
 } Player;
 
 //----------------------------------------
 // P R O T O T Y P E S
 
 void MainLoop();
+void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void SetScreen8();
 void SetPage8(i8 page);
 void DrawPoint8(char posX, char posY, char color);
@@ -190,10 +197,10 @@ void MainLoop()
 	i16 i;
 	u8 bEnd = 0/*, keyCode*/;
 	u8 page = 0;
-	//u8 keyLine;
-	u8 rot = 0;
-	u16 posX = 128 << 8, posY = 128 << 8, dx = 0,dy = 0;
-	i8 speed = 0;
+	u8 keyLine;
+	//u16 dx = 0, dy = 0;
+	//i8 speed = 0;
+	Player ply[4];
 
 	SetTo60Hz();
 	SetScreen8();
@@ -201,68 +208,119 @@ void MainLoop()
 	Fill8(0, 0, 0, 256, 212, 0x92);
 	Fill8(1, 0, 0, 256, 212, 0x92);
 
+	InitializePlayer(&ply[0], 0, 50, 100);
+	InitializePlayer(&ply[1], 1, 100, 100);
+	InitializePlayer(&ply[2], 2, 150, 100);
+	InitializePlayer(&ply[3], 3, 200, 100);
+
 	while(bEnd == 0)
 	{
 		SetPage8(page << 5);
 		page = 1 - page;
 
-		Fill8(page, posX >> 8, posY >> 8, 13, 11, 0x92);
-		Fill8(page, 20, 50, 13, 11, 0x92);
-		Fill8(page, 40, 50, 13, 11, 0x92);
-		Fill8(page, 60, 50, 13, 11, 0x92);
+		Fill8(page, ScrPosX(ply[0].prevX), ScrPosY(ply[0].prevY), 13, 11, 0x92);
+		Fill8(page, ScrPosX(ply[1].prevX), ScrPosY(ply[1].prevY), 13, 11, 0x92);
+		Fill8(page, ScrPosX(ply[2].prevX), ScrPosY(ply[2].prevY), 13, 11, 0x92);
+		Fill8(page, ScrPosX(ply[3].prevX), ScrPosY(ply[3].prevY), 13, 11, 0x92);
 
-		speed--;
-		if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+		ply[0].prevX = ply[0].posX;
+		ply[0].prevY = ply[0].posY;
+		ply[1].prevX = ply[1].posX;
+		ply[1].prevY = ply[1].posY;
+		ply[2].prevX = ply[2].posX;
+		ply[2].prevY = ply[2].posY;
+		ply[3].prevX = ply[3].posX;
+		ply[3].prevY = ply[3].posY;
+
+		// Player 0 gameplay
+		ply[0].speed--;
+		keyLine = GetKeyMatrixLine(8);
+		if((keyLine & KEY_LEFT) == 0)
+			ply[0].rot++; 
+		if((keyLine & KEY_RIGHT) == 0)
+			ply[0].rot--; 
+		if((keyLine & KEY_UP) == 0)
 		{
-			switch (i)
-			{
-			case 1: // up
-				dx = g_Cosinus[rot];
-				dy = g_Sinus[rot];
-				speed += 2;
-				break;
-			case 2: // up-right
-				dx = g_Cosinus[rot];
-				dy = g_Sinus[rot];
-				speed += 2;
-				rot--; 
-				break;
-			case 3: // right
-				rot--; 
-				break;
-			case 4: // down-right
-				rot--; 
-				break;
-			case 5: // down
-				break;
-			case 6: // down-left
-				rot++; 
-				break;
-			case 7: // left
-				rot++; 
-				break;
-			case 8:// up-left
-				dx = g_Cosinus[rot];
-				dy = g_Sinus[rot];
-				speed++;
-				rot++; 
-				break;
-			}
+			ply[0].dX = g_Cosinus[ply[0].rot];
+			ply[0].dY = g_Sinus[ply[0].rot];
+			ply[0].speed += 2;
 		}
 
-		rot &= 0x0F;
-		if(speed < 0)
-			speed = 0;
-		else if(speed > 10)
-			speed = 10;
+		// Player 1 gameplay
+		ply[1].speed--;
+		keyLine = GetKeyMatrixLine(5);
+		if((keyLine & KEY_Z) == 0)
+			ply[1].rot++; 
+		if((keyLine & KEY_X) == 0)
+		{
+			ply[1].dX = g_Cosinus[ply[1].rot];
+			ply[1].dY = g_Sinus[ply[1].rot];
+			ply[1].speed += 2;
+		}
+		keyLine = GetKeyMatrixLine(3);
+		if((keyLine & KEY_C) == 0)
+			ply[1].rot--; 
 
-		posX += speed * dx;
-		posY -= speed * dy;
+		//if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
+		//{
+		//	switch (i)
+		//	{
+		//	case 1: // up
+		//		dx = g_Cosinus[ply[0].rot];
+		//		dy = g_Sinus[ply[0].rot];
+		//		speed += 2;
+		//		break;
+		//	case 2: // up-right
+		//		dx = g_Cosinus[ply[0].rot];
+		//		dy = g_Sinus[ply[0].rot];
+		//		speed += 2;
+		//		ply[0].rot--; 
+		//		break;
+		//	case 3: // right
+		//		ply[0].rot--; 
+		//		break;
+		//	case 4: // down-right
+		//		ply[0].rot--; 
+		//		break;
+		//	case 5: // down
+		//		break;
+		//	case 6: // down-left
+		//		ply[0].rot++; 
+		//		break;
+		//	case 7: // left
+		//		ply[0].rot++; 
+		//		break;
+		//	case 8:// up-left
+		//		dx = g_Cosinus[ply[0].rot];
+		//		dy = g_Sinus[ply[0].rot];
+		//		speed++;
+		//		ply[0].rot++; 
+		//		break;
+		//	}
+		//}
 
-		RAMtoVRAMTrans(page, posX >> 8, posY >> 8, 13, 11, (u16)&car1[rot * 13 * 11]);
-		RAMtoVRAMTrans(page, 20, 50, 13, 11, (u16)&car2[rot * 13 * 11]);
-		RAMtoVRAMTrans(page, 40, 50, 13, 11, (u16)&car3[rot * 13 * 11]);
-		RAMtoVRAMTrans(page, 60, 50, 13, 11, (u16)&car4[rot * 13 * 11]);
+		ply[0].rot &= 0x0F;
+		if(ply[0].speed < 0)
+			ply[0].speed = 0;
+		else if(ply[0].speed > 10)
+			ply[0].speed = 10;
+
+		ply[0].posX += ply[0].speed * ply[0].dX;
+		ply[0].posY -= ply[0].speed * ply[0].dY;
+
+		ply[1].rot &= 0x0F;
+		if(ply[1].speed < 0)
+			ply[1].speed = 0;
+		else if(ply[1].speed > 10)
+			ply[1].speed = 10;
+
+		ply[1].posX += ply[1].speed * ply[1].dX;
+		ply[1].posY -= ply[1].speed * ply[1].dY;
+
+		RAMtoVRAMTrans(page, ScrPosX(ply[0].posX), ScrPosY(ply[0].posY), 13, 11, (u16)&car1[ply[0].rot * 13 * 11]);
+		RAMtoVRAMTrans(page, ScrPosX(ply[1].posX), ScrPosY(ply[1].posY), 13, 11, (u16)&car2[ply[1].rot * 13 * 11]);
+		RAMtoVRAMTrans(page, ScrPosX(ply[2].posX), ScrPosY(ply[2].posY), 13, 11, (u16)&car3[ply[2].rot * 13 * 11]);
+		RAMtoVRAMTrans(page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11, (u16)&car4[ply[3].rot * 13 * 11]);
 
 		// Keyboard
 		//for(i=0; i<10; i++) // rows
@@ -290,6 +348,21 @@ void MainLoop()
 		//	bEnd = 1;
 	}
 }
+
+/** Initialize player data */
+void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
+{
+	ply->car = car; // car index
+	ply->posX = posX << 8; // position X
+	ply->posY = posY << 8; // position Y
+	ply->prevX = posX << 8; // previous position X
+	ply->prevY = posY << 8; // previous position Y
+	ply->rot = 0; // rotation
+	ply->dX = 0; // velocity X
+	ply->dY = 0; // velocity Y
+	ply->speed = 0;
+}
+
 
 /**
  *

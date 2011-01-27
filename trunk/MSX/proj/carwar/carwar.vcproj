@@ -193,6 +193,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\keyboard.h"
+			>
+		</File>
+		<File
 			RelativePath=".\trigo16.inc"
 			>
 		</File>
