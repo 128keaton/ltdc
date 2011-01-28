@@ -160,6 +160,10 @@
 			Name="data"
 			>
 			<File
+				RelativePath=".\data\build_data.bat"
+				>
+			</File>
+			<File
 				RelativePath=".\data\sprt_car_1.h"
 				>
 			</File>
@@ -173,6 +177,10 @@
 			</File>
 			<File
 				RelativePath=".\data\sprt_car_4.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\sprt_shadow.h"
 				>
 			</File>
 		</Filter>

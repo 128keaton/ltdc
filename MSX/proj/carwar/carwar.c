@@ -167,8 +167,25 @@ void VPDCommandLoop(u16 address);
 #include "data/sprt_car_2.h"
 #include "data/sprt_car_3.h"
 #include "data/sprt_car_4.h"
+#include "data/sprt_shadow.h"
 
 #include "trigo16.inc"
+
+const u8 backgound[] = 
+{
+// Sprite[0]
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+};
 
 ///
 sfr at 0xA8 g_slotPort;
@@ -194,13 +211,14 @@ void main(void)
  */
 void MainLoop()
 {
-	i16 i;
+	i8 i;
 	u8 bEnd = 0/*, keyCode*/;
 	u8 page = 0;
 	u8 keyLine;
 	//u16 dx = 0, dy = 0;
 	//i8 speed = 0;
 	Player ply[4];
+	Player* curPly;
 
 	SetTo60Hz();
 	SetScreen8();
@@ -218,128 +236,144 @@ void MainLoop()
 		SetPage8(page << 5);
 		page = 1 - page;
 
+		//----------------------------------------
+		// Clean prévious position
 		Fill8(page, ScrPosX(ply[0].prevX), ScrPosY(ply[0].prevY), 13, 11, 0x92);
 		Fill8(page, ScrPosX(ply[1].prevX), ScrPosY(ply[1].prevY), 13, 11, 0x92);
 		Fill8(page, ScrPosX(ply[2].prevX), ScrPosY(ply[2].prevY), 13, 11, 0x92);
 		Fill8(page, ScrPosX(ply[3].prevX), ScrPosY(ply[3].prevY), 13, 11, 0x92);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[0].prevX), ScrPosY(ply[0].prevY), 13, 11, (u16)&backgound);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[1].prevX), ScrPosY(ply[1].prevY), 13, 11, (u16)&backgound);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[2].prevX), ScrPosY(ply[2].prevY), 13, 11, (u16)&backgound);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[3].prevX), ScrPosY(ply[3].prevY), 13, 11, (u16)&backgound);
 
-		ply[0].prevX = ply[0].posX;
-		ply[0].prevY = ply[0].posY;
-		ply[1].prevX = ply[1].posX;
-		ply[1].prevY = ply[1].posY;
-		ply[2].prevX = ply[2].posX;
-		ply[2].prevY = ply[2].posY;
-		ply[3].prevX = ply[3].posX;
-		ply[3].prevY = ply[3].posY;
-
-		// Player 0 gameplay
-		ply[0].speed--;
+		//----------------------------------------
+		// Player 1 gameplay
+		curPly = &ply[0];
 		keyLine = GetKeyMatrixLine(8);
 		if((keyLine & KEY_LEFT) == 0)
-			ply[0].rot++; 
+		{
+			curPly->rot++; 
+			curPly->rot &= 0x0F;
+		}
 		if((keyLine & KEY_RIGHT) == 0)
-			ply[0].rot--; 
+		{
+			curPly->rot--; 
+			curPly->rot &= 0x0F;
+		}
 		if((keyLine & KEY_UP) == 0)
 		{
-			ply[0].dX = g_Cosinus[ply[0].rot];
-			ply[0].dY = g_Sinus[ply[0].rot];
-			ply[0].speed += 2;
+			curPly->dX = g_Cosinus[curPly->rot];
+			curPly->dY = g_Sinus[curPly->rot];
+			curPly->speed += 2;
 		}
 
-		// Player 1 gameplay
-		ply[1].speed--;
+		//----------------------------------------
+		// Player 2 gameplay
+		curPly = &ply[1];
 		keyLine = GetKeyMatrixLine(5);
 		if((keyLine & KEY_Z) == 0)
-			ply[1].rot++; 
-		if((keyLine & KEY_X) == 0)
 		{
-			ply[1].dX = g_Cosinus[ply[1].rot];
-			ply[1].dY = g_Sinus[ply[1].rot];
-			ply[1].speed += 2;
+			curPly->rot++; 
+			curPly->rot &= 0x0F;
 		}
 		keyLine = GetKeyMatrixLine(3);
 		if((keyLine & KEY_C) == 0)
-			ply[1].rot--; 
+		{
+			curPly->rot--; 
+			curPly->rot &= 0x0F;
+		}
+		keyLine = GetKeyMatrixLine(5);
+		if((keyLine & KEY_X) == 0)
+		{
+			curPly->dX = g_Cosinus[curPly->rot];
+			curPly->dY = g_Sinus[curPly->rot];
+			curPly->speed += 2;
+		}
 
-		//if((i = Joystick(0) | Joystick(1) | Joystick(2)) != 0)
-		//{
-		//	switch (i)
-		//	{
-		//	case 1: // up
-		//		dx = g_Cosinus[ply[0].rot];
-		//		dy = g_Sinus[ply[0].rot];
-		//		speed += 2;
-		//		break;
-		//	case 2: // up-right
-		//		dx = g_Cosinus[ply[0].rot];
-		//		dy = g_Sinus[ply[0].rot];
-		//		speed += 2;
-		//		ply[0].rot--; 
-		//		break;
-		//	case 3: // right
-		//		ply[0].rot--; 
-		//		break;
-		//	case 4: // down-right
-		//		ply[0].rot--; 
-		//		break;
-		//	case 5: // down
-		//		break;
-		//	case 6: // down-left
-		//		ply[0].rot++; 
-		//		break;
-		//	case 7: // left
-		//		ply[0].rot++; 
-		//		break;
-		//	case 8:// up-left
-		//		dx = g_Cosinus[ply[0].rot];
-		//		dy = g_Sinus[ply[0].rot];
-		//		speed++;
-		//		ply[0].rot++; 
-		//		break;
-		//	}
-		//}
+		//----------------------------------------
+		// Player 3 gameplay
+		curPly = &ply[2];
+		switch (Joystick(1)) // Joy 1 direction
+		{
+		case 2: // up-right
+		case 3: // right
+		case 4: // down-right
+			curPly->rot--; 
+			curPly->rot &= 0x0F;
+			break;
+		case 6: // down-left
+		case 7: // left
+		case 8:// up-left
+			curPly->rot++; 
+			curPly->rot &= 0x0F;
+			break;
+		}
+		if(Joytrig(1) != 0) // Joy 1 Button A
+		{
+			curPly->dX = g_Cosinus[curPly->rot];
+			curPly->dY = g_Sinus[curPly->rot];
+			curPly->speed += 2;
+		}
 
-		ply[0].rot &= 0x0F;
-		if(ply[0].speed < 0)
-			ply[0].speed = 0;
-		else if(ply[0].speed > 10)
-			ply[0].speed = 10;
+		//----------------------------------------
+		// Player 4 gameplay
+		curPly = &ply[3];
+		switch (Joystick(2)) // Joy 2 direction
+		{
+		case 2: // up-right
+		case 3: // right
+		case 4: // down-right
+			curPly->rot--; 
+			curPly->rot &= 0x0F;
+			break;
+		case 6: // down-left
+		case 7: // left
+		case 8:// up-left
+			curPly->rot++; 
+			curPly->rot &= 0x0F;
+			break;
+		}
+		if(Joytrig(2) != 0) // Joy 2 Button A
+		{
+			curPly->dX = g_Cosinus[curPly->rot];
+			curPly->dY = g_Sinus[curPly->rot];
+			curPly->speed += 2;
+		}
 
-		ply[0].posX += ply[0].speed * ply[0].dX;
-		ply[0].posY -= ply[0].speed * ply[0].dY;
+		//----------------------------------------
+		// Update physic
+		for(i=0; i<4; i++)
+		{
+			curPly = &ply[i];
 
-		ply[1].rot &= 0x0F;
-		if(ply[1].speed < 0)
-			ply[1].speed = 0;
-		else if(ply[1].speed > 10)
-			ply[1].speed = 10;
+			curPly->speed--;
+			if(curPly->speed < 0)
+				curPly->speed = 0;
+			else if(curPly->speed > 10)
+				curPly->speed = 10;
+			//curPly->speed &= 0x07;
 
-		ply[1].posX += ply[1].speed * ply[1].dX;
-		ply[1].posY -= ply[1].speed * ply[1].dY;
+			curPly->prevX = curPly->posX;
+			curPly->prevY = curPly->posY;
+			curPly->posX += curPly->speed * curPly->dX;
+			curPly->posY -= curPly->speed * curPly->dY;
+		}
 
+		//----------------------------------------
+		// Draw cars
+
+		// Shadow
+		//RAMtoVRAMTrans(page, ScrPosX(ply[0].posX), ScrPosY(ply[0].posY), 13, 11, (u16)&shadow);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[1].posX), ScrPosY(ply[1].posY), 13, 11, (u16)&shadow);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[2].posX), ScrPosY(ply[2].posY), 13, 11, (u16)&shadow);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11, (u16)&shadow);
+
+		// Cars
 		RAMtoVRAMTrans(page, ScrPosX(ply[0].posX), ScrPosY(ply[0].posY), 13, 11, (u16)&car1[ply[0].rot * 13 * 11]);
 		RAMtoVRAMTrans(page, ScrPosX(ply[1].posX), ScrPosY(ply[1].posY), 13, 11, (u16)&car2[ply[1].rot * 13 * 11]);
 		RAMtoVRAMTrans(page, ScrPosX(ply[2].posX), ScrPosY(ply[2].posY), 13, 11, (u16)&car3[ply[2].rot * 13 * 11]);
 		RAMtoVRAMTrans(page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11, (u16)&car4[ply[3].rot * 13 * 11]);
-
-		// Keyboard
-		//for(i=0; i<10; i++) // rows
-		//{
-		//	keyLine = GetKeyMatrixLine(i);
-		//	for(j=0; j<8; j++) // characters
-		//	{
-		//		if(keyLine & 1 << j)
-		//			DrawPoint8(10 + j, 10 + i, 0);
-		//		else
-		//			DrawPoint8(10 + j, 10 + i, 255);
-		//	}
-		//}
-
-		//for(j=0; j<256; j++) // characters
-		//{
-		//	DrawPoint8(j, i, j);
-		//}
-
 
 		waitRetrace();
 
