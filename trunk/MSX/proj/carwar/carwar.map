@@ -13,7 +13,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
      0000    l__GSINIT
      0000    l__HOME
      0000    l__OVERLAY
-     344A    l__CODE
+     3969    l__CODE
      4010    s__CODE
      C000    s__CABS
      C000    s__DATA
@@ -26,7 +26,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   344A =  13386. bytes (REL,CON)
+_CODE                              4010   3969 =  14697. bytes (REL,CON)
 
       Value  Global
    --------  --------------------------------
@@ -38,73 +38,87 @@ _CODE                              4010   344A =  13386. bytes (REL,CON)
      520B    _car3
      5AFB    _car4
      63EB    _shadow
-     64BA    _backgound
-     6549    _MainLoop
-     6549    _MainLoop_start
-     6F12    _InitializePlayer
-     6F12    _InitializePlayer_start
-     6F12    _MainLoop_end
-     6FDA    _InitializePlayer_end
-     6FDA    _SetScreen8
-     6FDA    _SetScreen8_start
-     7007    _SetPage8
-     7007    _SetPage8_start
-     7007    _SetScreen8_end
-     701F    _DrawPoint8
-     701F    _DrawPoint8_start
-     701F    _SetPage8_end
-     7067    _DrawLine8
-     7067    _DrawLine8_start
-     7067    _DrawPoint8_end
-     7074    _DrawLine8_end
-     7074    _waitRetrace
-     7074    _waitRetrace_start
-     707F    _WaitForVDP
-     707F    _WaitForVDP_start
-     707F    _waitRetrace_end
-     7097    _Joystick
-     7097    _Joystick_start
-     7097    _WaitForVDP_end
-     70A9    _Joystick_end
-     70A9    _Joytrig
-     70A9    _Joytrig_start
-     70BD    _GetKeyMatrixLine
-     70BD    _GetKeyMatrixLine_start
-     70BD    _Joytrig_end
-     70CF    _GetKeyMatrixLine_end
-     70CF    _SetTo50Hz
-     70CF    _SetTo50Hz_start
-     70DD    _SetTo50Hz_end
-     70DD    _SetTo60Hz
-     70DD    _SetTo60Hz_start
-     70EB    _SetTo60Hz_end
-     70EB    _WriteToVRAM8
-     70EB    _WriteToVRAM8_start
-     711B    _VPDCommandLoop
-     711B    _VPDCommandLoop_start
-     711B    _WriteToVRAM8_end
-     7153    _RAMtoVRAM
-     7153    _RAMtoVRAM_start
-     7153    _VPDCommandLoop_end
-     721E    _RAMtoVRAMTrans
-     721E    _RAMtoVRAMTrans_start
-     721E    _RAMtoVRAM_end
-     72E9    _Fill8
-     72E9    _Fill8_start
-     72E9    _RAMtoVRAMTrans_end
-     739B    _Fill8_end
-     739B    _VPDCommand32
-     739B    _VPDCommand32_start
-     73D9    _VPDCommand32_end
-     73D9    _VPDCommand36
-     73D9    _VPDCommand36_start
-     740F    _VPDCommand36_end
-     740F    __muluchar_rrx_s
-     7422    __mulschar_rrx_s
-     7429    __mulschar_rrx_hds
-     7435    __mulint_rrx_s
-     7441    __mulint_rrx_hds
-     7441    __muluchar_rrx_hds
+     647A    _charTable
+     663A    _backgound
+     66C9    _defaultColor
+     66D1    _MainLoop
+     66D1    _MainLoop_start
+     7167    _MainLoop_end
+     7171    _InitializePlayer
+     7171    _InitializePlayer_start
+     7239    _InitializePlayer_end
+     7239    _SetScreen8
+     7239    _SetScreen8_start
+     7299    _SetScreen8_end
+     7299    _SetSpriteMode
+     7299    _SetSpriteMode_start
+     72C8    _SetFreq
+     72C8    _SetFreq_start
+     72C8    _SetSpriteMode_end
+     72E9    _SetFreq_end
+     72E9    _SetPage8
+     72E9    _SetPage8_start
+     7304    _DrawPoint8
+     7304    _DrawPoint8_start
+     7304    _SetPage8_end
+     734C    _DrawLine8
+     734C    _DrawLine8_start
+     734C    _DrawPoint8_end
+     7359    _DrawLine8_end
+     7359    _waitRetrace
+     7359    _waitRetrace_start
+     7364    _WaitForVDP
+     7364    _WaitForVDP_start
+     7364    _waitRetrace_end
+     737C    _Joystick
+     737C    _Joystick_start
+     737C    _WaitForVDP_end
+     738E    _Joystick_end
+     738E    _Joytrig
+     738E    _Joytrig_start
+     73A2    _GetKeyMatrixLine
+     73A2    _GetKeyMatrixLine_start
+     73A2    _Joytrig_end
+     73B4    _GetKeyMatrixLine_end
+     73B4    _WriteToVRAM8
+     73B4    _WriteToVRAM8_start
+     73E4    _VPDCommandLoop
+     73E4    _VPDCommandLoop_start
+     73E4    _WriteToVRAM8_end
+     741C    _RAMtoVRAM
+     741C    _RAMtoVRAM_start
+     741C    _VPDCommandLoop_end
+     74E7    _RAMtoVRAMTrans
+     74E7    _RAMtoVRAMTrans_start
+     74E7    _RAMtoVRAM_end
+     75B2    _Fill8
+     75B2    _Fill8_start
+     75B2    _RAMtoVRAMTrans_end
+     7664    _Fill8_end
+     7664    _VRAMtoVRAM
+     7664    _VRAMtoVRAM_start
+     775E    _VRAMtoVRAMTrans
+     775E    _VRAMtoVRAMTrans_start
+     775E    _VRAMtoVRAM_end
+     7858    _VPDCommand32
+     7858    _VPDCommand32_start
+     7858    _VRAMtoVRAMTrans_end
+     7896    _VPDCommand32_end
+     7896    _VPDCommand36
+     7896    _VPDCommand36_start
+     78CC    _PrintSprite
+     78CC    _PrintSprite_start
+     78CC    _VPDCommand36_end
+     78D7    _PrintSprite_end
+     78D7    _SetSprite
+     78D7    _SetSprite_start
+     792E    _SetSprite_end
+     792E    __muluchar_rrx_s
+     7941    __mulschar_rrx_s
+     7948    __mulschar_rrx_hds
+     7954    __mulint_rrx_s
+     7960    __mulint_rrx_hds
+     7960    __muluchar_rrx_hds
 
 
 
