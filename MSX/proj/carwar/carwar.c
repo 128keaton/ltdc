@@ -53,6 +53,27 @@
 
 #define DISP_PAGE	(1 << 5)
 
+#define SPRITE_OFF		0x02
+#define SPRITE_ON		0x00
+
+#define SPRITE_MAG		0x01
+#define SPRITE_NO_MAG	0x00
+#define SPRITE_SIZE_16	0x02
+#define SPRITE_SIZE_8	0x00
+#define SPRITE_MASK     0xFC // 1111 1100
+
+#define LINES_192		0x00
+#define LINES_212		0x80 // 1000 0000
+#define LINES_MASK		0x7F // 0111 1111
+
+#define FREQ_50			0x20 // 0000 0010
+#define FREQ_60			0x00
+#define FREQ_MASK		0xFD // 1111 1101
+
+
+#define TRUE  1
+#define FALSE 0
+
 #include "keyboard.h"
 
 //----------------------------------------
@@ -78,6 +99,7 @@ typedef char i8;
 typedef unsigned char u8;
 typedef int i16;
 typedef unsigned int u16;
+typedef unsigned char BOOL;
 
 //typedef Vec3 int[3];
 //typedef struct { i16 x, y, z, w; } ShortVec;
@@ -111,6 +133,14 @@ typedef struct
 
 typedef struct
 {
+	u8 posY;
+	u8 posX;
+	u8 index; // index in TGS table
+	u8 reserved;
+} EntryTAS;
+
+typedef struct
+{
 	u8 rotSpeed;
 	u8 accel;
 } Car;
@@ -118,10 +148,10 @@ typedef struct
 typedef struct
 {
 	u8 car;    // car index
-	u16 posX;  // position X
-	u16 posY;  // position Y
-	u16 prevX; // previous position X
-	u16 prevY; // previous position Y
+	i16 posX;  // position X
+	i16 posY;  // position Y
+	i16 prevX; // previous position X
+	i16 prevY; // previous position Y
 	u16 rot;   // rotation
 	u16 dX;    // velocity X
 	u16 dY;    // velocity Y
@@ -133,7 +163,8 @@ typedef struct
 
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
-void SetScreen8();
+void SetScreen8(u8 lines);
+void SetSpriteMode(u8 activate, u8 flag);
 void SetPage8(i8 page);
 void DrawPoint8(char posX, char posY, char color);
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
@@ -145,11 +176,15 @@ char Joystick(char n);
 char Joytrig(char n);
 u8 GetKeyMatrixLine(u8 n);
 void WriteToVRAM8(i16 addr, u8 value);
-void SetTo50Hz();
-void SetTo60Hz();
+void SetFreq(u8 freq);
+void PrintSprite(u8 X, u8 Y, const char* text);
+void SetSprite(u8 index, u8 X, u8 Y, u8 shape);
+
 void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
 void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
 void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color);
+void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
+void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
 
 void VPDCommand32(u16 address);
 void VPDCommand36(u16 address);
@@ -168,6 +203,7 @@ void VPDCommandLoop(u16 address);
 #include "data/sprt_car_3.h"
 #include "data/sprt_car_4.h"
 #include "data/sprt_shadow.h"
+#include "data/sprt_alpha.h"
 
 #include "trigo16.inc"
 
@@ -185,6 +221,18 @@ const u8 backgound[] =
 	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
 	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
 	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
+};
+
+const u8 defaultColor[] = 
+{
+	0x0F,
+	0x0F,
+	0x0F,
+	0x0F,
+	0x0F,
+	0x0F,
+	0x0F,
+	0x0F,
 };
 
 ///
@@ -211,7 +259,7 @@ void main(void)
  */
 void MainLoop()
 {
-	i8 i;
+	i8 i = 0;
 	u8 bEnd = 0/*, keyCode*/;
 	u8 page = 0;
 	u8 keyLine;
@@ -220,20 +268,48 @@ void MainLoop()
 	Player ply[4];
 	Player* curPly;
 
-	SetTo60Hz();
-	SetScreen8();
+	SetFreq(FREQ_50);
+	SetScreen8(LINES_212);
+	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8);
 
-	Fill8(0, 0, 0, 256, 212, 0x92);
-	Fill8(1, 0, 0, 256, 212, 0x92);
+	Fill8(0, 0, 0,   256, 212, 0x92);
+	Fill8(0, 0, 212, 256, 44,  0);
+	Fill8(1, 0, 0,   256, 212, 0x92);
+	Fill8(1, 0, 212, 256, 44,  0);
 
 	InitializePlayer(&ply[0], 0, 50, 100);
 	InitializePlayer(&ply[1], 1, 100, 100);
 	InitializePlayer(&ply[2], 2, 150, 100);
 	InitializePlayer(&ply[3], 3, 200, 100);
 
+	//----------------------------------------
+	// Initialize sprites
+	//for(i=0; i<16*3; i++)
+	{
+		//RAMtoVRAM(0, (8 * i) % 256, 248 + (i / 32), 8, 1, (u16)&charTable[8 * i]);
+		RAMtoVRAM(0, 0, 248, 8, 1, (u16)&charTable[0]);
+	}
+
+	// show first 8 sprites
+	//for(i=0; i<8; i++)
+	{
+		//SetSprite(i, 64 + (i * 8), 64, i);
+		SetSprite(0, 0x40, 0x40, 0);
+	}
+
+	//----------------------------------------
+	// Copy cars to VRAM
+	PrintSprite(64, 64, "INIT\nCARS");
+	for(i=0; i<16; i++)
+	{
+		RAMtoVRAM(1, i * 13, 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
+		RAMtoVRAM(1, i * 13, 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
+		RAMtoVRAM(1, i * 13, 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
+		RAMtoVRAM(1, i * 13, 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
+	}
 	while(bEnd == 0)
 	{
-		SetPage8(page << 5);
+		SetPage8(page);
 		page = 1 - page;
 
 		//----------------------------------------
@@ -350,8 +426,8 @@ void MainLoop()
 			curPly->speed--;
 			if(curPly->speed < 0)
 				curPly->speed = 0;
-			else if(curPly->speed > 10)
-				curPly->speed = 10;
+			else if(curPly->speed > 7)
+				curPly->speed = 7;
 			//curPly->speed &= 0x07;
 
 			curPly->prevX = curPly->posX;
@@ -370,10 +446,15 @@ void MainLoop()
 		//RAMtoVRAMTrans(page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11, (u16)&shadow);
 
 		// Cars
-		RAMtoVRAMTrans(page, ScrPosX(ply[0].posX), ScrPosY(ply[0].posY), 13, 11, (u16)&car1[ply[0].rot * 13 * 11]);
-		RAMtoVRAMTrans(page, ScrPosX(ply[1].posX), ScrPosY(ply[1].posY), 13, 11, (u16)&car2[ply[1].rot * 13 * 11]);
-		RAMtoVRAMTrans(page, ScrPosX(ply[2].posX), ScrPosY(ply[2].posY), 13, 11, (u16)&car3[ply[2].rot * 13 * 11]);
-		RAMtoVRAMTrans(page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11, (u16)&car4[ply[3].rot * 13 * 11]);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[0].posX), ScrPosY(ply[0].posY), 13, 11, (u16)&car1[ply[0].rot * 13 * 11]);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[1].posX), ScrPosY(ply[1].posY), 13, 11, (u16)&car2[ply[1].rot * 13 * 11]);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[2].posX), ScrPosY(ply[2].posY), 13, 11, (u16)&car3[ply[2].rot * 13 * 11]);
+		//RAMtoVRAMTrans(page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11, (u16)&car4[ply[3].rot * 13 * 11]);
+
+		VRAMtoVRAMTrans(1, ply[0].rot * 13, 212 + 0,  page, ScrPosX(ply[0].posX), ScrPosY(ply[0].posY), 13, 11);
+		VRAMtoVRAMTrans(1, ply[1].rot * 13, 212 + 11, page, ScrPosX(ply[1].posX), ScrPosY(ply[1].posY), 13, 11);
+		VRAMtoVRAMTrans(1, ply[2].rot * 13, 212 + 22, page, ScrPosX(ply[2].posX), ScrPosY(ply[2].posY), 13, 11);
+		VRAMtoVRAMTrans(1, ply[3].rot * 13, 212 + 33, page, ScrPosX(ply[3].posX), ScrPosY(ply[3].posY), 13, 11);
 
 		waitRetrace();
 
@@ -397,148 +478,13 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 	ply->speed = 0;
 }
 
-
 /**
  *
  */
-//void SetShortVec(ShortVec* ret, i16 x, i16 y, i16 z)
-//{
-//	ret->x = x;
-//	ret->y = y;
-//	ret->z = z;
-//}
-
-/**
- *
- */
-//void TransXZ(ShortVec* ret, const ShortVec* vec, u8 g_Angle, const ShortVec* pos)
-//{
-//	g_Angle >>= 2; 
-//	ret->x = UxU(vec->x, g_Cosinus[g_Angle]) - UxU(vec->z, g_Sinus[g_Angle]);
-//	ret->y = vec->y + pos->y;
-//	ret->z = UxU(vec->x, g_Sinus[g_Angle]) + UxU(vec->z, g_Cosinus[g_Angle]);
-//}
-
-/**
- * 
- */
-//void TransXZIndex(i8 i)
-//{
-//	g_World[i].x = UxU(g_Local[i].x, g_Cosinus[g_AngleIndex]) - UxU(g_Local[i].z, g_Sinus[g_AngleIndex]) + g_Position.x;
-//	g_World[i].y = g_Local[i].y + g_Position.y;
-//	g_World[i].z = UxU(g_Local[i].x, g_Sinus[g_AngleIndex]) + UxU(g_Local[i].z, g_Cosinus[g_AngleIndex]) + g_Position.z;
-//}
-
-/**
- *
- */
-//void Project(ShortVec* ret, const ShortVec* vec, const ShortVec* cam)
-//{
-//#if 1
-//	ret->z = ((vec->z - cam->z) >> 5);
-//	ret->x = 128 + (vec->x - cam->x) / ret->z;
-//	ret->y = 106 + (vec->y - cam->y) / ret->z;
-//#else
-//	ret->z = ((vec->z - cam->z) >> 5);
-//	if(ret->z > 0)
-//	{
-//		ret->x = 0;
-//		ret->y = 0;
-//	}
-//	else
-//	{
-//		ret->x = 128 + UxU2(vec->x - cam->x, g_ProjectionX[ret->z]);
-//		ret->y = 106 + UxU2(vec->y - cam->y, g_ProjectionY[ret->z]);
-//	}
-//#endif
-//}
-
-/**
- * Update
- */
-//void Update()
-//{
-//	i8 i;
-//
-//#define DRAW_LINE(sx, sy, dx, dy, clr) SX = sx; SY = sy; DX = dx; DY= dy; CLR = clr; DrawLineSimple();
-//
-//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 0);
-//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 0);
-//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 0);
-//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 0);
-//
-//	DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 0);
-//	DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 0);
-//	DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 0);
-//	DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 0);
-//
-//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 0);
-//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 0);
-//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 0);
-//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 0);
-//
-//	for(i=0; i<POINT_NUM; i++)
-//	{
-//		// Clean
-//		DrawPoint8(g_Screen[i].x, g_Screen[i].y, 0);
-//
-//		// Transform
-//		//TransXZ(&g_World[i], &g_Local[i], g_Angle, &g_Position);
-//		TransXZIndex(i);
-//		Project(&g_Screen[i], &g_World[i], &g_Camera);
-//
-//		// Draw
-//		DrawPoint8(g_Screen[i].x, g_Screen[i].y, 255);
-//	}
-//
-//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[1].x, g_Screen[1].y, 128);
-//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[2].x, g_Screen[2].y, 128);
-//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[3].x, g_Screen[3].y, 128);
-//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[0].x, g_Screen[0].y, 128);
-//
-//	DRAW_LINE(g_Screen[4].x, g_Screen[4].y, g_Screen[5].x, g_Screen[5].y, 128);
-//	DRAW_LINE(g_Screen[5].x, g_Screen[5].y, g_Screen[6].x, g_Screen[6].y, 128);
-//	DRAW_LINE(g_Screen[6].x, g_Screen[6].y, g_Screen[7].x, g_Screen[7].y, 128);
-//	DRAW_LINE(g_Screen[7].x, g_Screen[7].y, g_Screen[4].x, g_Screen[4].y, 128);
-//
-//	DRAW_LINE(g_Screen[0].x, g_Screen[0].y, g_Screen[4].x, g_Screen[4].y, 128);
-//	DRAW_LINE(g_Screen[1].x, g_Screen[1].y, g_Screen[5].x, g_Screen[5].y, 128);
-//	DRAW_LINE(g_Screen[2].x, g_Screen[2].y, g_Screen[6].x, g_Screen[6].y, 128);
-//	DRAW_LINE(g_Screen[3].x, g_Screen[3].y, g_Screen[7].x, g_Screen[7].y, 128);
-//
-//	/*ShortMat4 local2world =
-//   {
-//       { M2U(1),   0,        0,       0 },
-//       { 0,        M2U(1),   0,       0 },
-//       { 0,        0,        M2U(1),  0 },
-//       { M2U(10),  M2U(10),  M2U(10), 0 },
-//   };
-//
-//   ShortVec g_World[5];
-//   loop(i, 5)
-//       g_World[i] = Trans(g_Local[i], local2world);
-//
-//   ShortMat4 world2view =
-//   {
-//       { M2U(1),   0,        0,       0 },
-//       { 0,        M2U(1),   0,       0 },
-//       { 0,        0,        M2U(1),  0 },
-//       { M2U(10),  M2U(10),  M2U(10), 0 },
-//   };
-//
-//   ShortVec view[5];
-//   loop(i, 5)
-//       view[i] = Trans(g_World[i], local2world);*/
-//
-//   //ShortMat4 view2screen;
-//   //CreateProfectionMatrix(view2screen);
-//}
-
-/**
- *
- */
-void SetScreen8()
+void SetScreen8(u8 lines)
 {
+	lines;
+
 	_asm
 
 		//; Passage en SCREEN 8
@@ -548,10 +494,9 @@ void SetScreen8()
 		set		#2,a           //; bit 2 a 1
 		set		#1,a           //; bit 1 a 1
 		ld		(RG0SAV),a
-
-		di                    //; on interdit les interruptions
-
+	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
+
 		ld		a,VDP_REG(0)
 		out		(VDP_ADDR),a
 
@@ -560,25 +505,113 @@ void SetScreen8()
 		res		#4,a           //; bit 4 a 0
 		res		#3,a           //; bit 3 a 0
 		ld		(RG1SAV),a
-
 		out		(VDP_ADDR),a
+
 		ld		a,VDP_REG(1)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 2 -
 		ld		a,#0x1F // 00011111b
 		out		(VDP_ADDR),a
+
 		ld		a,VDP_REG(2)
 		out		(VDP_ADDR),a
 
-		ei                    //; on autorise les interruptions
+		//; - modification registre 5 -
+		ld		a,#0xEE ;// TAS addr
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(5)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 6 -
+		ld		a,#0x1F ;// TGS addr
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(6)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 9 -
+		ld		a,(RG9SAV)
+		and		#LINES_MASK ;// 0111 1111
+		or		4(ix) ;// 192 or 212 lines?
+		ld		(RG9SAV),a
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(9)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 11 -
+		ld		a,#0x01 ;// TAS addr
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(11)
+	ei //; on autorise les interruptions
+		out		(VDP_ADDR),a
+		
+	_endasm;
+}
+
+/***/
+void SetSpriteMode(u8 activate, u8 flag)
+{
+	activate; flag;
+
+	_asm
+
+		//; Passage en SCREEN 8
+
+		//; - modification registre 1 -
+		ld		a,(RG1SAV)
+		and		#0xFC ;// 1111 1100
+		or		5(ix)
+		ld		(RG1SAV),a
+	di //; on interdit les interruptions
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(1)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 8 -
+		ld		a,(RG8SAV)
+		and		#0xFD ;// 1111 1101
+		or		4(ix)
+		ld		(RG8SAV),a
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(8)
+	ei //; on autorise les interruptions
+		out		(VDP_ADDR),a
 
 	_endasm;
 }
 
-/**
- *
- */
+
+/** Set frequence 50/60Hz */
+void SetFreq(u8 freq)
+{
+	freq;
+
+	WaitForVDP();
+
+	_asm
+
+		//; - modification registre 9 -
+		ld		a,(RG9SAV)
+		and		#FREQ_MASK ;// 1111 1101
+		or		4(ix)
+		ld		(RG9SAV),a
+	di //; on interdit les interruptions
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(9)
+	ei //; on autorise les interruptions
+		out		(VDP_ADDR),a
+
+	_endasm;
+}
+
+/** Set current page for mode 8 */
 void SetPage8(i8 page)
 {
 	page;
@@ -586,15 +619,15 @@ void SetPage8(i8 page)
 	_asm
 		//; - modification registre 2 -
 		ld      a,4(ix)       //; donnee
-		;//rla
-		;//rla
-		;//rla
+		rrca
+		rrca
+		rrca
 		or		#0x1F         //; += 00011111b
-		di                    //; on interdit les interruptions
+	di //; on interdit les interruptions
 		out		(VDP_ADDR),a  
 		ld		a,VDP_REG(2)     //; write to register R#2
+	ei //; on autorise les interruptions
 		out		(VDP_ADDR),a  
-		ei                    //; on autorise les interruptions
 
 	_endasm;
 }
@@ -613,7 +646,7 @@ void DrawPoint8(char posX, char posY, char color)
 		//; - Preparation des registres -
 		//; - X=128 -
 		ld    a,4(ix)    //; donnee
-		di
+	di //; on interdit les interruptions
 		out   (VDP_ADDR),a
 		ld    a,VDP_REG(36) //; a ecrire sur le registre 36
 		out   (VDP_ADDR),a
@@ -650,9 +683,8 @@ void DrawPoint8(char posX, char posY, char color)
 		ld    a,#0x50  //; donnee (01010000b)
 		out   (VDP_ADDR),a
 		ld    a,VDP_REG(46)     //; a ecrire sur le registre 46
+	ei //; on autorise les interruptions
 		out   (VDP_ADDR),a
-
-		ei
 
 	_endasm;
 }
@@ -918,7 +950,7 @@ void WaitForVDP()
 		
 		//; Attente libération VDP
 		ld		a,#2
-		di
+	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
 		ld		a,VDP_REG(15)
 		out		(VDP_ADDR),a
@@ -930,8 +962,8 @@ void WaitForVDP()
 		xor		a
 		out		(VDP_ADDR),a
 		ld		a,VDP_REG(15)
+	ei //; on autorise les interruptions
 		out		(VDP_ADDR),a		//; RAZ du registre 15
-		ei
 
 	_endasm;
 }
@@ -970,39 +1002,6 @@ u8 GetKeyMatrixLine(u8 n)
 	_endasm;
 }
 
-void SetTo50Hz()
-{
-	WaitForVDP();
-
-	_asm
-
-		ld		a,#2
-		di
-		out		(VDP_ADDR),a ;// send 0 (50 hz)
-
-		ld		a,VDP_REG(9)
-		out		(VDP_ADDR),a ;// RAZ du registre 9
-
-		ei
-	_endasm;
-}
-
-void SetTo60Hz()
-{
-	WaitForVDP();
-
-	_asm
-
-		ld		a,#0
-		di
-		out		(VDP_ADDR),a ;// send 0 (60 hz)
-
-		ld		a,VDP_REG(9)
-		out		(VDP_ADDR),a ;// RAZ du registre 9
-
-		ei
-	_endasm;
-}
 
 /**
  *
@@ -1020,7 +1019,7 @@ void WriteToVRAM8(i16 addr, u8 value)
 		and		#0xC0		;// Keep only 2 last bits
         rla
         rla
-		di
+	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
 		ld		a,VDP_REG(14)
 		out		(VDP_ADDR),a
@@ -1035,117 +1034,11 @@ void WriteToVRAM8(i16 addr, u8 value)
 
 		;// Write value
 		ld		a,6(ix)
+	ei //; on autorise les interruptions
 		out		(VDP_DATA),a
 
-		ei
 	_endasm;
-		
-	//_asm
-
-	//	;// Set 0 to register 14 (we don't use address bits 14-16)
-	//	xor		a
-	//	di
-	//	out		(VDP_ADDR),a
-	//	ld		a,VDP_REG(14)
-	//	out		(VDP_ADDR),a
-	//	
-	//	;// Set VRAM address to port 0
-	//	ld		a,4(ix)
-	//	out		(VDP_ADDR),a
-
-	//	ld		a,5(ix)
-	//	and		#0x3F		;// Set 2 last bits to 0
-	//	or		#0x40		;// write access
-	//	out		(VDP_ADDR),a
-
-	//	;// Write value
-	//	ld		a,6(ix)
-	//	out		(VDP_DATA),a
-
-	//	ei
-	//_endasm;
-
 }
-
-
-/**
- *
- */
-//void Fill8(u8 px, u8 py, u8 sx, u8 sy, u8 color)
-//{
-//	px; py; sx; sy; color;
-//
-//	WaitForVDP();
-//
-//	
-//	_asm
-//		di
-//
-//		ld		a,4(ix) ;// px
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(36) ;// DX 7-0
-//		out		(VDP_ADDR),a
-//		
-//		xor		a ;// 0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(37)
-//		out		(VDP_ADDR),a ;// DX 8
-//
-//		ld		a,5(ix) ;// py
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(38) ;// DY 7-0
-//		out		(VDP_ADDR),a
-//		
-//		xor		a ;// 0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(39)
-//		out		(VDP_ADDR),a ;// DY 9-8
-//
-//		ld		a,6(ix) ;// sx
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(40) ;// NX 7-0
-//		out		(VDP_ADDR),a
-//		
-//		xor		a ;// 0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(41)
-//		out		(VDP_ADDR),a ;// NX 8
-//
-//		ld		a,7(ix) ;// sy
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(42) ;// NY 7-0
-//		out		(VDP_ADDR),a
-//		
-//		xor		a ;// 0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(43)
-//		out		(VDP_ADDR),a ;// NY 8
-//		
-//		ld		a,8(ix) ;// color
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(44) ;// CR
-//		out		(VDP_ADDR),a
-//
-//		xor		a ;// 0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(45)
-//		out		(VDP_ADDR),a
-//
-//		ld		a,#0xF0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(46)
-//		out		(VDP_ADDR),a
-//
-//		xor		a ;// 0
-//		out		(VDP_ADDR),a
-//		ld		a,VDP_REG(45)
-//		out		(VDP_ADDR),a
-//
-//		ei
-//	_endasm;
-//}
-
-
 
 /**
  *
@@ -1208,6 +1101,7 @@ void VPDCommandLoop(u16 address)
 	_endasm;
 }
 
+/** Should be inline */
 void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
 	VdpBuffer36 buffer;
@@ -1225,13 +1119,11 @@ void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 	VPDCommandLoop(ram);
 }
 
-
+/** Should be inline */
 void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
 	VdpBuffer36 buffer;
 	
-	page; ram;
-
 	buffer.DX = dx;
 	buffer.DY = dy + ((u16)page << 8);
 	buffer.NX = nx;
@@ -1243,12 +1135,11 @@ void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 	VPDCommandLoop(ram);
 }
 
+/** Should be inline */
 void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
 {
 	VdpBuffer36 buffer;
 	
-	page;
-
 	buffer.DX = dx;
 	buffer.DY = dy + ((u16)page << 8);
 	buffer.NX = nx;
@@ -1259,7 +1150,39 @@ void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
 	VPDCommand36((u16)&buffer);
 }
 
+/** Should be inline */
+void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny)
+{
+	VdpBuffer32 buffer;
+	
+	buffer.SX = sx;
+	buffer.SY = sy + ((u16)sPage << 8);
+	buffer.DX = dx;
+	buffer.DY = dy + ((u16)dPage << 8);
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = 0;
+	buffer.ARG = 0;
+	buffer.CMD = 0xF0;
+	VPDCommand32((u16)&buffer);
+}
 
+/** Should be inline */
+void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny)
+{
+	VdpBuffer32 buffer;
+	
+	buffer.SX = sx;
+	buffer.SY = sy + ((u16)sPage << 8);
+	buffer.DX = dx;
+	buffer.DY = dy + ((u16)dPage << 8);
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = 0;
+	buffer.ARG = 0;
+	buffer.CMD = 0x98;
+	VPDCommand32((u16)&buffer);
+}
 
 
 
@@ -1283,7 +1206,7 @@ void VPDCommand32(u16 address)
 		ld h,5(ix)
 		//; Envoi données VDP
 		ld	a,#32		//; R32 avec incrémentation
-		di
+	di
 		out	(VDP_ADDR),a
 		ld	a,VDP_REG(17)
 		out	(VDP_ADDR),a         //; Ecriture séquentielle
@@ -1302,7 +1225,7 @@ void VPDCommand32(u16 address)
 		outi
 		outi
 		outi
-		ei                      //; "EI" anticipé
+	ei                      //; "EI" anticipé
 		outi
 
 	_endasm;
@@ -1323,7 +1246,7 @@ void VPDCommand36(u16 address)
 		ld h,5(ix)
 		;// Envoi données VDP
 		ld	a,#36		;// R36 avec incrémentation
-		di
+	di
 		out	(VDP_ADDR),a
 		ld	a,VDP_REG(17)
 		out	(VDP_ADDR),a         ;// Ecriture séquentielle
@@ -1338,8 +1261,25 @@ void VPDCommand36(u16 address)
 		outi
 		outi
 		outi
-		ei                      ;// "EI" anticipé
+	ei                      ;// "EI" anticipé
 		outi
 
 	_endasm;
+}
+
+void PrintSprite(u8 X, u8 Y, const char* text)
+{
+	X; Y; text;
+}
+
+void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
+{
+	EntryTAS sprt;
+	sprt.posX = X;
+	sprt.posY = Y;
+	sprt.index = shape;
+	//RAMtoVRAM(0, (4 * index) % 256, 247, 4, 1, (u16)&sprt);
+	//RAMtoVRAM(0, (8 * index) % 256, 245, 8, 1, (u16)&defaultColor);
+	RAMtoVRAM(0, 0, 247, 4, 1, (u16)&sprt);
+	RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
 }

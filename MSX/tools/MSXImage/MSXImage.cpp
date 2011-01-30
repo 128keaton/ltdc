@@ -81,11 +81,12 @@ bool SaveImage(FIBITMAP* dib, const char* lpszPathName)
 void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 numX, i32 numY, i32 colorNum, u32 transColor, const char* name)
 {
 	FIBITMAP *dib, *dib32;
-	i32 i, j, nx, ny;
+	i32 i, j, nx, ny, bit;
 	std::string outData;
 	char tempData[1024];
 	RGB24 c24;
 	GRB8 c8;
+	u8 byte = 0;
 		
 	dib = LoadImage(inFile); // open and load the file using the default load option
 	if(dib != NULL)
@@ -117,27 +118,53 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 					outData += "\t";
 					for(i = 0; i < sizeX; i++)
 					{
-						// convert to 8 bits GRB
 						i32 pixel = posX + i + (nx * sizeX) + ((posY + j + (ny * sizeY)) * imageX);
 						u32 argb = ((u32*)bits)[pixel];
-						if((argb & 0xFFFFFF) == transColor)
+						if(colorNum == 256)
 						{
-							c8 = 0;
-						}
-						else
-						{
-							c24 = RGB24(argb);
-							c8 = GRB8(c24);
-							if(c8 == 0)
+							// convert to 8 bits GRB
+							if((argb & 0xFFFFFF) == transColor)
 							{
-								if(c24.G > c24.R)
-									c8 = 0x20;
-								else
-									c8 = 0x04;
+								c8 = 0;
+							}
+							else
+							{
+								c24 = RGB24(argb);
+								c8 = GRB8(c24);
+								if(c8 == 0)
+								{
+									if(c24.G > c24.R)
+										c8 = 0x20;
+									else
+										c8 = 0x04;
+								}
+							}
+							sprintf_s(tempData, 1024, "0x%02X, ", (u8)c8);
+							outData += tempData;
+						}
+						else if(colorNum == 16)
+						{
+						}
+						else if(colorNum == 1)
+						{
+							bit = pixel & 0x7;
+							if((argb & 0xFFFFFF) != transColor)
+								byte |= 1 << (7 - bit);
+							if((pixel & 0x7) == 0x7)
+							{
+								sprintf_s(tempData, 1024, "0x%02X, // %c%c%c%c%c%c%c%c", byte, 
+									byte & 0x80 ? '#' : '.', 
+									byte & 0x40 ? '#' : '.', 
+									byte & 0x20 ? '#' : '.', 
+									byte & 0x10 ? '#' : '.', 
+									byte & 0x08 ? '#' : '.', 
+									byte & 0x04 ? '#' : '.', 
+									byte & 0x02 ? '#' : '.', 
+									byte & 0x01 ? '#' : '.');
+								outData += tempData;
+								byte = 0;
 							}
 						}
-						sprintf_s(tempData, 1024, "0x%02X, ", (u8)c8);
-						outData += tempData;
 					}
 					outData += "\n";
 				}
@@ -213,7 +240,7 @@ int main(int argc, const char* argv[])
 {
 	FreeImage_Initialise();
 
-	const char *inFile, *outFile, *name;
+	const char *inFile = NULL, *outFile = NULL, *name = NULL;
 	i32 i, colorNum = 256, posX = 0, posY = 0, sizeX = 0, sizeY = 0, numX = 1, numY = 1, transColor = 0;
 
 	for(i=0; i<argc; i++)
