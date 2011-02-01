@@ -70,49 +70,49 @@ _CODE                              4010   3969 =  14697. bytes (REL,CON)
      7364    _WaitForVDP
      7364    _WaitForVDP_start
      7364    _waitRetrace_end
-     737C    _Joystick
-     737C    _Joystick_start
      737C    _WaitForVDP_end
-     738E    _Joystick_end
-     738E    _Joytrig
-     738E    _Joytrig_start
-     73A2    _GetKeyMatrixLine
-     73A2    _GetKeyMatrixLine_start
-     73A2    _Joytrig_end
-     73B4    _GetKeyMatrixLine_end
-     73B4    _WriteToVRAM8
-     73B4    _WriteToVRAM8_start
-     73E4    _VPDCommandLoop
-     73E4    _VPDCommandLoop_start
-     73E4    _WriteToVRAM8_end
-     741C    _RAMtoVRAM
-     741C    _RAMtoVRAM_start
-     741C    _VPDCommandLoop_end
-     74E7    _RAMtoVRAMTrans
-     74E7    _RAMtoVRAMTrans_start
-     74E7    _RAMtoVRAM_end
-     75B2    _Fill8
-     75B2    _Fill8_start
-     75B2    _RAMtoVRAMTrans_end
-     7664    _Fill8_end
-     7664    _VRAMtoVRAM
-     7664    _VRAMtoVRAM_start
-     775E    _VRAMtoVRAMTrans
-     775E    _VRAMtoVRAMTrans_start
-     775E    _VRAMtoVRAM_end
-     7858    _VPDCommand32
-     7858    _VPDCommand32_start
-     7858    _VRAMtoVRAMTrans_end
-     7896    _VPDCommand32_end
-     7896    _VPDCommand36
-     7896    _VPDCommand36_start
-     78CC    _PrintSprite
-     78CC    _PrintSprite_start
-     78CC    _VPDCommand36_end
-     78D7    _PrintSprite_end
-     78D7    _SetSprite
-     78D7    _SetSprite_start
-     792E    _SetSprite_end
+     737C    _WriteToVRAM8
+     737C    _WriteToVRAM8_start
+     73AC    _VPDCommandLoop
+     73AC    _VPDCommandLoop_start
+     73AC    _WriteToVRAM8_end
+     73E4    _RAMtoVRAM
+     73E4    _RAMtoVRAM_start
+     73E4    _VPDCommandLoop_end
+     74AF    _RAMtoVRAMTrans
+     74AF    _RAMtoVRAMTrans_start
+     74AF    _RAMtoVRAM_end
+     757A    _Fill8
+     757A    _Fill8_start
+     757A    _RAMtoVRAMTrans_end
+     762C    _Fill8_end
+     762C    _VRAMtoVRAM
+     762C    _VRAMtoVRAM_start
+     7726    _VRAMtoVRAMTrans
+     7726    _VRAMtoVRAMTrans_start
+     7726    _VRAMtoVRAM_end
+     7820    _VPDCommand32
+     7820    _VPDCommand32_start
+     7820    _VRAMtoVRAMTrans_end
+     785E    _VPDCommand32_end
+     785E    _VPDCommand36
+     785E    _VPDCommand36_start
+     7894    _PrintSprite
+     7894    _PrintSprite_start
+     7894    _VPDCommand36_end
+     789F    _PrintSprite_end
+     789F    _SetSprite
+     789F    _SetSprite_start
+     78F6    _Joystick
+     78F6    _Joystick_start
+     78F6    _SetSprite_end
+     7908    _Joystick_end
+     7908    _Joytrig
+     7908    _Joytrig_start
+     791C    _GetKeyMatrixLine
+     791C    _GetKeyMatrixLine_start
+     791C    _Joytrig_end
+     792E    _GetKeyMatrixLine_end
      792E    __muluchar_rrx_s
      7941    __mulschar_rrx_s
      7948    __mulschar_rrx_hds
@@ -128,6 +128,8 @@ _CODE                              4010   3969 =  14697. bytes (REL,CON)
 MODULES
 	FILE carwar.o
 		NAME carwar
+	FILE bios.rel
+		NAME bios
 LIBRARIES
 	LIBRARY C:\Dev\program\msx\tools\SDCC\bin\..\lib\z80/z80.lib
 		MODULE mul.o

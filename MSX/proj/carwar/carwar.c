@@ -3,6 +3,9 @@
 #pragma preproc_asm +
 #pragma sdcc_hash +
 
+#include "core.h"
+#include "bios.h"
+
 //----------------------------------------
 // D E F I N E S
 
@@ -71,11 +74,6 @@
 #define FREQ_MASK		0xFD // 1111 1101
 
 
-#define TRUE  1
-#define FALSE 0
-
-#include "keyboard.h"
-
 //----------------------------------------
 // M A C R O S
 
@@ -84,28 +82,11 @@
 #define POSI(a)    (a)
 #define NEGA(a)    ((^a)++)
 
-#define M2U(a)     ((a) << 8)
-#define U2M(a)     ((a) >> 8)
-#define UxU(a, b)  (((a) >> 4) * ((b) >> 4))
-#define UxU2(a, b) ((((a) >> 4) * (b)) >> 4)
-
 #define ScrPosX(a) ((a >> 8) - 6)
 #define ScrPosY(a) ((a >> 8) - 5)
 
 //----------------------------------------
 // T Y P E S
-
-typedef char i8;
-typedef unsigned char u8;
-typedef int i16;
-typedef unsigned int u16;
-typedef unsigned char BOOL;
-
-//typedef Vec3 int[3];
-//typedef struct { i16 x, y, z, w; } ShortVec;
-typedef struct { i16 x, y, z; } ShortVec;
-//typedef ShortMat3 ShortVec[3];
-//typedef ShortMat4 ShortVec[4];
 
 typedef struct
 {
@@ -168,13 +149,8 @@ void SetSpriteMode(u8 activate, u8 flag);
 void SetPage8(i8 page);
 void DrawPoint8(char posX, char posY, char color);
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
-void DrawLine(int posX1, int posY1, int posX2, int posY2, char color);
-void DrawLineSimple();
 void waitRetrace();
 void WaitForVDP();
-char Joystick(char n);
-char Joytrig(char n);
-u8 GetKeyMatrixLine(u8 n);
 void WriteToVRAM8(i16 addr, u8 value);
 void SetFreq(u8 freq);
 void PrintSprite(u8 X, u8 Y, const char* text);
@@ -690,102 +666,6 @@ void DrawPoint8(char posX, char posY, char color)
 }
 
 /**
- *
- */
-//void DrawLine(int posX1, int posY1, int posX2, int posY2, char color)
-//{
-//	SX  = posX1; 
-//	SY  = posY1; 
-//	DX  = posX2; 
-//	DY  = posY2; 
-//	CLR = color;
-//
-//	DrawLineSimple();
-//}
-
-/**
- *
- */
-//void DrawLineSimple()
-//{
-//	WaitForVDP();
-//
-//	_asm
-//
-//;//-----------------------------------------------------------
-//;// Commande LINE du VDP
-//;// Entrée : (SX,SY)-(DX,DY),R44
-//;//-----------------------------------------------------------
-//
-//Do_Line_VDP:
-//;// Calcul de DeltaY
-//        xor     a               ;// RAZ du carry flag
-//        ld      hl,(_DY)
-//        ld      de,(_SY)
-//        sbc     hl,de           ;// HL = DY-SY
-//
-//        rla                     ;// Préparation valeur R45 (DIY)
-//        ld      (_ARG),a
-//
-//        and     a               ;// Test du résultat
-//        jp      z,DeltaX        ;// si DeltaY est positif on passe à DeltaX
-//        ex      de,hl           ;// sinon
-//		ld      hl,#0            ;// on inverse
-//        sbc     hl,de           ;// le résultat
-//
-//;// Calcul de DeltaX
-//DeltaX: push    hl              ;// sauvegarde de DeltaY
-//        xor     a               ;// RAZ du carry flag
-//        ld      hl,(_DX)
-//        ld      de,(_SX)
-//        sbc     hl,de           ;// HL = DX-SX
-//
-//        ld      a,(_ARG)
-//        rla
-//        rla                     ;// Préparation valeur R45 (DIX)
-//        ld      (_ARG),a
-//
-//        bit     1,a             ;// Test du résultat
-//        jp      z,cpHLDE        ;// si DeltaX est positif on passe à MAJ
-//        ex      de,hl           ;// sinon
-//		ld      hl,#0            ;// on inverse
-//        sbc     hl,de           ;// le résultat
-//
-//;// Calcul de MAJ
-//cpHLDE: pop     de              ;// HL=abs(DeltaX) / DE=abs(DeltaY)
-//        xor     a               ;// RAZ du carry flag
-//
-//        push    hl
-//        sbc     hl,de           ;// Comparaison HL / DE
-//        pop     hl
-//
-//        ld      a,(_ARG)
-//        rla                     ;// Préparation valeur R45 (MAJ)
-//        ld      (_ARG),a
-//
-//        bit     0,a             ;// Test du résultat
-//        jp      z,DoIt          ;// si HL>DE on y va
-//        ex      de,hl           ;// sinon on inverse les valeurs
-//
-//;// Exécution commande
-//DoIt:   ld      (_NX),hl
-//        ld      (_NY),de
-//
-//        ld      hl,(_SX)
-//        ld      (_DX),hl
-//
-//        ld      hl,(_SY)
-//        ld      (_DY),hl
-//
-//        ld      a,#0x70 ;//01110000b
-//        ld      (_CMD),a         ;// Commande LINE
-//
-//	_endasm;
-//
-//	VPDCommand32((int)&SX);
-//}
-
-/**
  * LINE (128,96),(190,56),255
  */
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
@@ -967,41 +847,6 @@ void WaitForVDP()
 
 	_endasm;
 }
-
-///
-char Joystick(char n)
-{
-	n;
-	_asm
-		ld		a,4(ix)
-		call	0x00d5
-		ld		l,a
-	_endasm;
-}
-
-///
-char Joytrig(char n)
-{
-	n;
-	_asm
-		ld		a,4(ix)
-		call	0x00d8
-		ld		h,#0x00
-		ld		l,a
-	_endasm;
-}
-
-///
-u8 GetKeyMatrixLine(u8 n)
-{
-	n;
-	_asm
-		ld		a,4(ix)
-		call	0x0141
-		ld		l,a
-	_endasm;
-}
-
 
 /**
  *

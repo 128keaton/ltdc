@@ -188,28 +188,84 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\build.bat"
+		<Filter
+			Name="build"
 			>
-		</File>
-		<File
-			RelativePath=".\carwar.asm"
+			<File
+				RelativePath=".\bios.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\bios.lst"
+				>
+			</File>
+			<File
+				RelativePath=".\bios.sym"
+				>
+			</File>
+			<File
+				RelativePath=".\build.bat"
+				>
+			</File>
+			<File
+				RelativePath=".\carwar.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\carwar.lst"
+				>
+			</File>
+			<File
+				RelativePath=".\carwar.sym"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="CMSX"
 			>
-		</File>
+			<File
+				RelativePath=".\3d.c"
+				>
+			</File>
+			<File
+				RelativePath=".\3d.h"
+				>
+			</File>
+			<File
+				RelativePath=".\bios.c"
+				>
+			</File>
+			<File
+				RelativePath=".\bios.h"
+				>
+			</File>
+			<File
+				RelativePath=".\core.h"
+				>
+			</File>
+			<File
+				RelativePath=".\keyboard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\proj64.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\trigo16.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\trigo32.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\trigo64.inc"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\carwar.c"
-			>
-		</File>
-		<File
-			RelativePath=".\carwar.sym"
-			>
-		</File>
-		<File
-			RelativePath=".\keyboard.h"
-			>
-		</File>
-		<File
-			RelativePath=".\trigo16.inc"
 			>
 		</File>
 	</Files>
