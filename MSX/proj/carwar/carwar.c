@@ -1,6 +1,5 @@
 /* 3D on MSX */
 
-#pragma preproc_asm +
 #pragma sdcc_hash +
 
 #include "core.h"
@@ -137,7 +136,7 @@ typedef struct
 	u16 dX;    // velocity X
 	u16 dY;    // velocity Y
 	i8 speed;
-} Player;
+} Player; // 16 bytes
 
 //----------------------------------------
 // P R O T O T Y P E S
@@ -145,7 +144,7 @@ typedef struct
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void SetScreen8(u8 lines);
-void SetSpriteMode(u8 activate, u8 flag);
+void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas);
 void SetPage8(i8 page);
 void DrawPoint8(char posX, char posY, char color);
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
@@ -199,31 +198,24 @@ const u8 backgound[] =
 	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
 };
 
-const u8 defaultColor[] = 
-{
-	0x0F,
-	0x0F,
-	0x0F,
-	0x0F,
-	0x0F,
-	0x0F,
-	0x0F,
-	0x0F,
-};
+//const u8 testSprt[] = { 0x40, 0x40, 0, 0 };
+//const u8 defaultColor[] = { 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F };
+const u8 defaultColor[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 ///
-sfr at 0xA8 g_slotPort;
+__sfr __at 0xA8 g_slotPort;
 
 /**
  * Program entry point
  */
 void main(void)
 {
-	_asm
+	__asm
 		di
 		ld sp, (#0xFC4A)
+		//ld sp, (#0xC000)
 		ei
-	_endasm;
+	__endasm;
 
 	g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 
@@ -239,14 +231,14 @@ void MainLoop()
 	u8 bEnd = 0/*, keyCode*/;
 	u8 page = 0;
 	u8 keyLine;
-	//u16 dx = 0, dy = 0;
-	//i8 speed = 0;
-	Player ply[4];
+	//Player ply[4];
+	Player* ply = 0xC000;
 	Player* curPly;
+	u8 testSprt[4] = { 0x40, 0x40, 0, 0 };
 
 	SetFreq(FREQ_50);
 	SetScreen8(LINES_212);
-	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8);
+	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
 	Fill8(0, 0, 0,   256, 212, 0x92);
 	Fill8(0, 0, 212, 256, 44,  0);
@@ -263,15 +255,31 @@ void MainLoop()
 	//for(i=0; i<16*3; i++)
 	{
 		//RAMtoVRAM(0, (8 * i) % 256, 248 + (i / 32), 8, 1, (u16)&charTable[8 * i]);
-		RAMtoVRAM(0, 0, 248, 8, 1, (u16)&charTable[0]);
+		//RAMtoVRAM(0, 0, 248, 8, 1, (u16)&charTable[0]);
 	}
 
 	// show first 8 sprites
 	//for(i=0; i<8; i++)
 	{
 		//SetSprite(i, 64 + (i * 8), 64, i);
-		SetSprite(0, 0x40, 0x40, 0);
+		//SetSprite(0, 0x40, 0x40, 0);
+		//RAMtoVRAM(0, 0, 247, 4, 1, (u16)&testSprt);
+		//RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
 	}
+
+	for(i=0; i<32; i++)
+	{
+		testSprt[0] = 64 + i * 4;
+		testSprt[1] = 64 + i * 4;
+		testSprt[2] = 0;
+		RAMtoVRAM(0, i * 16, 249 + (i / 16), 8, 1, (u16)&defaultColor);
+		RAMtoVRAM(0, i * 4, 247 + (i / 64), 3, 1, (u16)&testSprt);
+		RAMtoVRAM(0, i * 8, 248 + (i / 32), 8, 1, (u16)&charTable[0]);
+		//RAMtoVRAM(0, (i * 16) % 256, 245 + (i / 16), 8, 1, (u16)&defaultColor);
+		//RAMtoVRAM(0, (i * 4) % 256, 247 + (i / 64), 4, 1, (u16)&testSprt);
+		//RAMtoVRAM(0, (i * 8) % 256, 248 + (i / 32), 8, 1, (u16)&charTable[0]);
+	}
+
 
 	//----------------------------------------
 	// Copy cars to VRAM
@@ -461,16 +469,17 @@ void SetScreen8(u8 lines)
 {
 	lines;
 
-	_asm
+	__asm
 
 		//; Passage en SCREEN 8
+	di //; on interdit les interruptions
+
 		//; - modification registre 0 -
 		ld		a,(RG0SAV)
-		set		#3,a           //; bit 3 a 1
-		set		#2,a           //; bit 2 a 1
-		set		#1,a           //; bit 1 a 1
+		set		#3,a           //; bit 3 a 1 (mode 8)
+		set		#2,a           //; bit 2 a 1 (mode 8)
+		set		#1,a           //; bit 1 a 1 (mode 8)
 		ld		(RG0SAV),a
-	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(0)
@@ -478,8 +487,8 @@ void SetScreen8(u8 lines)
 
 		//; - modification registre 1 -
 		ld		a,(RG1SAV)
-		res		#4,a           //; bit 4 a 0
-		res		#3,a           //; bit 3 a 0
+		res		#4,a           //; bit 4 a 0 (mode 8)
+		res		#3,a           //; bit 3 a 0 (mode 8)
 		ld		(RG1SAV),a
 		out		(VDP_ADDR),a
 
@@ -487,65 +496,64 @@ void SetScreen8(u8 lines)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 2 -
-		ld		a,#0x1F // 00011111b
+		ld		a,#0x1F // 00011111b (addr de la page graphique 0)
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(2)
 		out		(VDP_ADDR),a
 
-		//; - modification registre 5 -
-		ld		a,#0xEE ;// TAS addr
-		out		(VDP_ADDR),a
-
-		ld		a,VDP_REG(5)
-		out		(VDP_ADDR),a
-
-		//; - modification registre 6 -
-		ld		a,#0x1F ;// TGS addr
-		out		(VDP_ADDR),a
-
-		ld		a,VDP_REG(6)
-		out		(VDP_ADDR),a
-
 		//; - modification registre 9 -
 		ld		a,(RG9SAV)
-		and		#LINES_MASK ;// 0111 1111
-		or		4(ix) ;// 192 or 212 lines?
+		res		#7,a           //; bit 7 a 0
+		//and		#LINES_MASK ;// 0111 1111
+		or		4(ix) ;// 192 (0x00) or 212 lines (0x80)?
 		ld		(RG9SAV),a
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(9)
 		out		(VDP_ADDR),a
 
-		//; - modification registre 11 -
-		ld		a,#0x01 ;// TAS addr
-		out		(VDP_ADDR),a
-
-		ld		a,VDP_REG(11)
 	ei //; on autorise les interruptions
-		out		(VDP_ADDR),a
-		
-	_endasm;
+
+	
+	__endasm;
 }
 
 /***/
-void SetSpriteMode(u8 activate, u8 flag)
+//                    4            5         7-6      9-8
+void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 {
-	activate; flag;
+	activate; flag; tgs; tas;
 
-	_asm
+	__asm
 
 		//; Passage en SCREEN 8
+	di //; on interdit les interruptions
 
 		//; - modification registre 1 -
 		ld		a,(RG1SAV)
 		and		#0xFC ;// 1111 1100
 		or		5(ix)
 		ld		(RG1SAV),a
-	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(1)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 5 -
+		//ld		a,#0xEE ;// TAS addr (low)
+		ld		a,8(ix) ;// TAS addr (low)
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(5)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 6 -
+		//ld		a,#0x1F ;// TGS addr
+		ld		a,6(ix) ;// TGS addr
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(6)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 8 -
@@ -556,10 +564,19 @@ void SetSpriteMode(u8 activate, u8 flag)
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(8)
-	ei //; on autorise les interruptions
 		out		(VDP_ADDR),a
 
-	_endasm;
+		//; - modification registre 11 -
+		//ld		a,#0x01 ;// TAS addr (high)
+		ld		a,9(ix) ;// TAS addr (high)
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(11)
+		out		(VDP_ADDR),a
+
+	ei //; on autorise les interruptions
+		
+	__endasm;
 }
 
 
@@ -570,7 +587,7 @@ void SetFreq(u8 freq)
 
 	WaitForVDP();
 
-	_asm
+	__asm
 
 		//; - modification registre 9 -
 		ld		a,(RG9SAV)
@@ -584,7 +601,7 @@ void SetFreq(u8 freq)
 	ei //; on autorise les interruptions
 		out		(VDP_ADDR),a
 
-	_endasm;
+	__endasm;
 }
 
 /** Set current page for mode 8 */
@@ -592,7 +609,7 @@ void SetPage8(i8 page)
 {
 	page;
 
-	_asm
+	__asm
 		//; - modification registre 2 -
 		ld      a,4(ix)       //; donnee
 		rrca
@@ -605,7 +622,7 @@ void SetPage8(i8 page)
 	ei //; on autorise les interruptions
 		out		(VDP_ADDR),a  
 
-	_endasm;
+	__endasm;
 }
 
 /**
@@ -617,7 +634,7 @@ void DrawPoint8(char posX, char posY, char color)
 
 	WaitForVDP();
 
-	_asm
+	__asm
 
 		//; - Preparation des registres -
 		//; - X=128 -
@@ -662,7 +679,7 @@ void DrawPoint8(char posX, char posY, char color)
 	ei //; on autorise les interruptions
 		out   (VDP_ADDR),a
 
-	_endasm;
+	__endasm;
 }
 
 /**
@@ -675,7 +692,7 @@ void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 	WaitForVDP();
 /*
 
-	_asm
+	__asm
 
 		//; a:							f: 
 		//; b: DX						c: DY
@@ -799,7 +816,7 @@ void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 
 		ei
 
-	_endasm;
+	__endasm;
 */
 }
 
@@ -808,7 +825,7 @@ void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
  */
 void waitRetrace()
 {
-	_asm
+	__asm
 
 		di
 	WAIT_RETRACE:
@@ -818,7 +835,7 @@ void waitRetrace()
 		jr		z, WAIT_RETRACE
 		ei
 
-	_endasm;
+	__endasm;
 }
 
 /**
@@ -826,7 +843,7 @@ void waitRetrace()
  */ 
 void WaitForVDP()
 {
-	_asm
+	__asm
 		
 		//; Attente libération VDP
 		ld		a,#2
@@ -845,7 +862,7 @@ void WaitForVDP()
 	ei //; on autorise les interruptions
 		out		(VDP_ADDR),a		//; RAZ du registre 15
 
-	_endasm;
+	__endasm;
 }
 
 /**
@@ -858,7 +875,7 @@ void WriteToVRAM8(i16 addr, u8 value)
 	WaitForVDP();
 
 	
-	_asm
+	__asm
 		;// Set 0 to register 14 (we don't use address bits 14-16)
 		ld		a,5(ix)     ;// Bits 14-15
 		and		#0xC0		;// Keep only 2 last bits
@@ -882,7 +899,7 @@ void WriteToVRAM8(i16 addr, u8 value)
 	ei //; on autorise les interruptions
 		out		(VDP_DATA),a
 
-	_endasm;
+	__endasm;
 }
 
 /**
@@ -892,7 +909,7 @@ void VPDCommandLoop(u16 address)
 {
 	address;
 
-	_asm
+	__asm
 
 		ld l,4(ix)
 		ld h,5(ix)
@@ -943,7 +960,7 @@ void VPDCommandLoop(u16 address)
 
 		ei
 
-	_endasm;
+	__endasm;
 }
 
 /** Should be inline */
@@ -1045,7 +1062,7 @@ void VPDCommand32(u16 address)
 
 	WaitForVDP();
 
-	_asm
+	__asm
 
 		ld l,4(ix)
 		ld h,5(ix)
@@ -1073,7 +1090,7 @@ void VPDCommand32(u16 address)
 	ei                      //; "EI" anticipé
 		outi
 
-	_endasm;
+	__endasm;
 }
 
 /**
@@ -1085,7 +1102,7 @@ void VPDCommand36(u16 address)
 
 	WaitForVDP();
 
-	_asm
+	__asm
 
 		ld l,4(ix)
 		ld h,5(ix)
@@ -1109,7 +1126,7 @@ void VPDCommand36(u16 address)
 	ei                      ;// "EI" anticipé
 		outi
 
-	_endasm;
+	__endasm;
 }
 
 void PrintSprite(u8 X, u8 Y, const char* text)

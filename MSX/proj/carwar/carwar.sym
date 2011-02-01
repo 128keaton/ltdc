@@ -1,106 +1,105 @@
-; no$gmb format .sym file
-; Generated automagically by ASxxxx linker V01.75 + NoICE + SDCC Feb 1999 (SDK 3.0.0)
-; Area: .  .ABS.
-01:4010 s__CODE
-00:C000 s__CABS
-00:C000 s__DATA
-00:C000 s__GSFINAL
-00:C000 s__GSINIT
-00:C000 s__HOME
-00:C000 s__OVERLAY
-; Area: _CODE
-01:4010 _main
-01:4010 _main_start
-01:402B _car1
-01:402B _main_end
-01:491B _car2
-01:520B _car3
-01:5AFB _car4
-01:63EB _shadow
-01:647A _charTable
-01:663A _backgound
-01:66C9 _defaultColor
-01:66D1 _MainLoop
-01:66D1 _MainLoop_start
-01:7167 _MainLoop_end
-01:7171 _InitializePlayer
-01:7171 _InitializePlayer_start
-01:7239 _InitializePlayer_end
-01:7239 _SetScreen8
-01:7239 _SetScreen8_start
-01:7299 _SetScreen8_end
-01:7299 _SetSpriteMode
-01:7299 _SetSpriteMode_start
-01:72C8 _SetFreq
-01:72C8 _SetFreq_start
-01:72C8 _SetSpriteMode_end
-01:72E9 _SetFreq_end
-01:72E9 _SetPage8
-01:72E9 _SetPage8_start
-01:7304 _DrawPoint8
-01:7304 _DrawPoint8_start
-01:7304 _SetPage8_end
-01:734C _DrawLine8
-01:734C _DrawLine8_start
-01:734C _DrawPoint8_end
-01:7359 _DrawLine8_end
-01:7359 _waitRetrace
-01:7359 _waitRetrace_start
-01:7364 _WaitForVDP
-01:7364 _WaitForVDP_start
-01:7364 _waitRetrace_end
-01:737C _WaitForVDP_end
-01:737C _WriteToVRAM8
-01:737C _WriteToVRAM8_start
-01:73AC _VPDCommandLoop
-01:73AC _VPDCommandLoop_start
-01:73AC _WriteToVRAM8_end
-01:73E4 _RAMtoVRAM
-01:73E4 _RAMtoVRAM_start
-01:73E4 _VPDCommandLoop_end
-01:74AF _RAMtoVRAMTrans
-01:74AF _RAMtoVRAMTrans_start
-01:74AF _RAMtoVRAM_end
-01:757A _Fill8
-01:757A _Fill8_start
-01:757A _RAMtoVRAMTrans_end
-01:762C _Fill8_end
-01:762C _VRAMtoVRAM
-01:762C _VRAMtoVRAM_start
-01:7726 _VRAMtoVRAMTrans
-01:7726 _VRAMtoVRAMTrans_start
-01:7726 _VRAMtoVRAM_end
-01:7820 _VPDCommand32
-01:7820 _VPDCommand32_start
-01:7820 _VRAMtoVRAMTrans_end
-01:785E _VPDCommand32_end
-01:785E _VPDCommand36
-01:785E _VPDCommand36_start
-01:7894 _PrintSprite
-01:7894 _PrintSprite_start
-01:7894 _VPDCommand36_end
-01:789F _PrintSprite_end
-01:789F _SetSprite
-01:789F _SetSprite_start
-01:78F6 _Joystick
-01:78F6 _Joystick_start
-01:78F6 _SetSprite_end
-01:7908 _Joystick_end
-01:7908 _Joytrig
-01:7908 _Joytrig_start
-01:791C _GetKeyMatrixLine
-01:791C _GetKeyMatrixLine_start
-01:791C _Joytrig_end
-01:792E _GetKeyMatrixLine_end
-01:792E __muluchar_rrx_s
-01:7941 __mulschar_rrx_s
-01:7948 __mulschar_rrx_hds
-01:7954 __mulint_rrx_s
-01:7960 __mulint_rrx_hds
-01:7960 __muluchar_rrx_hds
-; Area: _DATA
-; Area: _OVERLAY
-; Area: _HOME
-; Area: _GSINIT
-; Area: _GSFINAL
-; Area: _CABS
+ASxxxx Assembler V02.00 + NoICE + SDCC mods + Flat24  (Zilog Z80 / Hitachi HD64180), page 1.
+
+Symbol Table
+
+    .__.ABS.                                                    =  0000 G
+  0 COLOR_COPY_END                                                 3197 R
+  0 SEND_NEXT_COLOR                                                3179 R
+  0 WAIT_REG2                                                      3181 R
+  0 WAIT_RETRACE                                                   3118 R
+  0 WAIT_VDP                                                       312B R
+  0 _DrawLine8                                                     3109 GR
+  0 _DrawLine8_end                                                 3117 GR
+  0 _DrawLine8_start                                               3109 GR
+  0 _DrawPoint8                                                    30C1 GR
+  0 _DrawPoint8_end                                                3109 GR
+  0 _DrawPoint8_start                                              30C1 GR
+  0 _Fill8                                                         32E0 GR
+  0 _Fill8_end                                                     3370 GR
+  0 _Fill8_start                                                   32E0 GR
+    _GetKeyMatrixLine                                              **** GX
+  0 _InitializePlayer                                              2F6E GR
+  0 _InitializePlayer_end                                          2FF3 GR
+  0 _InitializePlayer_start                                        2F6E GR
+    _Joystick                                                      **** GX
+    _Joytrig                                                       **** GX
+  0 _MainLoop                                                      26C0 GR
+  0 _MainLoop_end                                                  2F64 GR
+  0 _MainLoop_start                                                26C0 GR
+  0 _PrintSprite                                                   3570 GR
+  0 _PrintSprite_end                                               357B GR
+  0 _PrintSprite_start                                             3570 GR
+  0 _RAMtoVRAM                                                     31A2 GR
+  0 _RAMtoVRAMTrans                                                3241 GR
+  0 _RAMtoVRAMTrans_end                                            32E0 GR
+  0 _RAMtoVRAMTrans_start                                          3241 GR
+  0 _RAMtoVRAM_end                                                 3241 GR
+  0 _RAMtoVRAM_start                                               31A2 GR
+  0 _SetFreq                                                       3085 GR
+  0 _SetFreq_end                                                   30A6 GR
+  0 _SetFreq_start                                                 3085 GR
+  0 _SetPage8                                                      30A6 GR
+  0 _SetPage8_end                                                  30C1 GR
+  0 _SetPage8_start                                                30A6 GR
+  0 _SetScreen8                                                    2FF3 GR
+  0 _SetScreen8_end                                                303B GR
+  0 _SetScreen8_start                                              2FF3 GR
+  0 _SetSprite                                                     357B GR
+  0 _SetSpriteMode                                                 303B GR
+  0 _SetSpriteMode_end                                             3085 GR
+  0 _SetSpriteMode_start                                           303B GR
+  0 _SetSprite_end                                                 35CB GR
+  0 _SetSprite_start                                               357B GR
+  0 _VPDCommand32                                                  34FC GR
+  0 _VPDCommand32_end                                              353A GR
+  0 _VPDCommand32_start                                            34FC GR
+  0 _VPDCommand36                                                  353A GR
+  0 _VPDCommand36_end                                              3570 GR
+  0 _VPDCommand36_start                                            353A GR
+  0 _VPDCommandLoop                                                316A GR
+  0 _VPDCommandLoop_end                                            31A2 GR
+  0 _VPDCommandLoop_start                                          316A GR
+  0 _VRAMtoVRAM                                                    3370 GR
+  0 _VRAMtoVRAMTrans                                               3436 GR
+  0 _VRAMtoVRAMTrans_end                                           34FC GR
+  0 _VRAMtoVRAMTrans_start                                         3436 GR
+  0 _VRAMtoVRAM_end                                                3436 GR
+  0 _VRAMtoVRAM_start                                              3370 GR
+  0 _WaitForVDP                                                    3122 GR
+  0 _WaitForVDP_end                                                313A GR
+  0 _WaitForVDP_start                                              3122 GR
+  0 _WriteToVRAM8                                                  313A GR
+  0 _WriteToVRAM8_end                                              316A GR
+  0 _WriteToVRAM8_start                                            313A GR
+    __divuschar_rrx_s                                              **** GX
+    __mulint_rrx_s                                                 **** GX
+  0 __str_0                                                        2F64 R
+  0 _backgound                                                     2629 GR
+  0 _car1                                                          001A GR
+  0 _car2                                                          090A GR
+  0 _car3                                                          11FA GR
+  0 _car4                                                          1AEA GR
+  0 _charTable                                                     2469 GR
+  0 _defaultColor                                                  26B8 GR
+  0 _g_Cosinus                                                     2609 R
+  0 _g_Sinus                                                       25E9 R
+    _g_slotPort                                                 =  00A8 
+  0 _main                                                          0000 GR
+  0 _main_end                                                      001A GR
+  0 _main_start                                                    0000 GR
+  0 _shadow                                                        23DA GR
+  0 _waitRetrace                                                   3117 GR
+  0 _waitRetrace_end                                               3122 GR
+  0 _waitRetrace_start                                             3117 GR
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods + Flat24  (Zilog Z80 / Hitachi HD64180), page 2.
+
+Area Table
+
+   0 _CODE                                      size 35CB   flags 0
+   1 _DATA                                      size    0   flags 0
+   2 _OVERLAY                                   size    0   flags 0
+   3 _HOME                                      size    0   flags 0
+   4 _GSINIT                                    size    0   flags 0
+   5 _GSFINAL                                   size    0   flags 0
+   6 _CABS                                      size    0   flags 0
