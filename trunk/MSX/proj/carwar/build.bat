@@ -1,8 +1,11 @@
 @ECHO off
 SET PROGRAM=carwar
+SET LIBS=bios.c
 
 ECHO -- SDCC Compile --
-sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 %PROGRAM%.c --vc
+sdcc -c -mz80 --vc bios.c
+REM ## sdcc -c -mz80 --vc 3d.c
+sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 --vc %PROGRAM%.c bios.rel
 ECHO Compiled
 
 ECHO -- hex2bin --
