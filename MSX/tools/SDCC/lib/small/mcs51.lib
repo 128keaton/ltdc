@@ -1,8 +1,0 @@
-crtstart.rel
-crtxinit.rel
-crtxclear.rel
-crtclear.rel
-crtxstack.rel
-crtpagesfr.rel
-crtbank.rel
-crtcall.rel
