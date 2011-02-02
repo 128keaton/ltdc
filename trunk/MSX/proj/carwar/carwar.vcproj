@@ -192,18 +192,6 @@
 			Name="build"
 			>
 			<File
-				RelativePath=".\bios.asm"
-				>
-			</File>
-			<File
-				RelativePath=".\bios.lst"
-				>
-			</File>
-			<File
-				RelativePath=".\bios.sym"
-				>
-			</File>
-			<File
 				RelativePath=".\build.bat"
 				>
 			</File>
@@ -213,6 +201,10 @@
 			</File>
 			<File
 				RelativePath=".\carwar.lst"
+				>
+			</File>
+			<File
+				RelativePath=".\carwar.map"
 				>
 			</File>
 			<File
