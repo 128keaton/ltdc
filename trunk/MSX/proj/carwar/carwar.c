@@ -152,10 +152,12 @@ void waitRetrace();
 void WaitForVDP();
 void WriteToVRAM8(u16 addr, u8 value);
 void SetFreq(u8 freq);
-//void PrintSprite(u8 X, u8 Y, const char* text);
-//void SetSprite(u8 index, u8 X, u8 Y, u8 shape);
+void PrintSprite(u8 X, u8 Y, const char* text);
+void ClearSprite();
+void SetSprite(u8 index, u8 X, u8 Y, u8 shape);
 
 void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
+void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
 void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
 void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color);
 void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
@@ -198,9 +200,7 @@ const u8 backgound[] =
 	0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 0x92, 
 };
 
-//const u8 testSprt[] = { 0x40, 0x40, 0, 0 };
-//const u8 defaultColor[] = { 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F };
-const u8 defaultColor[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+const u8 defaultColor[] = { 0x0a, 0x0a, 0x0b, 0x0e, 0x0e, 0x0b, 0x0a, 0x0a };
 
 ///
 __sfr __at 0xA8 g_slotPort;
@@ -213,7 +213,6 @@ void main(void)
 	__asm
 		di
 		ld sp, (#0xFC4A)
-		//ld sp, (#0xC000)
 		ei
 	__endasm;
 
@@ -253,47 +252,24 @@ void MainLoop()
 
 	//----------------------------------------
 	// Initialize sprites
-	//for(i=0; i<16*3; i++)
+	for(x=0; x<48; x++)
 	{
-		//RAMtoVRAM(0, (8 * i) % 256, 248 + (i / 32), 8, 1, (u16)&charTable[8 * i]);
-		//RAMtoVRAM(0, 0, 248, 8, 1, (u16)&charTable[0]);
+		RAMtoVRAM16((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
 	}
-
-	// show first 8 sprites
-	//for(i=0; i<8; i++)
-	{
-		//SetSprite(i, 64 + (i * 8), 64, i);
-		//SetSprite(0, 0x40, 0x40, 0);
-		//RAMtoVRAM(0, 0, 247, 4, 1, (u16)&testSprt);
-		//RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
-	}
-
-	//for(i=0; i<32; i++)
-	//{
-	//	testSprt[0] = 32 + i * 4;
-	//	testSprt[1] = 32 + i * 4;
-	//	testSprt[2] = 0;
-	//	RAMtoVRAM(0, (i * 16) & 0xFF, 245 + (i / 16), 8, 1, (u16)&defaultColor);
-	//	RAMtoVRAM(0, (i * 4) & 0xFF, 247 + (i / 64), 4, 1, (u16)&testSprt);
-	//	RAMtoVRAM(0, (i * 8) & 0xFF, 248 + (i / 32), 8, 1, (u16)&charTable[i * 8]);
-	//}
 	
-	RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
-	RAMtoVRAM(0, 0, 247, 3, 1, (u16)&testSprt);
-	RAMtoVRAM(0, 0, 248, 8, 1, (u16)&charTable);
-
 	//----------------------------------------
 	// Build background
-	//PrintSprite(64, 64, "INIT\nTRACK");
+	PrintSprite(64, 64, "INIT\nTRACK");
 	for(x=0; x<=255; x++)
 		for(y=0; y<=211; y++)
 			DrawPoint8(x, y, x + y);
 	VRAMtoVRAM(0,   0, 0, 1,   0, 0, 128, 212);
 	VRAMtoVRAM(0, 128, 0, 1, 128, 0, 128, 212);
+	ClearSprite();
 
 	//----------------------------------------
 	// Copy cars to VRAM
-	//PrintSprite(64, 64, "INIT\nCARS");
+	PrintSprite(64, 64, "INIT\nCARS");
 	for(i=0; i<16; i++)
 	{
 		RAMtoVRAM(1, i * 13, 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
@@ -301,7 +277,9 @@ void MainLoop()
 		RAMtoVRAM(1, i * 13, 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
 		RAMtoVRAM(1, i * 13, 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
 	}
+	ClearSprite();
 
+	PrintSprite(64, 64, "LETS\nGO!");
 	while(bEnd == 0)
 	{
 		SetPage8(page);
@@ -977,13 +955,29 @@ void VPDCommandLoop(u16 address)
 	__endasm;
 }
 
+
+/** Should be inline */
+void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
+{
+	VdpBuffer36 buffer;
+	
+	buffer.DX = dx;
+	buffer.DY = dy;
+	buffer.NX = nx;
+	buffer.NY = ny;
+	buffer.CLR = ((u8*)ram)[0];
+	buffer.ARG = 0;
+	buffer.CMD = 0xF0;
+	VPDCommand36((u16)&buffer);
+	VPDCommandLoop(ram);
+}
+
+
 /** Should be inline */
 void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 {
 	VdpBuffer36 buffer;
 	
-	page; ram;
-
 	buffer.DX = dx;
 	buffer.DY = dy + ((u16)page << 8);
 	buffer.NX = nx;
@@ -1143,19 +1137,41 @@ void VPDCommand36(u16 address)
 	__endasm;
 }
 
-//void PrintSprite(u8 X, u8 Y, const char* text)
-//{
-//	X; Y; text;
-//}
-//
-//void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
-//{
-//	EntryTAS sprt;
-//	sprt.posX = X;
-//	sprt.posY = Y;
-//	sprt.index = shape;
-//	//RAMtoVRAM(0, (4 * index) % 256, 247, 4, 1, (u16)&sprt);
-//	//RAMtoVRAM(0, (8 * index) % 256, 245, 8, 1, (u16)&defaultColor);
-//	RAMtoVRAM(0, 0, 247, 4, 1, (u16)&sprt);
-//	RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
-//}
+void PrintSprite(u8 X, u8 Y, const char* text)
+{
+	u8 sprtIdx = 0;
+	u8 curX = X;
+	u8 curY = Y;
+	while(text[sprtIdx] != 0)
+	{
+		if(text[sprtIdx] == '\n')
+		{
+			curX = X;
+			curY += 9;
+		}
+		else
+		{
+			SetSprite(sprtIdx, curX, curY, text[sprtIdx] - '0');
+			curX += 8;
+		}
+		sprtIdx++;
+	}
+	SetSprite(sprtIdx, 0, 216, 0);
+}
+
+void ClearSprite()
+{
+	SetSprite(0, 0, 216, 0);
+}
+
+void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
+{
+	EntryTAS sprt;
+	sprt.posX = X;
+	sprt.posY = Y;
+	sprt.index = shape;
+	//RAMtoVRAM(0, 0, 247, 4, 1, (u16)&sprt);
+	//RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
+	RAMtoVRAM16((index * 16) % 256, 244 + (index / 16), 8, 1, (u16)&defaultColor);
+	RAMtoVRAM16((index * 4) % 256, 246 + (index / 64), 4, 1, (u16)&sprt);
+}
