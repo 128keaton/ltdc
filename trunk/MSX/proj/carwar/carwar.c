@@ -87,7 +87,7 @@
 //----------------------------------------
 // T Y P E S
 
-typedef struct
+typedef struct tagVdpBuffer36
 {
 	u16 DX;  // 36-37
 	u16 DY;  // 38-39
@@ -98,7 +98,7 @@ typedef struct
 	u8  CMD; // 46
 } VdpBuffer36;
 
-typedef struct
+typedef struct tagVdpBuffer32
 {
 	u16 SX;  // 32-33
 	u16 SY;  // 34-35
@@ -111,7 +111,7 @@ typedef struct
 	u8  CMD; // 46
 } VdpBuffer32;
 
-typedef struct
+typedef struct tagEntryTAS
 {
 	u8 posY;
 	u8 posX;
@@ -119,13 +119,13 @@ typedef struct
 	u8 reserved;
 } EntryTAS;
 
-typedef struct
+typedef struct tagCar
 {
 	u8 rotSpeed;
 	u8 accel;
 } Car;
 
-typedef struct
+typedef struct tagPlayer
 {
 	u8 car;    // car index
 	i16 posX;  // position X
@@ -137,6 +137,14 @@ typedef struct
 	u16 dY;    // velocity Y
 	i8 speed;
 } Player; // 16 bytes
+
+struct GameData
+{
+	Car         cars[4];
+	Player      players[4];
+	VdpBuffer32 buffer32;
+	VdpBuffer36 buffer36;
+};
 
 //----------------------------------------
 // P R O T O T Y P E S
@@ -159,7 +167,7 @@ void SetSprite(u8 index, u8 X, u8 Y, u8 shape);
 void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
 void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
 void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
-void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color);
+void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color);
 void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
 void VRAMtoVRAM16(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
 void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
@@ -203,8 +211,13 @@ const u8 backgound[] =
 
 const u8 defaultColor[] = { 0x0a, 0x0a, 0x0b, 0x0e, 0x0e, 0x0b, 0x0a, 0x0a };
 
+Player __at(0xC000) ply[4];
+VdpBuffer36 __at(0xC100) buffer36;
+VdpBuffer32 __at(0xC200) buffer32;
+//struct GameData __at(0xD000) game;
+
 ///
-__sfr __at 0xA8 g_slotPort;
+__sfr __at(0xA8) g_slotPort;
 
 /**
  * Program entry point
@@ -232,7 +245,7 @@ void MainLoop()
 	u8 page = 0;
 	u8 keyLine;
 	//Player ply[4];
-	Player* ply = 0xC000;
+	//Player* ply = 0xC000;
 	Player* curPly;
 	u16 x, y;
 	u8 testSprt[4] = { 0x40, 0x40, 0, 0 };
@@ -241,10 +254,10 @@ void MainLoop()
 	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
-	Fill8(0, 0, 0,   256, 212, 0x92);
-	Fill8(0, 0, 212, 256, 44,  0);
-	Fill8(1, 0, 0,   256, 212, 0x92);
-	Fill8(1, 0, 212, 256, 44,  0);
+	FillVRAM(0, 0,         256, 212, 0x92);
+	FillVRAM(0, 212,       256, 44,  0);
+	FillVRAM(0, 256 + 0,   256, 212, 0x92);
+	FillVRAM(0, 256 + 212, 256, 44,  0);
 
 	//----------------------------------------
 	// Initialize sprites
@@ -255,13 +268,13 @@ void MainLoop()
 	
 	//----------------------------------------
 	// Build background
-	PrintSprite(64, 64, "INIT\nTRACK");
-	for(x=0; x<=255; x++)
-		for(y=0; y<=211; y++)
-			DrawPoint8(x, y, x + y);
-	VRAMtoVRAM(0,   0, 0, 1,   0, 0, 128, 212);
-	VRAMtoVRAM(0, 128, 0, 1, 128, 0, 128, 212);
-	ClearSprite();
+	//PrintSprite(64, 64, "INIT\nTRACK");
+	//for(x=0; x<=255; x++)
+	//	for(y=0; y<=211; y++)
+	//		DrawPoint8(x, y, x + y);
+	//VRAMtoVRAM(0,   0, 0, 1,   0, 0, 128, 212);
+	//VRAMtoVRAM(0, 128, 0, 1, 128, 0, 128, 212);
+	//ClearSprite();
 
 	//----------------------------------------
 	// Copy cars to VRAM
@@ -281,8 +294,8 @@ void MainLoop()
 	for(i=0; i<4; i++)
 	{
 		InitializePlayer(&ply[i], i, 50 + 50 * i, 100);
-		VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * 0) + ScrPosY(ply[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
-		VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * 1) + ScrPosY(ply[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+		//VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * 0) + ScrPosY(ply[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
+		//VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * 1) + ScrPosY(ply[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
 	}
 	ClearSprite();
 
@@ -393,7 +406,18 @@ void MainLoop()
 		// Restore background
 		for(i=0; i<4; i++)
 		{
-			VRAMtoVRAM16((13 * i) + (52 * page), 212, ScrPosX(ply[i].prevX), (512 * page) + ScrPosY(ply[i].prevY), 13, 11);
+			//VRAMtoVRAM16((13 * i) + (52 * page), 212, ScrPosX(ply[i].prevX), (512 * page) + ScrPosY(ply[i].prevY), 13, 11);
+			buffer36.DX = ply[i].prevX;
+			buffer36.DX /= 256;
+			buffer36.DX -= 7;
+			buffer36.DY = (256 * page) + ScrPosY(ply[i].prevY);
+			buffer36.NX = 13;
+			buffer36.NY = 11;
+			buffer36.CLR = 0x92;
+			buffer36.ARG = 0;
+			buffer36.CMD = 0xC0;
+			VPDCommand36((u16)&buffer36);			
+			//FillVRAM(ScrPosX(ply[i].prevX), (256 * page) + ScrPosY(ply[i].prevY), 13, 11, 0x92);
 		}
 
 		//----------------------------------------
@@ -414,7 +438,7 @@ void MainLoop()
 			curPly->posY -= curPly->speed * curPly->dY;
 
 			// Backup
-			VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * page) + ScrPosY(ply[i].posY), (13 * i) + (52 * page), 212, 13, 11);
+			//VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * page) + ScrPosY(ply[i].posY), (13 * i) + (52 * page), 212, 13, 11);
 		}
 
 		//----------------------------------------
@@ -998,12 +1022,12 @@ void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
 }
 
 /** Should be inline */
-void Fill8(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u8 color)
+void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
 {
 	VdpBuffer36 buffer;
 	
 	buffer.DX = dx;
-	buffer.DY = dy + ((u16)page << 8);
+	buffer.DY = dy;
 	buffer.NX = nx;
 	buffer.NY = ny;
 	buffer.CLR = color;
