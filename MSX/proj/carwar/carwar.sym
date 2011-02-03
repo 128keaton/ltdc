@@ -3,85 +3,89 @@
 Symbol Table
 
     .__.ABS.                                                    =  0000 G
-  0 COLOR_COPY_END                                                 31DC R
-  0 SEND_NEXT_COLOR                                                31BE R
-  0 WAIT_REG2                                                      31C6 R
-  0 WAIT_RETRACE                                                   315D R
-  0 WAIT_VDP                                                       3170 R
-  0 _ClearSprite                                                   3692 GR
-  0 _ClearSprite_end                                               369F GR
-  0 _ClearSprite_start                                             3692 GR
-  0 _DrawLine8                                                     314E GR
-  0 _DrawLine8_end                                                 315C GR
-  0 _DrawLine8_start                                               314E GR
-  0 _DrawPoint8                                                    3106 GR
-  0 _DrawPoint8_end                                                314E GR
-  0 _DrawPoint8_start                                              3106 GR
-  0 _Fill8                                                         339B GR
-  0 _Fill8_end                                                     342B GR
-  0 _Fill8_start                                                   339B GR
+  0 COLOR_COPY_END                                                 32FD R
+  0 SEND_NEXT_COLOR                                                32DF R
+  0 WAIT_REG2                                                      32E7 R
+  0 WAIT_RETRACE                                                   327E R
+  0 WAIT_VDP                                                       3291 R
+  0 _ClearSprite                                                   3833 GR
+  0 _ClearSprite_end                                               3840 GR
+  0 _ClearSprite_start                                             3833 GR
+  0 _DrawLine8                                                     326F GR
+  0 _DrawLine8_end                                                 327D GR
+  0 _DrawLine8_start                                               326F GR
+  0 _DrawPoint8                                                    3227 GR
+  0 _DrawPoint8_end                                                326F GR
+  0 _DrawPoint8_start                                              3227 GR
+  0 _Fill8                                                         34BC GR
+  0 _Fill8_end                                                     354C GR
+  0 _Fill8_start                                                   34BC GR
     _GetKeyMatrixLine                                              **** GX
-  0 _InitializePlayer                                              2FB3 GR
-  0 _InitializePlayer_end                                          3038 GR
-  0 _InitializePlayer_start                                        2FB3 GR
+  0 _InitializePlayer                                              30D4 GR
+  0 _InitializePlayer_end                                          3159 GR
+  0 _InitializePlayer_start                                        30D4 GR
     _Joystick                                                      **** GX
     _Joytrig                                                       **** GX
   0 _MainLoop                                                      26C0 GR
-  0 _MainLoop_end                                                  2F95 GR
+  0 _MainLoop_end                                                  30A4 GR
   0 _MainLoop_start                                                26C0 GR
-  0 _PrintSprite                                                   362B GR
-  0 _PrintSprite_end                                               3692 GR
-  0 _PrintSprite_start                                             362B GR
-  0 _RAMtoVRAM                                                     325D GR
-  0 _RAMtoVRAM16                                                   31E7 GR
-  0 _RAMtoVRAM16_end                                               325D GR
-  0 _RAMtoVRAM16_start                                             31E7 GR
-  0 _RAMtoVRAMTrans                                                32FC GR
-  0 _RAMtoVRAMTrans_end                                            339B GR
-  0 _RAMtoVRAMTrans_start                                          32FC GR
-  0 _RAMtoVRAM_end                                                 32FC GR
-  0 _RAMtoVRAM_start                                               325D GR
-  0 _SetFreq                                                       30CA GR
-  0 _SetFreq_end                                                   30EB GR
-  0 _SetFreq_start                                                 30CA GR
-  0 _SetPage8                                                      30EB GR
-  0 _SetPage8_end                                                  3106 GR
-  0 _SetPage8_start                                                30EB GR
-  0 _SetScreen8                                                    3038 GR
-  0 _SetScreen8_end                                                3080 GR
-  0 _SetScreen8_start                                              3038 GR
-  0 _SetSprite                                                     369F GR
-  0 _SetSpriteMode                                                 3080 GR
-  0 _SetSpriteMode_end                                             30CA GR
-  0 _SetSpriteMode_start                                           3080 GR
-  0 _SetSprite_end                                                 377A GR
-  0 _SetSprite_start                                               369F GR
-  0 _VPDCommand32                                                  35B7 GR
-  0 _VPDCommand32_end                                              35F5 GR
-  0 _VPDCommand32_start                                            35B7 GR
-  0 _VPDCommand36                                                  35F5 GR
-  0 _VPDCommand36_end                                              362B GR
-  0 _VPDCommand36_start                                            35F5 GR
-  0 _VPDCommandLoop                                                31AF GR
-  0 _VPDCommandLoop_end                                            31E7 GR
-  0 _VPDCommandLoop_start                                          31AF GR
-  0 _VRAMtoVRAM                                                    342B GR
-  0 _VRAMtoVRAMTrans                                               34F1 GR
-  0 _VRAMtoVRAMTrans_end                                           35B7 GR
-  0 _VRAMtoVRAMTrans_start                                         34F1 GR
-  0 _VRAMtoVRAM_end                                                34F1 GR
-  0 _VRAMtoVRAM_start                                              342B GR
-  0 _WaitForVDP                                                    3167 GR
-  0 _WaitForVDP_end                                                317F GR
-  0 _WaitForVDP_start                                              3167 GR
-  0 _WriteToVRAM8                                                  317F GR
-  0 _WriteToVRAM8_end                                              31AF GR
-  0 _WriteToVRAM8_start                                            317F GR
+  0 _PrintSprite                                                   37CC GR
+  0 _PrintSprite_end                                               3833 GR
+  0 _PrintSprite_start                                             37CC GR
+  0 _RAMtoVRAM                                                     337E GR
+  0 _RAMtoVRAM16                                                   3308 GR
+  0 _RAMtoVRAM16_end                                               337E GR
+  0 _RAMtoVRAM16_start                                             3308 GR
+  0 _RAMtoVRAMTrans                                                341D GR
+  0 _RAMtoVRAMTrans_end                                            34BC GR
+  0 _RAMtoVRAMTrans_start                                          341D GR
+  0 _RAMtoVRAM_end                                                 341D GR
+  0 _RAMtoVRAM_start                                               337E GR
+  0 _SetFreq                                                       31EB GR
+  0 _SetFreq_end                                                   320C GR
+  0 _SetFreq_start                                                 31EB GR
+  0 _SetPage8                                                      320C GR
+  0 _SetPage8_end                                                  3227 GR
+  0 _SetPage8_start                                                320C GR
+  0 _SetScreen8                                                    3159 GR
+  0 _SetScreen8_end                                                31A1 GR
+  0 _SetScreen8_start                                              3159 GR
+  0 _SetSprite                                                     3840 GR
+  0 _SetSpriteMode                                                 31A1 GR
+  0 _SetSpriteMode_end                                             31EB GR
+  0 _SetSpriteMode_start                                           31A1 GR
+  0 _SetSprite_end                                                 391B GR
+  0 _SetSprite_start                                               3840 GR
+  0 _VPDCommand32                                                  3758 GR
+  0 _VPDCommand32_end                                              3796 GR
+  0 _VPDCommand32_start                                            3758 GR
+  0 _VPDCommand36                                                  3796 GR
+  0 _VPDCommand36_end                                              37CC GR
+  0 _VPDCommand36_start                                            3796 GR
+  0 _VPDCommandLoop                                                32D0 GR
+  0 _VPDCommandLoop_end                                            3308 GR
+  0 _VPDCommandLoop_start                                          32D0 GR
+  0 _VRAMtoVRAM                                                    354C GR
+  0 _VRAMtoVRAM16                                                  3612 GR
+  0 _VRAMtoVRAM16_end                                              3692 GR
+  0 _VRAMtoVRAM16_start                                            3612 GR
+  0 _VRAMtoVRAMTrans                                               3692 GR
+  0 _VRAMtoVRAMTrans_end                                           3758 GR
+  0 _VRAMtoVRAMTrans_start                                         3692 GR
+  0 _VRAMtoVRAM_end                                                3612 GR
+  0 _VRAMtoVRAM_start                                              354C GR
+  0 _WaitForVDP                                                    3288 GR
+  0 _WaitForVDP_end                                                32A0 GR
+  0 _WaitForVDP_start                                              3288 GR
+  0 _WriteToVRAM8                                                  32A0 GR
+  0 _WriteToVRAM8_end                                              32D0 GR
+  0 _WriteToVRAM8_start                                            32A0 GR
     __modsint_rrx_s                                                **** GX
     __mulint_rrx_s                                                 **** GX
-  0 __str_0                                                        2F95 R
-  0 __str_1                                                        2FA0 R
-  0 __str_2                                                        2FAA R
+  0 __str_0                                                        30A4 R
+  0 __str_1                                                        30AF R
+  0 __str_2                                                        30B9 R
+  0 __str_3                                                        30CB R
   0 _backgound                                                     2629 GR
   0 _car1                                                          001A GR
   0 _car2                                                          090A GR
@@ -96,15 +100,15 @@ Symbol Table
   0 _main_end                                                      001A GR
   0 _main_start                                                    0000 GR
   0 _shadow                                                        23DA GR
-  0 _waitRetrace                                                   315C GR
-  0 _waitRetrace_end                                               3167 GR
-  0 _waitRetrace_start                                             315C GR
+  0 _waitRetrace                                                   327D GR
+  0 _waitRetrace_end                                               3288 GR
+  0 _waitRetrace_start                                             327D GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods + Flat24  (Zilog Z80 / Hitachi HD64180), page 2.
 
 Area Table
 
-   0 _CODE                                      size 377A   flags 0
+   0 _CODE                                      size 391B   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0
