@@ -53,6 +53,19 @@
 #define VDP_ARG	#45
 #define VDP_CMD	#46
 
+#define VDP_CMD_HMMC	0xF0
+#define VDP_CMD_YMMM	0xE0
+#define VDP_CMD_HMMM	0xD0
+#define VDP_CMD_HMMV	0xC0
+#define VDP_CMD_LMMC 
+#define VDP_CMD_LMCM 
+#define VDP_CMD_LMMM 
+#define VDP_CMD_LMMV 
+#define VDP_CMD_LINE 
+#define VDP_CMD_SRCH	0x60
+#define VDP_CMD_PSET 
+#define VDP_CMD_POINT
+
 #define DISP_PAGE	(1 << 5)
 
 #define SPRITE_OFF		0x02
@@ -128,10 +141,10 @@ typedef struct tagCar
 typedef struct tagPlayer
 {
 	u8 car;    // car index
-	i16 posX;  // position X
-	i16 posY;  // position Y
-	i16 prevX; // previous position X
-	i16 prevY; // previous position Y
+	u16 posX;  // position X
+	u16 posY;  // position Y
+	u16 prevX; // previous position X
+	u16 prevY; // previous position Y
 	u16 rot;   // rotation
 	u16 dX;    // velocity X
 	u16 dY;    // velocity Y
@@ -153,7 +166,7 @@ void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void SetScreen8(u8 lines);
 void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas);
-void SetPage8(i8 page);
+void SetPage8(u8 page);
 void DrawPoint8(char posX, char posY, char color);
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
 void waitRetrace();
@@ -164,13 +177,11 @@ void PrintSprite(u8 X, u8 Y, const char* text);
 void ClearSprite();
 void SetSprite(u8 index, u8 X, u8 Y, u8 shape);
 
-void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
-void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
-void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram);
+void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
+void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
 void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color);
-void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
-void VRAMtoVRAM16(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
-void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny);
+void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
+void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
 
 void VPDCommand32(u16 address);
 void VPDCommand36(u16 address);
@@ -263,28 +274,28 @@ void MainLoop()
 	// Initialize sprites
 	for(x=0; x<sizeof(charTable)/8; x++)
 	{
-		RAMtoVRAM16((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
+		RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
 	}
 	
 	//----------------------------------------
 	// Build background
-	//PrintSprite(64, 64, "INIT\nTRACK");
-	//for(x=0; x<=255; x++)
-	//	for(y=0; y<=211; y++)
-	//		DrawPoint8(x, y, x + y);
-	//VRAMtoVRAM(0,   0, 0, 1,   0, 0, 128, 212);
-	//VRAMtoVRAM(0, 128, 0, 1, 128, 0, 128, 212);
-	//ClearSprite();
+	PrintSprite(64, 64, "INIT\nTRACK");
+	for(x=0; x<=255; x++)
+		for(y=0; y<=211; y++)
+			DrawPoint8(x, y, x + y);
+	VRAMtoVRAM(  0, 0,   0, 256, 128, 212);
+	VRAMtoVRAM(128, 0, 128, 256, 128, 212);
+	ClearSprite();
 
 	//----------------------------------------
 	// Copy cars to VRAM
 	PrintSprite(64, 64, "INIT\nCARS");
 	for(i=0; i<16; i++)
 	{
-		RAMtoVRAM(1, i * 13, 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
-		RAMtoVRAM(1, i * 13, 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
-		RAMtoVRAM(1, i * 13, 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
-		RAMtoVRAM(1, i * 13, 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
 	}
 	ClearSprite();
 
@@ -294,8 +305,8 @@ void MainLoop()
 	for(i=0; i<4; i++)
 	{
 		InitializePlayer(&ply[i], i, 50 + 50 * i, 100);
-		//VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * 0) + ScrPosY(ply[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
-		//VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * 1) + ScrPosY(ply[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+		VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * 0) + ScrPosY(ply[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
+		VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * 1) + ScrPosY(ply[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
 	}
 	ClearSprite();
 
@@ -406,18 +417,7 @@ void MainLoop()
 		// Restore background
 		for(i=0; i<4; i++)
 		{
-			//VRAMtoVRAM16((13 * i) + (52 * page), 212, ScrPosX(ply[i].prevX), (512 * page) + ScrPosY(ply[i].prevY), 13, 11);
-			buffer36.DX = ply[i].prevX;
-			buffer36.DX /= 256;
-			buffer36.DX -= 7;
-			buffer36.DY = (256 * page) + ScrPosY(ply[i].prevY);
-			buffer36.NX = 13;
-			buffer36.NY = 11;
-			buffer36.CLR = 0x92;
-			buffer36.ARG = 0;
-			buffer36.CMD = 0xC0;
-			VPDCommand36((u16)&buffer36);			
-			//FillVRAM(ScrPosX(ply[i].prevX), (256 * page) + ScrPosY(ply[i].prevY), 13, 11, 0x92);
+			VRAMtoVRAM((13 * i) + (52 * page), 212, ScrPosX(ply[i].prevX), (256 * page) + ScrPosY(ply[i].prevY), 13, 11);
 		}
 
 		//----------------------------------------
@@ -438,14 +438,14 @@ void MainLoop()
 			curPly->posY -= curPly->speed * curPly->dY;
 
 			// Backup
-			//VRAMtoVRAM16(ScrPosX(ply[i].posX), (512 * page) + ScrPosY(ply[i].posY), (13 * i) + (52 * page), 212, 13, 11);
+			VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * page) + ScrPosY(ply[i].posY), (13 * i) + (52 * page), 212, 13, 11);
 		}
 
 		//----------------------------------------
 		// Draw cars
 		for(i=0; i<4; i++)
 		{
-			VRAMtoVRAMTrans(1, 13 * ply[i].rot, 212 + (11 * i), page, ScrPosX(ply[i].posX), ScrPosY(ply[i].posY), 13, 11);
+			VRAMtoVRAMTrans(13 * ply[i].rot, 256 + 212 + (11 * i), ScrPosX(ply[i].posX), (256 * page) + ScrPosY(ply[i].posY), 13, 11);
 		}
 
 		waitRetrace();
@@ -613,7 +613,7 @@ void SetFreq(u8 freq)
 }
 
 /** Set current page for mode 8 */
-void SetPage8(i8 page)
+void SetPage8(u8 page)
 {
 	page;
 
@@ -973,7 +973,7 @@ void VPDCommandLoop(u16 address)
 
 
 /** Should be inline */
-void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
+void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
 {
 	VdpBuffer36 buffer;
 	
@@ -988,30 +988,13 @@ void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
 	VPDCommandLoop(ram);
 }
 
-
 /** Should be inline */
-void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
 {
 	VdpBuffer36 buffer;
 	
 	buffer.DX = dx;
-	buffer.DY = dy + ((u16)page << 8);
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = ((u8*)ram)[0];
-	buffer.ARG = 0;
-	buffer.CMD = 0xF0;
-	VPDCommand36((u16)&buffer);
-	VPDCommandLoop(ram);
-}
-
-/** Should be inline */
-void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
-{
-	VdpBuffer36 buffer;
-	
-	buffer.DX = dx;
-	buffer.DY = dy + ((u16)page << 8);
+	buffer.DY = dy;
 	buffer.NX = nx;
 	buffer.NY = ny;
 	buffer.CLR = ((u8*)ram)[0];
@@ -1037,23 +1020,7 @@ void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
 }
 
 /** Should be inline */
-void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny)
-{
-	VdpBuffer32 buffer;
-	
-	buffer.SX = sx;
-	buffer.SY = sy + ((u16)sPage << 8);
-	buffer.DX = dx;
-	buffer.DY = dy + ((u16)dPage << 8);
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = 0;
-	buffer.ARG = 0;
-	buffer.CMD = 0xD0;
-	VPDCommand32((u16)&buffer);
-}
-
-void VRAMtoVRAM16(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
+void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
 {
 	VdpBuffer32 buffer;
 	
@@ -1070,14 +1037,14 @@ void VRAMtoVRAM16(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
 }
 
 /** Should be inline */
-void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny)
+void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
 {
 	VdpBuffer32 buffer;
 	
 	buffer.SX = sx;
-	buffer.SY = sy + ((u16)sPage << 8);
+	buffer.SY = sy;
 	buffer.DX = dx;
-	buffer.DY = dy + ((u16)dPage << 8);
+	buffer.DY = dy;
 	buffer.NX = nx;
 	buffer.NY = ny;
 	buffer.CLR = 0;
@@ -1085,12 +1052,6 @@ void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 n
 	buffer.CMD = 0x98;
 	VPDCommand32((u16)&buffer);
 }
-
-
-
-
-
-
 
 
 /**
@@ -1202,8 +1163,6 @@ void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
 	sprt.posX = X;
 	sprt.posY = Y;
 	sprt.index = shape;
-	//RAMtoVRAM(0, 0, 247, 4, 1, (u16)&sprt);
-	//RAMtoVRAM(0, 0, 245, 8, 1, (u16)&defaultColor);
-	RAMtoVRAM16((index * 16) % 256, 244 + (index / 16), 8, 1, (u16)&defaultColor);
-	RAMtoVRAM16((index * 4) % 256, 246 + (index / 64), 4, 1, (u16)&sprt);
+	RAMtoVRAM((index * 16) % 256, 244 + (index / 16), 8, 1, (u16)&defaultColor);
+	RAMtoVRAM((index * 4) % 256, 246 + (index / 64), 4, 1, (u16)&sprt);
 }
