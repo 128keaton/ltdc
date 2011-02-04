@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.0.0 #6037 (Oct 31 2010) (MINGW32)
-; This file was generated Fri Feb 04 00:51:04 2011
+; This file was generated Fri Feb 04 18:22:54 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -33,12 +33,10 @@
 	.globl _WaitForVDP
 	.globl _WriteToVRAM8
 	.globl _VPDCommandLoop
-	.globl _RAMtoVRAM16
 	.globl _RAMtoVRAM
 	.globl _RAMtoVRAMTrans
 	.globl _FillVRAM
 	.globl _VRAMtoVRAM
-	.globl _VRAMtoVRAM16
 	.globl _VRAMtoVRAMTrans
 	.globl _VPDCommand32
 	.globl _VPDCommand36
@@ -79,19 +77,19 @@ _buffer32	=	0xc200
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;carwar.c:225: void main(void)
+;carwar.c:236: void main(void)
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main_start::
 _main:
-;carwar.c:231: __endasm;
+;carwar.c:242: __endasm;
 	
 		 di
 		 ld sp, (#0xFC4A)
 		 ei
 		
-;carwar.c:233: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+;carwar.c:244: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 	in	a,(_g_slotPort)
 	and	a,#0xCF
 	ld	c,a
@@ -103,7 +101,7 @@ _main:
 	ld	a,c
 	or	a,b
 	out	(_g_slotPort),a
-;carwar.c:235: MainLoop();
+;carwar.c:246: MainLoop();
 	call	_MainLoop
 	ret
 _main_end::
@@ -9979,7 +9977,7 @@ _defaultColor:
 	.db #0x0B	; 11
 	.db #0x0A	; 10
 	.db #0x0A	; 10
-;carwar.c:241: void MainLoop()
+;carwar.c:252: void MainLoop()
 ;	---------------------------------
 ; Function MainLoop
 ; ---------------------------------
@@ -9988,13 +9986,13 @@ _MainLoop:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-19
+	ld	hl,#-23
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:245: u8 page = 0;
+;carwar.c:256: u8 page = 0;
 	ld	-2 (ix),#0x00
-;carwar.c:251: u8 testSprt[4] = { 0x40, 0x40, 0, 0 };
-	ld	hl,#0x0008
+;carwar.c:262: u8 testSprt[4] = { 0x40, 0x40, 0, 0 };
+	ld	hl,#0x000C
 	add	hl,sp
 	ex	de,hl
 	ld	a,#0x40
@@ -10013,19 +10011,19 @@ _MainLoop:
 	ld	hl,#0x0003
 	add	hl,de
 	ld	(hl),#0x00
-;carwar.c:253: SetFreq(FREQ_50);
+;carwar.c:264: SetFreq(FREQ_50);
 	ld	a,#0x20
 	push	af
 	inc	sp
 	call	_SetFreq
 	inc	sp
-;carwar.c:254: SetScreen8(LINES_212);
+;carwar.c:265: SetScreen8(LINES_212);
 	ld	a,#0x80
 	push	af
 	inc	sp
 	call	_SetScreen8
 	inc	sp
-;carwar.c:255: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
+;carwar.c:266: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 	ld	hl,#0x01EE
 	push	hl
 	ld	hl,#0x001F
@@ -10035,7 +10033,7 @@ _MainLoop:
 	call	_SetSpriteMode
 	pop	af
 	pop	af
-;carwar.c:257: FillVRAM(0, 0,         256, 212, 0x92);
+;carwar.c:268: FillVRAM(0, 0,         256, 212, 0x92);
 	ld	h,#0x92
 	ex	(sp),hl
 	inc	sp
@@ -10051,7 +10049,7 @@ _MainLoop:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:258: FillVRAM(0, 212,       256, 44,  0);
+;carwar.c:269: FillVRAM(0, 212,       256, 44,  0);
 	ld	a,#0x00
 	push	af
 	inc	sp
@@ -10067,7 +10065,7 @@ _MainLoop:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:259: FillVRAM(0, 256 + 0,   256, 212, 0x92);
+;carwar.c:270: FillVRAM(0, 256 + 0,   256, 212, 0x92);
 	ld	a,#0x92
 	push	af
 	inc	sp
@@ -10083,7 +10081,7 @@ _MainLoop:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:260: FillVRAM(0, 256 + 212, 256, 44,  0);
+;carwar.c:271: FillVRAM(0, 256 + 212, 256, 44,  0);
 	ld	a,#0x00
 	push	af
 	inc	sp
@@ -10099,7 +10097,7 @@ _MainLoop:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:264: for(x=0; x<sizeof(charTable)/8; x++)
+;carwar.c:275: for(x=0; x<sizeof(charTable)/8; x++)
 	ld	-7 (ix),#0x00
 	ld	-6 (ix),#0x00
 00139$:
@@ -10108,7 +10106,7 @@ _MainLoop:
 	ld	a,-6 (ix)
 	sbc	a,#0x00
 	jr	NC,00142$
-;carwar.c:266: RAMtoVRAM16((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
+;carwar.c:277: RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
 	ld	e,-7 (ix)
 	ld	d,-6 (ix)
 	sla	e
@@ -10147,17 +10145,17 @@ _MainLoop:
 	push	hl
 	push	bc
 	push	de
-	call	_RAMtoVRAM16
+	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:264: for(x=0; x<sizeof(charTable)/8; x++)
+;carwar.c:275: for(x=0; x<sizeof(charTable)/8; x++)
 	inc	-7 (ix)
 	jr	NZ,00139$
 	inc	-6 (ix)
 	jr	00139$
 00142$:
-;carwar.c:281: PrintSprite(64, 64, "INIT\nCARS");
+;carwar.c:282: PrintSprite(64, 64, "INIT\nTRACK");
 	ld	hl,#__str_0
 	push	hl
 	ld	hl,#0x4040
@@ -10165,106 +10163,90 @@ _MainLoop:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:282: for(i=0; i<16; i++)
-	ld	-1 (ix),#0x00
+;carwar.c:283: for(x=0; x<=255; x++)
+	ld	-7 (ix),#0x00
+	ld	-6 (ix),#0x00
+00147$:
+	ld	a,#0xFF
+	sub	a,-7 (ix)
+	ld	a,#0x00
+	sbc	a,-6 (ix)
+	jr	C,00150$
+;carwar.c:284: for(y=0; y<=211; y++)
 	ld	de,#0x0000
-	ld	-13 (ix),#0x00
 00143$:
-	ld	a,-1 (ix)
-	sub	a,#0x10
-	jp	PO,00203$
-	xor	a,#0x80
-00203$:
-	jp	P,00146$
-;carwar.c:284: RAMtoVRAM(1, i * 13, 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
-	ld	hl,#_car1
-	add	hl,de
+	ld	a,#0xD3
+	sub	a,e
+	ld	a,#0x00
+	sbc	a,d
+	jr	C,00149$
+;carwar.c:285: DrawPoint8(x, y, x + y);
+	ld	a, -7 (ix)
+	ld	c, e
+	add	a,c
+	ld	l,a
+	ld	c,e
+	ld	b,-7 (ix)
 	push	de
-	push	hl
-	ld	hl,#0x0B0D
-	push	hl
-	ld	a,#0xD4
+	ld	a,l
 	push	af
 	inc	sp
-	ld	d, -13 (ix)
-	ld	e,#0x01
-	push	de
-	call	_RAMtoVRAM
-	pop	af
-	pop	af
+	ld	a,c
+	push	af
+	inc	sp
+	push	bc
+	inc	sp
+	call	_DrawPoint8
 	pop	af
 	inc	sp
 	pop	de
-;carwar.c:285: RAMtoVRAM(1, i * 13, 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
-	ld	hl,#_car2
-	add	hl,de
-	push	de
+;carwar.c:284: for(y=0; y<=211; y++)
+	inc	de
+	jr	00143$
+00149$:
+;carwar.c:283: for(x=0; x<=255; x++)
+	inc	-7 (ix)
+	jr	NZ,00147$
+	inc	-6 (ix)
+	jr	00147$
+00150$:
+;carwar.c:286: VRAMtoVRAM(  0, 0,   0, 256, 128, 212);
+	ld	hl,#0x00D4
 	push	hl
-	ld	hl,#0x0B0D
+	ld	l, #0x80
 	push	hl
-	ld	a,#0xDF
-	push	af
-	inc	sp
-	ld	d, -13 (ix)
-	ld	e,#0x01
-	push	de
-	call	_RAMtoVRAM
-	pop	af
-	pop	af
-	pop	af
-	inc	sp
-	pop	de
-;carwar.c:286: RAMtoVRAM(1, i * 13, 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
-	ld	hl,#_car3
-	add	hl,de
-	push	de
+	ld	hl,#0x0100
 	push	hl
-	ld	hl,#0x0B0D
+	ld	h, #0x00
 	push	hl
-	ld	a,#0xEA
-	push	af
-	inc	sp
-	ld	d, -13 (ix)
-	ld	e,#0x01
-	push	de
-	call	_RAMtoVRAM
-	pop	af
-	pop	af
-	pop	af
-	inc	sp
-	pop	de
-;carwar.c:287: RAMtoVRAM(1, i * 13, 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
-	ld	hl,#_car4
-	add	hl,de
-	push	de
+	ld	l, #0x00
 	push	hl
-	ld	hl,#0x0B0D
+	ld	l, #0x00
 	push	hl
-	ld	a,#0xF5
-	push	af
-	inc	sp
-	ld	d, -13 (ix)
-	ld	e,#0x01
-	push	de
-	call	_RAMtoVRAM
-	pop	af
-	pop	af
-	pop	af
-	inc	sp
-	pop	de
-;carwar.c:282: for(i=0; i<16; i++)
-	ld	hl,#0x008F
-	add	hl,de
-	ex	de,hl
-	ld	a,-13 (ix)
-	add	a,#0x0D
-	ld	-13 (ix),a
-	inc	-1 (ix)
-	jp	00143$
-00146$:
-;carwar.c:289: ClearSprite();
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:287: VRAMtoVRAM(128, 0, 128, 256, 128, 212);
+	ld	hl,#0x00D4
+	push	hl
+	ld	l, #0x80
+	push	hl
+	ld	hl,#0x0100
+	push	hl
+	ld	hl,#0x0080
+	push	hl
+	ld	l, #0x00
+	push	hl
+	ld	l, #0x80
+	push	hl
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:288: ClearSprite();
 	call	_ClearSprite
-;carwar.c:293: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP");
+;carwar.c:292: PrintSprite(64, 64, "INIT\nCARS");
 	ld	hl,#__str_1
 	push	hl
 	ld	hl,#0x4040
@@ -10272,57 +10254,110 @@ _MainLoop:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:294: for(i=0; i<4; i++)
+;carwar.c:293: for(i=0; i<16; i++)
 	ld	-1 (ix),#0x00
-	ld	b,#0x00
-00147$:
+	ld	de,#0x0000
+	ld	-13 (ix),#0x00
+	ld	-12 (ix),#0x00
+00151$:
 	ld	a,-1 (ix)
-	sub	a,#0x04
-	jp	PO,00204$
+	sub	a,#0x10
+	jp	PO,00218$
 	xor	a,#0x80
-00204$:
-	jp	P,00150$
-;carwar.c:296: InitializePlayer(&ply[i], i, 50 + 50 * i, 100);
-	ld	a,b
-	add	a,#0x32
-	ld	e,a
-	ld	a,-1 (ix)
-	rlca
-	rlca
-	rlca
-	rlca
-	and	a,#0xF0
-	add	a,#<(_ply)
-	ld	d,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
-	ld	c,a
+00218$:
+	jp	P,00154$
+;carwar.c:295: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
+	ld	hl,#_car1
+	add	hl,de
 	push	de
-	ld	a,#0x64
-	push	af
-	inc	sp
-	ld	a,e
-	push	af
-	inc	sp
-	ld	a,-1 (ix)
-	push	af
-	inc	sp
-	ld	l,d
-	ld	h,c
 	push	hl
-	call	_InitializePlayer
-	pop	af
-	pop	af
-	inc	sp
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	hl,#0x01D4
+	push	hl
+	ld	l,-13 (ix)
+	ld	h,-12 (ix)
+	push	hl
+	call	_RAMtoVRAM
+	ld	hl,#0x000A
+	add	hl,sp
+	ld	sp,hl
 	pop	de
-;carwar.c:294: for(i=0; i<4; i++)
-	ld	b,e
+;carwar.c:296: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
+	ld	hl,#_car2
+	add	hl,de
+	push	de
+	push	hl
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	hl,#0x01DF
+	push	hl
+	ld	l,-13 (ix)
+	ld	h,-12 (ix)
+	push	hl
+	call	_RAMtoVRAM
+	ld	hl,#0x000A
+	add	hl,sp
+	ld	sp,hl
+	pop	de
+;carwar.c:297: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
+	ld	hl,#_car3
+	add	hl,de
+	push	de
+	push	hl
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	hl,#0x01EA
+	push	hl
+	ld	l,-13 (ix)
+	ld	h,-12 (ix)
+	push	hl
+	call	_RAMtoVRAM
+	ld	hl,#0x000A
+	add	hl,sp
+	ld	sp,hl
+	pop	de
+;carwar.c:298: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
+	ld	hl,#_car4
+	add	hl,de
+	push	de
+	push	hl
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	hl,#0x01F5
+	push	hl
+	ld	l,-13 (ix)
+	ld	h,-12 (ix)
+	push	hl
+	call	_RAMtoVRAM
+	ld	hl,#0x000A
+	add	hl,sp
+	ld	sp,hl
+	pop	de
+;carwar.c:293: for(i=0; i<16; i++)
+	ld	hl,#0x008F
+	add	hl,de
+	ex	de,hl
+	ld	a,-13 (ix)
+	add	a,#0x0D
+	ld	-13 (ix),a
+	ld	a,-12 (ix)
+	adc	a,#0x00
+	ld	-12 (ix),a
 	inc	-1 (ix)
-	jr	00147$
-00150$:
+	jp	00151$
+00154$:
 ;carwar.c:300: ClearSprite();
 	call	_ClearSprite
-;carwar.c:305: PrintSprite(64, 64, "LETS\nGO!");
+;carwar.c:304: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP");
 	ld	hl,#__str_2
 	push	hl
 	ld	hl,#0x4040
@@ -10330,33 +10365,208 @@ _MainLoop:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:306: while(bEnd == 0)
+;carwar.c:305: for(i=0; i<4; i++)
+	ld	-1 (ix),#0x00
+	ld	b,#0x00
+	ld	-15 (ix),#0x00
+	ld	-14 (ix),#0x00
+00155$:
+	ld	a,-1 (ix)
+	sub	a,#0x04
+	jp	PO,00219$
+	xor	a,#0x80
+00219$:
+	jp	P,00158$
+;carwar.c:307: InitializePlayer(&ply[i], i, 50 + 50 * i, 100);
+	ld	a,b
+	add	a,#0x32
+	ld	-13 (ix),a
+	ld	a,-1 (ix)
+	rlca
+	rlca
+	rlca
+	rlca
+	and	a,#0xF0
+	ld	c, a
+	add	a,#<(_ply)
+	ld	e,a
+	ld	a,#>(_ply)
+	adc	a,#0x00
+	ld	d,a
+	push	bc
+	ld	a,#0x64
+	push	af
+	inc	sp
+	ld	h,-13 (ix)
+	ld	l,-1 (ix)
+	push	hl
+	push	de
+	call	_InitializePlayer
+	pop	af
+	pop	af
+	inc	sp
+	pop	bc
+;carwar.c:308: VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * 0) + ScrPosY(ply[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
+	ld	a,#<(_ply)
+	add	a,c
+	ld	l, a
+	ld	a, #>(_ply)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	inc	hl
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFB
+	ld	-17 (ix),a
+	ld	a,h
+	adc	a,#0xFF
+	ld	-16 (ix),a
+	ld	a,#<(_ply)
+	add	a,c
+	ld	l, a
+	ld	a, #>(_ply)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFA
+	ld	e,a
+	ld	a,h
+	adc	a,#0xFF
+	ld	d,a
+	push	bc
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	l, #0xD4
+	push	hl
+	ld	l,-15 (ix)
+	ld	h,-14 (ix)
+	push	hl
+	ld	l,-17 (ix)
+	ld	h,-16 (ix)
+	push	hl
+	push	de
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+	pop	bc
+;carwar.c:309: VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * 1) + ScrPosY(ply[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+	ld	a,-15 (ix)
+	add	a,#0x34
+	ld	-17 (ix),a
+	ld	a,-14 (ix)
+	adc	a,#0x00
+	ld	-16 (ix),a
+	ld	a,#<(_ply)
+	add	a,c
+	ld	l, a
+	ld	a, #>(_ply)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	inc	hl
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFB
+	ld	-19 (ix),a
+	ld	a,h
+	adc	a,#0x00
+	ld	-18 (ix),a
+	ld	a,#<(_ply)
+	add	a,c
+	ld	c,a
+	ld	a,#>(_ply)
+	adc	a,#0x00
+	ld	e,a
+	inc	c
+	jr	NZ,00220$
+	inc	e
+00220$:
+	ld	l,c
+	ld	h,e
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFA
+	ld	e,a
+	ld	a,h
+	adc	a,#0xFF
+	ld	d,a
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	l, #0xD4
+	push	hl
+	ld	l,-17 (ix)
+	ld	h,-16 (ix)
+	push	hl
+	ld	l,-19 (ix)
+	ld	h,-18 (ix)
+	push	hl
+	push	de
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:305: for(i=0; i<4; i++)
+	ld	b,-13 (ix)
+	ld	a,-15 (ix)
+	add	a,#0x0D
+	ld	-15 (ix),a
+	ld	a,-14 (ix)
+	adc	a,#0x00
+	ld	-14 (ix),a
+	inc	-1 (ix)
+	jp	00155$
+00158$:
+;carwar.c:311: ClearSprite();
+	call	_ClearSprite
+;carwar.c:316: PrintSprite(64, 64, "LETS\nGO!");
+	ld	hl,#__str_3
+	push	hl
+	ld	hl,#0x4040
+	push	hl
+	call	_PrintSprite
+	pop	af
+	pop	af
+;carwar.c:317: while(bEnd == 0)
 00136$:
-;carwar.c:308: SetPage8(page);
+;carwar.c:319: SetPage8(page);
 	ld	a,-2 (ix)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:309: page = 1 - page;
+;carwar.c:320: page = 1 - page;
 	ld	a,#0x01
 	sub	a,-2 (ix)
 	ld	-2 (ix),a
-;carwar.c:313: curPly = &ply[0];
+;carwar.c:324: curPly = &ply[0];
 	ld	-5 (ix),#<(_ply)
 	ld	-4 (ix),#>(_ply)
-;carwar.c:314: keyLine = GetKeyMatrixLine(8);
+;carwar.c:325: keyLine = GetKeyMatrixLine(8);
 	ld	a,#0x08
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:315: if((keyLine & KEY_LEFT) == 0)
+;carwar.c:326: if((keyLine & KEY_LEFT) == 0)
 	ld	-3 (ix), l
 	ld	a, l
 	and	a,#0x10
 	jr	NZ,00102$
-;carwar.c:317: curPly->rot++; 
+;carwar.c:328: curPly->rot++; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	e,a
@@ -10375,7 +10585,7 @@ _MainLoop:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:318: curPly->rot &= 0x0F;
+;carwar.c:329: curPly->rot &= 0x0F;
 	ld	a,c
 	and	a,#0x0F
 	ld	c,a
@@ -10385,11 +10595,11 @@ _MainLoop:
 	inc	hl
 	ld	(hl),b
 00102$:
-;carwar.c:320: if((keyLine & KEY_RIGHT) == 0)
+;carwar.c:331: if((keyLine & KEY_RIGHT) == 0)
 	ld	a,-3 (ix)
 	and	a,#0x80
 	jr	NZ,00104$
-;carwar.c:322: curPly->rot--; 
+;carwar.c:333: curPly->rot--; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10408,7 +10618,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:323: curPly->rot &= 0x0F;
+;carwar.c:334: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10419,17 +10629,17 @@ _MainLoop:
 	inc	hl
 	ld	(hl),d
 00104$:
-;carwar.c:325: if((keyLine & KEY_UP) == 0)
+;carwar.c:336: if((keyLine & KEY_UP) == 0)
 	ld	a,-3 (ix)
 	and	a,#0x20
 	jr	NZ,00106$
-;carwar.c:327: curPly->dX = g_Cosinus[curPly->rot];
+;carwar.c:338: curPly->dX = g_Cosinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0B
-	ld	-13 (ix),a
+	ld	-19 (ix),a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	-12 (ix),a
+	ld	-18 (ix),a
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	l, a
@@ -10447,12 +10657,12 @@ _MainLoop:
 	ld	c,(hl)
 	inc	hl
 	ld	b,(hl)
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-19 (ix)
+	ld	h,-18 (ix)
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:328: curPly->dY = g_Sinus[curPly->rot];
+;carwar.c:339: curPly->dY = g_Sinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0D
 	ld	c,a
@@ -10469,7 +10679,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:329: curPly->speed += 2;
+;carwar.c:340: curPly->speed += 2;
 	ld	a,-5 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -10480,22 +10690,22 @@ _MainLoop:
 	add	a,#0x02
 	ld	(bc),a
 00106$:
-;carwar.c:334: curPly = &ply[1];
+;carwar.c:345: curPly = &ply[1];
 	ld	hl,#_ply + 16
 	ld	-5 (ix),l
 	ld	-4 (ix),h
-;carwar.c:335: keyLine = GetKeyMatrixLine(5);
+;carwar.c:346: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:336: if((keyLine & KEY_Z) == 0)
+;carwar.c:347: if((keyLine & KEY_Z) == 0)
 	ld	-3 (ix), l
 	ld	a, l
 	and	a,#0x80
 	jr	NZ,00108$
-;carwar.c:338: curPly->rot++; 
+;carwar.c:349: curPly->rot++; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10514,7 +10724,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:339: curPly->rot &= 0x0F;
+;carwar.c:350: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10525,18 +10735,18 @@ _MainLoop:
 	inc	hl
 	ld	(hl),d
 00108$:
-;carwar.c:341: keyLine = GetKeyMatrixLine(3);
+;carwar.c:352: keyLine = GetKeyMatrixLine(3);
 	ld	a,#0x03
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:342: if((keyLine & KEY_C) == 0)
+;carwar.c:353: if((keyLine & KEY_C) == 0)
 	ld	-3 (ix), l
 	ld	a, l
 	and	a,#0x01
 	jr	NZ,00110$
-;carwar.c:344: curPly->rot--; 
+;carwar.c:355: curPly->rot--; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10555,7 +10765,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:345: curPly->rot &= 0x0F;
+;carwar.c:356: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10566,24 +10776,24 @@ _MainLoop:
 	inc	hl
 	ld	(hl),d
 00110$:
-;carwar.c:347: keyLine = GetKeyMatrixLine(5);
+;carwar.c:358: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:348: if((keyLine & KEY_X) == 0)
+;carwar.c:359: if((keyLine & KEY_X) == 0)
 	ld	-3 (ix), l
 	ld	a, l
 	and	a,#0x20
 	jr	NZ,00112$
-;carwar.c:350: curPly->dX = g_Cosinus[curPly->rot];
+;carwar.c:361: curPly->dX = g_Cosinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0B
-	ld	-13 (ix),a
+	ld	-19 (ix),a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	-12 (ix),a
+	ld	-18 (ix),a
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	l, a
@@ -10601,12 +10811,12 @@ _MainLoop:
 	ld	c,(hl)
 	inc	hl
 	ld	b,(hl)
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-19 (ix)
+	ld	h,-18 (ix)
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:351: curPly->dY = g_Sinus[curPly->rot];
+;carwar.c:362: curPly->dY = g_Sinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0D
 	ld	c,a
@@ -10623,7 +10833,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:352: curPly->speed += 2;
+;carwar.c:363: curPly->speed += 2;
 	ld	a,-5 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -10634,11 +10844,11 @@ _MainLoop:
 	add	a,#0x02
 	ld	(bc),a
 00112$:
-;carwar.c:357: curPly = &ply[2];
+;carwar.c:368: curPly = &ply[2];
 	ld	hl,#_ply + 32
 	ld	-5 (ix),l
 	ld	-4 (ix),h
-;carwar.c:358: switch (Joystick(1)) // Joy 1 direction
+;carwar.c:369: switch (Joystick(1)) // Joy 1 direction
 	ld	a,#0x01
 	push	af
 	inc	sp
@@ -10646,15 +10856,15 @@ _MainLoop:
 	inc	sp
 	ld	a,l
 	sub	a,#0x02
-	jp	PO,00221$
+	jp	PO,00237$
 	xor	a,#0x80
-00221$:
+00237$:
 	jp	M,00119$
 	ld	a,#0x08
 	sub	a,l
-	jp	PO,00222$
+	jp	PO,00238$
 	xor	a,#0x80
-00222$:
+00238$:
 	jp	M,00119$
 	ld	a,l
 	add	a,#0xFE
@@ -10662,13 +10872,13 @@ _MainLoop:
 	push	de
 	ld	e,c
 	ld	d,#0x00
-	ld	hl,#00223$
+	ld	hl,#00239$
 	add	hl,de
 	add	hl,de
-;carwar.c:360: case 2: // up-right
+;carwar.c:371: case 2: // up-right
 	pop	de
 	jp	(hl)
-00223$:
+00239$:
 	jr	00113$
 	jr	00114$
 	jr	00115$
@@ -10677,11 +10887,11 @@ _MainLoop:
 	jr	00117$
 	jr	00118$
 00113$:
-;carwar.c:361: case 3: // right
+;carwar.c:372: case 3: // right
 00114$:
-;carwar.c:362: case 4: // down-right
+;carwar.c:373: case 4: // down-right
 00115$:
-;carwar.c:363: curPly->rot--; 
+;carwar.c:374: curPly->rot--; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10700,7 +10910,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:364: curPly->rot &= 0x0F;
+;carwar.c:375: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10710,15 +10920,15 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:365: break;
+;carwar.c:376: break;
 	jr	00119$
-;carwar.c:366: case 6: // down-left
+;carwar.c:377: case 6: // down-left
 00116$:
-;carwar.c:367: case 7: // left
+;carwar.c:378: case 7: // left
 00117$:
-;carwar.c:368: case 8:// up-left
+;carwar.c:379: case 8:// up-left
 00118$:
-;carwar.c:369: curPly->rot++; 
+;carwar.c:380: curPly->rot++; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10737,7 +10947,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:370: curPly->rot &= 0x0F;
+;carwar.c:381: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10747,9 +10957,9 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:372: }
+;carwar.c:383: }
 00119$:
-;carwar.c:373: if(Joytrig(1) != 0) // Joy 1 Button A
+;carwar.c:384: if(Joytrig(1) != 0) // Joy 1 Button A
 	ld	a,#0x01
 	push	af
 	inc	sp
@@ -10758,13 +10968,13 @@ _MainLoop:
 	xor	a,a
 	or	a,l
 	jr	Z,00121$
-;carwar.c:375: curPly->dX = g_Cosinus[curPly->rot];
+;carwar.c:386: curPly->dX = g_Cosinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0B
-	ld	-13 (ix),a
+	ld	-19 (ix),a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	-12 (ix),a
+	ld	-18 (ix),a
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	l, a
@@ -10782,12 +10992,12 @@ _MainLoop:
 	ld	c,(hl)
 	inc	hl
 	ld	b,(hl)
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-19 (ix)
+	ld	h,-18 (ix)
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:376: curPly->dY = g_Sinus[curPly->rot];
+;carwar.c:387: curPly->dY = g_Sinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0D
 	ld	c,a
@@ -10804,7 +11014,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:377: curPly->speed += 2;
+;carwar.c:388: curPly->speed += 2;
 	ld	a,-5 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -10815,11 +11025,11 @@ _MainLoop:
 	add	a,#0x02
 	ld	(bc),a
 00121$:
-;carwar.c:382: curPly = &ply[3];
+;carwar.c:393: curPly = &ply[3];
 	ld	hl,#_ply + 48
 	ld	-5 (ix),l
 	ld	-4 (ix),h
-;carwar.c:383: switch (Joystick(2)) // Joy 2 direction
+;carwar.c:394: switch (Joystick(2)) // Joy 2 direction
 	ld	a,#0x02
 	push	af
 	inc	sp
@@ -10827,15 +11037,15 @@ _MainLoop:
 	inc	sp
 	ld	a,l
 	sub	a,#0x02
-	jp	PO,00226$
+	jp	PO,00242$
 	xor	a,#0x80
-00226$:
+00242$:
 	jp	M,00128$
 	ld	a,#0x08
 	sub	a,l
-	jp	PO,00227$
+	jp	PO,00243$
 	xor	a,#0x80
-00227$:
+00243$:
 	jp	M,00128$
 	ld	a,l
 	add	a,#0xFE
@@ -10843,13 +11053,13 @@ _MainLoop:
 	push	de
 	ld	e,c
 	ld	d,#0x00
-	ld	hl,#00228$
+	ld	hl,#00244$
 	add	hl,de
 	add	hl,de
-;carwar.c:385: case 2: // up-right
+;carwar.c:396: case 2: // up-right
 	pop	de
 	jp	(hl)
-00228$:
+00244$:
 	jr	00122$
 	jr	00123$
 	jr	00124$
@@ -10858,11 +11068,11 @@ _MainLoop:
 	jr	00126$
 	jr	00127$
 00122$:
-;carwar.c:386: case 3: // right
+;carwar.c:397: case 3: // right
 00123$:
-;carwar.c:387: case 4: // down-right
+;carwar.c:398: case 4: // down-right
 00124$:
-;carwar.c:388: curPly->rot--; 
+;carwar.c:399: curPly->rot--; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10881,7 +11091,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:389: curPly->rot &= 0x0F;
+;carwar.c:400: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10891,15 +11101,15 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:390: break;
+;carwar.c:401: break;
 	jr	00128$
-;carwar.c:391: case 6: // down-left
+;carwar.c:402: case 6: // down-left
 00125$:
-;carwar.c:392: case 7: // left
+;carwar.c:403: case 7: // left
 00126$:
-;carwar.c:393: case 8:// up-left
+;carwar.c:404: case 8:// up-left
 00127$:
-;carwar.c:394: curPly->rot++; 
+;carwar.c:405: curPly->rot++; 
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -10918,7 +11128,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:395: curPly->rot &= 0x0F;
+;carwar.c:406: curPly->rot &= 0x0F;
 	ld	a,e
 	and	a,#0x0F
 	ld	e,a
@@ -10928,9 +11138,9 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:397: }
+;carwar.c:408: }
 00128$:
-;carwar.c:398: if(Joytrig(2) != 0) // Joy 2 Button A
+;carwar.c:409: if(Joytrig(2) != 0) // Joy 2 Button A
 	ld	a,#0x02
 	push	af
 	inc	sp
@@ -10938,14 +11148,14 @@ _MainLoop:
 	inc	sp
 	xor	a,a
 	or	a,l
-	jr	Z,00185$
-;carwar.c:400: curPly->dX = g_Cosinus[curPly->rot];
+	jr	Z,00197$
+;carwar.c:411: curPly->dX = g_Cosinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0B
-	ld	-13 (ix),a
+	ld	-19 (ix),a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	-12 (ix),a
+	ld	-18 (ix),a
 	ld	a,-5 (ix)
 	add	a,#0x09
 	ld	l, a
@@ -10963,12 +11173,12 @@ _MainLoop:
 	ld	c,(hl)
 	inc	hl
 	ld	b,(hl)
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-19 (ix)
+	ld	h,-18 (ix)
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:401: curPly->dY = g_Sinus[curPly->rot];
+;carwar.c:412: curPly->dY = g_Sinus[curPly->rot];
 	ld	a,-5 (ix)
 	add	a,#0x0D
 	ld	c,a
@@ -10985,7 +11195,7 @@ _MainLoop:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:402: curPly->speed += 2;
+;carwar.c:413: curPly->speed += 2;
 	ld	a,-5 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -10995,25 +11205,60 @@ _MainLoop:
 	ld	a,(bc)
 	add	a,#0x02
 	ld	(bc),a
-;carwar.c:407: for(i=0; i<4; i++)
-00185$:
+;carwar.c:418: for(i=0; i<4; i++)
+00197$:
+	ld	e,-2 (ix)
+	ld	d,#0x00
+	ld	l,e
+	ld	h,d
+	add	hl,hl
+	add	hl,de
+	add	hl,hl
+	add	hl,hl
+	add	hl,de
+	add	hl,hl
+	add	hl,hl
+	ld	-13 (ix),l
+	ld	-12 (ix),h
 	ld	-1 (ix),#0x00
-00151$:
+	ld	-19 (ix),#0x00
+	ld	-18 (ix),#0x00
+00159$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	PO,00231$
+	jp	PO,00247$
 	xor	a,#0x80
-00231$:
-	jp	P,00154$
-;carwar.c:410: buffer36.DX = ScrPosX(ply[i].prevX);
+00247$:
+	jp	P,00162$
+;carwar.c:420: VRAMtoVRAM((13 * i) + (52 * page), 212, ScrPosX(ply[i].prevX), (256 * page) + ScrPosY(ply[i].prevY), 13, 11);
+	ld	b, -2 (ix)
+	ld	c,#0x00
 	ld	a,-1 (ix)
 	rlca
 	rlca
 	rlca
 	rlca
 	and	a,#0xF0
-	ld	b, a
+	ld	-15 (ix),a
 	add	a,#<(_ply)
+	ld	e,a
+	ld	a,#>(_ply)
+	adc	a,#0x00
+	ld	d,a
+	ld	hl,#0x0007+1
+	add	hl,de
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFB
+	ld	l,a
+	ld	a,h
+	adc	a,#0xFF
+	ld	h,a
+	add	hl,bc
+	ld	c,l
+	ld	b,h
+	ld	a,#<(_ply)
+	add	a,-15 (ix)
 	ld	l, a
 	ld	a, #>(_ply)
 	adc	a, #0x00
@@ -11024,82 +11269,56 @@ _MainLoop:
 	inc	hl
 	inc	hl
 	inc	hl
-	ld	l, (hl)
-	ld	a,l
-	rlc	a
-	sbc	a,a
-	ld	h,a
-	ld	de, #0xFFFA
-	add	hl, de
-	ex	de,hl
-	ld	hl,#_buffer36
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:411: buffer36.DY = (256 * page) + ScrPosY(ply[i].prevY);
-	ld	d, -2 (ix)
-	ld	e,#0x00
-	ld	a,#<(_ply)
-	add	a,b
-	ld	c,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
-	ld	b,a
-	ld	hl,#0x0007+1
-	add	hl,bc
-	ld	l, (hl)
-	ld	a,l
-	rlc	a
-	sbc	a,a
-	ld	h,a
-	ld	bc, #0xFFFB
-	add	hl, bc
-	add	hl,de
-	ld	c,l
-	ld	b,h
-	ld	hl,#0x0002 + _buffer36
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:412: buffer36.NX = 13;
-	inc	hl
-	ld	(hl),#0x0D
-	inc	hl
-	ld	(hl),#0x00
-;carwar.c:413: buffer36.NY = 11;
-	inc	hl
-	ld	(hl),#0x0B
-	inc	hl
-	ld	(hl),#0x00
-;carwar.c:414: buffer36.CLR = 0x92;
-	inc	hl
-	ld	(hl),#0x92
-;carwar.c:415: buffer36.ARG = 0;
-	inc	hl
-	ld	(hl),#0x00
-;carwar.c:416: buffer36.CMD = 0xC0;
-	inc	hl
-	ld	(hl),#0xC0
-;carwar.c:417: VPDCommand36((u16)&buffer36);			
-	ld	l,#<(_buffer36)
-	ld	h,#>(_buffer36)
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFA
+	ld	-15 (ix),a
+	ld	a,h
+	adc	a,#0xFF
+	ld	-14 (ix),a
+	ld	a,-19 (ix)
+	add	a,-13 (ix)
+	ld	e,a
+	ld	a,-18 (ix)
+	adc	a,-12 (ix)
+	ld	d,a
+	ld	hl,#0x000B
 	push	hl
-	call	_VPDCommand36
-	pop	af
-;carwar.c:407: for(i=0; i<4; i++)
+	ld	l, #0x0D
+	push	hl
+	push	bc
+	ld	l,-15 (ix)
+	ld	h,-14 (ix)
+	push	hl
+	ld	hl,#0x00D4
+	push	hl
+	push	de
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:418: for(i=0; i<4; i++)
+	ld	a,-19 (ix)
+	add	a,#0x0D
+	ld	-19 (ix),a
+	ld	a,-18 (ix)
+	adc	a,#0x00
+	ld	-18 (ix),a
 	inc	-1 (ix)
-	jr	00151$
-00154$:
-;carwar.c:423: for(i=0; i<4; i++)
+	jp	00159$
+00162$:
+;carwar.c:425: for(i=0; i<4; i++)
 	ld	-1 (ix),#0x00
-00155$:
+	ld	-19 (ix),#0x00
+	ld	-18 (ix),#0x00
+00163$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	PO,00232$
+	jp	PO,00248$
 	xor	a,#0x80
-00232$:
-	jp	P,00158$
-;carwar.c:425: curPly = &ply[i];
+00248$:
+	jp	P,00166$
+;carwar.c:427: curPly = &ply[i];
 	ld	a,-1 (ix)
 	rlca
 	rlca
@@ -11112,7 +11331,7 @@ _MainLoop:
 	adc	a,#0x00
 	ld	-5 (ix), e
 	ld	-4 (ix), a
-;carwar.c:427: curPly->speed--;
+;carwar.c:429: curPly->speed--;
 	ld	a,-5 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -11121,87 +11340,88 @@ _MainLoop:
 	ld	d,a
 	ld	a,(de)
 	dec	a
-	ld	b,a
+;carwar.c:430: if(curPly->speed < 0)
 	ld	(de),a
-;carwar.c:428: if(curPly->speed < 0)
-	bit	7,b
+	bit	7,a
 	jr	Z,00134$
-;carwar.c:429: curPly->speed = 0;
+;carwar.c:431: curPly->speed = 0;
 	ld	a,#0x00
 	ld	(de),a
 	jr	00135$
 00134$:
-;carwar.c:430: else if(curPly->speed > 7)
+;carwar.c:432: else if(curPly->speed > 7)
 	ld	a,(de)
 	ld	l,a
 	ld	a,#0x07
 	sub	a,l
-	jp	PO,00233$
+	jp	PO,00249$
 	xor	a,#0x80
-00233$:
+00249$:
 	jp	P,00135$
-;carwar.c:431: curPly->speed = 7;
+;carwar.c:433: curPly->speed = 7;
 	ld	a,#0x07
 	ld	(de),a
 00135$:
-;carwar.c:433: curPly->prevX = curPly->posX;
+;carwar.c:435: curPly->prevX = curPly->posX;
 	ld	a,-5 (ix)
 	add	a,#0x05
-	ld	e,a
+	ld	c,a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	d,a
-	ld	c,-5 (ix)
-	ld	b,-4 (ix)
-	inc	bc
-	ld	l,c
-	ld	h,b
+	ld	b,a
+	ld	e,-5 (ix)
+	ld	d,-4 (ix)
+	inc	de
+	ld	l,e
+	ld	h,d
 	ld	a,(hl)
 	ld	-15 (ix),a
 	inc	hl
 	ld	a,(hl)
 	ld	-14 (ix),a
-	ex	de,hl
+	ld	l,c
+	ld	h,b
 	ld	a,-15 (ix)
 	ld	(hl),a
 	inc	hl
 	ld	a,-14 (ix)
 	ld	(hl),a
-;carwar.c:434: curPly->prevY = curPly->posY;
+;carwar.c:436: curPly->prevY = curPly->posY;
 	ld	a,-5 (ix)
 	add	a,#0x07
-	ld	e,a
+	ld	c,a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	d,a
+	ld	b,a
 	ld	a,-5 (ix)
 	add	a,#0x03
-	ld	-17 (ix),a
+	ld	-21 (ix),a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	-16 (ix),a
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
+	ld	-20 (ix),a
+	ld	l,-21 (ix)
+	ld	h,-20 (ix)
 	ld	a,(hl)
-	ld	-19 (ix),a
+	ld	-23 (ix),a
 	inc	hl
 	ld	a,(hl)
-	ld	-18 (ix),a
-	ex	de,hl
-	ld	a,-19 (ix)
+	ld	-22 (ix),a
+	ld	l,c
+	ld	h,b
+	ld	a,-23 (ix)
 	ld	(hl),a
 	inc	hl
-	ld	a,-18 (ix)
+	ld	a,-22 (ix)
 	ld	(hl),a
-;carwar.c:435: curPly->posX += curPly->speed * curPly->dX;
+;carwar.c:437: curPly->posX += curPly->speed * curPly->dX;
 	ld	a,-5 (ix)
 	add	a,#0x0F
-	ld	e,a
+	ld	c,a
 	ld	a,-4 (ix)
 	adc	a,#0x00
-	ld	d,a
-	ld	a,(de)
-	ld	-13 (ix),a
+	ld	b,a
+	ld	a,(bc)
+	ld	-17 (ix),a
 	ld	a,-5 (ix)
 	add	a,#0x0B
 	ld	l, a
@@ -11212,33 +11432,33 @@ _MainLoop:
 	inc	hl
 	ld	h,(hl)
 	ld	l,a
-	ld	a,-13 (ix)
-	ld	-13 (ix), a
+	ld	a,-17 (ix)
+	ld	-17 (ix), a
 	rla	
 	sbc	a,a
-	ld	-12 (ix),a
-	push	bc
+	ld	-16 (ix),a
+	push	de
 	push	hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-17 (ix)
+	ld	h,-16 (ix)
 	push	hl
 	call	__mulint_rrx_s
 	pop	af
 	pop	af
-	ex	de,hl
-	pop	bc
+	ld	b,h
+	ld	c,l
+	pop	de
 	ld	a,-15 (ix)
-	add	a,e
-	ld	e,a
+	add	a,c
+	ld	c,a
 	ld	a,-14 (ix)
-	adc	a,d
-	ld	d,a
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
+	adc	a,b
+	ld	b,a
+	ex	de,hl
+	ld	(hl),c
 	inc	hl
-	ld	(hl),d
-;carwar.c:436: curPly->posY -= curPly->speed * curPly->dY;
+	ld	(hl),b
+;carwar.c:438: curPly->posY -= curPly->speed * curPly->dY;
 	ld	a,-5 (ix)
 	add	a,#0x0D
 	ld	l, a
@@ -11250,40 +11470,35 @@ _MainLoop:
 	ld	h,(hl)
 	ld	l,a
 	push	hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-17 (ix)
+	ld	h,-16 (ix)
 	push	hl
 	call	__mulint_rrx_s
 	pop	af
 	pop	af
 	ld	b,h
 	ld	c,l
-	ld	a,-19 (ix)
+	ld	a,-23 (ix)
 	sub	a,c
 	ld	c,a
-	ld	a,-18 (ix)
+	ld	a,-22 (ix)
 	sbc	a,b
 	ld	b,a
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
+	ld	l,-21 (ix)
+	ld	h,-20 (ix)
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:423: for(i=0; i<4; i++)
-	inc	-1 (ix)
-	jp	00155$
-00158$:
-;carwar.c:444: for(i=0; i<4; i++)
-	ld	-1 (ix),#0x00
-	ld	b,#0x00
-00159$:
-	ld	a,-1 (ix)
-	sub	a,#0x04
-	jp	PO,00234$
-	xor	a,#0x80
-00234$:
-	jp	P,00162$
-;carwar.c:446: VRAMtoVRAMTrans(1, 13 * ply[i].rot, 212 + (11 * i), page, ScrPosX(ply[i].posX), ScrPosY(ply[i].posY), 13, 11);
+;carwar.c:441: VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * page) + ScrPosY(ply[i].posY), (13 * i) + (52 * page), 212, 13, 11);
+	ld	a,-19 (ix)
+	add	a,-13 (ix)
+	ld	-21 (ix),a
+	ld	a,-18 (ix)
+	adc	a,-12 (ix)
+	ld	-20 (ix),a
+	ld	l,-2 (ix)
+	ld	-22 (ix),l
+	ld	-23 (ix),#0x00
 	ld	a,-1 (ix)
 	rlca
 	rlca
@@ -11304,101 +11519,217 @@ _MainLoop:
 	ld	h, a
 	ld	l, d
 	inc	hl
-	ld	l, (hl)
-	ld	a,l
-	rlc	a
-	sbc	a,a
-	ld	a,l
+	ld	a, (hl)
+	ld	h, #0x00
 	add	a,#0xFB
-	ld	-19 (ix),a
-	ld	a,#<(_ply)
-	add	a,e
-	ld	d,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
+	ld	l,a
+	ld	a,h
+	adc	a,#0xFF
+	ld	h,a
+	ld	a,-23 (ix)
+	add	a,l
 	ld	c,a
-	inc	d
-	jr	NZ,00235$
-	inc	c
-00235$:
-	ld	l,d
-	ld	h,c
-	inc	hl
-	ld	l, (hl)
-	ld	a,l
-	rlc	a
-	sbc	a,a
-	ld	a,l
-	add	a,#0xFA
-	ld	c,a
-	ld	a,b
-	add	a,#0xD4
-	ld	-17 (ix),a
-	ld	a,#<(_ply)
-	add	a,e
-	ld	e,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
-	ld	d,a
-	ld	hl,#0x0009
-	add	hl,de
-	ld	a,(hl)
-	inc	hl
-	ld	e,a
-	add	a,a
-	add	a,e
-	add	a,a
-	add	a,a
-	add	a,e
-	ld	e,a
-	push	bc
-	ld	hl,#0x0B0D
-	push	hl
-	ld	b, -19 (ix)
-	push	bc
-	ld	a,-2 (ix)
-	push	af
-	inc	sp
-	ld	d, -17 (ix)
-	push	de
-	ld	a,#0x01
-	push	af
-	inc	sp
-	call	_VRAMtoVRAMTrans
-	pop	af
-	pop	af
-	pop	af
-	pop	af
-	pop	bc
-;carwar.c:444: for(i=0; i<4; i++)
-	ld	a,b
-	add	a,#0x0B
+	ld	a,-22 (ix)
+	adc	a,h
 	ld	b,a
+	ld	a,#<(_ply)
+	add	a,e
+	ld	l, a
+	ld	a, #>(_ply)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFA
+	ld	e,a
+	ld	a,h
+	adc	a,#0xFF
+	ld	d,a
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	l, #0xD4
+	push	hl
+	ld	l,-21 (ix)
+	ld	h,-20 (ix)
+	push	hl
+	push	bc
+	push	de
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:425: for(i=0; i<4; i++)
+	ld	a,-19 (ix)
+	add	a,#0x0D
+	ld	-19 (ix),a
+	ld	a,-18 (ix)
+	adc	a,#0x00
+	ld	-18 (ix),a
 	inc	-1 (ix)
-	jp	00159$
-00162$:
-;carwar.c:449: waitRetrace();
+	jp	00163$
+00166$:
+;carwar.c:446: for(i=0; i<4; i++)
+	ld	-1 (ix),#0x00
+	ld	-21 (ix),#0x00
+	ld	-20 (ix),#0x00
+00167$:
+	ld	a,-1 (ix)
+	sub	a,#0x04
+	jp	PO,00250$
+	xor	a,#0x80
+00250$:
+	jp	P,00170$
+;carwar.c:448: VRAMtoVRAMTrans(13 * ply[i].rot, 256 + 212 + (11 * i), ScrPosX(ply[i].posX), (256 * page) + ScrPosY(ply[i].posY), 13, 11);
+	ld	l,-2 (ix)
+	ld	-22 (ix),l
+	ld	-23 (ix),#0x00
+	ld	a,-1 (ix)
+	rlca
+	rlca
+	rlca
+	rlca
+	and	a,#0xF0
+	ld	c, a
+	add	a,#<(_ply)
+	ld	b,a
+	ld	a,#>(_ply)
+	adc	a,#0x00
+	ld	e,a
+	ld	a,b
+	add	a,#0x03
+	ld	b,a
+	ld	a,e
+	adc	a,#0x00
+	ld	h, a
+	ld	l, b
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFB
+	ld	l,a
+	ld	a,h
+	adc	a,#0xFF
+	ld	h,a
+	ld	a,-23 (ix)
+	add	a,l
+	ld	-23 (ix),a
+	ld	a,-22 (ix)
+	adc	a,h
+	ld	-22 (ix),a
+	ld	a,#<(_ply)
+	add	a,c
+	ld	b,a
+	ld	a,#>(_ply)
+	adc	a,#0x00
+	ld	e,a
+	inc	b
+	jr	NZ,00251$
+	inc	e
+00251$:
+	ld	l,b
+	ld	h,e
+	inc	hl
+	ld	a, (hl)
+	ld	h, #0x00
+	add	a,#0xFA
+	ld	-19 (ix),a
+	ld	a,h
+	adc	a,#0xFF
+	ld	-18 (ix),a
+	ld	a,-21 (ix)
+	add	a,#0xD4
+	ld	b,a
+	ld	a,-20 (ix)
+	adc	a,#0x01
+	ld	e,a
+	ld	a,#<(_ply)
+	add	a,c
+	ld	c,a
+	ld	a,#>(_ply)
+	adc	a,#0x00
+	ld	d,a
+	ld	a,c
+	add	a,#0x09
+	ld	c,a
+	ld	a,d
+	adc	a,#0x00
+	ld	h, a
+	ld	l, c
+	ld	c,(hl)
+	inc	hl
+	ld	d,(hl)
+	push	de
+	ld	e,c
+	ld	l,e
+	ld	h,d
+	add	hl,hl
+	add	hl,de
+	add	hl,hl
+	add	hl,hl
+	add	hl,de
+	pop	de
+	ld	c,l
+	ld	d,h
+	ld	hl,#0x000B
+	push	hl
+	ld	l, #0x0D
+	push	hl
+	ld	l,-23 (ix)
+	ld	h,-22 (ix)
+	push	hl
+	ld	l,-19 (ix)
+	ld	h,-18 (ix)
+	push	hl
+	ld	l,b
+	ld	h,e
+	push	hl
+	ld	e,c
+	push	de
+	call	_VRAMtoVRAMTrans
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:446: for(i=0; i<4; i++)
+	ld	a,-21 (ix)
+	add	a,#0x0B
+	ld	-21 (ix),a
+	ld	a,-20 (ix)
+	adc	a,#0x00
+	ld	-20 (ix),a
+	inc	-1 (ix)
+	jp	00167$
+00170$:
+;carwar.c:451: waitRetrace();
 	call	_waitRetrace
 	jp	00136$
 _MainLoop_end::
 __str_0:
 	.ascii "INIT"
 	.db 0x0A
-	.ascii "CARS"
+	.ascii "TRACK"
 	.db 0x00
 __str_1:
+	.ascii "INIT"
+	.db 0x0A
+	.ascii "CARS"
+	.db 0x00
+__str_2:
 	.ascii "INIT"
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x0A
 	.ascii "BACKUP"
 	.db 0x00
-__str_2:
+__str_3:
 	.ascii "LETS"
 	.db 0x0A
 	.ascii "GO!"
 	.db 0x00
-;carwar.c:458: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
+;carwar.c:460: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 ;	---------------------------------
 ; Function InitializePlayer
 ; ---------------------------------
@@ -11409,12 +11740,12 @@ _InitializePlayer:
 	add	ix,sp
 	push	af
 	push	af
-;carwar.c:460: ply->car = car; // car index
+;carwar.c:462: ply->car = car; // car index
 	ld	c,4 (ix)
 	ld	b,5 (ix)
 	ld	a,6 (ix)
 	ld	(bc),a
-;carwar.c:461: ply->posX = posX << 8; // position X
+;carwar.c:463: ply->posX = posX << 8; // position X
 	ld	e,c
 	ld	d,b
 	inc	de
@@ -11428,7 +11759,7 @@ _InitializePlayer:
 	inc	hl
 	ld	a,-1 (ix)
 	ld	(hl),a
-;carwar.c:462: ply->posY = posY << 8; // position Y
+;carwar.c:464: ply->posY = posY << 8; // position Y
 	ld	hl,#0x0003
 	add	hl,bc
 	ex	de,hl
@@ -11441,7 +11772,7 @@ _InitializePlayer:
 	inc	hl
 	ld	a,-3 (ix)
 	ld	(hl),a
-;carwar.c:463: ply->prevX = posX << 8; // previous position X
+;carwar.c:465: ply->prevX = posX << 8; // previous position X
 	ld	hl,#0x0005
 	add	hl,bc
 	ld	a,-2 (ix)
@@ -11449,7 +11780,7 @@ _InitializePlayer:
 	inc	hl
 	ld	a,-1 (ix)
 	ld	(hl),a
-;carwar.c:464: ply->prevY = posY << 8; // previous position Y
+;carwar.c:466: ply->prevY = posY << 8; // previous position Y
 	ld	hl,#0x0007
 	add	hl,bc
 	ld	a,-4 (ix)
@@ -11457,25 +11788,25 @@ _InitializePlayer:
 	inc	hl
 	ld	a,-3 (ix)
 	ld	(hl),a
-;carwar.c:465: ply->rot = 0; // rotation
+;carwar.c:467: ply->rot = 0; // rotation
 	ld	hl,#0x0009
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:466: ply->dX = 0; // velocity X
+;carwar.c:468: ply->dX = 0; // velocity X
 	ld	hl,#0x000B
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:467: ply->dY = 0; // velocity Y
+;carwar.c:469: ply->dY = 0; // velocity Y
 	ld	hl,#0x000D
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:468: ply->speed = 0;
+;carwar.c:470: ply->speed = 0;
 	ld	hl,#0x000F
 	add	hl,bc
 	ld	(hl),#0x00
@@ -11483,7 +11814,7 @@ _InitializePlayer:
 	pop	ix
 	ret
 _InitializePlayer_end::
-;carwar.c:474: void SetScreen8(u8 lines)
+;carwar.c:476: void SetScreen8(u8 lines)
 ;	---------------------------------
 ; Function SetScreen8
 ; ---------------------------------
@@ -11492,7 +11823,7 @@ _SetScreen8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:525: __endasm;
+;carwar.c:527: __endasm;
 	
 	
 	
@@ -11544,7 +11875,7 @@ _SetScreen8:
 	pop	ix
 	ret
 _SetScreen8_end::
-;carwar.c:530: void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
+;carwar.c:532: void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 ;	---------------------------------
 ; Function SetSpriteMode
 ; ---------------------------------
@@ -11553,7 +11884,7 @@ _SetSpriteMode:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:585: __endasm;
+;carwar.c:587: __endasm;
 	
 	
 	
@@ -11609,7 +11940,7 @@ _SetSpriteMode:
 	pop	ix
 	ret
 _SetSpriteMode_end::
-;carwar.c:590: void SetFreq(u8 freq)
+;carwar.c:592: void SetFreq(u8 freq)
 ;	---------------------------------
 ; Function SetFreq
 ; ---------------------------------
@@ -11618,9 +11949,9 @@ _SetFreq:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:594: WaitForVDP();
+;carwar.c:596: WaitForVDP();
 	call	_WaitForVDP
-;carwar.c:610: __endasm;
+;carwar.c:612: __endasm;
 	
 	
 	
@@ -11639,7 +11970,7 @@ _SetFreq:
 	pop	ix
 	ret
 _SetFreq_end::
-;carwar.c:614: void SetPage8(i8 page)
+;carwar.c:616: void SetPage8(u8 page)
 ;	---------------------------------
 ; Function SetPage8
 ; ---------------------------------
@@ -11648,7 +11979,7 @@ _SetPage8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:631: __endasm;
+;carwar.c:633: __endasm;
 	
 	
 		 ld a,4(ix)
@@ -11666,7 +11997,7 @@ _SetPage8:
 	pop	ix
 	ret
 _SetPage8_end::
-;carwar.c:637: void DrawPoint8(char posX, char posY, char color)
+;carwar.c:639: void DrawPoint8(char posX, char posY, char color)
 ;	---------------------------------
 ; Function DrawPoint8
 ; ---------------------------------
@@ -11675,9 +12006,9 @@ _DrawPoint8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:641: WaitForVDP();
+;carwar.c:643: WaitForVDP();
 	call	_WaitForVDP
-;carwar.c:688: __endasm;
+;carwar.c:690: __endasm;
 	
 	
 	
@@ -11727,7 +12058,7 @@ _DrawPoint8:
 	pop	ix
 	ret
 _DrawPoint8_end::
-;carwar.c:694: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
+;carwar.c:696: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 ;	---------------------------------
 ; Function DrawLine8
 ; ---------------------------------
@@ -11736,18 +12067,18 @@ _DrawLine8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:698: WaitForVDP();
+;carwar.c:700: WaitForVDP();
 	call	_WaitForVDP
 	pop	ix
 	ret
 _DrawLine8_end::
-;carwar.c:832: void waitRetrace()
+;carwar.c:834: void waitRetrace()
 ;	---------------------------------
 ; Function waitRetrace
 ; ---------------------------------
 _waitRetrace_start::
 _waitRetrace:
-;carwar.c:844: __endasm;
+;carwar.c:846: __endasm;
 	
 	
 		 di
@@ -11761,13 +12092,13 @@ _waitRetrace:
 		
 	ret
 _waitRetrace_end::
-;carwar.c:850: void WaitForVDP()
+;carwar.c:852: void WaitForVDP()
 ;	---------------------------------
 ; Function WaitForVDP
 ; ---------------------------------
 _WaitForVDP_start::
 _WaitForVDP:
-;carwar.c:871: __endasm;
+;carwar.c:873: __endasm;
 	
 	
 	
@@ -11790,7 +12121,7 @@ _WaitForVDP:
 		
 	ret
 _WaitForVDP_end::
-;carwar.c:877: void WriteToVRAM8(u16 addr, u8 value)
+;carwar.c:879: void WriteToVRAM8(u16 addr, u8 value)
 ;	---------------------------------
 ; Function WriteToVRAM8
 ; ---------------------------------
@@ -11799,9 +12130,9 @@ _WriteToVRAM8:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:881: WaitForVDP();
+;carwar.c:883: WaitForVDP();
 	call	_WaitForVDP
-;carwar.c:908: __endasm;
+;carwar.c:910: __endasm;
 	
 		 ;
 		 ld a,5(ix) ;
@@ -11830,7 +12161,7 @@ _WriteToVRAM8:
 	pop	ix
 	ret
 _WriteToVRAM8_end::
-;carwar.c:914: void VPDCommandLoop(u16 address)
+;carwar.c:916: void VPDCommandLoop(u16 address)
 ;	---------------------------------
 ; Function VPDCommandLoop
 ; ---------------------------------
@@ -11839,7 +12170,7 @@ _VPDCommandLoop:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:969: __endasm;
+;carwar.c:971: __endasm;
 	
 	
 		 ld l,4(ix)
@@ -11895,19 +12226,19 @@ _VPDCommandLoop:
 	pop	ix
 	ret
 _VPDCommandLoop_end::
-;carwar.c:974: void RAMtoVRAM16(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
+;carwar.c:976: void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
 ;	---------------------------------
-; Function RAMtoVRAM16
+; Function RAMtoVRAM
 ; ---------------------------------
-_RAMtoVRAM16_start::
-_RAMtoVRAM16:
+_RAMtoVRAM_start::
+_RAMtoVRAM:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
 	ld	hl,#-11
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:978: buffer.DX = dx;
+;carwar.c:980: buffer.DX = dx;
 	ld	hl,#0x0000
 	add	hl,sp
 	ld	a,4 (ix)
@@ -11915,7 +12246,7 @@ _RAMtoVRAM16:
 	inc	hl
 	ld	a,5 (ix)
 	ld	(hl),a
-;carwar.c:979: buffer.DY = dy;
+;carwar.c:981: buffer.DY = dy;
 	ld	hl,#0x0000
 	add	hl,sp
 	ld	c,l
@@ -11927,7 +12258,7 @@ _RAMtoVRAM16:
 	inc	hl
 	ld	a,7 (ix)
 	ld	(hl),a
-;carwar.c:980: buffer.NX = nx;
+;carwar.c:982: buffer.NX = nx;
 	ld	hl,#0x0004
 	add	hl,bc
 	ld	a,8 (ix)
@@ -11935,7 +12266,7 @@ _RAMtoVRAM16:
 	inc	hl
 	ld	a,9 (ix)
 	ld	(hl),a
-;carwar.c:981: buffer.NY = ny;
+;carwar.c:983: buffer.NY = ny;
 	ld	hl,#0x0006
 	add	hl,bc
 	ld	a,10 (ix)
@@ -11943,7 +12274,7 @@ _RAMtoVRAM16:
 	inc	hl
 	ld	a,11 (ix)
 	ld	(hl),a
-;carwar.c:982: buffer.CLR = ((u8*)ram)[0];
+;carwar.c:984: buffer.CLR = ((u8*)ram)[0];
 	ld	hl,#0x0008
 	add	hl,bc
 	ex	de,hl
@@ -11951,129 +12282,32 @@ _RAMtoVRAM16:
 	ld	h,13 (ix)
 	ld	a,(hl)
 	ld	(de),a
-;carwar.c:983: buffer.ARG = 0;
+;carwar.c:985: buffer.ARG = 0;
 	ld	hl,#0x0009
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:984: buffer.CMD = 0xF0;
+;carwar.c:986: buffer.CMD = 0xF0;
 	ld	hl,#0x000A
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0xF0
 	ld	(de),a
-;carwar.c:985: VPDCommand36((u16)&buffer);
+;carwar.c:987: VPDCommand36((u16)&buffer);
 	push	bc
 	call	_VPDCommand36
 	pop	af
-;carwar.c:986: VPDCommandLoop(ram);
+;carwar.c:988: VPDCommandLoop(ram);
 	ld	l,12 (ix)
 	ld	h,13 (ix)
-	push	hl
-	call	_VPDCommandLoop
-	ld	sp,ix
-	pop	ix
-	ret
-_RAMtoVRAM16_end::
-;carwar.c:991: void RAMtoVRAM(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
-;	---------------------------------
-; Function RAMtoVRAM
-; ---------------------------------
-_RAMtoVRAM_start::
-_RAMtoVRAM:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-13
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:995: buffer.DX = dx;
-	ld	hl,#0x0002
-	add	hl,sp
-	ld	c,5 (ix)
-	ld	b,#0x00
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:996: buffer.DY = dy + ((u16)page << 8);
-	ld	hl,#0x0002
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	ld	hl,#0x0002
-	add	hl,bc
-	ld	-13 (ix),l
-	ld	-12 (ix),h
-	ld	l,6 (ix)
-	ld	h,#0x00
-	ld	d, 4 (ix)
-	ld	e,#0x00
-	add	hl,de
-	ex	de,hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:997: buffer.NX = nx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	-13 (ix),l
-	ld	-12 (ix),h
-	ld	e,7 (ix)
-	ld	d,#0x00
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:998: buffer.NY = ny;
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	-13 (ix),l
-	ld	-12 (ix),h
-	ld	e,8 (ix)
-	ld	d,#0x00
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:999: buffer.CLR = ((u8*)ram)[0];
-	ld	hl,#0x0008
-	add	hl,bc
-	ex	de,hl
-	ld	l,9 (ix)
-	ld	h,10 (ix)
-	ld	a,(hl)
-	ld	(de),a
-;carwar.c:1000: buffer.ARG = 0;
-	ld	hl,#0x0009
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1001: buffer.CMD = 0xF0;
-	ld	hl,#0x000A
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0xF0
-	ld	(de),a
-;carwar.c:1002: VPDCommand36((u16)&buffer);
-	push	bc
-	call	_VPDCommand36
-	pop	af
-;carwar.c:1003: VPDCommandLoop(ram);
-	ld	l,9 (ix)
-	ld	h,10 (ix)
 	push	hl
 	call	_VPDCommandLoop
 	ld	sp,ix
 	pop	ix
 	ret
 _RAMtoVRAM_end::
-;carwar.c:1007: void RAMtoVRAMTrans(u8 page, u8 dx, u8 dy, u8 nx, u8 ny, u16 ram)
+;carwar.c:992: void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
 ;	---------------------------------
 ; Function RAMtoVRAMTrans
 ; ---------------------------------
@@ -12082,95 +12316,79 @@ _RAMtoVRAMTrans:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-13
+	ld	hl,#-11
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1011: buffer.DX = dx;
-	ld	hl,#0x0002
+;carwar.c:996: buffer.DX = dx;
+	ld	hl,#0x0000
 	add	hl,sp
-	ld	c,5 (ix)
-	ld	b,#0x00
-	ld	(hl),c
+	ld	a,4 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),b
-;carwar.c:1012: buffer.DY = dy + ((u16)page << 8);
-	ld	hl,#0x0002
+	ld	a,5 (ix)
+	ld	(hl),a
+;carwar.c:997: buffer.DY = dy;
+	ld	hl,#0x0000
 	add	hl,sp
 	ld	c,l
 	ld	b,h
-	ld	hl,#0x0002
-	add	hl,bc
-	ld	-13 (ix),l
-	ld	-12 (ix),h
-	ld	l,6 (ix)
-	ld	h,#0x00
-	ld	d, 4 (ix)
-	ld	e,#0x00
-	add	hl,de
-	ex	de,hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	ld	(hl),e
 	inc	hl
-	ld	(hl),d
-;carwar.c:1013: buffer.NX = nx;
+	inc	hl
+	ld	a,6 (ix)
+	ld	(hl),a
+	inc	hl
+	ld	a,7 (ix)
+	ld	(hl),a
+;carwar.c:998: buffer.NX = nx;
 	ld	hl,#0x0004
 	add	hl,bc
-	ld	-13 (ix),l
-	ld	-12 (ix),h
-	ld	e,7 (ix)
-	ld	d,#0x00
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	ld	(hl),e
+	ld	a,8 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),d
-;carwar.c:1014: buffer.NY = ny;
+	ld	a,9 (ix)
+	ld	(hl),a
+;carwar.c:999: buffer.NY = ny;
 	ld	hl,#0x0006
 	add	hl,bc
-	ld	-13 (ix),l
-	ld	-12 (ix),h
-	ld	e,8 (ix)
-	ld	d,#0x00
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	ld	(hl),e
+	ld	a,10 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),d
-;carwar.c:1015: buffer.CLR = ((u8*)ram)[0];
+	ld	a,11 (ix)
+	ld	(hl),a
+;carwar.c:1000: buffer.CLR = ((u8*)ram)[0];
 	ld	hl,#0x0008
 	add	hl,bc
 	ex	de,hl
-	ld	l,9 (ix)
-	ld	h,10 (ix)
+	ld	l,12 (ix)
+	ld	h,13 (ix)
 	ld	a,(hl)
 	ld	(de),a
-;carwar.c:1016: buffer.ARG = 0;
+;carwar.c:1001: buffer.ARG = 0;
 	ld	hl,#0x0009
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1017: buffer.CMD = 0xB8;
+;carwar.c:1002: buffer.CMD = 0xB8;
 	ld	hl,#0x000A
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0xB8
 	ld	(de),a
-;carwar.c:1018: VPDCommand36((u16)&buffer);
+;carwar.c:1003: VPDCommand36((u16)&buffer);
 	push	bc
 	call	_VPDCommand36
 	pop	af
-;carwar.c:1019: VPDCommandLoop(ram);
-	ld	l,9 (ix)
-	ld	h,10 (ix)
+;carwar.c:1004: VPDCommandLoop(ram);
+	ld	l,12 (ix)
+	ld	h,13 (ix)
 	push	hl
 	call	_VPDCommandLoop
 	ld	sp,ix
 	pop	ix
 	ret
 _RAMtoVRAMTrans_end::
-;carwar.c:1023: void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
+;carwar.c:1008: void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
 ;	---------------------------------
 ; Function FillVRAM
 ; ---------------------------------
@@ -12182,7 +12400,7 @@ _FillVRAM:
 	ld	hl,#-11
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1027: buffer.DX = dx;
+;carwar.c:1012: buffer.DX = dx;
 	ld	hl,#0x0000
 	add	hl,sp
 	ld	a,4 (ix)
@@ -12190,7 +12408,7 @@ _FillVRAM:
 	inc	hl
 	ld	a,5 (ix)
 	ld	(hl),a
-;carwar.c:1028: buffer.DY = dy;
+;carwar.c:1013: buffer.DY = dy;
 	ld	hl,#0x0000
 	add	hl,sp
 	ld	c,l
@@ -12202,7 +12420,7 @@ _FillVRAM:
 	inc	hl
 	ld	a,7 (ix)
 	ld	(hl),a
-;carwar.c:1029: buffer.NX = nx;
+;carwar.c:1014: buffer.NX = nx;
 	ld	hl,#0x0004
 	add	hl,bc
 	ld	a,8 (ix)
@@ -12210,7 +12428,7 @@ _FillVRAM:
 	inc	hl
 	ld	a,9 (ix)
 	ld	(hl),a
-;carwar.c:1030: buffer.NY = ny;
+;carwar.c:1015: buffer.NY = ny;
 	ld	hl,#0x0006
 	add	hl,bc
 	ld	a,10 (ix)
@@ -12218,32 +12436,32 @@ _FillVRAM:
 	inc	hl
 	ld	a,11 (ix)
 	ld	(hl),a
-;carwar.c:1031: buffer.CLR = color;
+;carwar.c:1016: buffer.CLR = color;
 	ld	hl,#0x0008
 	add	hl,bc
 	ex	de,hl
 	ld	a,12 (ix)
 	ld	(de),a
-;carwar.c:1032: buffer.ARG = 0;
+;carwar.c:1017: buffer.ARG = 0;
 	ld	hl,#0x0009
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1033: buffer.CMD = 0xC0;
+;carwar.c:1018: buffer.CMD = 0xC0;
 	ld	hl,#0x000A
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0xC0
 	ld	(de),a
-;carwar.c:1034: VPDCommand36((u16)&buffer);
+;carwar.c:1019: VPDCommand36((u16)&buffer);
 	push	bc
 	call	_VPDCommand36
 	ld	sp,ix
 	pop	ix
 	ret
 _FillVRAM_end::
-;carwar.c:1038: void VRAMtoVRAM(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny)
+;carwar.c:1023: void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
 ;	---------------------------------
 ; Function VRAMtoVRAM
 ; ---------------------------------
@@ -12252,127 +12470,10 @@ _VRAMtoVRAM:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-17
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:1042: buffer.SX = sx;
-	ld	hl,#0x0002
-	add	hl,sp
-	ld	c,5 (ix)
-	ld	b,#0x00
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:1043: buffer.SY = sy + ((u16)sPage << 8);
-	ld	hl,#0x0002
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	ld	hl,#0x0002
-	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	l,6 (ix)
-	ld	h,#0x00
-	ld	d, 4 (ix)
-	ld	e,#0x00
-	add	hl,de
-	ex	de,hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:1044: buffer.DX = dx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	e,8 (ix)
-	ld	d,#0x00
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:1045: buffer.DY = dy + ((u16)dPage << 8);
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	l,9 (ix)
-	ld	h,#0x00
-	ld	d, 7 (ix)
-	ld	e,#0x00
-	add	hl,de
-	ex	de,hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:1046: buffer.NX = nx;
-	ld	hl,#0x0008
-	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	e,10 (ix)
-	ld	d,#0x00
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:1047: buffer.NY = ny;
-	ld	hl,#0x000A
-	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	e,11 (ix)
-	ld	d,#0x00
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:1048: buffer.CLR = 0;
-	ld	hl,#0x000C
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1049: buffer.ARG = 0;
-	ld	hl,#0x000D
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1050: buffer.CMD = 0xD0;
-	ld	hl,#0x000E
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0xD0
-	ld	(de),a
-;carwar.c:1051: VPDCommand32((u16)&buffer);
-	push	bc
-	call	_VPDCommand32
-	ld	sp,ix
-	pop	ix
-	ret
-_VRAMtoVRAM_end::
-;carwar.c:1054: void VRAMtoVRAM16(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
-;	---------------------------------
-; Function VRAMtoVRAM16
-; ---------------------------------
-_VRAMtoVRAM16_start::
-_VRAMtoVRAM16:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
 	ld	hl,#-15
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1058: buffer.SX = sx;
+;carwar.c:1027: buffer.SX = sx;
 	ld	hl,#0x0000
 	add	hl,sp
 	ld	a,4 (ix)
@@ -12380,7 +12481,7 @@ _VRAMtoVRAM16:
 	inc	hl
 	ld	a,5 (ix)
 	ld	(hl),a
-;carwar.c:1059: buffer.SY = sy;
+;carwar.c:1028: buffer.SY = sy;
 	ld	hl,#0x0000
 	add	hl,sp
 	ld	c,l
@@ -12392,7 +12493,7 @@ _VRAMtoVRAM16:
 	inc	hl
 	ld	a,7 (ix)
 	ld	(hl),a
-;carwar.c:1060: buffer.DX = dx;
+;carwar.c:1029: buffer.DX = dx;
 	ld	hl,#0x0004
 	add	hl,bc
 	ld	a,8 (ix)
@@ -12400,7 +12501,7 @@ _VRAMtoVRAM16:
 	inc	hl
 	ld	a,9 (ix)
 	ld	(hl),a
-;carwar.c:1061: buffer.DY = dy;
+;carwar.c:1030: buffer.DY = dy;
 	ld	hl,#0x0006
 	add	hl,bc
 	ld	a,10 (ix)
@@ -12408,7 +12509,7 @@ _VRAMtoVRAM16:
 	inc	hl
 	ld	a,11 (ix)
 	ld	(hl),a
-;carwar.c:1062: buffer.NX = nx;
+;carwar.c:1031: buffer.NX = nx;
 	ld	hl,#0x0008
 	add	hl,bc
 	ld	a,12 (ix)
@@ -12416,7 +12517,7 @@ _VRAMtoVRAM16:
 	inc	hl
 	ld	a,13 (ix)
 	ld	(hl),a
-;carwar.c:1063: buffer.NY = ny;
+;carwar.c:1032: buffer.NY = ny;
 	ld	hl,#0x000A
 	add	hl,bc
 	ld	a,14 (ix)
@@ -12424,32 +12525,32 @@ _VRAMtoVRAM16:
 	inc	hl
 	ld	a,15 (ix)
 	ld	(hl),a
-;carwar.c:1064: buffer.CLR = 0;
+;carwar.c:1033: buffer.CLR = 0;
 	ld	hl,#0x000C
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1065: buffer.ARG = 0;
+;carwar.c:1034: buffer.ARG = 0;
 	ld	hl,#0x000D
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1066: buffer.CMD = 0xD0;
+;carwar.c:1035: buffer.CMD = 0xD0;
 	ld	hl,#0x000E
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0xD0
 	ld	(de),a
-;carwar.c:1067: VPDCommand32((u16)&buffer);
+;carwar.c:1036: VPDCommand32((u16)&buffer);
 	push	bc
 	call	_VPDCommand32
 	ld	sp,ix
 	pop	ix
 	ret
-_VRAMtoVRAM16_end::
-;carwar.c:1071: void VRAMtoVRAMTrans(u8 sPage, u8 sx, u8 sy, u8 dPage, u8 dx, u8 dy, u8 nx, u8 ny)
+_VRAMtoVRAM_end::
+;carwar.c:1040: void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
 ;	---------------------------------
 ; Function VRAMtoVRAMTrans
 ; ---------------------------------
@@ -12458,115 +12559,87 @@ _VRAMtoVRAMTrans:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-17
+	ld	hl,#-15
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1075: buffer.SX = sx;
-	ld	hl,#0x0002
+;carwar.c:1044: buffer.SX = sx;
+	ld	hl,#0x0000
 	add	hl,sp
-	ld	c,5 (ix)
-	ld	b,#0x00
-	ld	(hl),c
+	ld	a,4 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),b
-;carwar.c:1076: buffer.SY = sy + ((u16)sPage << 8);
-	ld	hl,#0x0002
+	ld	a,5 (ix)
+	ld	(hl),a
+;carwar.c:1045: buffer.SY = sy;
+	ld	hl,#0x0000
 	add	hl,sp
 	ld	c,l
 	ld	b,h
-	ld	hl,#0x0002
-	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	l,6 (ix)
-	ld	h,#0x00
-	ld	d, 4 (ix)
-	ld	e,#0x00
-	add	hl,de
-	ex	de,hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
 	inc	hl
-	ld	(hl),d
-;carwar.c:1077: buffer.DX = dx;
+	inc	hl
+	ld	a,6 (ix)
+	ld	(hl),a
+	inc	hl
+	ld	a,7 (ix)
+	ld	(hl),a
+;carwar.c:1046: buffer.DX = dx;
 	ld	hl,#0x0004
 	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	e,8 (ix)
-	ld	d,#0x00
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
+	ld	a,8 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),d
-;carwar.c:1078: buffer.DY = dy + ((u16)dPage << 8);
+	ld	a,9 (ix)
+	ld	(hl),a
+;carwar.c:1047: buffer.DY = dy;
 	ld	hl,#0x0006
 	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	l,9 (ix)
-	ld	h,#0x00
-	ld	d, 7 (ix)
-	ld	e,#0x00
-	add	hl,de
-	ex	de,hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
+	ld	a,10 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),d
-;carwar.c:1079: buffer.NX = nx;
+	ld	a,11 (ix)
+	ld	(hl),a
+;carwar.c:1048: buffer.NX = nx;
 	ld	hl,#0x0008
 	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	e,10 (ix)
-	ld	d,#0x00
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
+	ld	a,12 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),d
-;carwar.c:1080: buffer.NY = ny;
+	ld	a,13 (ix)
+	ld	(hl),a
+;carwar.c:1049: buffer.NY = ny;
 	ld	hl,#0x000A
 	add	hl,bc
-	ld	-17 (ix),l
-	ld	-16 (ix),h
-	ld	e,11 (ix)
-	ld	d,#0x00
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
-	ld	(hl),e
+	ld	a,14 (ix)
+	ld	(hl),a
 	inc	hl
-	ld	(hl),d
-;carwar.c:1081: buffer.CLR = 0;
+	ld	a,15 (ix)
+	ld	(hl),a
+;carwar.c:1050: buffer.CLR = 0;
 	ld	hl,#0x000C
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1082: buffer.ARG = 0;
+;carwar.c:1051: buffer.ARG = 0;
 	ld	hl,#0x000D
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1083: buffer.CMD = 0x98;
+;carwar.c:1052: buffer.CMD = 0x98;
 	ld	hl,#0x000E
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x98
 	ld	(de),a
-;carwar.c:1084: VPDCommand32((u16)&buffer);
+;carwar.c:1053: VPDCommand32((u16)&buffer);
 	push	bc
 	call	_VPDCommand32
 	ld	sp,ix
 	pop	ix
 	ret
 _VRAMtoVRAMTrans_end::
-;carwar.c:1097: void VPDCommand32(u16 address)
+;carwar.c:1060: void VPDCommand32(u16 address)
 ;	---------------------------------
 ; Function VPDCommand32
 ; ---------------------------------
@@ -12575,9 +12648,9 @@ _VPDCommand32:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1101: WaitForVDP();
+;carwar.c:1064: WaitForVDP();
 	call	_WaitForVDP
-;carwar.c:1131: __endasm;
+;carwar.c:1094: __endasm;
 	
 	
 		 ld l,4(ix)
@@ -12610,7 +12683,7 @@ _VPDCommand32:
 	pop	ix
 	ret
 _VPDCommand32_end::
-;carwar.c:1137: void VPDCommand36(u16 address)
+;carwar.c:1100: void VPDCommand36(u16 address)
 ;	---------------------------------
 ; Function VPDCommand36
 ; ---------------------------------
@@ -12619,9 +12692,9 @@ _VPDCommand36:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1141: WaitForVDP();
+;carwar.c:1104: WaitForVDP();
 	call	_WaitForVDP
-;carwar.c:1167: __endasm;
+;carwar.c:1130: __endasm;
 	
 	
 		 ld l,4(ix)
@@ -12650,7 +12723,7 @@ _VPDCommand36:
 	pop	ix
 	ret
 _VPDCommand36_end::
-;carwar.c:1170: void PrintSprite(u8 X, u8 Y, const char* text)
+;carwar.c:1133: void PrintSprite(u8 X, u8 Y, const char* text)
 ;	---------------------------------
 ; Function PrintSprite
 ; ---------------------------------
@@ -12660,11 +12733,11 @@ _PrintSprite:
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;carwar.c:1173: u8 curX = X;
+;carwar.c:1136: u8 curX = X;
 	ld	a,4 (ix)
 	ld	-1 (ix),a
-;carwar.c:1174: u8 curY = Y;
-;carwar.c:1175: while(text[sprtIdx] != 0)
+;carwar.c:1137: u8 curY = Y;
+;carwar.c:1138: while(text[sprtIdx] != 0)
 	ld	b, 5 (ix)
 	ld	e,#0x00
 00104$:
@@ -12680,20 +12753,20 @@ _PrintSprite:
 	xor	a,a
 	or	a,l
 	jr	Z,00106$
-;carwar.c:1177: if(text[sprtIdx] == '\n')
+;carwar.c:1140: if(text[sprtIdx] == '\n')
 	ld	a,l
 	sub	a,#0x0A
 	jr	NZ,00102$
-;carwar.c:1179: curX = X;
+;carwar.c:1142: curX = X;
 	ld	a,4 (ix)
 	ld	-1 (ix),a
-;carwar.c:1180: curY += 9;
+;carwar.c:1143: curY += 9;
 	ld	a,b
 	add	a,#0x09
 	ld	b,a
 	jr	00103$
 00102$:
-;carwar.c:1184: SetSprite(sprtIdx, curX, curY, text[sprtIdx] - '0');
+;carwar.c:1147: SetSprite(sprtIdx, curX, curY, text[sprtIdx] - '0');
 	ld	a,l
 	add	a,#0xD0
 	ld	l,a
@@ -12711,16 +12784,16 @@ _PrintSprite:
 	pop	af
 	pop	de
 	pop	bc
-;carwar.c:1185: curX += 8;
+;carwar.c:1148: curX += 8;
 	ld	a,-1 (ix)
 	add	a,#0x08
 	ld	-1 (ix),a
 00103$:
-;carwar.c:1187: sprtIdx++;
+;carwar.c:1150: sprtIdx++;
 	inc	e
 	jr	00104$
 00106$:
-;carwar.c:1189: SetSprite(sprtIdx, 0, 216, 0);
+;carwar.c:1152: SetSprite(sprtIdx, 0, 216, 0);
 	ld	hl,#0x00D8
 	push	hl
 	ld	d,#0x00
@@ -12730,13 +12803,13 @@ _PrintSprite:
 	pop	ix
 	ret
 _PrintSprite_end::
-;carwar.c:1192: void ClearSprite()
+;carwar.c:1155: void ClearSprite()
 ;	---------------------------------
 ; Function ClearSprite
 ; ---------------------------------
 _ClearSprite_start::
 _ClearSprite:
-;carwar.c:1194: SetSprite(0, 0, 216, 0);
+;carwar.c:1157: SetSprite(0, 0, 216, 0);
 	ld	hl,#0x00D8
 	push	hl
 	ld	l, #0x00
@@ -12746,7 +12819,7 @@ _ClearSprite:
 	pop	af
 	ret
 _ClearSprite_end::
-;carwar.c:1197: void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
+;carwar.c:1160: void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
 ;	---------------------------------
 ; Function SetSprite
 ; ---------------------------------
@@ -12758,7 +12831,7 @@ _SetSprite:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1200: sprt.posX = X;
+;carwar.c:1163: sprt.posX = X;
 	ld	hl,#0x0004
 	add	hl,sp
 	ld	c,l
@@ -12768,15 +12841,15 @@ _SetSprite:
 	inc	de
 	ld	a,5 (ix)
 	ld	(de),a
-;carwar.c:1201: sprt.posY = Y;
+;carwar.c:1164: sprt.posY = Y;
 	ld	a,6 (ix)
 	ld	(bc),a
-;carwar.c:1202: sprt.index = shape;
+;carwar.c:1165: sprt.index = shape;
 	inc	bc
 	inc	bc
 	ld	a,7 (ix)
 	ld	(bc),a
-;carwar.c:1205: RAMtoVRAM16((index * 16) % 256, 244 + (index / 16), 8, 1, (u16)&defaultColor);
+;carwar.c:1166: RAMtoVRAM((index * 16) % 256, 244 + (index / 16), 8, 1, (u16)&defaultColor);
 	ld	-8 (ix),#<(_defaultColor)
 	ld	-7 (ix),#>(_defaultColor)
 	ld	a,4 (ix)
@@ -12822,12 +12895,12 @@ _SetSprite:
 	ld	h,-5 (ix)
 	push	hl
 	push	bc
-	call	_RAMtoVRAM16
+	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:1206: RAMtoVRAM16((index * 4) % 256, 246 + (index / 64), 4, 1, (u16)&sprt);
+;carwar.c:1167: RAMtoVRAM((index * 4) % 256, 246 + (index / 64), 4, 1, (u16)&sprt);
 	ld	hl,#0x0004
 	add	hl,sp
 	ld	-8 (ix),l
@@ -12867,7 +12940,7 @@ _SetSprite:
 	push	hl
 	push	bc
 	push	de
-	call	_RAMtoVRAM16
+	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
