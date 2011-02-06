@@ -14,9 +14,9 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
             0000  l__GSINIT                        
             0000  l__HOME                          
             0000  l__OVERLAY                       
-            38E1  l__CODE                          
             4010  s__CODE                          
-            C000  _ply                             
+            4692  l__CODE                          
+            C000  _players                         
             C000  s__CABS                          
             C000  s__DATA                          
             C000  s__GSFINAL                       
@@ -31,7 +31,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   38E1 =  14561. bytes (REL,CON)
+_CODE                              4010   4692 =  18066. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
@@ -44,123 +44,141 @@ _CODE                              4010   38E1 =  14561. bytes (REL,CON)
             5AFA  _car4                            
             63EA  _shadow                          
             6479  _charTable                       
-            6639  _backgound                       
-            66C8  _defaultColor                    
-            66D0  _MainLoop                        
-            66D0  _MainLoop_start                  
-            717E  _MainLoop_end                    
-            71AE  _InitializePlayer                
-            71AE  _InitializePlayer_start          
-            7233  _InitializePlayer_end            
-            7233  _SetScreen8                      
-            7233  _SetScreen8_start                
-            727B  _SetScreen8_end                  
-            727B  _SetSpriteMode                   
-            727B  _SetSpriteMode_start             
-            72C5  _SetFreq                         
-            72C5  _SetFreq_start                   
-            72C5  _SetSpriteMode_end               
-            72E6  _SetFreq_end                     
-            72E6  _SetPage8                        
-            72E6  _SetPage8_start                  
-            7301  _DrawPoint8                      
-            7301  _DrawPoint8_start                
-            7301  _SetPage8_end                    
-            7349  _DrawLine8                       
-            7349  _DrawLine8_start                 
-            7349  _DrawPoint8_end                  
-            7357  _DrawLine8_end                   
-            7357  _waitRetrace                     
-            7357  _waitRetrace_start               
-            7362  _WaitForVDP                      
-            7362  _WaitForVDP_start                
-            7362  _waitRetrace_end                 
-            737A  _WaitForVDP_end                  
-            737A  _WriteToVRAM8                    
-            737A  _WriteToVRAM8_start              
-            73AA  _VPDCommandLoop                  
-            73AA  _VPDCommandLoop_start            
-            73AA  _WriteToVRAM8_end                
-            73E2  _RAMtoVRAM                       
-            73E2  _RAMtoVRAM_start                 
-            73E2  _VPDCommandLoop_end              
-            7458  _RAMtoVRAMTrans                  
+            65F9  _trackTiles                      
+            6EF9  _defaultColor                    
+            6F01  _cars                            
+            6F0D  _track01                         
+            6F8B  _MainLoop                        
+            6F8B  _MainLoop_start                  
+            7B67  _MainLoop_end                    
+            7B9B  _InitializePlayer                
+            7B9B  _InitializePlayer_start          
+            7C75  _CheckCollision                  
+            7C75  _CheckCollision_start            
+            7C75  _InitializePlayer_end            
+            7DC8  _CheckCollision_end              
+            7DC8  _Joystick                        
+            7DC8  _Joystick_start                  
+            7DDA  _Joystick_end                    
+            7DDA  _Joytrig                         
+            7DDA  _Joytrig_start                   
+            7DEE  _GetKeyMatrixLine                
+            7DEE  _GetKeyMatrixLine_start          
+            7DEE  _Joytrig_end                     
+            7E00  _GetKeyMatrixLine_end            
+            7E00  _SetScreen8                      
+            7E00  _SetScreen8_start                
+            7E48  _SetScreen8_end                  
+            7E48  _SetSpriteMode                   
+            7E48  _SetSpriteMode_start             
+            7E92  _SetFreq                         
+            7E92  _SetFreq_start                   
+            7E92  _SetSpriteMode_end               
+            7EB3  _SetFreq_end                     
+            7EB3  _SetPage8                        
+            7EB3  _SetPage8_start                  
+            7ECE  _DrawPoint8                      
+            7ECE  _DrawPoint8_start                
+            7ECE  _SetPage8_end                    
+            7F39  _DrawLine8                       
+            7F39  _DrawLine8_start                 
+            7F39  _DrawPoint8_end                  
+            7F47  _DrawLine8_end                   
+            7F47  _waitRetrace                     
 ASxxxx Linker V02.00 + NoICE + sdld,  page 3.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   38E1 =  14561. bytes (REL,CON)
+_CODE                              4010   4692 =  18066. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            7458  _RAMtoVRAMTrans_start            
-            7458  _RAMtoVRAM_end                   
-            74CE  _FillVRAM                        
-            74CE  _FillVRAM_start                  
-            74CE  _RAMtoVRAMTrans_end              
-            7535  _FillVRAM_end                    
-            7535  _VRAMtoVRAM                      
-            7535  _VRAMtoVRAM_start                
-            75B5  _VRAMtoVRAMTrans                 
-            75B5  _VRAMtoVRAMTrans_start           
-            75B5  _VRAMtoVRAM_end                  
-            7635  _VPDCommand32                    
-            7635  _VPDCommand32_start              
-            7635  _VRAMtoVRAMTrans_end             
-            7673  _VPDCommand32_end                
-            7673  _VPDCommand36                    
-            7673  _VPDCommand36_start              
-            76A9  _PrintSprite                     
-            76A9  _PrintSprite_start               
-            76A9  _VPDCommand36_end                
-            7710  _ClearSprite                     
-            7710  _ClearSprite_start               
-            7710  _PrintSprite_end                 
-            771D  _ClearSprite_end                 
-            771D  _SetSprite                       
-            771D  _SetSprite_start                 
-            77F8  _Joystick                        
-            77F8  _Joystick_start                  
-            77F8  _SetSprite_end                   
-            780A  _Joystick_end                    
-            780A  _Joytrig                         
-            780A  _Joytrig_start                   
-            781E  _GetKeyMatrixLine                
-            781E  _GetKeyMatrixLine_start          
-            781E  _Joytrig_end                     
-            7830  _GetKeyMatrixLine_end            
-            7830  __modschar_rrx_s                 
-            7837  __modschar_rrx_hds               
-            783D  __modsint_rrx_s                  
-            7843  __modsint_rrx_hds                
-            7849  __divsint_rrx_s                  
-            7852  __divschar_rrx_s                 
-            7859  __div8                           
-            7859  __divschar_rrx_hds               
-            785D  __div_signexte                   
-            7861  __div16                          
-            7861  __divsint_rrx_hds                
-            7887  __get_remainder                  
-            7891  __divuint_rrx_s                  
-            7899  __divuchar_rrx_s                 
-            78A0  __divu8                          
+            7F47  _waitRetrace_start               
+            7F52  _WaitForVDP                      
+            7F52  _WaitForVDP_start                
+            7F52  _waitRetrace_end                 
+            7F6A  _WaitForVDP_end                  
+            7F6A  _WriteToVRAM8                    
+            7F6A  _WriteToVRAM8_start              
+            7F9A  _VPDCommandLoop                  
+            7F9A  _VPDCommandLoop_start            
+            7F9A  _WriteToVRAM8_end                
+            7FD2  _RAMtoVRAM                       
+            7FD2  _RAMtoVRAM_start                 
+            7FD2  _VPDCommandLoop_end              
+            8048  _RAMtoVRAMTrans                  
+            8048  _RAMtoVRAMTrans_start            
+            8048  _RAMtoVRAM_end                   
+            80BE  _FillVRAM                        
+            80BE  _FillVRAM_start                  
+            80BE  _RAMtoVRAMTrans_end              
+            8125  _FillVRAM_end                    
+            8125  _VRAMtoVRAM                      
+            8125  _VRAMtoVRAM_start                
+            81A5  _VRAMtoVRAMTrans                 
+            81A5  _VRAMtoVRAMTrans_start           
+            81A5  _VRAMtoVRAM_end                  
+            8225  _VPDCommand32                    
+            8225  _VPDCommand32_start              
+            8225  _VRAMtoVRAMTrans_end             
+            8263  _VPDCommand32_end                
+            8263  _VPDCommand36                    
+            8263  _VPDCommand36_start              
+            8299  _PrintSprite                     
+            8299  _PrintSprite_start               
+            8299  _VPDCommand36_end                
+            830A  _ClearSprite                     
+            830A  _ClearSprite_start               
+            830A  _PrintSprite_end                 
+            831C  _ClearSprite_end                 
+            831C  _SetSpriteMultiColor             
+            831C  _SetSpriteMultiColor_start       
+            83EF  _SetSpriteMultiColor_end         
+            83EF  _SetSpriteUniColor               
+            83EF  _SetSpriteUniColor_start         
+            84C0  _SetSpriteUniColor_end           
+            84C0  _last_error                      
+            84C1  _open                            
+            84E8  _creat                           
+            8512  _close                           
+            8529  _dup                             
+            854A  _read                            
+            8575  _write                           
 ASxxxx Linker V02.00 + NoICE + sdld,  page 4.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   38E1 =  14561. bytes (REL,CON)
+_CODE                              4010   4692 =  18066. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            78A0  __divuchar_rrx_hds               
-            78A3  __divu16                         
-            78A3  __divuint_rrx_hds                
-            78D5  __mulint_rrx_s                   
-            78DB  __mulint_rrx_hds                 
-            78DB  __muluchar_rrx_hds               
-            78DD  __mul16                          
+            85A0  _lseek                           
+            85CE  _exit                            
+            85E1  __modschar_rrx_s                 
+            85E8  __modschar_rrx_hds               
+            85EE  __modsint_rrx_s                  
+            85F4  __modsint_rrx_hds                
+            85FA  __divsint_rrx_s                  
+            8603  __divschar_rrx_s                 
+            860A  __div8                           
+            860A  __divschar_rrx_hds               
+            860E  __div_signexte                   
+            8612  __div16                          
+            8612  __divsint_rrx_hds                
+            8638  __get_remainder                  
+            8642  __divuint_rrx_s                  
+            864A  __divuchar_rrx_s                 
+            8651  __divu8                          
+            8651  __divuchar_rrx_hds               
+            8654  __divu16                         
+            8654  __divuint_rrx_hds                
+            8686  __mulint_rrx_s                   
+            868C  __mulint_rrx_hds                 
+            868C  __muluchar_rrx_hds               
+            868E  __mul16                          
+
 ASxxxx Linker V02.00 + NoICE + sdld,  page 5.
 Hexadecimal
 
@@ -221,14 +239,16 @@ Files Linked                              [ module(s) ]
 
 carwar.rel                                [ carwar ]
 bios.rel                                  [ bios ]
+video.rel                                 [ video ]
+files.rel                                 [  ]
 
 
 Libraries Linked                          [ object file ]
 
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divunsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ mul.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ modsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divunsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ mul.rel ]
 
 ASxxxx Linker V02.00 + NoICE + sdld,  page 12.
 
