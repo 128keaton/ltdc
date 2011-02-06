@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.0.0 #6037 (Oct 31 2010) (MINGW32)
-; This file was generated Fri Feb 04 18:22:54 2011
+; This file was generated Sun Feb 06 23:45:56 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -12,9 +12,11 @@
 	.globl _main
 	.globl _buffer32
 	.globl _buffer36
-	.globl _ply
+	.globl _players
+	.globl _track01
+	.globl _cars
 	.globl _defaultColor
-	.globl _backgound
+	.globl _trackTiles
 	.globl _charTable
 	.globl _shadow
 	.globl _car4
@@ -23,26 +25,7 @@
 	.globl _car1
 	.globl _MainLoop
 	.globl _InitializePlayer
-	.globl _SetScreen8
-	.globl _SetSpriteMode
-	.globl _SetFreq
-	.globl _SetPage8
-	.globl _DrawPoint8
-	.globl _DrawLine8
-	.globl _waitRetrace
-	.globl _WaitForVDP
-	.globl _WriteToVRAM8
-	.globl _VPDCommandLoop
-	.globl _RAMtoVRAM
-	.globl _RAMtoVRAMTrans
-	.globl _FillVRAM
-	.globl _VRAMtoVRAM
-	.globl _VRAMtoVRAMTrans
-	.globl _VPDCommand32
-	.globl _VPDCommand36
-	.globl _PrintSprite
-	.globl _ClearSprite
-	.globl _SetSprite
+	.globl _CheckCollision
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -51,7 +34,7 @@ _g_slotPort	=	0x00a8
 ;  ram data
 ;--------------------------------------------------------
 	.area _DATA
-_ply	=	0xc000
+_players	=	0xc000
 _buffer36	=	0xc100
 _buffer32	=	0xc200
 ;--------------------------------------------------------
@@ -77,19 +60,19 @@ _buffer32	=	0xc200
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;carwar.c:236: void main(void)
+;carwar.c:177: void main(void)
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main_start::
 _main:
-;carwar.c:242: __endasm;
+;carwar.c:183: __endasm;
 	
 		 di
 		 ld sp, (#0xFC4A)
 		 ei
 		
-;carwar.c:244: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+;carwar.c:185: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 	in	a,(_g_slotPort)
 	and	a,#0xCF
 	ld	c,a
@@ -101,7 +84,7 @@ _main:
 	ld	a,c
 	or	a,b
 	out	(_g_slotPort),a
-;carwar.c:246: MainLoop();
+;carwar.c:187: MainLoop();
 	call	_MainLoop
 	ret
 _main_end::
@@ -9790,194 +9773,2335 @@ _charTable:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
+_trackTiles:
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xBF	; 191
+	.db #0x6E	; 110	n
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xBF	; 191
+	.db #0x78	; 120	x
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFB	; 251
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xBC	; 188
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC6	; 198
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xBD	; 189
+	.db #0xB8	; 184
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xF4	; 244
+	.db #0x88	; 136
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x3E	; 62
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x3E	; 62
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xE7	; 231
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xC3	; 195
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x38	; 56
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x72	; 114	r
+	.db #0x00	; 0
+	.db #0xFE	; 254
+	.db #0x1E	; 30
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xD7	; 215
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x5C	; 92
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0x79	; 121	y
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xF5	; 245
+	.db #0xF2	; 242
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xEF	; 239
+	.db #0x82	; 130
+	.db #0x00	; 0
+	.db #0xFD	; 253
+	.db #0xE1	; 225
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x48	; 72	H
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xA4	; 164
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xEE	; 238
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x76	; 118	v
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xBF	; 191
+	.db #0x08	; 8
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x70	; 112	p
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC2	; 194
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
 _g_Sinus:
 	.dw #0x0000
+	.dw #0x0019
+	.dw #0x0031
+	.dw #0x004A
 	.dw #0x0061
+	.dw #0x0078
+	.dw #0x008E
+	.dw #0x00A2
 	.dw #0x00B5
+	.dw #0x00C5
+	.dw #0x00D4
+	.dw #0x00E1
 	.dw #0x00EC
+	.dw #0x00F4
+	.dw #0x00FB
+	.dw #0x00FE
 	.dw #0x0100
+	.dw #0x00FE
+	.dw #0x00FB
+	.dw #0x00F4
 	.dw #0x00EC
+	.dw #0x00E1
+	.dw #0x00D4
+	.dw #0x00C5
 	.dw #0x00B5
+	.dw #0x00A2
+	.dw #0x008E
+	.dw #0x0078
 	.dw #0x0061
+	.dw #0x004A
+	.dw #0x0031
+	.dw #0x0019
 	.dw #0x0000
+	.dw #0xFFE7
+	.dw #0xFFCF
+	.dw #0xFFB6
 	.dw #0xFF9F
+	.dw #0xFF88
+	.dw #0xFF72
+	.dw #0xFF5E
 	.dw #0xFF4B
+	.dw #0xFF3B
+	.dw #0xFF2C
+	.dw #0xFF1F
 	.dw #0xFF14
+	.dw #0xFF0C
+	.dw #0xFF05
+	.dw #0xFF02
 	.dw #0xFF00
+	.dw #0xFF02
+	.dw #0xFF05
+	.dw #0xFF0C
 	.dw #0xFF14
+	.dw #0xFF1F
+	.dw #0xFF2C
+	.dw #0xFF3B
 	.dw #0xFF4B
+	.dw #0xFF5E
+	.dw #0xFF72
+	.dw #0xFF88
 	.dw #0xFF9F
+	.dw #0xFFB6
+	.dw #0xFFCF
+	.dw #0xFFE7
 _g_Cosinus:
 	.dw #0x0100
+	.dw #0x00FE
+	.dw #0x00FB
+	.dw #0x00F4
 	.dw #0x00EC
+	.dw #0x00E1
+	.dw #0x00D4
+	.dw #0x00C5
 	.dw #0x00B5
+	.dw #0x00A2
+	.dw #0x008E
+	.dw #0x0078
 	.dw #0x0061
+	.dw #0x004A
+	.dw #0x0031
+	.dw #0x0019
 	.dw #0x0000
+	.dw #0xFFE7
+	.dw #0xFFCF
+	.dw #0xFFB6
 	.dw #0xFF9F
+	.dw #0xFF88
+	.dw #0xFF72
+	.dw #0xFF5E
 	.dw #0xFF4B
+	.dw #0xFF3B
+	.dw #0xFF2C
+	.dw #0xFF1F
 	.dw #0xFF14
+	.dw #0xFF0C
+	.dw #0xFF05
+	.dw #0xFF02
 	.dw #0xFF00
+	.dw #0xFF02
+	.dw #0xFF05
+	.dw #0xFF0C
 	.dw #0xFF14
+	.dw #0xFF1F
+	.dw #0xFF2C
+	.dw #0xFF3B
 	.dw #0xFF4B
+	.dw #0xFF5E
+	.dw #0xFF72
+	.dw #0xFF88
 	.dw #0xFF9F
+	.dw #0xFFB6
+	.dw #0xFFCF
+	.dw #0xFFE7
 	.dw #0x0000
+	.dw #0x0019
+	.dw #0x0031
+	.dw #0x004A
 	.dw #0x0061
+	.dw #0x0078
+	.dw #0x008E
+	.dw #0x00A2
 	.dw #0x00B5
+	.dw #0x00C5
+	.dw #0x00D4
+	.dw #0x00E1
 	.dw #0x00EC
-_backgound:
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
-	.db #0x92	; 146
+	.dw #0x00F4
+	.dw #0x00FB
+	.dw #0x00FE
 _defaultColor:
-	.db #0x0A	; 10
-	.db #0x0A	; 10
-	.db #0x0B	; 11
-	.db #0x0E	; 14
-	.db #0x0E	; 14
-	.db #0x0B	; 11
-	.db #0x0A	; 10
-	.db #0x0A	; 10
-;carwar.c:252: void MainLoop()
+	.db #0x01	; 1
+	.db #0x01	; 1
+	.db #0x09	; 9
+	.db #0x0D	; 13
+	.db #0x0D	; 13
+	.db #0x09	; 9
+	.db #0x01	; 1
+	.db #0x01	; 1
+_cars:
+	.db #0x05	; 5
+	.db #0x18	; 24
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x20	; 32
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x1E	; 30
+	.db #0x04	; 4
+	.db #0x06	; 6
+	.db #0x10	; 16
+	.db #0x04	; 4
+_track01:
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x20	; 32
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x20	; 32
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x01	; 1
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x80	; 128
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x40	; 64
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x21	; 33
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x29	; 41
+	.db #0x90	; 144
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x01	; 1
+	.db #0xE0	; 224
+	.db #0x90	; 144
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x90	; 144
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x8B	; 139
+	.db #0x5D	; 93
+	.db #0x90	; 144
+	.db #0x04	; 4
+	.db #0xE0	; 224
+	.db #0x90	; 144
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x90	; 144
+	.db #0x80	; 128
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x92	; 146
+	.db #0x01	; 1
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0x92	; 146
+	.db #0xE0	; 224
+	.db #0x21	; 33
+	.db #0x90	; 144
+	.db #0xE0	; 224
+	.db #0x02	; 2
+	.db #0xE0	; 224
+	.db #0x90	; 144
+	.db #0x40	; 64
+	.db #0xE0	; 224
+	.db #0x90	; 144
+;carwar.c:193: void MainLoop()
 ;	---------------------------------
 ; Function MainLoop
 ; ---------------------------------
@@ -9986,44 +12110,24 @@ _MainLoop:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-23
+	ld	hl,#-32
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:256: u8 page = 0;
-	ld	-2 (ix),#0x00
-;carwar.c:262: u8 testSprt[4] = { 0x40, 0x40, 0, 0 };
-	ld	hl,#0x000C
-	add	hl,sp
-	ex	de,hl
-	ld	a,#0x40
-	ld	(de),a
-	ld	c,e
-	ld	b,d
-	inc	bc
-	ld	a,#0x40
-	ld	(bc),a
-	ld	c,e
-	ld	b,d
-	inc	bc
-	inc	bc
-	ld	a,#0x00
-	ld	(bc),a
-	ld	hl,#0x0003
-	add	hl,de
-	ld	(hl),#0x00
-;carwar.c:264: SetFreq(FREQ_50);
+;carwar.c:197: u8 page = 0;
+	ld	-4 (ix),#0x00
+;carwar.c:204: SetFreq(FREQ_50);
 	ld	a,#0x20
 	push	af
 	inc	sp
 	call	_SetFreq
 	inc	sp
-;carwar.c:265: SetScreen8(LINES_212);
+;carwar.c:205: SetScreen8(LINES_212);
 	ld	a,#0x80
 	push	af
 	inc	sp
 	call	_SetScreen8
 	inc	sp
-;carwar.c:266: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
+;carwar.c:206: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 	ld	hl,#0x01EE
 	push	hl
 	ld	hl,#0x001F
@@ -10033,8 +12137,108 @@ _MainLoop:
 	call	_SetSpriteMode
 	pop	af
 	pop	af
-;carwar.c:268: FillVRAM(0, 0,         256, 212, 0x92);
-	ld	h,#0x92
+;carwar.c:208: FillVRAM(0, 0,   256, 256, 0);
+	ld	h,#0x00
+	ex	(sp),hl
+	inc	sp
+	ld	hl,#0x0100
+	push	hl
+	ld	l, #0x00
+	push	hl
+	ld	h, #0x00
+	push	hl
+	ld	l, #0x00
+	push	hl
+	call	_FillVRAM
+	ld	hl,#0x0009
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:209: FillVRAM(0, 256, 256, 256, 0);
+	ld	a,#0x00
+	push	af
+	inc	sp
+	ld	hl,#0x0100
+	push	hl
+	ld	l, #0x00
+	push	hl
+	ld	l, #0x00
+	push	hl
+	ld	h, #0x00
+	push	hl
+	call	_FillVRAM
+	ld	hl,#0x0009
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:213: for(x=0; x<sizeof(charTable)/8; x++)
+	ld	-8 (ix),#0x00
+	ld	-7 (ix),#0x00
+00161$:
+	ld	a,-8 (ix)
+	sub	a,#0x30
+	ld	a,-7 (ix)
+	sbc	a,#0x00
+	jr	NC,00164$
+;carwar.c:215: RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
+	ld	c,-8 (ix)
+	ld	b,-7 (ix)
+	sla	c
+	rl	b
+	sla	c
+	rl	b
+	sla	c
+	rl	b
+	ld	hl,#_charTable
+	add	hl,bc
+	ld	-18 (ix), l
+	ld	-17 (ix), h
+	ld	l,-8 (ix)
+	ld	h,-7 (ix)
+	srl	h
+	rr	l
+	srl	h
+	rr	l
+	srl	h
+	rr	l
+	srl	h
+	rr	l
+	srl	h
+	rr	l
+	ld	de, #0x00F8
+	add	hl, de
+	ex	de,hl
+	ld	b,#0x00
+	ld	l,-18 (ix)
+	ld	h,-17 (ix)
+	push	hl
+	ld	hl,#0x0001
+	push	hl
+	ld	l, #0x08
+	push	hl
+	push	de
+	push	bc
+	call	_RAMtoVRAM
+	ld	hl,#0x000A
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:213: for(x=0; x<sizeof(charTable)/8; x++)
+	inc	-8 (ix)
+	jr	NZ,00161$
+	inc	-7 (ix)
+	jr	00161$
+00164$:
+;carwar.c:220: PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
+	ld	c,#<(_defaultColor)
+	ld	b,#>(_defaultColor)
+	push	bc
+	ld	hl,#__str_0
+	push	hl
+	ld	hl,#0x4040
+	push	hl
+	call	_PrintSprite
+	pop	af
+	pop	af
+;carwar.c:231: FillVRAM(0, 0, 256, 212, COLOR_GREEN);
+	ld	h,#0xE0
 	ex	(sp),hl
 	inc	sp
 	ld	hl,#0x00D4
@@ -10049,204 +12253,308 @@ _MainLoop:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:269: FillVRAM(0, 212,       256, 44,  0);
-	ld	a,#0x00
-	push	af
-	inc	sp
-	ld	hl,#0x002C
-	push	hl
-	ld	hl,#0x0100
-	push	hl
-	ld	hl,#0x00D4
-	push	hl
-	ld	l, #0x00
-	push	hl
-	call	_FillVRAM
-	ld	hl,#0x0009
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:270: FillVRAM(0, 256 + 0,   256, 212, 0x92);
-	ld	a,#0x92
-	push	af
-	inc	sp
-	ld	hl,#0x00D4
-	push	hl
-	ld	hl,#0x0100
-	push	hl
-	ld	l, #0x00
-	push	hl
-	ld	h, #0x00
-	push	hl
-	call	_FillVRAM
-	ld	hl,#0x0009
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:271: FillVRAM(0, 256 + 212, 256, 44,  0);
-	ld	a,#0x00
-	push	af
-	inc	sp
-	ld	hl,#0x002C
-	push	hl
-	ld	hl,#0x0100
-	push	hl
-	ld	l, #0xD4
-	push	hl
-	ld	hl,#0x0000
-	push	hl
-	call	_FillVRAM
-	ld	hl,#0x0009
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:275: for(x=0; x<sizeof(charTable)/8; x++)
-	ld	-7 (ix),#0x00
-	ld	-6 (ix),#0x00
-00139$:
-	ld	a,-7 (ix)
-	sub	a,#0x30
-	ld	a,-6 (ix)
-	sbc	a,#0x00
-	jr	NC,00142$
-;carwar.c:277: RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
-	ld	e,-7 (ix)
-	ld	d,-6 (ix)
-	sla	e
-	rl	d
-	sla	e
-	rl	d
-	sla	e
-	rl	d
-	ld	hl,#_charTable
-	add	hl,de
-	ld	-13 (ix), l
-	ld	-12 (ix), h
-	ld	l,-7 (ix)
-	ld	h,-6 (ix)
-	srl	h
-	rr	l
-	srl	h
-	rr	l
-	srl	h
-	rr	l
-	srl	h
-	rr	l
-	srl	h
-	rr	l
-	ld	bc, #0x00F8
-	add	hl,bc
-	ld	c, l
-	ld	b, h
-	ld	d,#0x00
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
-	push	hl
-	ld	hl,#0x0001
-	push	hl
-	ld	l, #0x08
-	push	hl
-	push	bc
-	push	de
-	call	_RAMtoVRAM
-	ld	hl,#0x000A
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:275: for(x=0; x<sizeof(charTable)/8; x++)
-	inc	-7 (ix)
-	jr	NZ,00139$
-	inc	-6 (ix)
-	jr	00139$
-00142$:
-;carwar.c:282: PrintSprite(64, 64, "INIT\nTRACK");
-	ld	hl,#__str_0
-	push	hl
-	ld	hl,#0x4040
-	push	hl
-	call	_PrintSprite
-	pop	af
-	pop	af
-;carwar.c:283: for(x=0; x<=255; x++)
-	ld	-7 (ix),#0x00
-	ld	-6 (ix),#0x00
-00147$:
-	ld	a,#0xFF
-	sub	a,-7 (ix)
-	ld	a,#0x00
-	sbc	a,-6 (ix)
-	jr	C,00150$
-;carwar.c:284: for(y=0; y<=211; y++)
-	ld	de,#0x0000
-00143$:
-	ld	a,#0xD3
-	sub	a,e
-	ld	a,#0x00
-	sbc	a,d
-	jr	C,00149$
-;carwar.c:285: DrawPoint8(x, y, x + y);
-	ld	a, -7 (ix)
-	ld	c, e
-	add	a,c
+;carwar.c:232: for(i=0; i<7; i++)
+	ld	-1 (ix),#0x00
+00177$:
+	ld	a,-1 (ix)
+	sub	a,#0x07
+	jp	NC,00180$
+;carwar.c:234: for(j=0; j<6; j++)
+	ld	a,-1 (ix)
+	rrca
+	rrca
+	rrca
+	and	a,#0xE0
+	add	a,#0x10
+	ld	b,a
+	ld	e,b
+	ld	-2 (ix),#0x00
+	ld	-18 (ix),#0x00
+00173$:
+	ld	a,-2 (ix)
+	sub	a,#0x06
+	jp	NC,00179$
+;carwar.c:236: tile = &track01[i + j * 7];
+	ld	a,-1 (ix)
+	add	a,-18 (ix)
 	ld	l,a
-	ld	c,e
-	ld	b,-7 (ix)
 	push	de
 	ld	a,l
-	push	af
-	inc	sp
+	ld	e,a
+	add	a,a
+	add	a,e
+	pop	de
+	add	a,#<(_track01)
+	ld	c,a
+	ld	a,#>(_track01)
+	adc	a,#0x00
+	ld	d,a
+	ld	-16 (ix),c
+	ld	-15 (ix),d
+;carwar.c:237: for(x=0; x<32; x++)
+	ld	a,-16 (ix)
+	add	a,#0x01
+	ld	-20 (ix),a
+	ld	a,-15 (ix)
+	adc	a,#0x00
+	ld	-19 (ix),a
+	ld	a,-2 (ix)
+	rrca
+	rrca
+	rrca
+	and	a,#0xE0
+	add	a,#0x08
+	ld	-21 (ix),a
+	ld	a,-16 (ix)
+	add	a,#0x02
+	ld	-23 (ix),a
+	ld	a,-15 (ix)
+	adc	a,#0x00
+	ld	-22 (ix),a
+	ld	a,-21 (ix)
+	ld	-24 (ix),a
+	ld	-14 (ix),#0x00
+	ld	-13 (ix),#0x00
+00169$:
+	ld	a,-14 (ix)
+	sub	a,#0x20
+	ld	a,-13 (ix)
+	sbc	a,#0x00
+	jp	NC,00175$
+;carwar.c:239: for(y=0; y<32; y++)
+	ld	a,#0x1F
+	sub	a,-14 (ix)
+	ld	-26 (ix),a
+	ld	a,#0x00
+	sbc	a,-13 (ix)
+	ld	-25 (ix),a
+	ld	a,-26 (ix)
+	ld	-28 (ix),a
+	ld	a,-25 (ix)
+	ld	-27 (ix),a
+	ld	-12 (ix),#0x00
+	ld	-11 (ix),#0x00
+00165$:
+	ld	a,-12 (ix)
+	sub	a,#0x20
+	ld	a,-11 (ix)
+	sbc	a,#0x00
+	jp	NC,00171$
+;carwar.c:241: if(tile->tile & ROT_1)      { lx = y;      ly = 31 - x; }
+	ld	l,-16 (ix)
+	ld	h,-15 (ix)
+	ld	l,(hl)
+	ld	a,l
+	and	a,#0x20
+	jr	Z,00108$
+	ld	a,-12 (ix)
+	ld	-30 (ix),a
+	ld	a,-11 (ix)
+	ld	-29 (ix),a
+	ld	a,-28 (ix)
+	ld	-32 (ix),a
+	ld	a,-27 (ix)
+	ld	-31 (ix),a
+	jr	00109$
+00108$:
+;carwar.c:242: else if(tile->tile & ROT_2) { lx = 31 - x; ly = 31 - y; }
+	ld	a,l
+	and	a,#0x40
+	jr	Z,00105$
+	ld	a,-26 (ix)
+	ld	-30 (ix),a
+	ld	a,-25 (ix)
+	ld	-29 (ix),a
+	ld	a,#0x1F
+	sub	a,-12 (ix)
+	ld	-32 (ix),a
+	ld	a,#0x00
+	sbc	a,-11 (ix)
+	ld	-31 (ix),a
+	jr	00109$
+00105$:
+;carwar.c:243: else if(tile->tile & ROT_3) { lx = 31 - y; ly = x; }
+	ld	a,l
+	and	a,#0x80
+	jr	Z,00102$
+	ld	a,#0x1F
+	sub	a,-12 (ix)
+	ld	-30 (ix),a
+	ld	a,#0x00
+	sbc	a,-11 (ix)
+	ld	-29 (ix),a
+	ld	a,-14 (ix)
+	ld	-32 (ix),a
+	ld	a,-13 (ix)
+	ld	-31 (ix),a
+	jr	00109$
+00102$:
+;carwar.c:244: else                        { lx = x;      ly = y; }
+	ld	a,-14 (ix)
+	ld	-30 (ix),a
+	ld	a,-13 (ix)
+	ld	-29 (ix),a
+	ld	a,-12 (ix)
+	ld	-32 (ix),a
+	ld	a,-11 (ix)
+	ld	-31 (ix),a
+00109$:
+;carwar.c:245: byte = trackTiles[32 * 4 * (tile->tile & 0x0F) + (lx / 8) + (ly * 4)];
+	ld	l,-16 (ix)
+	ld	h,-15 (ix)
+	ld	a,(hl)
+	and	a,#0x0F
+	ld	l,a
+	ld	h,#0x00
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	add	hl,hl
+	ld	c,-30 (ix)
+	ld	d,-29 (ix)
+	srl	d
+	rr	c
+	srl	d
+	rr	c
+	srl	d
+	rr	c
+	ld	a,l
+	add	a,c
+	ld	c,a
+	ld	a,h
+	adc	a,d
+	ld	d,a
+	ld	l,-32 (ix)
+	ld	h,-31 (ix)
+	add	hl,hl
+	add	hl,hl
 	ld	a,c
+	add	a,l
+	ld	c,a
+	ld	a,d
+	adc	a,h
+	ld	d,a
+	ld	a,#<(_trackTiles)
+	add	a,c
+	ld	c,a
+	ld	a,#>(_trackTiles)
+	adc	a,d
+	ld	h, a
+	ld	l, c
+	ld	a,(hl)
+	ld	-3 (ix),a
+;carwar.c:246: if(byte & (1 << (7 - (lx & 0x07))))
+	ld	a,-30 (ix)
+	and	a,#0x07
+	ld	l,a
+	ld	h,#0x00
+	ld	a,#0x07
+	sub	a,l
+	ld	d,a
+	ld	a,#0x00
+	sbc	a,h
+	ld	a,d
+	inc	a
 	push	af
-	inc	sp
+	ld	d,#0x01
+	ld	c,#0x00
+	pop	af
+	jr	00280$
+00279$:
+	sla	d
+	rl	c
+00280$:
+	dec	a
+	jr	NZ,00279$
+	ld	a, -3 (ix)
+	ld	h, #0x00
+	and	a,d
+	ld	l,a
+	ld	a,h
+	and	a,c
+	ld	h,a
+	ld	a,l
+	or	a,h
+	jr	Z,00111$
+;carwar.c:247: DrawPoint8(16 + 32 * i + x, 8 + 32 * j + y, tile->color1);
+	ld	l,-23 (ix)
+	ld	h,-22 (ix)
+	ld	l,(hl)
+	ld	c,-12 (ix)
+	ld	a,-24 (ix)
+	add	a,c
+	ld	c,a
+	ld	d,-14 (ix)
+	ld	a,e
+	add	a,d
+	ld	d,a
 	push	bc
+	push	de
+	ld	b, l
+	push	bc
+	push	de
 	inc	sp
 	call	_DrawPoint8
 	pop	af
 	inc	sp
 	pop	de
-;carwar.c:284: for(y=0; y<=211; y++)
-	inc	de
-	jr	00143$
-00149$:
-;carwar.c:283: for(x=0; x<=255; x++)
-	inc	-7 (ix)
-	jr	NZ,00147$
-	inc	-6 (ix)
-	jr	00147$
-00150$:
-;carwar.c:286: VRAMtoVRAM(  0, 0,   0, 256, 128, 212);
-	ld	hl,#0x00D4
-	push	hl
-	ld	l, #0x80
-	push	hl
-	ld	hl,#0x0100
-	push	hl
-	ld	h, #0x00
-	push	hl
-	ld	l, #0x00
-	push	hl
-	ld	l, #0x00
-	push	hl
-	call	_VRAMtoVRAM
-	ld	hl,#0x000C
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:287: VRAMtoVRAM(128, 0, 128, 256, 128, 212);
-	ld	hl,#0x00D4
-	push	hl
-	ld	l, #0x80
-	push	hl
-	ld	hl,#0x0100
-	push	hl
-	ld	hl,#0x0080
-	push	hl
-	ld	l, #0x00
-	push	hl
-	ld	l, #0x80
-	push	hl
-	call	_VRAMtoVRAM
-	ld	hl,#0x000C
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:288: ClearSprite();
-	call	_ClearSprite
-;carwar.c:292: PrintSprite(64, 64, "INIT\nCARS");
+	pop	bc
+	jr	00167$
+00111$:
+;carwar.c:249: DrawPoint8(16 + 32 * i + x, 8 + 32 * j + y, tile->color0);
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
+	ld	l,(hl)
+	ld	c,-12 (ix)
+	ld	a,-21 (ix)
+	add	a,c
+	ld	c,a
+	ld	d,-14 (ix)
+	ld	a,b
+	add	a,d
+	ld	d,a
+	push	bc
+	push	de
+	ld	b, l
+	push	bc
+	push	de
+	inc	sp
+	call	_DrawPoint8
+	pop	af
+	inc	sp
+	pop	de
+	pop	bc
+00167$:
+;carwar.c:239: for(y=0; y<32; y++)
+	inc	-12 (ix)
+	jp	NZ,00165$
+	inc	-11 (ix)
+	jp	00165$
+00171$:
+;carwar.c:237: for(x=0; x<32; x++)
+	inc	-14 (ix)
+	jp	NZ,00169$
+	inc	-13 (ix)
+	jp	00169$
+00175$:
+;carwar.c:234: for(j=0; j<6; j++)
+	ld	a,-18 (ix)
+	add	a,#0x07
+	ld	-18 (ix),a
+	inc	-2 (ix)
+	jp	00173$
+00179$:
+;carwar.c:232: for(i=0; i<7; i++)
+	inc	-1 (ix)
+	jp	00177$
+00180$:
+;carwar.c:254: PrintSprite(64, 64, "SHADE\nTRACK", (u16)&defaultColor);
+	ld	c,#<(_defaultColor)
+	ld	b,#>(_defaultColor)
+	push	bc
 	ld	hl,#__str_1
 	push	hl
 	ld	hl,#0x4040
@@ -10254,19 +12562,47 @@ _MainLoop:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:293: for(i=0; i<16; i++)
+;carwar.c:262: VRAMtoVRAM(0, 0, 0, 256, 256, 212);
+	ld	hl,#0x00D4
+	ex	(sp),hl
+	ld	hl,#0x0100
+	push	hl
+	ld	l, #0x00
+	push	hl
+	ld	h, #0x00
+	push	hl
+	ld	l, #0x00
+	push	hl
+	ld	l, #0x00
+	push	hl
+	call	_VRAMtoVRAM
+	ld	hl,#0x000C
+	add	hl,sp
+	ld	sp,hl
+;carwar.c:263: ClearSprite();
+	call	_ClearSprite
+;carwar.c:267: PrintSprite(64, 64, "INIT\nCARS", (u16)&defaultColor);
+	ld	c,#<(_defaultColor)
+	ld	b,#>(_defaultColor)
+	push	bc
+	ld	hl,#__str_2
+	push	hl
+	ld	hl,#0x4040
+	push	hl
+	call	_PrintSprite
+	pop	af
+	pop	af
+	pop	af
+;carwar.c:268: for(i=0; i<16; i++)
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
-	ld	-13 (ix),#0x00
-	ld	-12 (ix),#0x00
-00151$:
+	ld	-32 (ix),#0x00
+	ld	-31 (ix),#0x00
+00181$:
 	ld	a,-1 (ix)
 	sub	a,#0x10
-	jp	PO,00218$
-	xor	a,#0x80
-00218$:
-	jp	P,00154$
-;carwar.c:295: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
+	jp	NC,00184$
+;carwar.c:270: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
 	ld	hl,#_car1
 	add	hl,de
 	push	de
@@ -10277,15 +12613,15 @@ _MainLoop:
 	push	hl
 	ld	hl,#0x01D4
 	push	hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-32 (ix)
+	ld	h,-31 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:296: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
+;carwar.c:271: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
 	ld	hl,#_car2
 	add	hl,de
 	push	de
@@ -10296,15 +12632,15 @@ _MainLoop:
 	push	hl
 	ld	hl,#0x01DF
 	push	hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-32 (ix)
+	ld	h,-31 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:297: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
+;carwar.c:272: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
 	ld	hl,#_car3
 	add	hl,de
 	push	de
@@ -10315,15 +12651,15 @@ _MainLoop:
 	push	hl
 	ld	hl,#0x01EA
 	push	hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-32 (ix)
+	ld	h,-31 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:298: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
+;carwar.c:273: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
 	ld	hl,#_car4
 	add	hl,de
 	push	de
@@ -10334,53 +12670,54 @@ _MainLoop:
 	push	hl
 	ld	hl,#0x01F5
 	push	hl
-	ld	l,-13 (ix)
-	ld	h,-12 (ix)
+	ld	l,-32 (ix)
+	ld	h,-31 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:293: for(i=0; i<16; i++)
+;carwar.c:268: for(i=0; i<16; i++)
 	ld	hl,#0x008F
 	add	hl,de
 	ex	de,hl
-	ld	a,-13 (ix)
+	ld	a,-32 (ix)
 	add	a,#0x0D
-	ld	-13 (ix),a
-	ld	a,-12 (ix)
+	ld	-32 (ix),a
+	ld	a,-31 (ix)
 	adc	a,#0x00
-	ld	-12 (ix),a
+	ld	-31 (ix),a
 	inc	-1 (ix)
-	jp	00151$
-00154$:
-;carwar.c:300: ClearSprite();
+	jp	00181$
+00184$:
+;carwar.c:275: ClearSprite();
 	call	_ClearSprite
-;carwar.c:304: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP");
-	ld	hl,#__str_2
+;carwar.c:279: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
+	ld	c,#<(_defaultColor)
+	ld	b,#>(_defaultColor)
+	push	bc
+	ld	hl,#__str_3
 	push	hl
 	ld	hl,#0x4040
 	push	hl
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:305: for(i=0; i<4; i++)
+	pop	af
+;carwar.c:280: for(i=0; i<4; i++)
 	ld	-1 (ix),#0x00
 	ld	b,#0x00
-	ld	-15 (ix),#0x00
-	ld	-14 (ix),#0x00
-00155$:
+	ld	-30 (ix),#0x00
+	ld	-29 (ix),#0x00
+00185$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	PO,00219$
-	xor	a,#0x80
-00219$:
-	jp	P,00158$
-;carwar.c:307: InitializePlayer(&ply[i], i, 50 + 50 * i, 100);
+	jp	NC,00188$
+;carwar.c:282: InitializePlayer(&players[i], i, 50 + 50 * i, 100);
 	ld	a,b
 	add	a,#0x32
-	ld	-13 (ix),a
+	ld	-32 (ix),a
 	ld	a,-1 (ix)
 	rlca
 	rlca
@@ -10388,16 +12725,16 @@ _MainLoop:
 	rlca
 	and	a,#0xF0
 	ld	c, a
-	add	a,#<(_ply)
+	add	a,#<(_players)
 	ld	e,a
-	ld	a,#>(_ply)
+	ld	a,#>(_players)
 	adc	a,#0x00
 	ld	d,a
 	push	bc
 	ld	a,#0x64
 	push	af
 	inc	sp
-	ld	h,-13 (ix)
+	ld	h,-32 (ix)
 	ld	l,-1 (ix)
 	push	hl
 	push	de
@@ -10406,31 +12743,31 @@ _MainLoop:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:308: VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * 0) + ScrPosY(ply[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
-	ld	a,#<(_ply)
+;carwar.c:283: VRAMtoVRAM(ScrPosX(players[i].posX), (256 * 0) + ScrPosY(players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
+	ld	a,#<(_players)
 	add	a,c
-	ld	l, a
-	ld	a, #>(_ply)
-	adc	a, #0x00
-	ld	h, a
-	inc	hl
-	inc	hl
+	ld	e,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	d,a
+	inc	de
+	ld	l,e
+	ld	h,d
 	inc	hl
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFB
-	ld	-17 (ix),a
+	ld	-28 (ix),a
 	ld	a,h
 	adc	a,#0xFF
-	ld	-16 (ix),a
-	ld	a,#<(_ply)
+	ld	-27 (ix),a
+	ld	a,#<(_players)
 	add	a,c
 	ld	l, a
-	ld	a, #>(_ply)
+	ld	a, #>(_players)
 	adc	a, #0x00
 	ld	h, a
-	inc	hl
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
@@ -10446,11 +12783,11 @@ _MainLoop:
 	push	hl
 	ld	l, #0xD4
 	push	hl
-	ld	l,-15 (ix)
-	ld	h,-14 (ix)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
 	push	hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
+	ld	l,-28 (ix)
+	ld	h,-27 (ix)
 	push	hl
 	push	de
 	call	_VRAMtoVRAM
@@ -10458,42 +12795,37 @@ _MainLoop:
 	add	hl,sp
 	ld	sp,hl
 	pop	bc
-;carwar.c:309: VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * 1) + ScrPosY(ply[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
-	ld	a,-15 (ix)
+;carwar.c:284: VRAMtoVRAM(ScrPosX(players[i].posX), (256 * 1) + ScrPosY(players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+	ld	a,-30 (ix)
 	add	a,#0x34
-	ld	-17 (ix),a
-	ld	a,-14 (ix)
+	ld	-28 (ix),a
+	ld	a,-29 (ix)
 	adc	a,#0x00
-	ld	-16 (ix),a
-	ld	a,#<(_ply)
+	ld	-27 (ix),a
+	ld	a,#<(_players)
 	add	a,c
-	ld	l, a
-	ld	a, #>(_ply)
-	adc	a, #0x00
-	ld	h, a
-	inc	hl
-	inc	hl
+	ld	e,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	d,a
+	inc	de
+	ld	l,e
+	ld	h,d
 	inc	hl
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFB
-	ld	-19 (ix),a
+	ld	-26 (ix),a
 	ld	a,h
 	adc	a,#0x00
-	ld	-18 (ix),a
-	ld	a,#<(_ply)
+	ld	-25 (ix),a
+	ld	a,#<(_players)
 	add	a,c
-	ld	c,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
-	ld	e,a
-	inc	c
-	jr	NZ,00220$
-	inc	e
-00220$:
-	ld	l,c
-	ld	h,e
+	ld	l, a
+	ld	a, #>(_players)
+	adc	a, #0x00
+	ld	h, a
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
@@ -10508,347 +12840,200 @@ _MainLoop:
 	push	hl
 	ld	l, #0xD4
 	push	hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
+	ld	l,-28 (ix)
+	ld	h,-27 (ix)
 	push	hl
-	ld	l,-19 (ix)
-	ld	h,-18 (ix)
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
 	push	hl
 	push	de
 	call	_VRAMtoVRAM
 	ld	hl,#0x000C
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:305: for(i=0; i<4; i++)
-	ld	b,-13 (ix)
-	ld	a,-15 (ix)
+;carwar.c:280: for(i=0; i<4; i++)
+	ld	b,-32 (ix)
+	ld	a,-30 (ix)
 	add	a,#0x0D
-	ld	-15 (ix),a
-	ld	a,-14 (ix)
+	ld	-30 (ix),a
+	ld	a,-29 (ix)
 	adc	a,#0x00
-	ld	-14 (ix),a
+	ld	-29 (ix),a
 	inc	-1 (ix)
-	jp	00155$
-00158$:
-;carwar.c:311: ClearSprite();
+	jp	00185$
+00188$:
+;carwar.c:286: ClearSprite();
 	call	_ClearSprite
-;carwar.c:316: PrintSprite(64, 64, "LETS\nGO!");
-	ld	hl,#__str_3
-	push	hl
-	ld	hl,#0x4040
-	push	hl
-	call	_PrintSprite
-	pop	af
-	pop	af
-;carwar.c:317: while(bEnd == 0)
-00136$:
-;carwar.c:319: SetPage8(page);
-	ld	a,-2 (ix)
+;carwar.c:291: while(1/*bEnd == 0*/)
+00159$:
+;carwar.c:293: SetPage8(page);
+	ld	a,-4 (ix)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:320: page = 1 - page;
+;carwar.c:294: page = 1 - page;
 	ld	a,#0x01
-	sub	a,-2 (ix)
-	ld	-2 (ix),a
-;carwar.c:324: curPly = &ply[0];
-	ld	-5 (ix),#<(_ply)
-	ld	-4 (ix),#>(_ply)
-;carwar.c:325: keyLine = GetKeyMatrixLine(8);
+	sub	a,-4 (ix)
+;carwar.c:295: yOffset = 256 * page;
+	ld	-4 (ix), a
+	ld	l, a
+	ld	-9 (ix),l
+	ld	-10 (ix),#0x00
+;carwar.c:297: for(i=0; i<4; i++)
+	ld	c,#0x00
+00189$:
+;carwar.c:298: players[i].flag = 0;
+	ld	a,c
+	cp	a,#0x04
+	jr	NC,00192$
+	rlca
+	rlca
+	rlca
+	rlca
+	and	a,#0xF0
+	add	a,#<(_players)
+	ld	e,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	d,a
+	ld	hl,#0x000D
+	add	hl,de
+	ld	e,l
+	ld	d,h
+	ld	a,#0x00
+	ld	(de),a
+;carwar.c:297: for(i=0; i<4; i++)
+	inc	c
+	jr	00189$
+00192$:
+;carwar.c:302: curPly = &players[0];
+	ld	-6 (ix),#<(_players)
+	ld	-5 (ix),#>(_players)
+;carwar.c:303: keyLine = GetKeyMatrixLine(8);
 	ld	a,#0x08
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:326: if((keyLine & KEY_LEFT) == 0)
-	ld	-3 (ix), l
-	ld	a, l
-	and	a,#0x10
-	jr	NZ,00102$
-;carwar.c:328: curPly->rot++; 
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	e,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	d, a
-	ld	l, e
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	b, (hl)
-	ld	c, a
-	inc	bc
-	ld	l,e
-	ld	h,d
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:329: curPly->rot &= 0x0F;
-	ld	a,c
-	and	a,#0x0F
-	ld	c,a
-	ld	b,#0x00
-	ex	de,hl
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-00102$:
-;carwar.c:331: if((keyLine & KEY_RIGHT) == 0)
-	ld	a,-3 (ix)
-	and	a,#0x80
-	jr	NZ,00104$
-;carwar.c:333: curPly->rot--; 
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	dec	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:334: curPly->rot &= 0x0F;
+	ld	e,l
+;carwar.c:304: if((keyLine & KEY_LEFT) == 0)
 	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-00104$:
-;carwar.c:336: if((keyLine & KEY_UP) == 0)
-	ld	a,-3 (ix)
-	and	a,#0x20
-	jr	NZ,00106$
-;carwar.c:338: curPly->dX = g_Cosinus[curPly->rot];
-	ld	a,-5 (ix)
-	add	a,#0x0B
-	ld	-19 (ix),a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	-18 (ix),a
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	l, a
-	ld	a, -4 (ix)
-	adc	a, #0x00
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	sla	e
-	rl	d
-	ld	hl,#_g_Cosinus
-	add	hl,de
-	ld	c,(hl)
-	inc	hl
-	ld	b,(hl)
-	ld	l,-19 (ix)
-	ld	h,-18 (ix)
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:339: curPly->dY = g_Sinus[curPly->rot];
-	ld	a,-5 (ix)
+	and	a,#0x10
+	jr	NZ,00114$
+;carwar.c:305: curPly->flag |= CAR_TURN_LEFT;
+	ld	a,-6 (ix)
 	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b,a
-	ld	hl,#_g_Sinus
-	add	hl,de
-	ld	e,(hl)
-	inc	hl
-	ld	d,(hl)
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:340: curPly->speed += 2;
 	ld	a,-5 (ix)
-	add	a,#0x0F
-	ld	c,a
-	ld	a,-4 (ix)
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-	add	a,#0x02
+	or	a,#0x02
 	ld	(bc),a
-00106$:
-;carwar.c:345: curPly = &ply[1];
-	ld	hl,#_ply + 16
-	ld	-5 (ix),l
-	ld	-4 (ix),h
-;carwar.c:346: keyLine = GetKeyMatrixLine(5);
+00114$:
+;carwar.c:306: if((keyLine & KEY_RIGHT) == 0)
+	ld	a,e
+	and	a,#0x80
+	jr	NZ,00116$
+;carwar.c:307: curPly->flag |= CAR_TURN_RIGHT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x01
+	ld	(bc),a
+00116$:
+;carwar.c:308: if((keyLine & KEY_UP) == 0)
+	ld	a,e
+	and	a,#0x20
+	jr	NZ,00118$
+;carwar.c:309: curPly->flag |= CAR_MOVE;
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x04
+	ld	(bc),a
+00118$:
+;carwar.c:313: curPly = &players[1];
+	ld	hl,#_players + 16
+	ld	-6 (ix),l
+	ld	-5 (ix),h
+;carwar.c:314: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:347: if((keyLine & KEY_Z) == 0)
-	ld	-3 (ix), l
+;carwar.c:315: if((keyLine & KEY_Z) == 0)
 	ld	a, l
 	and	a,#0x80
-	jr	NZ,00108$
-;carwar.c:349: curPly->rot++; 
-	ld	a,-5 (ix)
-	add	a,#0x09
+	jr	NZ,00120$
+;carwar.c:316: curPly->flag |= CAR_TURN_LEFT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
+	ld	a,-5 (ix)
 	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	inc	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:350: curPly->rot &= 0x0F;
-	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-00108$:
-;carwar.c:352: keyLine = GetKeyMatrixLine(3);
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x02
+	ld	(bc),a
+00120$:
+;carwar.c:317: keyLine = GetKeyMatrixLine(3);
 	ld	a,#0x03
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:353: if((keyLine & KEY_C) == 0)
-	ld	-3 (ix), l
+;carwar.c:318: if((keyLine & KEY_C) == 0)
 	ld	a, l
 	and	a,#0x01
-	jr	NZ,00110$
-;carwar.c:355: curPly->rot--; 
-	ld	a,-5 (ix)
-	add	a,#0x09
+	jr	NZ,00122$
+;carwar.c:319: curPly->flag |= CAR_TURN_RIGHT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
+	ld	a,-5 (ix)
 	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	dec	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:356: curPly->rot &= 0x0F;
-	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-00110$:
-;carwar.c:358: keyLine = GetKeyMatrixLine(5);
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x01
+	ld	(bc),a
+00122$:
+;carwar.c:320: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:359: if((keyLine & KEY_X) == 0)
-	ld	-3 (ix), l
+;carwar.c:321: if((keyLine & KEY_X) == 0)
 	ld	a, l
 	and	a,#0x20
-	jr	NZ,00112$
-;carwar.c:361: curPly->dX = g_Cosinus[curPly->rot];
-	ld	a,-5 (ix)
-	add	a,#0x0B
-	ld	-19 (ix),a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	-18 (ix),a
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	l, a
-	ld	a, -4 (ix)
-	adc	a, #0x00
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	sla	e
-	rl	d
-	ld	hl,#_g_Cosinus
-	add	hl,de
-	ld	c,(hl)
-	inc	hl
-	ld	b,(hl)
-	ld	l,-19 (ix)
-	ld	h,-18 (ix)
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:362: curPly->dY = g_Sinus[curPly->rot];
-	ld	a,-5 (ix)
+	jr	NZ,00124$
+;carwar.c:322: curPly->flag |= CAR_MOVE;
+	ld	a,-6 (ix)
 	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b,a
-	ld	hl,#_g_Sinus
-	add	hl,de
-	ld	e,(hl)
-	inc	hl
-	ld	d,(hl)
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:363: curPly->speed += 2;
 	ld	a,-5 (ix)
-	add	a,#0x0F
-	ld	c,a
-	ld	a,-4 (ix)
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-	add	a,#0x02
+	or	a,#0x04
 	ld	(bc),a
-00112$:
-;carwar.c:368: curPly = &ply[2];
-	ld	hl,#_ply + 32
-	ld	-5 (ix),l
-	ld	-4 (ix),h
-;carwar.c:369: switch (Joystick(1)) // Joy 1 direction
+00124$:
+;carwar.c:326: curPly = &players[2];
+	ld	hl,#_players + 32
+	ld	-6 (ix),l
+	ld	-5 (ix),h
+;carwar.c:327: switch (Joystick(1)) // Joy 1 direction
 	ld	a,#0x01
 	push	af
 	inc	sp
@@ -10856,291 +13041,169 @@ _MainLoop:
 	inc	sp
 	ld	a,l
 	sub	a,#0x02
-	jp	PO,00237$
+	jp	PO,00295$
 	xor	a,#0x80
-00237$:
-	jp	M,00119$
+00295$:
+	jp	M,00131$
 	ld	a,#0x08
 	sub	a,l
-	jp	PO,00238$
+	jp	PO,00296$
 	xor	a,#0x80
-00238$:
-	jp	M,00119$
+00296$:
+	jp	M,00131$
 	ld	a,l
 	add	a,#0xFE
 	ld	c,a
 	push	de
 	ld	e,c
 	ld	d,#0x00
-	ld	hl,#00239$
+	ld	hl,#00297$
 	add	hl,de
 	add	hl,de
-;carwar.c:371: case 2: // up-right
+;carwar.c:329: case 2: // up-right
 	pop	de
 	jp	(hl)
-00239$:
-	jr	00113$
-	jr	00114$
-	jr	00115$
-	jr	00119$
-	jr	00116$
-	jr	00117$
-	jr	00118$
-00113$:
-;carwar.c:372: case 3: // right
-00114$:
-;carwar.c:373: case 4: // down-right
-00115$:
-;carwar.c:374: curPly->rot--; 
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	dec	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:375: curPly->rot &= 0x0F;
-	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:376: break;
-	jr	00119$
-;carwar.c:377: case 6: // down-left
-00116$:
-;carwar.c:378: case 7: // left
-00117$:
-;carwar.c:379: case 8:// up-left
-00118$:
-;carwar.c:380: curPly->rot++; 
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	inc	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:381: curPly->rot &= 0x0F;
-	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:383: }
-00119$:
-;carwar.c:384: if(Joytrig(1) != 0) // Joy 1 Button A
-	ld	a,#0x01
-	push	af
-	inc	sp
-	call	_Joytrig
-	inc	sp
-	xor	a,a
-	or	a,l
-	jr	Z,00121$
-;carwar.c:386: curPly->dX = g_Cosinus[curPly->rot];
-	ld	a,-5 (ix)
-	add	a,#0x0B
-	ld	-19 (ix),a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	-18 (ix),a
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	l, a
-	ld	a, -4 (ix)
-	adc	a, #0x00
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	sla	e
-	rl	d
-	ld	hl,#_g_Cosinus
-	add	hl,de
-	ld	c,(hl)
-	inc	hl
-	ld	b,(hl)
-	ld	l,-19 (ix)
-	ld	h,-18 (ix)
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:387: curPly->dY = g_Sinus[curPly->rot];
-	ld	a,-5 (ix)
-	add	a,#0x0D
-	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b,a
-	ld	hl,#_g_Sinus
-	add	hl,de
-	ld	e,(hl)
-	inc	hl
-	ld	d,(hl)
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:388: curPly->speed += 2;
-	ld	a,-5 (ix)
-	add	a,#0x0F
-	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b,a
-	ld	a,(bc)
-	add	a,#0x02
-	ld	(bc),a
-00121$:
-;carwar.c:393: curPly = &ply[3];
-	ld	hl,#_ply + 48
-	ld	-5 (ix),l
-	ld	-4 (ix),h
-;carwar.c:394: switch (Joystick(2)) // Joy 2 direction
-	ld	a,#0x02
-	push	af
-	inc	sp
-	call	_Joystick
-	inc	sp
-	ld	a,l
-	sub	a,#0x02
-	jp	PO,00242$
-	xor	a,#0x80
-00242$:
-	jp	M,00128$
-	ld	a,#0x08
-	sub	a,l
-	jp	PO,00243$
-	xor	a,#0x80
-00243$:
-	jp	M,00128$
-	ld	a,l
-	add	a,#0xFE
-	ld	c,a
-	push	de
-	ld	e,c
-	ld	d,#0x00
-	ld	hl,#00244$
-	add	hl,de
-	add	hl,de
-;carwar.c:396: case 2: // up-right
-	pop	de
-	jp	(hl)
-00244$:
-	jr	00122$
-	jr	00123$
-	jr	00124$
-	jr	00128$
+00297$:
 	jr	00125$
 	jr	00126$
 	jr	00127$
-00122$:
-;carwar.c:397: case 3: // right
-00123$:
-;carwar.c:398: case 4: // down-right
-00124$:
-;carwar.c:399: curPly->rot--; 
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	dec	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:400: curPly->rot &= 0x0F;
-	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:401: break;
+	jr	00131$
 	jr	00128$
-;carwar.c:402: case 6: // down-left
+	jr	00129$
+	jr	00130$
 00125$:
-;carwar.c:403: case 7: // left
+;carwar.c:330: case 3: // right
 00126$:
-;carwar.c:404: case 8:// up-left
+;carwar.c:331: case 4: // down-right
 00127$:
-;carwar.c:405: curPly->rot++; 
-	ld	a,-5 (ix)
-	add	a,#0x09
+;carwar.c:332: curPly->flag |= CAR_TURN_RIGHT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
+	ld	a,-5 (ix)
 	adc	a,#0x00
-	ld	b, a
-	ld	l, c
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	inc	de
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:406: curPly->rot &= 0x0F;
-	ld	a,e
-	and	a,#0x0F
-	ld	e,a
-	ld	d,#0x00
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:408: }
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x01
+	ld	(bc),a
+;carwar.c:333: break;
+	jr	00131$
+;carwar.c:334: case 6: // down-left
 00128$:
-;carwar.c:409: if(Joytrig(2) != 0) // Joy 2 Button A
+;carwar.c:335: case 7: // left
+00129$:
+;carwar.c:336: case 8:// up-left
+00130$:
+;carwar.c:337: curPly->flag |= CAR_TURN_LEFT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x02
+	ld	(bc),a
+;carwar.c:339: }
+00131$:
+;carwar.c:340: if(Joytrig(1) != 0) // Joy 1 Button A
+	ld	a,#0x01
+	push	af
+	inc	sp
+	call	_Joytrig
+	inc	sp
+	xor	a,a
+	or	a,l
+	jr	Z,00133$
+;carwar.c:341: curPly->flag |= CAR_MOVE;
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x04
+	ld	(bc),a
+00133$:
+;carwar.c:345: curPly = &players[3];
+	ld	hl,#_players + 48
+	ld	-6 (ix),l
+	ld	-5 (ix),h
+;carwar.c:346: switch (Joystick(2)) // Joy 2 direction
+	ld	a,#0x02
+	push	af
+	inc	sp
+	call	_Joystick
+	inc	sp
+	ld	a,l
+	sub	a,#0x02
+	jp	PO,00298$
+	xor	a,#0x80
+00298$:
+	jp	M,00140$
+	ld	a,#0x08
+	sub	a,l
+	jp	PO,00299$
+	xor	a,#0x80
+00299$:
+	jp	M,00140$
+	ld	a,l
+	add	a,#0xFE
+	ld	c,a
+	push	de
+	ld	e,c
+	ld	d,#0x00
+	ld	hl,#00300$
+	add	hl,de
+	add	hl,de
+;carwar.c:348: case 2: // up-right
+	pop	de
+	jp	(hl)
+00300$:
+	jr	00134$
+	jr	00135$
+	jr	00136$
+	jr	00140$
+	jr	00137$
+	jr	00138$
+	jr	00139$
+00134$:
+;carwar.c:349: case 3: // right
+00135$:
+;carwar.c:350: case 4: // down-right
+00136$:
+;carwar.c:351: curPly->flag |= CAR_TURN_RIGHT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x01
+	ld	(bc),a
+;carwar.c:352: break;
+	jr	00140$
+;carwar.c:353: case 6: // down-left
+00137$:
+;carwar.c:354: case 7: // left
+00138$:
+;carwar.c:355: case 8:// up-left
+00139$:
+;carwar.c:356: curPly->flag |= CAR_TURN_LEFT;
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	or	a,#0x02
+	ld	(bc),a
+;carwar.c:358: }
+00140$:
+;carwar.c:359: if(Joytrig(2) != 0) // Joy 2 Button A
 	ld	a,#0x02
 	push	af
 	inc	sp
@@ -11148,66 +13211,20 @@ _MainLoop:
 	inc	sp
 	xor	a,a
 	or	a,l
-	jr	Z,00197$
-;carwar.c:411: curPly->dX = g_Cosinus[curPly->rot];
-	ld	a,-5 (ix)
-	add	a,#0x0B
-	ld	-19 (ix),a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	-18 (ix),a
-	ld	a,-5 (ix)
-	add	a,#0x09
-	ld	l, a
-	ld	a, -4 (ix)
-	adc	a, #0x00
-	ld	h, a
-	ld	a,(hl)
-	inc	hl
-	ld	d, (hl)
-	ld	e, a
-	sla	e
-	rl	d
-	ld	hl,#_g_Cosinus
-	add	hl,de
-	ld	c,(hl)
-	inc	hl
-	ld	b,(hl)
-	ld	l,-19 (ix)
-	ld	h,-18 (ix)
-	ld	(hl),c
-	inc	hl
-	ld	(hl),b
-;carwar.c:412: curPly->dY = g_Sinus[curPly->rot];
-	ld	a,-5 (ix)
+	jr	Z,00244$
+;carwar.c:360: curPly->flag |= CAR_MOVE;
+	ld	a,-6 (ix)
 	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b,a
-	ld	hl,#_g_Sinus
-	add	hl,de
-	ld	e,(hl)
-	inc	hl
-	ld	d,(hl)
-	ld	l,c
-	ld	h,b
-	ld	(hl),e
-	inc	hl
-	ld	(hl),d
-;carwar.c:413: curPly->speed += 2;
 	ld	a,-5 (ix)
-	add	a,#0x0F
-	ld	c,a
-	ld	a,-4 (ix)
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-	add	a,#0x02
+	or	a,#0x04
 	ld	(bc),a
-;carwar.c:418: for(i=0; i<4; i++)
-00197$:
-	ld	e,-2 (ix)
+;carwar.c:364: for(i=0; i<4; i++)
+00244$:
+	ld	e,-4 (ix)
 	ld	d,#0x00
 	ld	l,e
 	ld	h,d
@@ -11218,35 +13235,30 @@ _MainLoop:
 	add	hl,de
 	add	hl,hl
 	add	hl,hl
-	ld	-13 (ix),l
-	ld	-12 (ix),h
+	ld	-32 (ix),l
+	ld	-31 (ix),h
 	ld	-1 (ix),#0x00
-	ld	-19 (ix),#0x00
-	ld	-18 (ix),#0x00
-00159$:
+	ld	-30 (ix),#0x00
+	ld	-29 (ix),#0x00
+00193$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	PO,00247$
-	xor	a,#0x80
-00247$:
-	jp	P,00162$
-;carwar.c:420: VRAMtoVRAM((13 * i) + (52 * page), 212, ScrPosX(ply[i].prevX), (256 * page) + ScrPosY(ply[i].prevY), 13, 11);
-	ld	b, -2 (ix)
-	ld	c,#0x00
+	jp	NC,00196$
+;carwar.c:366: VRAMtoVRAM((13 * i) + (52 * page), 212, ScrPosX(players[i].prevX), yOffset + ScrPosY(players[i].prevY), 13, 11);
 	ld	a,-1 (ix)
 	rlca
 	rlca
 	rlca
 	rlca
 	and	a,#0xF0
-	ld	-15 (ix),a
-	add	a,#<(_ply)
-	ld	e,a
-	ld	a,#>(_ply)
+	ld	e, a
+	add	a,#<(_players)
+	ld	c,a
+	ld	a,#>(_players)
 	adc	a,#0x00
-	ld	d,a
-	ld	hl,#0x0007+1
-	add	hl,de
+	ld	b,a
+	ld	hl,#0x0006+1
+	add	hl,bc
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFB
@@ -11254,16 +13266,18 @@ _MainLoop:
 	ld	a,h
 	adc	a,#0xFF
 	ld	h,a
-	add	hl,bc
-	ld	c,l
-	ld	b,h
-	ld	a,#<(_ply)
-	add	a,-15 (ix)
+	ld	a,-10 (ix)
+	add	a,l
+	ld	-26 (ix),a
+	ld	a,-9 (ix)
+	adc	a,h
+	ld	-25 (ix),a
+	ld	a,#<(_players)
+	add	a,e
 	ld	l, a
-	ld	a, #>(_ply)
+	ld	a, #>(_players)
 	adc	a, #0x00
 	ld	h, a
-	inc	hl
 	inc	hl
 	inc	hl
 	inc	hl
@@ -11272,252 +13286,482 @@ _MainLoop:
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFA
-	ld	-15 (ix),a
+	ld	e,a
 	ld	a,h
 	adc	a,#0xFF
-	ld	-14 (ix),a
-	ld	a,-19 (ix)
-	add	a,-13 (ix)
-	ld	e,a
-	ld	a,-18 (ix)
-	adc	a,-12 (ix)
 	ld	d,a
+	ld	a,-30 (ix)
+	add	a,-32 (ix)
+	ld	c,a
+	ld	a,-29 (ix)
+	adc	a,-31 (ix)
+	ld	b,a
 	ld	hl,#0x000B
 	push	hl
 	ld	l, #0x0D
 	push	hl
-	push	bc
-	ld	l,-15 (ix)
-	ld	h,-14 (ix)
-	push	hl
-	ld	hl,#0x00D4
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
 	push	hl
 	push	de
+	ld	hl,#0x00D4
+	push	hl
+	push	bc
 	call	_VRAMtoVRAM
 	ld	hl,#0x000C
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:418: for(i=0; i<4; i++)
-	ld	a,-19 (ix)
+;carwar.c:364: for(i=0; i<4; i++)
+	ld	a,-30 (ix)
 	add	a,#0x0D
-	ld	-19 (ix),a
-	ld	a,-18 (ix)
+	ld	-30 (ix),a
+	ld	a,-29 (ix)
 	adc	a,#0x00
-	ld	-18 (ix),a
+	ld	-29 (ix),a
 	inc	-1 (ix)
-	jp	00159$
-00162$:
-;carwar.c:425: for(i=0; i<4; i++)
+	jp	00193$
+00196$:
+;carwar.c:371: for(i=0; i<4; i++)
 	ld	-1 (ix),#0x00
-	ld	-19 (ix),#0x00
-	ld	-18 (ix),#0x00
-00163$:
+00197$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	PO,00248$
-	xor	a,#0x80
-00248$:
-	jp	P,00166$
-;carwar.c:427: curPly = &ply[i];
+	jp	NC,00200$
+;carwar.c:373: curPly = &players[i];
 	ld	a,-1 (ix)
 	rlca
 	rlca
 	rlca
 	rlca
 	and	a,#0xF0
-	add	a,#<(_ply)
-	ld	e,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
-	ld	-5 (ix), e
-	ld	-4 (ix), a
-;carwar.c:429: curPly->speed--;
-	ld	a,-5 (ix)
-	add	a,#0x0F
-	ld	e,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	d,a
-	ld	a,(de)
-	dec	a
-;carwar.c:430: if(curPly->speed < 0)
-	ld	(de),a
-	bit	7,a
-	jr	Z,00134$
-;carwar.c:431: curPly->speed = 0;
-	ld	a,#0x00
-	ld	(de),a
-	jr	00135$
-00134$:
-;carwar.c:432: else if(curPly->speed > 7)
-	ld	a,(de)
-	ld	l,a
-	ld	a,#0x07
-	sub	a,l
-	jp	PO,00249$
-	xor	a,#0x80
-00249$:
-	jp	P,00135$
-;carwar.c:433: curPly->speed = 7;
-	ld	a,#0x07
-	ld	(de),a
-00135$:
-;carwar.c:435: curPly->prevX = curPly->posX;
-	ld	a,-5 (ix)
-	add	a,#0x05
+	add	a,#<(_players)
 	ld	c,a
-	ld	a,-4 (ix)
+	ld	a,#>(_players)
 	adc	a,#0x00
-	ld	b,a
-	ld	e,-5 (ix)
-	ld	d,-4 (ix)
-	inc	de
-	ld	l,e
-	ld	h,d
-	ld	a,(hl)
-	ld	-15 (ix),a
-	inc	hl
-	ld	a,(hl)
-	ld	-14 (ix),a
-	ld	l,c
-	ld	h,b
-	ld	a,-15 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,-14 (ix)
-	ld	(hl),a
-;carwar.c:436: curPly->prevY = curPly->posY;
-	ld	a,-5 (ix)
-	add	a,#0x07
+	ld	-6 (ix), c
+	ld	-5 (ix), a
+;carwar.c:375: if(curPly->flag & CAR_TURN_LEFT)
+	ld	a,-6 (ix)
+	add	a,#0x0D
 	ld	c,a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	b,a
 	ld	a,-5 (ix)
-	add	a,#0x03
-	ld	-21 (ix),a
-	ld	a,-4 (ix)
-	adc	a,#0x00
-	ld	-20 (ix),a
-	ld	l,-21 (ix)
-	ld	h,-20 (ix)
-	ld	a,(hl)
-	ld	-23 (ix),a
-	inc	hl
-	ld	a,(hl)
-	ld	-22 (ix),a
-	ld	l,c
-	ld	h,b
-	ld	a,-23 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,-22 (ix)
-	ld	(hl),a
-;carwar.c:437: curPly->posX += curPly->speed * curPly->dX;
-	ld	a,-5 (ix)
-	add	a,#0x0F
-	ld	c,a
-	ld	a,-4 (ix)
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-	ld	-17 (ix),a
+	and	a,#0x02
+	jr	Z,00144$
+;carwar.c:377: curPly->rot += cars[curPly->car].rotSpeed; 
+	ld	a,-6 (ix)
+	add	a,#0x0E
+	ld	c,a
 	ld	a,-5 (ix)
-	add	a,#0x0B
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	ld	-30 (ix),a
+	ld	a,-6 (ix)
+	add	a,#0x0C
+	ld	e,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	d,a
+	ld	a,(de)
+	ld	e,a
+	add	a,a
+	add	a,e
+	add	a,#<(_cars)
+	ld	e,a
+	ld	a,#>(_cars)
+	adc	a,#0x00
+	ld	d,a
+	ld	a,(de)
+	ld	l,a
+	ld	a,-30 (ix)
+	add	a,l
+	ld	(bc),a
+00144$:
+;carwar.c:379: if(curPly->flag & CAR_TURN_RIGHT)
+	ld	a,-6 (ix)
+	add	a,#0x0D
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	ld	-28 (ix), a
+	and	a,#0x01
+	jr	Z,00146$
+;carwar.c:381: curPly->rot -= cars[curPly->car].rotSpeed; 
+	ld	a,-6 (ix)
+	add	a,#0x0E
+	ld	e,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	d,a
+	ld	a,(de)
+	ld	-30 (ix),a
+	ld	a,-6 (ix)
+	add	a,#0x0C
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	ld	l,a
+	push	de
+	ld	a,l
+	ld	e,a
+	add	a,a
+	add	a,e
+	pop	de
+	add	a,#<(_cars)
+	ld	c,a
+	ld	a,#>(_cars)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	ld	l,a
+	ld	a,-30 (ix)
+	sub	a,l
+	ld	(de),a
+00146$:
+;carwar.c:383: if(curPly->flag & CAR_MOVE)
+	ld	a,-28 (ix)
+	and	a,#0x04
+	jr	Z,00148$
+;carwar.c:385: angle = curPly->rot / 4;
+	ld	a,-6 (ix)
+	add	a,#0x0E
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	ld	c,a
+	srl	c
+	srl	c
+;carwar.c:386: curPly->dX = g_Cosinus[angle];
+	ld	a,-6 (ix)
+	add	a,#0x08
+	ld	-30 (ix),a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	-29 (ix),a
+	sla	c
+	ld	a,#<(_g_Cosinus)
+	add	a,c
 	ld	l, a
-	ld	a, -4 (ix)
+	ld	a, #>(_g_Cosinus)
+	adc	a, #0x00
+	ld	h, a
+	ld	b,(hl)
+	inc	hl
+	ld	e,(hl)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
+	ld	(hl),b
+	inc	hl
+	ld	(hl),e
+;carwar.c:387: curPly->dY = g_Sinus[angle];
+	ld	a,-6 (ix)
+	add	a,#0x0A
+	ld	e,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	d,a
+	ld	a,#<(_g_Sinus)
+	add	a,c
+	ld	l, a
+	ld	a, #>(_g_Sinus)
+	adc	a, #0x00
+	ld	h, a
+	ld	c,(hl)
+	inc	hl
+	ld	b,(hl)
+	ex	de,hl
+	ld	(hl),c
+	inc	hl
+	ld	(hl),b
+;carwar.c:388: curPly->speed += 2;
+	ld	a,-6 (ix)
+	add	a,#0x0F
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+	add	a,#0x02
+	ld	(bc),a
+00148$:
+;carwar.c:391: if(curPly->speed > 0)
+	ld	a,-6 (ix)
+	add	a,#0x0F
+	ld	c,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,(bc)
+;carwar.c:392: curPly->speed--;
+	or	a,a
+	jr	Z,00150$
+	dec	a
+	ld	(bc),a
+00150$:
+;carwar.c:393: if(curPly->speed > cars[curPly->car].maxSpeed)
+	ld	a,(bc)
+	ld	-30 (ix),a
+	ld	a,-6 (ix)
+	add	a,#0x0C
+	ld	e,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	d,a
+	ld	a,(de)
+	ld	e,a
+	add	a,a
+	add	a,e
+	add	a,#<(_cars)
+	ld	e,a
+	ld	a,#>(_cars)
+	adc	a,#0x00
+	ld	d,a
+	inc	de
+	ld	a,(de)
+	ld	e,a
+	sub	a,-30 (ix)
+	jr	NC,00152$
+;carwar.c:394: curPly->speed = cars[curPly->car].maxSpeed;
+	ld	a,e
+	ld	(bc),a
+00152$:
+;carwar.c:396: curPly->prevX = curPly->posX;
+	ld	a,-6 (ix)
+	add	a,#0x04
+	ld	e,a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	d,a
+	ld	l,-6 (ix)
+	ld	h,-5 (ix)
+	ld	a,(hl)
+	ld	-28 (ix),a
+	inc	hl
+	ld	a,(hl)
+	ld	-27 (ix),a
+	ex	de,hl
+	ld	a,-28 (ix)
+	ld	(hl),a
+	inc	hl
+	ld	a,-27 (ix)
+	ld	(hl),a
+;carwar.c:397: curPly->prevY = curPly->posY;
+	ld	a,-6 (ix)
+	add	a,#0x06
+	ld	-30 (ix),a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	-29 (ix),a
+	ld	a,-6 (ix)
+	add	a,#0x02
+	ld	-26 (ix),a
+	ld	a,-5 (ix)
+	adc	a,#0x00
+	ld	-25 (ix),a
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
+	ld	(hl),e
+	inc	hl
+	ld	(hl),d
+;carwar.c:398: curPly->posX += (curPly->speed * curPly->dX) / 8;
+	ld	a,(bc)
+	ld	-30 (ix),a
+	ld	a,-6 (ix)
+	add	a,#0x08
+	ld	l, a
+	ld	a, -5 (ix)
 	adc	a, #0x00
 	ld	h, a
 	ld	a,(hl)
 	inc	hl
 	ld	h,(hl)
 	ld	l,a
-	ld	a,-17 (ix)
-	ld	-17 (ix), a
-	rla	
-	sbc	a,a
-	ld	-16 (ix),a
+	ld	a,-30 (ix)
+	ld	-30 (ix),a
+	ld	-29 (ix),#0x00
 	push	de
 	push	hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
 	push	hl
 	call	__mulint_rrx_s
+	pop	af
+	pop	af
+	ld	b,h
+	ld	c,l
+	ld	hl,#0x0008
+	push	hl
+	push	bc
+	call	__divsint_rrx_s
 	pop	af
 	pop	af
 	ld	b,h
 	ld	c,l
 	pop	de
-	ld	a,-15 (ix)
+	ld	a,-28 (ix)
 	add	a,c
 	ld	c,a
-	ld	a,-14 (ix)
+	ld	a,-27 (ix)
 	adc	a,b
 	ld	b,a
-	ex	de,hl
+	ld	l,-6 (ix)
+	ld	h,-5 (ix)
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:438: curPly->posY -= curPly->speed * curPly->dY;
-	ld	a,-5 (ix)
-	add	a,#0x0D
+;carwar.c:399: curPly->posY -= (curPly->speed * curPly->dY) / 8;
+	ld	a,-6 (ix)
+	add	a,#0x0A
 	ld	l, a
-	ld	a, -4 (ix)
+	ld	a, -5 (ix)
 	adc	a, #0x00
 	ld	h, a
 	ld	a,(hl)
 	inc	hl
 	ld	h,(hl)
 	ld	l,a
+	push	de
 	push	hl
-	ld	l,-17 (ix)
-	ld	h,-16 (ix)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
 	push	hl
 	call	__mulint_rrx_s
 	pop	af
 	pop	af
 	ld	b,h
 	ld	c,l
-	ld	a,-23 (ix)
+	ld	hl,#0x0008
+	push	hl
+	push	bc
+	call	__divsint_rrx_s
+	pop	af
+	pop	af
+	ld	b,h
+	ld	c,l
+	pop	de
+	ld	a,e
 	sub	a,c
-	ld	c,a
-	ld	a,-22 (ix)
+	ld	e,a
+	ld	a,d
 	sbc	a,b
-	ld	b,a
-	ld	l,-21 (ix)
-	ld	h,-20 (ix)
-	ld	(hl),c
+	ld	d,a
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
+	ld	(hl),e
 	inc	hl
-	ld	(hl),b
-;carwar.c:441: VRAMtoVRAM(ScrPosX(ply[i].posX), (256 * page) + ScrPosY(ply[i].posY), (13 * i) + (52 * page), 212, 13, 11);
-	ld	a,-19 (ix)
-	add	a,-13 (ix)
-	ld	-21 (ix),a
-	ld	a,-18 (ix)
-	adc	a,-12 (ix)
-	ld	-20 (ix),a
-	ld	l,-2 (ix)
-	ld	-22 (ix),l
-	ld	-23 (ix),#0x00
+	ld	(hl),d
+;carwar.c:371: for(i=0; i<4; i++)
+	inc	-1 (ix)
+	jp	00197$
+00200$:
+;carwar.c:403: CheckCollision(0, 1);
+	ld	hl,#0x0100
+	push	hl
+	call	_CheckCollision
+;carwar.c:404: CheckCollision(0, 2);
+	ld	hl,#0x0200
+	ex	(sp),hl
+	call	_CheckCollision
+;carwar.c:405: CheckCollision(0, 3);
+	ld	hl,#0x0300
+	ex	(sp),hl
+	call	_CheckCollision
+;carwar.c:406: CheckCollision(1, 2);
+	ld	hl,#0x0201
+	ex	(sp),hl
+	call	_CheckCollision
+;carwar.c:407: CheckCollision(1, 3);
+	ld	hl,#0x0301
+	ex	(sp),hl
+	call	_CheckCollision
+;carwar.c:408: CheckCollision(2, 3);
+	ld	hl,#0x0302
+	ex	(sp),hl
+	call	_CheckCollision
+	pop	af
+;carwar.c:411: for(i=0; i<4; i++)
+	ld	-1 (ix),#0x00
+	ld	de,#0x0000
+00201$:
+	ld	a,-1 (ix)
+	sub	a,#0x04
+	jp	NC,00204$
+;carwar.c:413: curPly = &players[i];
 	ld	a,-1 (ix)
 	rlca
 	rlca
 	rlca
 	rlca
 	and	a,#0xF0
-	ld	e, a
-	add	a,#<(_ply)
-	ld	d,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
+	add	a,#<(_players)
 	ld	c,a
-	ld	a,d
-	add	a,#0x03
-	ld	d,a
-	ld	a,c
+	ld	a,#>(_players)
 	adc	a,#0x00
-	ld	h, a
-	ld	l, d
+	ld	-6 (ix), c
+	ld	-5 (ix), a
+;carwar.c:414: if(curPly->posY < (5 << 8))
+	ld	c,-6 (ix)
+	ld	b,-5 (ix)
+	inc	bc
+	inc	bc
+	ld	l,c
+	ld	h,b
+	inc	hl
+	ld	a, (hl)
+	sub	a,#0x05
+	jr	NC,00156$
+;carwar.c:415: curPly->posY = (5 << 8);
+	ld	l,c
+	ld	h,b
+	ld	(hl),#0x00
+	inc	hl
+	ld	(hl),#0x05
+	jr	00157$
+00156$:
+;carwar.c:416: else if(curPly->posY > (206 << 8))
+	ld	l,c
+	ld	h,b
+	ld	a,(hl)
+	inc	hl
+	ld	h,(hl)
+	ld	l,a
+	ld	a,#0x00
+	sub	a,l
+	ld	a,#0xCE
+	sbc	a,h
+	jr	NC,00157$
+;carwar.c:417: curPly->posY = (206 << 8);
+	ld	l,c
+	ld	h,b
+	ld	(hl),#0x00
+	inc	hl
+	ld	(hl),#0xCE
+00157$:
+;carwar.c:420: VRAMtoVRAM(ScrPosX(curPly->posX), yOffset + ScrPosY(curPly->posY), (13 * i) + (52 * page), 212, 13, 11);
+	ld	a,e
+	add	a,-32 (ix)
+	ld	-30 (ix),a
+	ld	a,d
+	adc	a,-31 (ix)
+	ld	-29 (ix),a
+	ld	l, -6 (ix)
+	ld	h, -5 (ix)
+	inc	hl
+	inc	hl
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
@@ -11526,86 +13770,77 @@ _MainLoop:
 	ld	a,h
 	adc	a,#0xFF
 	ld	h,a
-	ld	a,-23 (ix)
+	ld	a,-10 (ix)
 	add	a,l
-	ld	c,a
-	ld	a,-22 (ix)
+	ld	-28 (ix),a
+	ld	a,-9 (ix)
 	adc	a,h
-	ld	b,a
-	ld	a,#<(_ply)
-	add	a,e
-	ld	l, a
-	ld	a, #>(_ply)
-	adc	a, #0x00
-	ld	h, a
-	inc	hl
+	ld	-27 (ix),a
+	ld	l,-6 (ix)
+	ld	h,-5 (ix)
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFA
-	ld	e,a
+	ld	c,a
 	ld	a,h
 	adc	a,#0xFF
-	ld	d,a
+	ld	b,a
+	push	de
 	ld	hl,#0x000B
 	push	hl
 	ld	l, #0x0D
 	push	hl
 	ld	l, #0xD4
 	push	hl
-	ld	l,-21 (ix)
-	ld	h,-20 (ix)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
+	push	hl
+	ld	l,-28 (ix)
+	ld	h,-27 (ix)
 	push	hl
 	push	bc
-	push	de
 	call	_VRAMtoVRAM
 	ld	hl,#0x000C
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:425: for(i=0; i<4; i++)
-	ld	a,-19 (ix)
-	add	a,#0x0D
-	ld	-19 (ix),a
-	ld	a,-18 (ix)
-	adc	a,#0x00
-	ld	-18 (ix),a
+	pop	de
+;carwar.c:411: for(i=0; i<4; i++)
+	ld	hl,#0x000D
+	add	hl,de
+	ld	e,l
+	ld	d,h
 	inc	-1 (ix)
-	jp	00163$
-00166$:
-;carwar.c:446: for(i=0; i<4; i++)
+	jp	00201$
+00204$:
+;carwar.c:425: for(i=0; i<4; i++)
 	ld	-1 (ix),#0x00
-	ld	-21 (ix),#0x00
-	ld	-20 (ix),#0x00
-00167$:
+	ld	-32 (ix),#0x00
+	ld	-31 (ix),#0x00
+00205$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	PO,00250$
-	xor	a,#0x80
-00250$:
-	jp	P,00170$
-;carwar.c:448: VRAMtoVRAMTrans(13 * ply[i].rot, 256 + 212 + (11 * i), ScrPosX(ply[i].posX), (256 * page) + ScrPosY(ply[i].posY), 13, 11);
-	ld	l,-2 (ix)
-	ld	-22 (ix),l
-	ld	-23 (ix),#0x00
+	jp	NC,00208$
+;carwar.c:427: VRAMtoVRAMTrans(13 * (players[i].rot / 16), 256 + 212 + (11 * i), ScrPosX(players[i].posX), yOffset + ScrPosY(players[i].posY), 13, 11);
 	ld	a,-1 (ix)
 	rlca
 	rlca
 	rlca
 	rlca
 	and	a,#0xF0
-	ld	c, a
-	add	a,#<(_ply)
-	ld	b,a
-	ld	a,#>(_ply)
+	ld	b, a
+	add	a,#<(_players)
+	ld	c,a
+	ld	a,#>(_players)
 	adc	a,#0x00
 	ld	e,a
-	ld	a,b
-	add	a,#0x03
-	ld	b,a
+	ld	a,c
+	add	a,#0x02
+	ld	c,a
 	ld	a,e
 	adc	a,#0x00
 	ld	h, a
-	ld	l, b
+	ld	l, c
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
@@ -11614,56 +13849,55 @@ _MainLoop:
 	ld	a,h
 	adc	a,#0xFF
 	ld	h,a
-	ld	a,-23 (ix)
+	ld	a,-10 (ix)
 	add	a,l
-	ld	-23 (ix),a
-	ld	a,-22 (ix)
+	ld	-30 (ix),a
+	ld	a,-9 (ix)
 	adc	a,h
-	ld	-22 (ix),a
-	ld	a,#<(_ply)
-	add	a,c
-	ld	b,a
-	ld	a,#>(_ply)
-	adc	a,#0x00
-	ld	e,a
-	inc	b
-	jr	NZ,00251$
-	inc	e
-00251$:
-	ld	l,b
-	ld	h,e
+	ld	-29 (ix),a
+	ld	a,#<(_players)
+	add	a,b
+	ld	l, a
+	ld	a, #>(_players)
+	adc	a, #0x00
+	ld	h, a
 	inc	hl
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFA
-	ld	-19 (ix),a
+	ld	-28 (ix),a
 	ld	a,h
 	adc	a,#0xFF
-	ld	-18 (ix),a
-	ld	a,-21 (ix)
+	ld	-27 (ix),a
+	ld	a,-32 (ix)
 	add	a,#0xD4
-	ld	b,a
-	ld	a,-20 (ix)
+	ld	c,a
+	ld	a,-31 (ix)
 	adc	a,#0x01
 	ld	e,a
-	ld	a,#<(_ply)
-	add	a,c
-	ld	c,a
-	ld	a,#>(_ply)
+	ld	a,#<(_players)
+	add	a,b
+	ld	b,a
+	ld	a,#>(_players)
 	adc	a,#0x00
 	ld	d,a
-	ld	a,c
-	add	a,#0x09
-	ld	c,a
+	ld	a,b
+	add	a,#0x0E
+	ld	b,a
 	ld	a,d
 	adc	a,#0x00
+	ld	d, a
+	ld	l, b
 	ld	h, a
-	ld	l, c
-	ld	c,(hl)
-	inc	hl
-	ld	d,(hl)
+	ld	a,(hl)
+	srl	a
+	srl	a
+	srl	a
+	srl	a
+	ld	l,a
 	push	de
-	ld	e,c
+	ld	e,l
+	ld	d,#0x00
 	ld	l,e
 	ld	h,d
 	add	hl,hl
@@ -11672,64 +13906,64 @@ _MainLoop:
 	add	hl,hl
 	add	hl,de
 	pop	de
-	ld	c,l
+	ld	b,l
 	ld	d,h
 	ld	hl,#0x000B
 	push	hl
 	ld	l, #0x0D
 	push	hl
-	ld	l,-23 (ix)
-	ld	h,-22 (ix)
+	ld	l,-30 (ix)
+	ld	h,-29 (ix)
 	push	hl
-	ld	l,-19 (ix)
-	ld	h,-18 (ix)
+	ld	l,-28 (ix)
+	ld	h,-27 (ix)
 	push	hl
-	ld	l,b
+	ld	l,c
 	ld	h,e
 	push	hl
-	ld	e,c
+	ld	e,b
 	push	de
 	call	_VRAMtoVRAMTrans
 	ld	hl,#0x000C
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:446: for(i=0; i<4; i++)
-	ld	a,-21 (ix)
+;carwar.c:425: for(i=0; i<4; i++)
+	ld	a,-32 (ix)
 	add	a,#0x0B
-	ld	-21 (ix),a
-	ld	a,-20 (ix)
+	ld	-32 (ix),a
+	ld	a,-31 (ix)
 	adc	a,#0x00
-	ld	-20 (ix),a
+	ld	-31 (ix),a
 	inc	-1 (ix)
-	jp	00167$
-00170$:
-;carwar.c:451: waitRetrace();
+	jp	00205$
+00208$:
+;carwar.c:430: waitRetrace();
 	call	_waitRetrace
-	jp	00136$
+	jp	00159$
 _MainLoop_end::
 __str_0:
-	.ascii "INIT"
+	.ascii "BUILD"
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x00
 __str_1:
+	.ascii "SHADE"
+	.db 0x0A
+	.ascii "TRACK"
+	.db 0x00
+__str_2:
 	.ascii "INIT"
 	.db 0x0A
 	.ascii "CARS"
 	.db 0x00
-__str_2:
+__str_3:
 	.ascii "INIT"
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x0A
 	.ascii "BACKUP"
 	.db 0x00
-__str_3:
-	.ascii "LETS"
-	.db 0x0A
-	.ascii "GO!"
-	.db 0x00
-;carwar.c:460: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
+;carwar.c:439: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 ;	---------------------------------
 ; Function InitializePlayer
 ; ---------------------------------
@@ -11740,73 +13974,121 @@ _InitializePlayer:
 	add	ix,sp
 	push	af
 	push	af
-;carwar.c:462: ply->car = car; // car index
+;carwar.c:441: ply->car = car; // car index
 	ld	c,4 (ix)
 	ld	b,5 (ix)
+	ld	hl,#0x000C
+	add	hl,bc
+	ex	de,hl
 	ld	a,6 (ix)
-	ld	(bc),a
-;carwar.c:463: ply->posX = posX << 8; // position X
-	ld	e,c
-	ld	d,b
-	inc	de
-	ld	l,7 (ix)
-	ld	-1 (ix),l
-	ld	-2 (ix),#0x00
-	ld	l,e
-	ld	h,d
-	ld	a,-2 (ix)
-	ld	(hl),a
+	ld	(de),a
+;carwar.c:442: ply->posX = 128 + posX << 7; // position X
+	ld	a, 7 (ix)
+	ld	h, #0x00
+	add	a,#0x80
+	ld	e,a
+	ld	a,h
+	adc	a,#0x00
+	ld	d,a
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	ld	l,c
+	ld	h,b
+	ld	(hl),e
 	inc	hl
-	ld	a,-1 (ix)
-	ld	(hl),a
-;carwar.c:464: ply->posY = posY << 8; // position Y
-	ld	hl,#0x0003
+	ld	(hl),d
+;carwar.c:443: ply->posY = 128 + posY << 7; // position Y
+	ld	hl,#0x0002
+	add	hl,bc
+	ld	-2 (ix),l
+	ld	-1 (ix),h
+	ld	a, 8 (ix)
+	ld	h, #0x00
+	add	a,#0x80
+	ld	e,a
+	ld	a,h
+	adc	a,#0x00
+	ld	d,a
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	ld	l,-2 (ix)
+	ld	h,-1 (ix)
+	ld	(hl),e
+	inc	hl
+	ld	(hl),d
+;carwar.c:444: ply->prevX = ply->posX; // previous position X
+	ld	hl,#0x0004
+	add	hl,bc
+	ld	-4 (ix),l
+	ld	-3 (ix),h
+	ld	l,c
+	ld	h,b
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	ld	l,-4 (ix)
+	ld	h,-3 (ix)
+	ld	(hl),e
+	inc	hl
+	ld	(hl),d
+;carwar.c:445: ply->prevY = ply->posY; // previous position Y
+	ld	hl,#0x0006
+	add	hl,bc
+	ld	-4 (ix),l
+	ld	-3 (ix),h
+	ld	l,-2 (ix)
+	ld	h,-1 (ix)
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	ld	l,-4 (ix)
+	ld	h,-3 (ix)
+	ld	(hl),e
+	inc	hl
+	ld	(hl),d
+;carwar.c:446: ply->rot = 0; // rotation
+	ld	hl,#0x000E
 	add	hl,bc
 	ex	de,hl
-	ld	l,8 (ix)
-	ld	-3 (ix),l
-	ld	-4 (ix),#0x00
-	ex	de,hl
-	ld	a,-4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,-3 (ix)
-	ld	(hl),a
-;carwar.c:465: ply->prevX = posX << 8; // previous position X
-	ld	hl,#0x0005
-	add	hl,bc
-	ld	a,-2 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,-1 (ix)
-	ld	(hl),a
-;carwar.c:466: ply->prevY = posY << 8; // previous position Y
-	ld	hl,#0x0007
-	add	hl,bc
-	ld	a,-4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,-3 (ix)
-	ld	(hl),a
-;carwar.c:467: ply->rot = 0; // rotation
-	ld	hl,#0x0009
+	ld	a,#0x00
+	ld	(de),a
+;carwar.c:447: ply->dX = 0; // velocity X
+	ld	hl,#0x0008
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:468: ply->dX = 0; // velocity X
-	ld	hl,#0x000B
+;carwar.c:448: ply->dY = 0; // velocity Y
+	ld	hl,#0x000A
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:469: ply->dY = 0; // velocity Y
-	ld	hl,#0x000D
-	add	hl,bc
-	ld	(hl),#0x00
-	inc	hl
-	ld	(hl),#0x00
-;carwar.c:470: ply->speed = 0;
+;carwar.c:449: ply->speed = 0;
 	ld	hl,#0x000F
 	add	hl,bc
 	ld	(hl),#0x00
@@ -11814,1139 +14096,235 @@ _InitializePlayer:
 	pop	ix
 	ret
 _InitializePlayer_end::
-;carwar.c:476: void SetScreen8(u8 lines)
+;carwar.c:453: void CheckCollision(u8 car1, u8 car2)
 ;	---------------------------------
-; Function SetScreen8
+; Function CheckCollision
 ; ---------------------------------
-_SetScreen8_start::
-_SetScreen8:
+_CheckCollision_start::
+_CheckCollision:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:527: __endasm;
-	
-	
-	
-		di
-	
-	
-		 ld a,(#0xF3DF)
-		 set #3,a
-		 set #2,a
-		 set #1,a
-		 ld (#0xF3DF),a
-		 out (#0x99),a
-	
-		 ld a,#(0x80+0)
-		 out (#0x99),a
-	
-	
-		 ld a,(#0xF3E0)
-		 res #4,a
-		 res #3,a
-		 ld (#0xF3E0),a
-		 out (#0x99),a
-	
-		 ld a,#(0x80+1)
-		 out (#0x99),a
-	
-	
-		 ld a,#0x1F
-		 out (#0x99),a
-	
-		 ld a,#(0x80+2)
-		 out (#0x99),a
-	
-	
-		 ld a,(#0xF3E8)
-		 res #7,a
-	
-		 or 4(ix) ;
-		 ld (#0xF3E8),a
-		 out (#0x99),a
-	
-		 ld a,#(0x80+9)
-		 out (#0x99),a
-	
-		ei
-	
-	
-		
-	pop	ix
-	ret
-_SetScreen8_end::
-;carwar.c:532: void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
-;	---------------------------------
-; Function SetSpriteMode
-; ---------------------------------
-_SetSpriteMode_start::
-_SetSpriteMode:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:587: __endasm;
-	
-	
-	
-		di
-	
-	
-		 ld a,(#0xF3E0)
-		 and #0xFC ;
-		 or 5(ix)
-		 ld (#0xF3E0),a
-		 out (#0x99),a
-	
-		 ld a,#(0x80+1)
-		 out (#0x99),a
-	
-	
-	
-		 ld a,8(ix) ;
-		 out (#0x99),a
-	
-		 ld a,#(0x80+5)
-		 out (#0x99),a
-	
-	
-	
-		 ld a,6(ix) ;
-		 out (#0x99),a
-	
-		 ld a,#(0x80+6)
-		 out (#0x99),a
-	
-	
-		 ld a,(#0xF3E7)
-		 and #0xFD ;
-		 or 4(ix)
-		 ld (#0xF3E7),a
-		 out (#0x99),a
-	
-		 ld a,#(0x80+8)
-		 out (#0x99),a
-	
-	
-	
-		 ld a,9(ix) ;
-		 out (#0x99),a
-	
-		 ld a,#(0x80+11)
-		 out (#0x99),a
-	
-		ei
-	
-		
-	pop	ix
-	ret
-_SetSpriteMode_end::
-;carwar.c:592: void SetFreq(u8 freq)
-;	---------------------------------
-; Function SetFreq
-; ---------------------------------
-_SetFreq_start::
-_SetFreq:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:596: WaitForVDP();
-	call	_WaitForVDP
-;carwar.c:612: __endasm;
-	
-	
-	
-		 ld a,(#0xF3E8)
-		 and #0xFD ;
-		 or 4(ix)
-		 ld (#0xF3E8),a
-		di
-		 out (#0x99),a
-	
-		 ld a,#(0x80+9)
-		ei
-		 out (#0x99),a
-	
-		
-	pop	ix
-	ret
-_SetFreq_end::
-;carwar.c:616: void SetPage8(u8 page)
-;	---------------------------------
-; Function SetPage8
-; ---------------------------------
-_SetPage8_start::
-_SetPage8:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:633: __endasm;
-	
-	
-		 ld a,4(ix)
-		 rrca
-		 rrca
-		 rrca
-		 or #0x1F
-		di
-		 out (#0x99),a
-		 ld a,#(0x80+2)
-		ei
-		 out (#0x99),a
-	
-		
-	pop	ix
-	ret
-_SetPage8_end::
-;carwar.c:639: void DrawPoint8(char posX, char posY, char color)
-;	---------------------------------
-; Function DrawPoint8
-; ---------------------------------
-_DrawPoint8_start::
-_DrawPoint8:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:643: WaitForVDP();
-	call	_WaitForVDP
-;carwar.c:690: __endasm;
-	
-	
-	
-	
-		 ld a,4(ix)
-		di
-		 out (#0x99),a
-		 ld a,#(0x80+36)
-		 out (#0x99),a
-	
-		 xor a
-		 out (#0x99),a
-		 ld a,#(0x80+37)
-		 out (#0x99),a
-	
-	
-		 ld a,5(ix)
-		 out (#0x99),a
-		 ld a,#(0x80+38)
-		 out (#0x99),a
-	
-		 xor a
-		 out (#0x99),a
-		 ld a,#(0x80+39)
-		 out (#0x99),a
-	
-	
-		 ld a,6(ix)
-		 out (#0x99),a
-		 ld a,#(0x80+44)
-		 out (#0x99),a
-	
-	
-		 xor a
-		 out (#0x99),a
-		 ld a,#(0x80+45)
-		 out (#0x99),a
-	
-	
-		 ld a,#0x50
-		 out (#0x99),a
-		 ld a,#(0x80+46)
-		ei
-		 out (#0x99),a
-	
-		
-	pop	ix
-	ret
-_DrawPoint8_end::
-;carwar.c:696: void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
-;	---------------------------------
-; Function DrawLine8
-; ---------------------------------
-_DrawLine8_start::
-_DrawLine8:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:700: WaitForVDP();
-	call	_WaitForVDP
-	pop	ix
-	ret
-_DrawLine8_end::
-;carwar.c:834: void waitRetrace()
-;	---------------------------------
-; Function waitRetrace
-; ---------------------------------
-_waitRetrace_start::
-_waitRetrace:
-;carwar.c:846: __endasm;
-	
-	
-		 di
-	 WAIT_RETRACE:
-		 in a,(0x99)
-		 and #0x80
-		 cp #0
-		 jr z, WAIT_RETRACE
-		 ei
-	
-		
-	ret
-_waitRetrace_end::
-;carwar.c:852: void WaitForVDP()
-;	---------------------------------
-; Function WaitForVDP
-; ---------------------------------
-_WaitForVDP_start::
-_WaitForVDP:
-;carwar.c:873: __endasm;
-	
-	
-	
-		 ld a,#2
-		di
-		 out (#0x99),a
-		 ld a,#(0x80+15)
-		 out (#0x99),a
-	 WAIT_VDP:
-		 nop
-		 in a,(#0x99)
-		 rra
-		 jr c,WAIT_VDP
-		 xor a
-		 out (#0x99),a
-		 ld a,#(0x80+15)
-		ei
-		 out (#0x99),a
-	
-		
-	ret
-_WaitForVDP_end::
-;carwar.c:879: void WriteToVRAM8(u16 addr, u8 value)
-;	---------------------------------
-; Function WriteToVRAM8
-; ---------------------------------
-_WriteToVRAM8_start::
-_WriteToVRAM8:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:883: WaitForVDP();
-	call	_WaitForVDP
-;carwar.c:910: __endasm;
-	
-		 ;
-		 ld a,5(ix) ;
-		 and #0xC0 ;
-		       rla
-		       rla
-		di
-		 out (#0x99),a
-		 ld a,#(0x80+14)
-		 out (#0x99),a
-	
-		 ld a,4(ix) ;
-		 out (#0x99),a
-	
-		 ld a,5(ix) ;
-		 and #0x3F ;
-		 or #0x40 ;
-		 out (#0x99),a
-	
-		 ;
-		 ld a,6(ix)
-		ei
-		 out (#0x98),a
-	
-		
-	pop	ix
-	ret
-_WriteToVRAM8_end::
-;carwar.c:916: void VPDCommandLoop(u16 address)
-;	---------------------------------
-; Function VPDCommandLoop
-; ---------------------------------
-_VPDCommandLoop_start::
-_VPDCommandLoop:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:971: __endasm;
-	
-	
-		 ld l,4(ix)
-		 ld h,5(ix)
-	
-		 di
-	
-	 SEND_NEXT_COLOR:
-	
-		 inc hl
-	
-		 ;
-		 ;
-		 ld a,(hl)
-		 out (#0x99),a
-		 ld a,#(0x80+44)
-		 out (#0x99),a
-	
-	 WAIT_REG2:
-	
-		 ;
-		 ;
-		 ld a,#2
-		 out (#0x99),a
-		 ld a,#(0x80+15)
-		 out (#0x99),a
-	
-		 ;
-		 nop
-		 in a,(#0x99)
-		 ld b,a ;
-		 rra ;
-		 jr nc,COLOR_COPY_END
-	
-		 ;
-		 ;
-		 ld a,b ;
-		 rla ;
-		 jr nc,WAIT_REG2
-		 jp SEND_NEXT_COLOR
-	
-	 COLOR_COPY_END:
-	
-		 ;
-		 xor a
-		 out (#0x99),a
-		 ld a,#(0x80+15)
-		 out (#0x99),a
-	
-		 ei
-	
-		
-	pop	ix
-	ret
-_VPDCommandLoop_end::
-;carwar.c:976: void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
-;	---------------------------------
-; Function RAMtoVRAM
-; ---------------------------------
-_RAMtoVRAM_start::
-_RAMtoVRAM:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-11
+	ld	hl,#-6
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:980: buffer.DX = dx;
-	ld	hl,#0x0000
-	add	hl,sp
+;carwar.c:456: dist = players[car1].posX - players[car2].posX;
 	ld	a,4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,5 (ix)
-	ld	(hl),a
-;carwar.c:981: buffer.DY = dy;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	inc	hl
-	inc	hl
-	ld	a,6 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,7 (ix)
-	ld	(hl),a
-;carwar.c:982: buffer.NX = nx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	a,8 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,9 (ix)
-	ld	(hl),a
-;carwar.c:983: buffer.NY = ny;
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	a,10 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,11 (ix)
-	ld	(hl),a
-;carwar.c:984: buffer.CLR = ((u8*)ram)[0];
-	ld	hl,#0x0008
-	add	hl,bc
-	ex	de,hl
-	ld	l,12 (ix)
-	ld	h,13 (ix)
-	ld	a,(hl)
-	ld	(de),a
-;carwar.c:985: buffer.ARG = 0;
-	ld	hl,#0x0009
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:986: buffer.CMD = 0xF0;
-	ld	hl,#0x000A
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0xF0
-	ld	(de),a
-;carwar.c:987: VPDCommand36((u16)&buffer);
-	push	bc
-	call	_VPDCommand36
-	pop	af
-;carwar.c:988: VPDCommandLoop(ram);
-	ld	l,12 (ix)
-	ld	h,13 (ix)
-	push	hl
-	call	_VPDCommandLoop
-	ld	sp,ix
-	pop	ix
-	ret
-_RAMtoVRAM_end::
-;carwar.c:992: void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
-;	---------------------------------
-; Function RAMtoVRAMTrans
-; ---------------------------------
-_RAMtoVRAMTrans_start::
-_RAMtoVRAMTrans:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-11
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:996: buffer.DX = dx;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	a,4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,5 (ix)
-	ld	(hl),a
-;carwar.c:997: buffer.DY = dy;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	inc	hl
-	inc	hl
-	ld	a,6 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,7 (ix)
-	ld	(hl),a
-;carwar.c:998: buffer.NX = nx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	a,8 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,9 (ix)
-	ld	(hl),a
-;carwar.c:999: buffer.NY = ny;
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	a,10 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,11 (ix)
-	ld	(hl),a
-;carwar.c:1000: buffer.CLR = ((u8*)ram)[0];
-	ld	hl,#0x0008
-	add	hl,bc
-	ex	de,hl
-	ld	l,12 (ix)
-	ld	h,13 (ix)
-	ld	a,(hl)
-	ld	(de),a
-;carwar.c:1001: buffer.ARG = 0;
-	ld	hl,#0x0009
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1002: buffer.CMD = 0xB8;
-	ld	hl,#0x000A
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0xB8
-	ld	(de),a
-;carwar.c:1003: VPDCommand36((u16)&buffer);
-	push	bc
-	call	_VPDCommand36
-	pop	af
-;carwar.c:1004: VPDCommandLoop(ram);
-	ld	l,12 (ix)
-	ld	h,13 (ix)
-	push	hl
-	call	_VPDCommandLoop
-	ld	sp,ix
-	pop	ix
-	ret
-_RAMtoVRAMTrans_end::
-;carwar.c:1008: void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
-;	---------------------------------
-; Function FillVRAM
-; ---------------------------------
-_FillVRAM_start::
-_FillVRAM:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-11
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:1012: buffer.DX = dx;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	a,4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,5 (ix)
-	ld	(hl),a
-;carwar.c:1013: buffer.DY = dy;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	inc	hl
-	inc	hl
-	ld	a,6 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,7 (ix)
-	ld	(hl),a
-;carwar.c:1014: buffer.NX = nx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	a,8 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,9 (ix)
-	ld	(hl),a
-;carwar.c:1015: buffer.NY = ny;
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	a,10 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,11 (ix)
-	ld	(hl),a
-;carwar.c:1016: buffer.CLR = color;
-	ld	hl,#0x0008
-	add	hl,bc
-	ex	de,hl
-	ld	a,12 (ix)
-	ld	(de),a
-;carwar.c:1017: buffer.ARG = 0;
-	ld	hl,#0x0009
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1018: buffer.CMD = 0xC0;
-	ld	hl,#0x000A
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0xC0
-	ld	(de),a
-;carwar.c:1019: VPDCommand36((u16)&buffer);
-	push	bc
-	call	_VPDCommand36
-	ld	sp,ix
-	pop	ix
-	ret
-_FillVRAM_end::
-;carwar.c:1023: void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
-;	---------------------------------
-; Function VRAMtoVRAM
-; ---------------------------------
-_VRAMtoVRAM_start::
-_VRAMtoVRAM:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-15
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:1027: buffer.SX = sx;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	a,4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,5 (ix)
-	ld	(hl),a
-;carwar.c:1028: buffer.SY = sy;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	inc	hl
-	inc	hl
-	ld	a,6 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,7 (ix)
-	ld	(hl),a
-;carwar.c:1029: buffer.DX = dx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	a,8 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,9 (ix)
-	ld	(hl),a
-;carwar.c:1030: buffer.DY = dy;
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	a,10 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,11 (ix)
-	ld	(hl),a
-;carwar.c:1031: buffer.NX = nx;
-	ld	hl,#0x0008
-	add	hl,bc
-	ld	a,12 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,13 (ix)
-	ld	(hl),a
-;carwar.c:1032: buffer.NY = ny;
-	ld	hl,#0x000A
-	add	hl,bc
-	ld	a,14 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,15 (ix)
-	ld	(hl),a
-;carwar.c:1033: buffer.CLR = 0;
-	ld	hl,#0x000C
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1034: buffer.ARG = 0;
-	ld	hl,#0x000D
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1035: buffer.CMD = 0xD0;
-	ld	hl,#0x000E
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0xD0
-	ld	(de),a
-;carwar.c:1036: VPDCommand32((u16)&buffer);
-	push	bc
-	call	_VPDCommand32
-	ld	sp,ix
-	pop	ix
-	ret
-_VRAMtoVRAM_end::
-;carwar.c:1040: void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
-;	---------------------------------
-; Function VRAMtoVRAMTrans
-; ---------------------------------
-_VRAMtoVRAMTrans_start::
-_VRAMtoVRAMTrans:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-15
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:1044: buffer.SX = sx;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	a,4 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,5 (ix)
-	ld	(hl),a
-;carwar.c:1045: buffer.SY = sy;
-	ld	hl,#0x0000
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	inc	hl
-	inc	hl
-	ld	a,6 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,7 (ix)
-	ld	(hl),a
-;carwar.c:1046: buffer.DX = dx;
-	ld	hl,#0x0004
-	add	hl,bc
-	ld	a,8 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,9 (ix)
-	ld	(hl),a
-;carwar.c:1047: buffer.DY = dy;
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	a,10 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,11 (ix)
-	ld	(hl),a
-;carwar.c:1048: buffer.NX = nx;
-	ld	hl,#0x0008
-	add	hl,bc
-	ld	a,12 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,13 (ix)
-	ld	(hl),a
-;carwar.c:1049: buffer.NY = ny;
-	ld	hl,#0x000A
-	add	hl,bc
-	ld	a,14 (ix)
-	ld	(hl),a
-	inc	hl
-	ld	a,15 (ix)
-	ld	(hl),a
-;carwar.c:1050: buffer.CLR = 0;
-	ld	hl,#0x000C
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1051: buffer.ARG = 0;
-	ld	hl,#0x000D
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x00
-	ld	(de),a
-;carwar.c:1052: buffer.CMD = 0x98;
-	ld	hl,#0x000E
-	add	hl,bc
-	ex	de,hl
-	ld	a,#0x98
-	ld	(de),a
-;carwar.c:1053: VPDCommand32((u16)&buffer);
-	push	bc
-	call	_VPDCommand32
-	ld	sp,ix
-	pop	ix
-	ret
-_VRAMtoVRAMTrans_end::
-;carwar.c:1060: void VPDCommand32(u16 address)
-;	---------------------------------
-; Function VPDCommand32
-; ---------------------------------
-_VPDCommand32_start::
-_VPDCommand32:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:1064: WaitForVDP();
-	call	_WaitForVDP
-;carwar.c:1094: __endasm;
-	
-	
-		 ld l,4(ix)
-		 ld h,5(ix)
-	
-		 ld a,#32
-		di
-		 out (#0x99),a
-		 ld a,#(0x80+17)
-		 out (#0x99),a
-		 ld c,#0x99 +#2
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		ei
-		 outi
-	
-		
-	pop	ix
-	ret
-_VPDCommand32_end::
-;carwar.c:1100: void VPDCommand36(u16 address)
-;	---------------------------------
-; Function VPDCommand36
-; ---------------------------------
-_VPDCommand36_start::
-_VPDCommand36:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-;carwar.c:1104: WaitForVDP();
-	call	_WaitForVDP
-;carwar.c:1130: __endasm;
-	
-	
-		 ld l,4(ix)
-		 ld h,5(ix)
-		 ;
-		 ld a,#36 ;
-		di
-		 out (#0x99),a
-		 ld a,#(0x80+17)
-		 out (#0x99),a ;
-		 ld c,#0x99 +#2 ;
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		 outi
-		ei ;
-		 outi
-	
-		
-	pop	ix
-	ret
-_VPDCommand36_end::
-;carwar.c:1133: void PrintSprite(u8 X, u8 Y, const char* text)
-;	---------------------------------
-; Function PrintSprite
-; ---------------------------------
-_PrintSprite_start::
-_PrintSprite:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	dec	sp
-;carwar.c:1136: u8 curX = X;
-	ld	a,4 (ix)
-	ld	-1 (ix),a
-;carwar.c:1137: u8 curY = Y;
-;carwar.c:1138: while(text[sprtIdx] != 0)
-	ld	b, 5 (ix)
-	ld	e,#0x00
-00104$:
-	ld	a,6 (ix)
-	add	a,e
-	ld	d,a
-	ld	a,7 (ix)
-	adc	a,#0x00
-	ld	c, a
-	ld	l, d
-	ld	h, a
-	ld	l,(hl)
-	xor	a,a
-	or	a,l
-	jr	Z,00106$
-;carwar.c:1140: if(text[sprtIdx] == '\n')
-	ld	a,l
-	sub	a,#0x0A
-	jr	NZ,00102$
-;carwar.c:1142: curX = X;
-	ld	a,4 (ix)
-	ld	-1 (ix),a
-;carwar.c:1143: curY += 9;
-	ld	a,b
-	add	a,#0x09
-	ld	b,a
-	jr	00103$
-00102$:
-;carwar.c:1147: SetSprite(sprtIdx, curX, curY, text[sprtIdx] - '0');
-	ld	a,l
-	add	a,#0xD0
-	ld	l,a
-	push	bc
-	push	de
-	ld	a,l
-	push	af
-	inc	sp
-	push	bc
-	inc	sp
-	ld	d, -1 (ix)
-	push	de
-	call	_SetSprite
-	pop	af
-	pop	af
-	pop	de
-	pop	bc
-;carwar.c:1148: curX += 8;
-	ld	a,-1 (ix)
-	add	a,#0x08
-	ld	-1 (ix),a
-00103$:
-;carwar.c:1150: sprtIdx++;
-	inc	e
-	jr	00104$
-00106$:
-;carwar.c:1152: SetSprite(sprtIdx, 0, 216, 0);
-	ld	hl,#0x00D8
-	push	hl
-	ld	d,#0x00
-	push	de
-	call	_SetSprite
-	ld	sp,ix
-	pop	ix
-	ret
-_PrintSprite_end::
-;carwar.c:1155: void ClearSprite()
-;	---------------------------------
-; Function ClearSprite
-; ---------------------------------
-_ClearSprite_start::
-_ClearSprite:
-;carwar.c:1157: SetSprite(0, 0, 216, 0);
-	ld	hl,#0x00D8
-	push	hl
-	ld	l, #0x00
-	push	hl
-	call	_SetSprite
-	pop	af
-	pop	af
-	ret
-_ClearSprite_end::
-;carwar.c:1160: void SetSprite(u8 index, u8 X, u8 Y, u8 shape)
-;	---------------------------------
-; Function SetSprite
-; ---------------------------------
-_SetSprite_start::
-_SetSprite:
-	push	ix
-	ld	ix,#0
-	add	ix,sp
-	ld	hl,#-8
-	add	hl,sp
-	ld	sp,hl
-;carwar.c:1163: sprt.posX = X;
-	ld	hl,#0x0004
-	add	hl,sp
-	ld	c,l
-	ld	b,h
-	ld	e,c
-	ld	d,b
-	inc	de
-	ld	a,5 (ix)
-	ld	(de),a
-;carwar.c:1164: sprt.posY = Y;
-	ld	a,6 (ix)
-	ld	(bc),a
-;carwar.c:1165: sprt.index = shape;
-	inc	bc
-	inc	bc
-	ld	a,7 (ix)
-	ld	(bc),a
-;carwar.c:1166: RAMtoVRAM((index * 16) % 256, 244 + (index / 16), 8, 1, (u16)&defaultColor);
-	ld	-8 (ix),#<(_defaultColor)
-	ld	-7 (ix),#>(_defaultColor)
-	ld	a,4 (ix)
-	srl	a
-	srl	a
-	srl	a
-	srl	a
-	ld	h, #0x00
-	add	a,#0xF4
+	rlca
+	rlca
+	rlca
+	rlca
+	and	a,#0xF0
 	ld	-6 (ix),a
-	ld	a,h
+	add	a,#<(_players)
+	ld	e,a
+	ld	a,#>(_players)
 	adc	a,#0x00
+	ld	h, a
+	ld	l, e
+	ld	c,(hl)
+	inc	hl
+	ld	b,(hl)
+	ld	a,5 (ix)
+	rlca
+	rlca
+	rlca
+	rlca
+	and	a,#0xF0
 	ld	-5 (ix),a
-	ld	e,4 (ix)
-	ld	d,#0x00
-	ld	c,e
-	ld	b,d
-	sla	c
-	rl	b
-	sla	c
-	rl	b
-	sla	c
-	rl	b
-	sla	c
-	rl	b
-	push	de
-	ld	hl,#0x0100
-	push	hl
-	push	bc
-	call	__modsint_rrx_s
-	pop	af
-	pop	af
-	ld	b,h
-	ld	c,l
-	ld	l,-8 (ix)
-	ld	h,-7 (ix)
-	push	hl
-	ld	hl,#0x0001
-	push	hl
-	ld	l, #0x08
-	push	hl
-	ld	l,-6 (ix)
-	ld	h,-5 (ix)
-	push	hl
-	push	bc
-	call	_RAMtoVRAM
-	ld	hl,#0x000A
-	add	hl,sp
-	ld	sp,hl
-	pop	de
-;carwar.c:1167: RAMtoVRAM((index * 4) % 256, 246 + (index / 64), 4, 1, (u16)&sprt);
-	ld	hl,#0x0004
-	add	hl,sp
-	ld	-8 (ix),l
-	ld	-7 (ix),h
-	ld	a,4 (ix)
-	srl	a
-	srl	a
-	srl	a
-	srl	a
-	srl	a
-	srl	a
-	ld	h, #0x00
-	add	a,#0xF6
+	add	a,#<(_players)
+	ld	l, a
+	ld	a, #>(_players)
+	adc	a, #0x00
+	ld	h, a
+	ld	a,(hl)
+	inc	hl
+	ld	h,(hl)
+	ld	l,a
+	ld	a,c
+	sub	a,l
+	ld	l,a
+	ld	a,b
+	sbc	a,h
+	ld	-2 (ix), l
+;carwar.c:457: x = dist >> 8;
+	ld	-1 (ix), a
+	ld	e,a
+	rlc	a
+	sbc	a,a
+	ld	d,a
+;carwar.c:458: dist = players[car1].posY - players[car2].posY;
+	ld	a,#<(_players)
+	add	a,-6 (ix)
+	ld	l, a
+	ld	a, #>(_players)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	ld	a,(hl)
+	ld	-4 (ix),a
+	inc	hl
+	ld	a,(hl)
+	ld	-3 (ix),a
+	ld	a,#<(_players)
+	add	a,-5 (ix)
+	ld	l, a
+	ld	a, #>(_players)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	ld	a,(hl)
+	inc	hl
+	ld	h,(hl)
+	ld	l,a
+	ld	a,-4 (ix)
+	sub	a,l
+	ld	l,a
+	ld	a,-3 (ix)
+	sbc	a,h
+	ld	-2 (ix), l
+;carwar.c:459: y = dist >> 8;
+	ld	-1 (ix), a
 	ld	c,a
-	ld	a,h
-	adc	a,#0x00
+	rlc	a
+	sbc	a,a
 	ld	b,a
-	sla	e
-	rl	d
-	sla	e
-	rl	d
+;carwar.c:460: dist = (x * x) + (y * y);
 	push	bc
-	ld	hl,#0x0100
-	push	hl
 	push	de
-	call	__modsint_rrx_s
+	push	de
+	call	__mulint_rrx_s
 	pop	af
 	pop	af
 	ex	de,hl
 	pop	bc
-	ld	l,-8 (ix)
-	ld	h,-7 (ix)
-	push	hl
-	ld	hl,#0x0001
-	push	hl
-	ld	l, #0x04
-	push	hl
-	push	bc
 	push	de
-	call	_RAMtoVRAM
-	ld	hl,#0x000A
-	add	hl,sp
-	ld	sp,hl
+	push	bc
+	push	bc
+	call	__mulint_rrx_s
+	pop	af
+	pop	af
+	ld	b,h
+	ld	c,l
+	pop	de
+	ld	a,e
+	add	a,c
+	ld	c,a
+	ld	a,d
+	adc	a,b
+	ld	-2 (ix), c
+	ld	-1 (ix), a
+;carwar.c:471: if(dist < 11 * 11) // Collision occured
+	ld	a,-2 (ix)
+	sub	a,#0x79
+	ld	a,-1 (ix)
+	sbc	a,#0x00
+	jp	PO,00106$
+	xor	a,#0x80
+00106$:
+	jp	P,00103$
+;carwar.c:473: dist = players[car1].speed;
+	ld	a,#<(_players)
+	add	a,-6 (ix)
+	ld	c,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	b,a
+	ld	hl,#0x000F
+	add	hl,bc
+	ld	a,(hl)
+	ld	-2 (ix), a
+	ld	-1 (ix),#0x00
+;carwar.c:474: players[car1].speed = players[car2].speed;
+	ld	a,#<(_players)
+	add	a,-6 (ix)
+	ld	c,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	b,a
+	ld	hl,#0x000F
+	add	hl,bc
+	ld	c,l
+	ld	b,h
+	ld	a,#<(_players)
+	add	a,-5 (ix)
+	ld	e,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	d,a
+	ld	hl,#0x000F
+	add	hl,de
+	ld	a,(hl)
+	ld	(bc),a
+;carwar.c:475: players[car1].posX = players[car1].prevX;
+	ld	a,#<(_players)
+	add	a,-6 (ix)
+	ld	c,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	b,a
+	ld	a,#<(_players)
+	add	a,-6 (ix)
+	ld	l, a
+	ld	a, #>(_players)
+	adc	a, #0x00
+	ld	h, a
+	inc	hl
+	inc	hl
+	inc	hl
+	inc	hl
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	ld	l,c
+	ld	h,b
+	ld	(hl),e
+	inc	hl
+	ld	(hl),d
+;carwar.c:476: players[car2].speed = dist;
+	ld	a,#<(_players)
+	add	a,-5 (ix)
+	ld	c,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	b,a
+	ld	hl,#0x000F
+	add	hl,bc
+	ld	c,l
+	ld	b,h
+	ld	a,-2 (ix)
+	ld	(bc),a
+;carwar.c:477: players[car2].posY = players[car2].prevY;
+	ld	a,#<(_players)
+	add	a,-5 (ix)
+	ld	c,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	b,a
+	inc	bc
+	inc	bc
+	ld	a,#<(_players)
+	add	a,-5 (ix)
+	ld	e,a
+	ld	a,#>(_players)
+	adc	a,#0x00
+	ld	d,a
+	ld	hl,#0x0006
+	add	hl,de
+	ld	e,(hl)
+	inc	hl
+	ld	d,(hl)
+	ld	l,c
+	ld	h,b
+	ld	(hl),e
+	inc	hl
+	ld	(hl),d
+00103$:
 	ld	sp,ix
 	pop	ix
 	ret
-_SetSprite_end::
+_CheckCollision_end::
 	.area _CODE
 	.area _CABS

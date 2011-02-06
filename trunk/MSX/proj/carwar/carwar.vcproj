@@ -187,6 +187,10 @@
 				RelativePath=".\data\sprt_shadow.h"
 				>
 			</File>
+			<File
+				RelativePath=".\data\sprt_track.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="build"
@@ -236,6 +240,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\files.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\files.h"
+				>
+			</File>
+			<File
 				RelativePath=".\keyboard.h"
 				>
 			</File>
@@ -253,6 +265,14 @@
 			</File>
 			<File
 				RelativePath=".\trigo64.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\video.c"
+				>
+			</File>
+			<File
+				RelativePath=".\video.h"
 				>
 			</File>
 		</Filter>

@@ -152,7 +152,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 								byte |= 1 << (7 - bit);
 							if((pixel & 0x7) == 0x7)
 							{
-								sprintf_s(tempData, 1024, "0x%02X, // %c%c%c%c%c%c%c%c", byte, 
+								sprintf_s(tempData, 1024, "0x%02X, /* %c%c%c%c%c%c%c%c */ ", byte, 
 									byte & 0x80 ? '#' : '.', 
 									byte & 0x40 ? '#' : '.', 
 									byte & 0x20 ? '#' : '.', 
