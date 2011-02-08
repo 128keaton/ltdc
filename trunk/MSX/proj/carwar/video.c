@@ -8,6 +8,8 @@ void SetScreen8(u8 lines)
 {
 	lines;
 
+	WaitForVDP();
+
 	__asm
 
 		//; Passage en SCREEN 8
@@ -44,7 +46,6 @@ void SetScreen8(u8 lines)
 		//; - modification registre 9 -
 		ld		a,(RG9SAV)
 		res		#7,a           //; bit 7 a 0
-		//and		#LINES_MASK ;// 0111 1111
 		or		4(ix) ;// 192 (0x00) or 212 lines (0x80)?
 		ld		(RG9SAV),a
 		out		(VDP_ADDR),a
@@ -64,6 +65,8 @@ void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 {
 	activate; flag; tgs; tas;
 
+	WaitForVDP();
+
 	__asm
 
 		//; Passage en SCREEN 8
@@ -80,7 +83,6 @@ void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 5 -
-		//ld		a,#0xEE ;// TAS addr (low)
 		ld		a,8(ix) ;// TAS addr (low)
 		out		(VDP_ADDR),a
 
@@ -88,7 +90,6 @@ void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 6 -
-		//ld		a,#0x1F ;// TGS addr
 		ld		a,6(ix) ;// TGS addr
 		out		(VDP_ADDR),a
 
@@ -106,7 +107,6 @@ void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 11 -
-		//ld		a,#0x01 ;// TAS addr (high)
 		ld		a,9(ix) ;// TAS addr (high)
 		out		(VDP_ADDR),a
 
@@ -147,6 +147,8 @@ void SetFreq(u8 freq)
 void SetPage8(u8 page)
 {
 	page;
+
+	WaitForVDP();
 
 	__asm
 		//; - modification registre 2 -
@@ -337,14 +339,12 @@ void waitRetrace()
 	__endasm;
 }
 
-/**
- * Commande VDP (écriture registres 32 à 46)
- */ 
+/** Attente de libération du VDP */ 
 void WaitForVDP()
 {
 	__asm
 		
-		//; Attente libération VDP
+		//; Attente libération VDP. Test bit CE sur registre S2
 		ld		a,#2
 	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
@@ -364,20 +364,18 @@ void WaitForVDP()
 	__endasm;
 }
 
-/**
- *
- */
-void WriteToVRAM8(u16 addr, u8 value)
+/** Write a byte in the VRAM */
+void WriteVRAM(u16 addr, u8 value)
 {
 	addr; value;
 
 	WaitForVDP();
-
 	
 	__asm
 		;// Set 0 to register 14 (we don't use address bits 14-16)
 		ld		a,5(ix)     ;// Bits 14-15
 		and		#0xC0		;// Keep only 2 last bits
+        rla
         rla
         rla
 	di //; on interdit les interruptions
@@ -397,6 +395,40 @@ void WriteToVRAM8(u16 addr, u8 value)
 		ld		a,6(ix)
 	ei //; on autorise les interruptions
 		out		(VDP_DATA),a
+
+	__endasm;
+}
+
+/** Read a byte in the VRAM */
+u8 ReadVRAM(u16 addr)
+{
+	addr;
+
+	WaitForVDP();
+	
+	__asm
+		;// Set 0 to register 14 (we don't use address bits 14-16)
+		ld		a,5(ix)     ;// Bits 14-15
+		and		#0xC0		;// Keep only 2 last bits
+        rla
+        rla
+        rla
+	di //; on interdit les interruptions
+		out		(VDP_ADDR),a
+		ld		a,VDP_REG(14)
+		out		(VDP_ADDR),a
+		
+		ld		a,4(ix)     ;// Bits 0-7
+		out		(VDP_ADDR),a
+
+		ld		a,5(ix)     ;// Bits 8-13
+		and		#0x3F		;// Set 2 last bits to 0; read access
+		out		(VDP_ADDR),a
+
+		;// Write value
+		in		a,(VDP_DATA)
+	ei //; on autorise les interruptions
+		ld		l,a
 
 	__endasm;
 }
