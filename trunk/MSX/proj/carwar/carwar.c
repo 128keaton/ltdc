@@ -19,8 +19,9 @@
 #define COLOR_YELLOW	144
 #define COLOR_WHITE     255
 
-#define BLOCK_SHADOW	4
-#define ROAD_SHADOW		3
+#define BLOCK_SHADOW	3
+#define ROAD_SHADOW		2
+#define BASE_SHADOW		5
 
 enum
 {
@@ -548,7 +549,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(x + 256 * (y - i));
 					if((y - i < 212) && (colorCode[cur] < OP_ROAD))
-						WriteVRAM(x + 256 * (y - i), DarkColor(cur, 4 - i));
+						WriteVRAM(x + 256 * (y - i), DarkColor(cur, BASE_SHADOW - i));
 					else
 						break;
 				}
@@ -556,7 +557,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(x + 256 * (y + i));
 					if((y + i < 212) && (colorCode[cur] >= OP_ROAD))
-						WriteVRAM(x + 256 * (y + i), DarkColor(cur, 3 - i));
+						WriteVRAM(x + 256 * (y + i), DarkColor(cur, BASE_SHADOW - i - 1));
 					else
 						break;
 				}
@@ -566,19 +567,26 @@ void ShadeTrack()
 	}
 }
 
+#define TransformColor(mul, shift) g = (g * mul) >> shift; r = (r * mul) >> shift; b = (b * mul) >> shift;
+
 /***/
 u8 DarkColor(u8 color, u8 power)
 {
-	const DarkFactor factor[] =
-	{
-		{ 4, 5 },
-		{ 3, 4 },
-		{ 2, 3 },
-		{ 1, 2 },
-	};
 	u8 g, r ,b;
-	g = ((color & 0xE0) >> 5) * factor[power].mul / factor[power].div;
-	r = ((color & 0x1C) >> 2) * factor[power].mul / factor[power].div;
-	b = (color & 0x03) * factor[power].mul / factor[power].div;
+	g = ((color & 0xE0) >> 5);
+	r = ((color & 0x1C) >> 2);
+	b = (color & 0x03);
+	switch(power)
+	{
+	case 0: break;
+	case 1: TransformColor(7, 3); break;
+	case 2: TransformColor(3, 2); break;
+	case 3: TransformColor(5, 3); break;
+	case 4: TransformColor(1, 1); break;
+	case 5: TransformColor(3, 3); break;
+	case 6: TransformColor(1, 2); break;
+	case 7: 
+	default: TransformColor(1, 3); break;
+	}
 	return (g << 5) + (r << 2) + b;
 }
