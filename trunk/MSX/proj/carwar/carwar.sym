@@ -10,9 +10,9 @@ Symbol Table
   0 _CheckCollision_end                                            3BA8 GR
   0 _CheckCollision_start                                          3A55 GR
     _ClearSprite                                                   **** GX
-  0 _DarkColor                                                     4055 GR
-  0 _DarkColor_end                                                 424C GR
-  0 _DarkColor_start                                               4055 GR
+  0 _DarkenColor                                                   404B GR
+  0 _DarkenColor_end                                               4242 GR
+  0 _DarkenColor_start                                             404B GR
     _FillVRAM                                                      **** GX
     _GetKeyMatrixLine                                              **** GX
   0 _InitializePlayer                                              397B GR
@@ -30,7 +30,7 @@ Symbol Table
     _SetScreen8                                                    **** GX
     _SetSpriteMode                                                 **** GX
   0 _ShadeTrack                                                    3E9D GR
-  0 _ShadeTrack_end                                                4055 GR
+  0 _ShadeTrack_end                                                404B GR
   0 _ShadeTrack_start                                              3E9D GR
     _VRAMtoVRAM                                                    **** GX
     _VRAMtoVRAMTrans                                               **** GX
@@ -67,7 +67,7 @@ Symbol Table
 
 Area Table
 
-   0 _CODE                                      size 424C   flags 0
+   0 _CODE                                      size 4242   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0

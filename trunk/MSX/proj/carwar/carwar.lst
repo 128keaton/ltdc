@@ -1,7 +1,7 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : free open source ANSI-C Compiler
                               3 ; Version 3.0.0 #6037 (Oct 31 2010) (MINGW32)
-                              4 ; This file was generated Tue Feb 08 15:09:40 2011
+                              4 ; This file was generated Tue Feb 08 15:15:07 2011
                               5 ;--------------------------------------------------------
                               6 	.module carwar
                               7 	.optsdcc -mz80
@@ -29,7 +29,7 @@
                              29 	.globl _CheckCollision
                              30 	.globl _BuildTrack
                              31 	.globl _ShadeTrack
-                             32 	.globl _DarkColor
+                             32 	.globl _DarkenColor
                              33 ;--------------------------------------------------------
                              34 ; special function registers
                              35 ;--------------------------------------------------------
@@ -14496,7 +14496,7 @@
    3EBA                   14496 00124$:
    3EBA DD 7E FF          14497 	ld	a,-1 (ix)
    3EBD D6 01             14498 	sub	a,#0x01
-   3EBF D2r50s40          14499 	jp	NC,00128$
+   3EBF D2r46s40          14499 	jp	NC,00128$
                           14500 ;carwar.c:542: for(y=0; y<211; y++)
    3EC2 DD 36 FC 00       14501 	ld	-4 (ix),#0x00
    3EC6 DD 36 FD 00       14502 	ld	-3 (ix),#0x00
@@ -14505,7 +14505,7 @@
    3ECD D6 D3             14505 	sub	a,#0xD3
    3ECF DD 7E FD          14506 	ld	a,-3 (ix)
    3ED2 DE 00             14507 	sbc	a,#0x00
-   3ED4 D2r44s40          14508 	jp	NC,00126$
+   3ED4 D2r3As40          14508 	jp	NC,00126$
                           14509 ;carwar.c:544: cur = ReadVRAM(x + 256 * y);
    3ED7 DD 66 FC          14510 	ld	h,-4 (ix)
    3EDA 2E 00             14511 	ld	l,#0x00
@@ -14548,7 +14548,7 @@
    3F14 57                14548 	ld	d,a
    3F15 1A                14549 	ld	a,(de)
    3F16 D6 40             14550 	sub	a,#0x40
-   3F18 D2r38s40          14551 	jp	NC,00122$
+   3F18 D2r2Es40          14551 	jp	NC,00122$
    3F1B 3E 00             14552 	ld	a,#<(_colorCode)
    3F1D 80                14553 	add	a,b
    3F1E 6F                14554 	ld	l, a
@@ -14557,7 +14557,7 @@
    3F23 67                14557 	ld	h, a
    3F24 7E                14558 	ld	a, (hl)
    3F25 D6 40             14559 	sub	a,#0x40
-   3F27 DAr38s40          14560 	jp	C,00122$
+   3F27 DAr2Es40          14560 	jp	C,00122$
                           14561 ;carwar.c:548: for(i=0; i<BLOCK_SHADOW; i++)
    3F2A DD 36 FA 00       14562 	ld	-6 (ix),#0x00
    3F2E DD 36 FB 00       14563 	ld	-5 (ix),#0x00
@@ -14566,7 +14566,7 @@
    3F35 D6 03             14566 	sub	a,#0x03
    3F37 DD 7E FB          14567 	ld	a,-5 (ix)
    3F3A DE 00             14568 	sbc	a,#0x00
-   3F3C 30 6A             14569 	jr	NC,00108$
+   3F3C 30 65             14569 	jr	NC,00108$
                           14570 ;carwar.c:550: cur = ReadVRAM(x + 256 * (y - i));
    3F3E DD 7E FC          14571 	ld	a,-4 (ix)
    3F41 DD 96 FA          14572 	sub	a,-6 (ix)
@@ -14597,7 +14597,7 @@
    3F6E D6 D4             14597 	sub	a,#0xD4
    3F70 7B                14598 	ld	a,e
    3F71 DE 00             14599 	sbc	a,#0x00
-   3F73 30 33             14600 	jr	NC,00108$
+   3F73 30 2E             14600 	jr	NC,00108$
    3F75 3E 00             14601 	ld	a,#<(_colorCode)
    3F77 81                14602 	add	a,c
    3F78 5F                14603 	ld	e,a
@@ -14606,441 +14606,435 @@
    3F7D 57                14606 	ld	d,a
    3F7E 1A                14607 	ld	a,(de)
    3F7F D6 40             14608 	sub	a,#0x40
-   3F81 30 25             14609 	jr	NC,00108$
-                          14610 ;carwar.c:552: WriteVRAM(x + 256 * (y - i), DarkColor(cur, BASE_SHADOW - i));
-   3F83 DD 6E FA          14611 	ld	l,-6 (ix)
-   3F86 3E 05             14612 	ld	a,#0x05
-   3F88 95                14613 	sub	a,l
-   3F89 47                14614 	ld	b,a
-   3F8A C5                14615 	push	bc
-   3F8B CDr55s40          14616 	call	_DarkColor
-   3F8E F1                14617 	pop	af
-   3F8F 7D                14618 	ld	a,l
-   3F90 F5                14619 	push	af
-   3F91 33                14620 	inc	sp
-   3F92 DD 6E F8          14621 	ld	l,-8 (ix)
-   3F95 DD 66 F9          14622 	ld	h,-7 (ix)
-   3F98 E5                14623 	push	hl
-   3F99 CDr00s00          14624 	call	_WriteVRAM
-   3F9C F1                14625 	pop	af
-   3F9D 33                14626 	inc	sp
-                          14627 ;carwar.c:548: for(i=0; i<BLOCK_SHADOW; i++)
-   3F9E DD 34 FA          14628 	inc	-6 (ix)
-   3FA1 20 8F             14629 	jr	NZ,00105$
-   3FA3 DD 34 FB          14630 	inc	-5 (ix)
-   3FA6 18 8A             14631 	jr	00105$
-   3FA8                   14632 00108$:
-                          14633 ;carwar.c:556: for(i=1; i<=ROAD_SHADOW; i++)
-   3FA8 DD 36 FA 01       14634 	ld	-6 (ix),#0x01
-   3FAC DD 36 FB 00       14635 	ld	-5 (ix),#0x00
-   3FB0                   14636 00113$:
-   3FB0 3E 02             14637 	ld	a,#0x02
-   3FB2 DD 96 FA          14638 	sub	a,-6 (ix)
-   3FB5 3E 00             14639 	ld	a,#0x00
-   3FB7 DD 9E FB          14640 	sbc	a,-5 (ix)
-   3FBA 38 6A             14641 	jr	C,00116$
-                          14642 ;carwar.c:558: cur = ReadVRAM(x + 256 * (y + i));
-   3FBC DD 7E FC          14643 	ld	a,-4 (ix)
-   3FBF DD 86 FA          14644 	add	a,-6 (ix)
-   3FC2 47                14645 	ld	b,a
-   3FC3 DD 7E FD          14646 	ld	a,-3 (ix)
-   3FC6 DD 8E FB          14647 	adc	a,-5 (ix)
-   3FC9 5F                14648 	ld	e,a
-   3FCA 60                14649 	ld	h,b
-   3FCB 2E 00             14650 	ld	l,#0x00
-   3FCD DD 7E FE          14651 	ld	a,-2 (ix)
-   3FD0 85                14652 	add	a,l
-   3FD1 DD 77 F8          14653 	ld	-8 (ix),a
-   3FD4 DD 7E FF          14654 	ld	a,-1 (ix)
-   3FD7 8C                14655 	adc	a,h
-   3FD8 DD 77 F9          14656 	ld	-7 (ix),a
-   3FDB C5                14657 	push	bc
-   3FDC D5                14658 	push	de
-   3FDD DD 6E F8          14659 	ld	l,-8 (ix)
-   3FE0 DD 66 F9          14660 	ld	h,-7 (ix)
-   3FE3 E5                14661 	push	hl
-   3FE4 CDr00s00          14662 	call	_ReadVRAM
-   3FE7 F1                14663 	pop	af
-   3FE8 D1                14664 	pop	de
-   3FE9 C1                14665 	pop	bc
-   3FEA 4D                14666 	ld	c,l
-                          14667 ;carwar.c:559: if((y + i < 212) && (colorCode[cur] >= OP_ROAD))
-   3FEB 78                14668 	ld	a,b
-   3FEC D6 D4             14669 	sub	a,#0xD4
-   3FEE 7B                14670 	ld	a,e
-   3FEF DE 00             14671 	sbc	a,#0x00
-   3FF1 30 33             14672 	jr	NC,00116$
-   3FF3 3E 00             14673 	ld	a,#<(_colorCode)
-   3FF5 81                14674 	add	a,c
-   3FF6 5F                14675 	ld	e,a
-   3FF7 3E C3             14676 	ld	a,#>(_colorCode)
-   3FF9 CE 00             14677 	adc	a,#0x00
-   3FFB 57                14678 	ld	d,a
-   3FFC 1A                14679 	ld	a,(de)
-   3FFD D6 40             14680 	sub	a,#0x40
-   3FFF 38 25             14681 	jr	C,00116$
-                          14682 ;carwar.c:560: WriteVRAM(x + 256 * (y + i), DarkColor(cur, BASE_SHADOW - i - 1));
-   4001 DD 6E FA          14683 	ld	l,-6 (ix)
-   4004 3E 04             14684 	ld	a,#0x04
-   4006 95                14685 	sub	a,l
-   4007 47                14686 	ld	b,a
-   4008 C5                14687 	push	bc
-   4009 CDr55s40          14688 	call	_DarkColor
-   400C F1                14689 	pop	af
-   400D 7D                14690 	ld	a,l
-   400E F5                14691 	push	af
-   400F 33                14692 	inc	sp
-   4010 DD 6E F8          14693 	ld	l,-8 (ix)
-   4013 DD 66 F9          14694 	ld	h,-7 (ix)
-   4016 E5                14695 	push	hl
-   4017 CDr00s00          14696 	call	_WriteVRAM
-   401A F1                14697 	pop	af
-   401B 33                14698 	inc	sp
-                          14699 ;carwar.c:556: for(i=1; i<=ROAD_SHADOW; i++)
-   401C DD 34 FA          14700 	inc	-6 (ix)
-   401F 20 8F             14701 	jr	NZ,00113$
-   4021 DD 34 FB          14702 	inc	-5 (ix)
-   4024 18 8A             14703 	jr	00113$
-   4026                   14704 00116$:
-                          14705 ;carwar.c:564: y += i;
-   4026 DD 7E FC          14706 	ld	a,-4 (ix)
-   4029 DD 86 FA          14707 	add	a,-6 (ix)
-   402C DD 77 FC          14708 	ld	-4 (ix),a
-   402F DD 7E FD          14709 	ld	a,-3 (ix)
-   4032 DD 8E FB          14710 	adc	a,-5 (ix)
-   4035 DD 77 FD          14711 	ld	-3 (ix),a
-   4038                   14712 00122$:
-                          14713 ;carwar.c:542: for(y=0; y<211; y++)
-   4038 DD 34 FC          14714 	inc	-4 (ix)
-   403B C2rCAs3E          14715 	jp	NZ,00120$
-   403E DD 34 FD          14716 	inc	-3 (ix)
-   4041 C3rCAs3E          14717 	jp	00120$
-   4044                   14718 00126$:
-                          14719 ;carwar.c:540: for(x=0; x<256; x++)
-   4044 DD 34 FE          14720 	inc	-2 (ix)
-   4047 C2rBAs3E          14721 	jp	NZ,00124$
-   404A DD 34 FF          14722 	inc	-1 (ix)
-   404D C3rBAs3E          14723 	jp	00124$
-   4050                   14724 00128$:
-   4050 DD F9             14725 	ld	sp,ix
-   4052 DD E1             14726 	pop	ix
-   4054 C9                14727 	ret
-   4055                   14728 _ShadeTrack_end::
-                          14729 ;carwar.c:573: u8 DarkColor(u8 color, u8 power)
-                          14730 ;	---------------------------------
-                          14731 ; Function DarkColor
-                          14732 ; ---------------------------------
-   4055                   14733 _DarkColor_start::
-   4055                   14734 _DarkColor:
-   4055 DD E5             14735 	push	ix
-   4057 DD 21 00 00       14736 	ld	ix,#0
-   405B DD 39             14737 	add	ix,sp
-   405D 3B                14738 	dec	sp
-                          14739 ;carwar.c:576: g = ((color & 0xE0) >> 5);
-   405E DD 7E 04          14740 	ld	a,4 (ix)
-   4061 E6 E0             14741 	and	a,#0xE0
-   4063 4F                14742 	ld	c,a
-   4064 CB 39             14743 	srl	c
-   4066 CB 39             14744 	srl	c
-   4068 CB 39             14745 	srl	c
-   406A CB 39             14746 	srl	c
-   406C CB 39             14747 	srl	c
-                          14748 ;carwar.c:577: r = ((color & 0x1C) >> 2);
+   3F81 30 20             14609 	jr	NC,00108$
+                          14610 ;carwar.c:552: WriteVRAM(x + 256 * (y - i), DarkenColor(cur, 3/*BASE_SHADOW - i*/));
+   3F83 06 03             14611 	ld	b, #0x03
+   3F85 C5                14612 	push	bc
+   3F86 CDr4Bs40          14613 	call	_DarkenColor
+   3F89 F1                14614 	pop	af
+   3F8A 7D                14615 	ld	a,l
+   3F8B F5                14616 	push	af
+   3F8C 33                14617 	inc	sp
+   3F8D DD 6E F8          14618 	ld	l,-8 (ix)
+   3F90 DD 66 F9          14619 	ld	h,-7 (ix)
+   3F93 E5                14620 	push	hl
+   3F94 CDr00s00          14621 	call	_WriteVRAM
+   3F97 F1                14622 	pop	af
+   3F98 33                14623 	inc	sp
+                          14624 ;carwar.c:548: for(i=0; i<BLOCK_SHADOW; i++)
+   3F99 DD 34 FA          14625 	inc	-6 (ix)
+   3F9C 20 94             14626 	jr	NZ,00105$
+   3F9E DD 34 FB          14627 	inc	-5 (ix)
+   3FA1 18 8F             14628 	jr	00105$
+   3FA3                   14629 00108$:
+                          14630 ;carwar.c:556: for(i=1; i<=ROAD_SHADOW; i++)
+   3FA3 DD 36 FA 01       14631 	ld	-6 (ix),#0x01
+   3FA7 DD 36 FB 00       14632 	ld	-5 (ix),#0x00
+   3FAB                   14633 00113$:
+   3FAB 3E 02             14634 	ld	a,#0x02
+   3FAD DD 96 FA          14635 	sub	a,-6 (ix)
+   3FB0 3E 00             14636 	ld	a,#0x00
+   3FB2 DD 9E FB          14637 	sbc	a,-5 (ix)
+   3FB5 38 65             14638 	jr	C,00116$
+                          14639 ;carwar.c:558: cur = ReadVRAM(x + 256 * (y + i));
+   3FB7 DD 7E FC          14640 	ld	a,-4 (ix)
+   3FBA DD 86 FA          14641 	add	a,-6 (ix)
+   3FBD 47                14642 	ld	b,a
+   3FBE DD 7E FD          14643 	ld	a,-3 (ix)
+   3FC1 DD 8E FB          14644 	adc	a,-5 (ix)
+   3FC4 5F                14645 	ld	e,a
+   3FC5 60                14646 	ld	h,b
+   3FC6 2E 00             14647 	ld	l,#0x00
+   3FC8 DD 7E FE          14648 	ld	a,-2 (ix)
+   3FCB 85                14649 	add	a,l
+   3FCC DD 77 F8          14650 	ld	-8 (ix),a
+   3FCF DD 7E FF          14651 	ld	a,-1 (ix)
+   3FD2 8C                14652 	adc	a,h
+   3FD3 DD 77 F9          14653 	ld	-7 (ix),a
+   3FD6 C5                14654 	push	bc
+   3FD7 D5                14655 	push	de
+   3FD8 DD 6E F8          14656 	ld	l,-8 (ix)
+   3FDB DD 66 F9          14657 	ld	h,-7 (ix)
+   3FDE E5                14658 	push	hl
+   3FDF CDr00s00          14659 	call	_ReadVRAM
+   3FE2 F1                14660 	pop	af
+   3FE3 D1                14661 	pop	de
+   3FE4 C1                14662 	pop	bc
+   3FE5 4D                14663 	ld	c,l
+                          14664 ;carwar.c:559: if((y + i < 212) && (colorCode[cur] >= OP_ROAD))
+   3FE6 78                14665 	ld	a,b
+   3FE7 D6 D4             14666 	sub	a,#0xD4
+   3FE9 7B                14667 	ld	a,e
+   3FEA DE 00             14668 	sbc	a,#0x00
+   3FEC 30 2E             14669 	jr	NC,00116$
+   3FEE 3E 00             14670 	ld	a,#<(_colorCode)
+   3FF0 81                14671 	add	a,c
+   3FF1 5F                14672 	ld	e,a
+   3FF2 3E C3             14673 	ld	a,#>(_colorCode)
+   3FF4 CE 00             14674 	adc	a,#0x00
+   3FF6 57                14675 	ld	d,a
+   3FF7 1A                14676 	ld	a,(de)
+   3FF8 D6 40             14677 	sub	a,#0x40
+   3FFA 38 20             14678 	jr	C,00116$
+                          14679 ;carwar.c:560: WriteVRAM(x + 256 * (y + i), DarkenColor(cur, 3/*BASE_SHADOW - i - 1*/));
+   3FFC 06 03             14680 	ld	b, #0x03
+   3FFE C5                14681 	push	bc
+   3FFF CDr4Bs40          14682 	call	_DarkenColor
+   4002 F1                14683 	pop	af
+   4003 7D                14684 	ld	a,l
+   4004 F5                14685 	push	af
+   4005 33                14686 	inc	sp
+   4006 DD 6E F8          14687 	ld	l,-8 (ix)
+   4009 DD 66 F9          14688 	ld	h,-7 (ix)
+   400C E5                14689 	push	hl
+   400D CDr00s00          14690 	call	_WriteVRAM
+   4010 F1                14691 	pop	af
+   4011 33                14692 	inc	sp
+                          14693 ;carwar.c:556: for(i=1; i<=ROAD_SHADOW; i++)
+   4012 DD 34 FA          14694 	inc	-6 (ix)
+   4015 20 94             14695 	jr	NZ,00113$
+   4017 DD 34 FB          14696 	inc	-5 (ix)
+   401A 18 8F             14697 	jr	00113$
+   401C                   14698 00116$:
+                          14699 ;carwar.c:564: y += i;
+   401C DD 7E FC          14700 	ld	a,-4 (ix)
+   401F DD 86 FA          14701 	add	a,-6 (ix)
+   4022 DD 77 FC          14702 	ld	-4 (ix),a
+   4025 DD 7E FD          14703 	ld	a,-3 (ix)
+   4028 DD 8E FB          14704 	adc	a,-5 (ix)
+   402B DD 77 FD          14705 	ld	-3 (ix),a
+   402E                   14706 00122$:
+                          14707 ;carwar.c:542: for(y=0; y<211; y++)
+   402E DD 34 FC          14708 	inc	-4 (ix)
+   4031 C2rCAs3E          14709 	jp	NZ,00120$
+   4034 DD 34 FD          14710 	inc	-3 (ix)
+   4037 C3rCAs3E          14711 	jp	00120$
+   403A                   14712 00126$:
+                          14713 ;carwar.c:540: for(x=0; x<256; x++)
+   403A DD 34 FE          14714 	inc	-2 (ix)
+   403D C2rBAs3E          14715 	jp	NZ,00124$
+   4040 DD 34 FF          14716 	inc	-1 (ix)
+   4043 C3rBAs3E          14717 	jp	00124$
+   4046                   14718 00128$:
+   4046 DD F9             14719 	ld	sp,ix
+   4048 DD E1             14720 	pop	ix
+   404A C9                14721 	ret
+   404B                   14722 _ShadeTrack_end::
+                          14723 ;carwar.c:583: u8 DarkenColor(u8 color, u8 power)
+                          14724 ;	---------------------------------
+                          14725 ; Function DarkenColor
+                          14726 ; ---------------------------------
+   404B                   14727 _DarkenColor_start::
+   404B                   14728 _DarkenColor:
+   404B DD E5             14729 	push	ix
+   404D DD 21 00 00       14730 	ld	ix,#0
+   4051 DD 39             14731 	add	ix,sp
+   4053 3B                14732 	dec	sp
+                          14733 ;carwar.c:586: g = ((color & 0xE0) >> 5);
+   4054 DD 7E 04          14734 	ld	a,4 (ix)
+   4057 E6 E0             14735 	and	a,#0xE0
+   4059 4F                14736 	ld	c,a
+   405A CB 39             14737 	srl	c
+   405C CB 39             14738 	srl	c
+   405E CB 39             14739 	srl	c
+   4060 CB 39             14740 	srl	c
+   4062 CB 39             14741 	srl	c
+                          14742 ;carwar.c:587: r = ((color & 0x1C) >> 2);
+   4064 DD 7E 04          14743 	ld	a,4 (ix)
+   4067 E6 1C             14744 	and	a,#0x1C
+   4069 47                14745 	ld	b,a
+   406A CB 38             14746 	srl	b
+   406C CB 38             14747 	srl	b
+                          14748 ;carwar.c:588: b = (color & 0x03);
    406E DD 7E 04          14749 	ld	a,4 (ix)
-   4071 E6 1C             14750 	and	a,#0x1C
-   4073 47                14751 	ld	b,a
-   4074 CB 38             14752 	srl	b
-   4076 CB 38             14753 	srl	b
-                          14754 ;carwar.c:578: b = (color & 0x03);
-   4078 DD 7E 04          14755 	ld	a,4 (ix)
-   407B E6 03             14756 	and	a,#0x03
-   407D DD 77 FF          14757 	ld	-1 (ix),a
-                          14758 ;carwar.c:579: switch(power)
-   4080 3E 07             14759 	ld	a,#0x07
-   4082 DD 96 05          14760 	sub	a,5 (ix)
-   4085 DAr02s42          14761 	jp	C,00109$
-   4088 D5                14762 	push	de
-   4089 DD 5E 05          14763 	ld	e,5 (ix)
-   408C 16 00             14764 	ld	d,#0x00
-   408E 21r96s40          14765 	ld	hl,#00114$
-   4091 19                14766 	add	hl,de
-   4092 19                14767 	add	hl,de
-   4093 19                14768 	add	hl,de
-   4094 D1                14769 	pop	de
-   4095 E9                14770 	jp	(hl)
-   4096                   14771 00114$:
-   4096 C3r36s42          14772 	jp	00110$
-   4099 C3rB1s40          14773 	jp	00102$
-   409C C3rFAs40          14774 	jp	00103$
-   409F C3r31s41          14775 	jp	00104$
-   40A2 C3r77s41          14776 	jp	00105$
-   40A5 C3r96s41          14777 	jp	00106$
-   40A8 C3rD8s41          14778 	jp	00107$
-   40AB C3r02s42          14779 	jp	00108$
-                          14780 ;carwar.c:581: case 0: break;
-   40AE C3r36s42          14781 	jp	00110$
-                          14782 ;carwar.c:582: case 1: TransformColor(7, 3); break;
-   40B1                   14783 00102$:
-   40B1 59                14784 	ld	e,c
-   40B2 16 00             14785 	ld	d,#0x00
-   40B4 6B                14786 	ld	l,e
-   40B5 62                14787 	ld	h,d
-   40B6 29                14788 	add	hl,hl
-   40B7 19                14789 	add	hl,de
-   40B8 29                14790 	add	hl,hl
-   40B9 19                14791 	add	hl,de
-   40BA CB 2C             14792 	sra	h
-   40BC CB 1D             14793 	rr	l
-   40BE CB 2C             14794 	sra	h
-   40C0 CB 1D             14795 	rr	l
-   40C2 CB 2C             14796 	sra	h
-   40C4 CB 1D             14797 	rr	l
-   40C6 4D                14798 	ld	c,l
-   40C7 58                14799 	ld	e,b
-   40C8 16 00             14800 	ld	d,#0x00
-   40CA 6B                14801 	ld	l,e
-   40CB 62                14802 	ld	h,d
-   40CC 29                14803 	add	hl,hl
-   40CD 19                14804 	add	hl,de
-   40CE 29                14805 	add	hl,hl
-   40CF 19                14806 	add	hl,de
-   40D0 CB 2C             14807 	sra	h
-   40D2 CB 1D             14808 	rr	l
-   40D4 CB 2C             14809 	sra	h
-   40D6 CB 1D             14810 	rr	l
-   40D8 CB 2C             14811 	sra	h
-   40DA CB 1D             14812 	rr	l
-   40DC 45                14813 	ld	b,l
-   40DD DD 5E FF          14814 	ld	e,-1 (ix)
-   40E0 16 00             14815 	ld	d,#0x00
-   40E2 6B                14816 	ld	l,e
-   40E3 62                14817 	ld	h,d
-   40E4 29                14818 	add	hl,hl
-   40E5 19                14819 	add	hl,de
-   40E6 29                14820 	add	hl,hl
-   40E7 19                14821 	add	hl,de
-   40E8 CB 2C             14822 	sra	h
-   40EA CB 1D             14823 	rr	l
-   40EC CB 2C             14824 	sra	h
-   40EE CB 1D             14825 	rr	l
-   40F0 CB 2C             14826 	sra	h
-   40F2 CB 1D             14827 	rr	l
-   40F4 DD 75 FF          14828 	ld	-1 (ix),l
-   40F7 C3r36s42          14829 	jp	00110$
-                          14830 ;carwar.c:583: case 2: TransformColor(3, 2); break;
-   40FA                   14831 00103$:
-   40FA 59                14832 	ld	e,c
-   40FB 16 00             14833 	ld	d,#0x00
-   40FD 6B                14834 	ld	l,e
-   40FE 62                14835 	ld	h,d
-   40FF 29                14836 	add	hl,hl
-   4100 19                14837 	add	hl,de
-   4101 CB 2C             14838 	sra	h
-   4103 CB 1D             14839 	rr	l
-   4105 CB 2C             14840 	sra	h
-   4107 CB 1D             14841 	rr	l
-   4109 4D                14842 	ld	c,l
-   410A 58                14843 	ld	e,b
-   410B 16 00             14844 	ld	d,#0x00
-   410D 6B                14845 	ld	l,e
-   410E 62                14846 	ld	h,d
-   410F 29                14847 	add	hl,hl
-   4110 19                14848 	add	hl,de
-   4111 CB 2C             14849 	sra	h
-   4113 CB 1D             14850 	rr	l
-   4115 CB 2C             14851 	sra	h
-   4117 CB 1D             14852 	rr	l
-   4119 45                14853 	ld	b,l
-   411A DD 5E FF          14854 	ld	e,-1 (ix)
-   411D 16 00             14855 	ld	d,#0x00
-   411F 6B                14856 	ld	l,e
-   4120 62                14857 	ld	h,d
-   4121 29                14858 	add	hl,hl
-   4122 19                14859 	add	hl,de
-   4123 CB 2C             14860 	sra	h
-   4125 CB 1D             14861 	rr	l
-   4127 CB 2C             14862 	sra	h
-   4129 CB 1D             14863 	rr	l
-   412B DD 75 FF          14864 	ld	-1 (ix),l
-   412E C3r36s42          14865 	jp	00110$
-                          14866 ;carwar.c:584: case 3: TransformColor(5, 3); break;
-   4131                   14867 00104$:
-   4131 59                14868 	ld	e,c
-   4132 16 00             14869 	ld	d,#0x00
-   4134 6B                14870 	ld	l,e
-   4135 62                14871 	ld	h,d
-   4136 29                14872 	add	hl,hl
-   4137 29                14873 	add	hl,hl
-   4138 19                14874 	add	hl,de
-   4139 CB 2C             14875 	sra	h
-   413B CB 1D             14876 	rr	l
-   413D CB 2C             14877 	sra	h
-   413F CB 1D             14878 	rr	l
-   4141 CB 2C             14879 	sra	h
-   4143 CB 1D             14880 	rr	l
-   4145 4D                14881 	ld	c,l
-   4146 58                14882 	ld	e,b
-   4147 16 00             14883 	ld	d,#0x00
-   4149 6B                14884 	ld	l,e
-   414A 62                14885 	ld	h,d
-   414B 29                14886 	add	hl,hl
-   414C 29                14887 	add	hl,hl
-   414D 19                14888 	add	hl,de
-   414E CB 2C             14889 	sra	h
-   4150 CB 1D             14890 	rr	l
-   4152 CB 2C             14891 	sra	h
-   4154 CB 1D             14892 	rr	l
-   4156 CB 2C             14893 	sra	h
-   4158 CB 1D             14894 	rr	l
-   415A 45                14895 	ld	b,l
-   415B DD 5E FF          14896 	ld	e,-1 (ix)
-   415E 16 00             14897 	ld	d,#0x00
-   4160 6B                14898 	ld	l,e
-   4161 62                14899 	ld	h,d
-   4162 29                14900 	add	hl,hl
-   4163 29                14901 	add	hl,hl
-   4164 19                14902 	add	hl,de
-   4165 CB 2C             14903 	sra	h
-   4167 CB 1D             14904 	rr	l
-   4169 CB 2C             14905 	sra	h
-   416B CB 1D             14906 	rr	l
-   416D CB 2C             14907 	sra	h
-   416F CB 1D             14908 	rr	l
-   4171 DD 75 FF          14909 	ld	-1 (ix),l
-   4174 C3r36s42          14910 	jp	00110$
-                          14911 ;carwar.c:585: case 4: TransformColor(1, 1); break;
-   4177                   14912 00105$:
-   4177 69                14913 	ld	l,c
-   4178 26 00             14914 	ld	h,#0x00
-   417A CB 2C             14915 	sra	h
-   417C CB 1D             14916 	rr	l
-   417E 4D                14917 	ld	c,l
-   417F 68                14918 	ld	l,b
-   4180 26 00             14919 	ld	h,#0x00
-   4182 CB 2C             14920 	sra	h
-   4184 CB 1D             14921 	rr	l
-   4186 45                14922 	ld	b,l
-   4187 DD 6E FF          14923 	ld	l,-1 (ix)
-   418A 26 00             14924 	ld	h,#0x00
-   418C CB 2C             14925 	sra	h
-   418E CB 1D             14926 	rr	l
-   4190 DD 75 FF          14927 	ld	-1 (ix),l
-   4193 C3r36s42          14928 	jp	00110$
-                          14929 ;carwar.c:586: case 5: TransformColor(3, 3); break;
-   4196                   14930 00106$:
-   4196 59                14931 	ld	e,c
-   4197 16 00             14932 	ld	d,#0x00
-   4199 6B                14933 	ld	l,e
-   419A 62                14934 	ld	h,d
-   419B 29                14935 	add	hl,hl
-   419C 19                14936 	add	hl,de
-   419D CB 2C             14937 	sra	h
-   419F CB 1D             14938 	rr	l
-   41A1 CB 2C             14939 	sra	h
-   41A3 CB 1D             14940 	rr	l
-   41A5 CB 2C             14941 	sra	h
-   41A7 CB 1D             14942 	rr	l
-   41A9 4D                14943 	ld	c,l
-   41AA 58                14944 	ld	e,b
-   41AB 16 00             14945 	ld	d,#0x00
-   41AD 6B                14946 	ld	l,e
-   41AE 62                14947 	ld	h,d
-   41AF 29                14948 	add	hl,hl
-   41B0 19                14949 	add	hl,de
-   41B1 CB 2C             14950 	sra	h
-   41B3 CB 1D             14951 	rr	l
-   41B5 CB 2C             14952 	sra	h
-   41B7 CB 1D             14953 	rr	l
-   41B9 CB 2C             14954 	sra	h
-   41BB CB 1D             14955 	rr	l
-   41BD 45                14956 	ld	b,l
-   41BE DD 5E FF          14957 	ld	e,-1 (ix)
-   41C1 16 00             14958 	ld	d,#0x00
-   41C3 6B                14959 	ld	l,e
-   41C4 62                14960 	ld	h,d
-   41C5 29                14961 	add	hl,hl
-   41C6 19                14962 	add	hl,de
-   41C7 CB 2C             14963 	sra	h
-   41C9 CB 1D             14964 	rr	l
-   41CB CB 2C             14965 	sra	h
-   41CD CB 1D             14966 	rr	l
-   41CF CB 2C             14967 	sra	h
-   41D1 CB 1D             14968 	rr	l
-   41D3 DD 75 FF          14969 	ld	-1 (ix),l
-   41D6 18 5E             14970 	jr	00110$
-                          14971 ;carwar.c:587: case 6: TransformColor(1, 2); break;
-   41D8                   14972 00107$:
-   41D8 69                14973 	ld	l,c
-   41D9 26 00             14974 	ld	h,#0x00
-   41DB CB 2C             14975 	sra	h
-   41DD CB 1D             14976 	rr	l
-   41DF CB 2C             14977 	sra	h
-   41E1 CB 1D             14978 	rr	l
-   41E3 4D                14979 	ld	c,l
-   41E4 68                14980 	ld	l,b
-   41E5 26 00             14981 	ld	h,#0x00
-   41E7 CB 2C             14982 	sra	h
-   41E9 CB 1D             14983 	rr	l
-   41EB CB 2C             14984 	sra	h
-   41ED CB 1D             14985 	rr	l
-   41EF 45                14986 	ld	b,l
-   41F0 DD 6E FF          14987 	ld	l,-1 (ix)
-   41F3 26 00             14988 	ld	h,#0x00
-   41F5 CB 2C             14989 	sra	h
-   41F7 CB 1D             14990 	rr	l
-   41F9 CB 2C             14991 	sra	h
-   41FB CB 1D             14992 	rr	l
-   41FD DD 75 FF          14993 	ld	-1 (ix),l
-   4200 18 34             14994 	jr	00110$
-                          14995 ;carwar.c:588: case 7: 
-   4202                   14996 00108$:
-                          14997 ;carwar.c:589: default: TransformColor(1, 3); break;
-   4202                   14998 00109$:
-   4202 69                14999 	ld	l,c
-   4203 26 00             15000 	ld	h,#0x00
-   4205 CB 2C             15001 	sra	h
-   4207 CB 1D             15002 	rr	l
-   4209 CB 2C             15003 	sra	h
-   420B CB 1D             15004 	rr	l
-   420D CB 2C             15005 	sra	h
-   420F CB 1D             15006 	rr	l
-   4211 4D                15007 	ld	c,l
-   4212 68                15008 	ld	l,b
-   4213 26 00             15009 	ld	h,#0x00
-   4215 CB 2C             15010 	sra	h
-   4217 CB 1D             15011 	rr	l
-   4219 CB 2C             15012 	sra	h
-   421B CB 1D             15013 	rr	l
-   421D CB 2C             15014 	sra	h
-   421F CB 1D             15015 	rr	l
-   4221 45                15016 	ld	b,l
-   4222 DD 6E FF          15017 	ld	l,-1 (ix)
-   4225 26 00             15018 	ld	h,#0x00
-   4227 CB 2C             15019 	sra	h
-   4229 CB 1D             15020 	rr	l
-   422B CB 2C             15021 	sra	h
-   422D CB 1D             15022 	rr	l
-   422F CB 2C             15023 	sra	h
-   4231 CB 1D             15024 	rr	l
-   4233 DD 75 FF          15025 	ld	-1 (ix),l
-                          15026 ;carwar.c:590: }
-   4236                   15027 00110$:
-                          15028 ;carwar.c:591: return (g << 5) + (r << 2) + b;
-   4236 79                15029 	ld	a,c
-   4237 0F                15030 	rrca
-   4238 0F                15031 	rrca
-   4239 0F                15032 	rrca
-   423A E6 E0             15033 	and	a,#0xE0
+   4071 E6 03             14750 	and	a,#0x03
+   4073 DD 77 FF          14751 	ld	-1 (ix),a
+                          14752 ;carwar.c:589: switch(power)
+   4076 3E 07             14753 	ld	a,#0x07
+   4078 DD 96 05          14754 	sub	a,5 (ix)
+   407B DArF8s41          14755 	jp	C,00109$
+   407E D5                14756 	push	de
+   407F DD 5E 05          14757 	ld	e,5 (ix)
+   4082 16 00             14758 	ld	d,#0x00
+   4084 21r8Cs40          14759 	ld	hl,#00114$
+   4087 19                14760 	add	hl,de
+   4088 19                14761 	add	hl,de
+   4089 19                14762 	add	hl,de
+   408A D1                14763 	pop	de
+   408B E9                14764 	jp	(hl)
+   408C                   14765 00114$:
+   408C C3r2Cs42          14766 	jp	00110$
+   408F C3rA7s40          14767 	jp	00102$
+   4092 C3rF0s40          14768 	jp	00103$
+   4095 C3r27s41          14769 	jp	00104$
+   4098 C3r6Ds41          14770 	jp	00105$
+   409B C3r8Cs41          14771 	jp	00106$
+   409E C3rCEs41          14772 	jp	00107$
+   40A1 C3rF8s41          14773 	jp	00108$
+                          14774 ;carwar.c:591: case 0: break;
+   40A4 C3r2Cs42          14775 	jp	00110$
+                          14776 ;carwar.c:592: case 1: TransformColor(7, 3); break;
+   40A7                   14777 00102$:
+   40A7 59                14778 	ld	e,c
+   40A8 16 00             14779 	ld	d,#0x00
+   40AA 6B                14780 	ld	l,e
+   40AB 62                14781 	ld	h,d
+   40AC 29                14782 	add	hl,hl
+   40AD 19                14783 	add	hl,de
+   40AE 29                14784 	add	hl,hl
+   40AF 19                14785 	add	hl,de
+   40B0 CB 2C             14786 	sra	h
+   40B2 CB 1D             14787 	rr	l
+   40B4 CB 2C             14788 	sra	h
+   40B6 CB 1D             14789 	rr	l
+   40B8 CB 2C             14790 	sra	h
+   40BA CB 1D             14791 	rr	l
+   40BC 4D                14792 	ld	c,l
+   40BD 58                14793 	ld	e,b
+   40BE 16 00             14794 	ld	d,#0x00
+   40C0 6B                14795 	ld	l,e
+   40C1 62                14796 	ld	h,d
+   40C2 29                14797 	add	hl,hl
+   40C3 19                14798 	add	hl,de
+   40C4 29                14799 	add	hl,hl
+   40C5 19                14800 	add	hl,de
+   40C6 CB 2C             14801 	sra	h
+   40C8 CB 1D             14802 	rr	l
+   40CA CB 2C             14803 	sra	h
+   40CC CB 1D             14804 	rr	l
+   40CE CB 2C             14805 	sra	h
+   40D0 CB 1D             14806 	rr	l
+   40D2 45                14807 	ld	b,l
+   40D3 DD 5E FF          14808 	ld	e,-1 (ix)
+   40D6 16 00             14809 	ld	d,#0x00
+   40D8 6B                14810 	ld	l,e
+   40D9 62                14811 	ld	h,d
+   40DA 29                14812 	add	hl,hl
+   40DB 19                14813 	add	hl,de
+   40DC 29                14814 	add	hl,hl
+   40DD 19                14815 	add	hl,de
+   40DE CB 2C             14816 	sra	h
+   40E0 CB 1D             14817 	rr	l
+   40E2 CB 2C             14818 	sra	h
+   40E4 CB 1D             14819 	rr	l
+   40E6 CB 2C             14820 	sra	h
+   40E8 CB 1D             14821 	rr	l
+   40EA DD 75 FF          14822 	ld	-1 (ix),l
+   40ED C3r2Cs42          14823 	jp	00110$
+                          14824 ;carwar.c:593: case 2: TransformColor(3, 2); break;
+   40F0                   14825 00103$:
+   40F0 59                14826 	ld	e,c
+   40F1 16 00             14827 	ld	d,#0x00
+   40F3 6B                14828 	ld	l,e
+   40F4 62                14829 	ld	h,d
+   40F5 29                14830 	add	hl,hl
+   40F6 19                14831 	add	hl,de
+   40F7 CB 2C             14832 	sra	h
+   40F9 CB 1D             14833 	rr	l
+   40FB CB 2C             14834 	sra	h
+   40FD CB 1D             14835 	rr	l
+   40FF 4D                14836 	ld	c,l
+   4100 58                14837 	ld	e,b
+   4101 16 00             14838 	ld	d,#0x00
+   4103 6B                14839 	ld	l,e
+   4104 62                14840 	ld	h,d
+   4105 29                14841 	add	hl,hl
+   4106 19                14842 	add	hl,de
+   4107 CB 2C             14843 	sra	h
+   4109 CB 1D             14844 	rr	l
+   410B CB 2C             14845 	sra	h
+   410D CB 1D             14846 	rr	l
+   410F 45                14847 	ld	b,l
+   4110 DD 5E FF          14848 	ld	e,-1 (ix)
+   4113 16 00             14849 	ld	d,#0x00
+   4115 6B                14850 	ld	l,e
+   4116 62                14851 	ld	h,d
+   4117 29                14852 	add	hl,hl
+   4118 19                14853 	add	hl,de
+   4119 CB 2C             14854 	sra	h
+   411B CB 1D             14855 	rr	l
+   411D CB 2C             14856 	sra	h
+   411F CB 1D             14857 	rr	l
+   4121 DD 75 FF          14858 	ld	-1 (ix),l
+   4124 C3r2Cs42          14859 	jp	00110$
+                          14860 ;carwar.c:594: case 3: TransformColor(5, 3); break;
+   4127                   14861 00104$:
+   4127 59                14862 	ld	e,c
+   4128 16 00             14863 	ld	d,#0x00
+   412A 6B                14864 	ld	l,e
+   412B 62                14865 	ld	h,d
+   412C 29                14866 	add	hl,hl
+   412D 29                14867 	add	hl,hl
+   412E 19                14868 	add	hl,de
+   412F CB 2C             14869 	sra	h
+   4131 CB 1D             14870 	rr	l
+   4133 CB 2C             14871 	sra	h
+   4135 CB 1D             14872 	rr	l
+   4137 CB 2C             14873 	sra	h
+   4139 CB 1D             14874 	rr	l
+   413B 4D                14875 	ld	c,l
+   413C 58                14876 	ld	e,b
+   413D 16 00             14877 	ld	d,#0x00
+   413F 6B                14878 	ld	l,e
+   4140 62                14879 	ld	h,d
+   4141 29                14880 	add	hl,hl
+   4142 29                14881 	add	hl,hl
+   4143 19                14882 	add	hl,de
+   4144 CB 2C             14883 	sra	h
+   4146 CB 1D             14884 	rr	l
+   4148 CB 2C             14885 	sra	h
+   414A CB 1D             14886 	rr	l
+   414C CB 2C             14887 	sra	h
+   414E CB 1D             14888 	rr	l
+   4150 45                14889 	ld	b,l
+   4151 DD 5E FF          14890 	ld	e,-1 (ix)
+   4154 16 00             14891 	ld	d,#0x00
+   4156 6B                14892 	ld	l,e
+   4157 62                14893 	ld	h,d
+   4158 29                14894 	add	hl,hl
+   4159 29                14895 	add	hl,hl
+   415A 19                14896 	add	hl,de
+   415B CB 2C             14897 	sra	h
+   415D CB 1D             14898 	rr	l
+   415F CB 2C             14899 	sra	h
+   4161 CB 1D             14900 	rr	l
+   4163 CB 2C             14901 	sra	h
+   4165 CB 1D             14902 	rr	l
+   4167 DD 75 FF          14903 	ld	-1 (ix),l
+   416A C3r2Cs42          14904 	jp	00110$
+                          14905 ;carwar.c:595: case 4: TransformColor(1, 1); break;
+   416D                   14906 00105$:
+   416D 69                14907 	ld	l,c
+   416E 26 00             14908 	ld	h,#0x00
+   4170 CB 2C             14909 	sra	h
+   4172 CB 1D             14910 	rr	l
+   4174 4D                14911 	ld	c,l
+   4175 68                14912 	ld	l,b
+   4176 26 00             14913 	ld	h,#0x00
+   4178 CB 2C             14914 	sra	h
+   417A CB 1D             14915 	rr	l
+   417C 45                14916 	ld	b,l
+   417D DD 6E FF          14917 	ld	l,-1 (ix)
+   4180 26 00             14918 	ld	h,#0x00
+   4182 CB 2C             14919 	sra	h
+   4184 CB 1D             14920 	rr	l
+   4186 DD 75 FF          14921 	ld	-1 (ix),l
+   4189 C3r2Cs42          14922 	jp	00110$
+                          14923 ;carwar.c:596: case 5: TransformColor(3, 3); break;
+   418C                   14924 00106$:
+   418C 59                14925 	ld	e,c
+   418D 16 00             14926 	ld	d,#0x00
+   418F 6B                14927 	ld	l,e
+   4190 62                14928 	ld	h,d
+   4191 29                14929 	add	hl,hl
+   4192 19                14930 	add	hl,de
+   4193 CB 2C             14931 	sra	h
+   4195 CB 1D             14932 	rr	l
+   4197 CB 2C             14933 	sra	h
+   4199 CB 1D             14934 	rr	l
+   419B CB 2C             14935 	sra	h
+   419D CB 1D             14936 	rr	l
+   419F 4D                14937 	ld	c,l
+   41A0 58                14938 	ld	e,b
+   41A1 16 00             14939 	ld	d,#0x00
+   41A3 6B                14940 	ld	l,e
+   41A4 62                14941 	ld	h,d
+   41A5 29                14942 	add	hl,hl
+   41A6 19                14943 	add	hl,de
+   41A7 CB 2C             14944 	sra	h
+   41A9 CB 1D             14945 	rr	l
+   41AB CB 2C             14946 	sra	h
+   41AD CB 1D             14947 	rr	l
+   41AF CB 2C             14948 	sra	h
+   41B1 CB 1D             14949 	rr	l
+   41B3 45                14950 	ld	b,l
+   41B4 DD 5E FF          14951 	ld	e,-1 (ix)
+   41B7 16 00             14952 	ld	d,#0x00
+   41B9 6B                14953 	ld	l,e
+   41BA 62                14954 	ld	h,d
+   41BB 29                14955 	add	hl,hl
+   41BC 19                14956 	add	hl,de
+   41BD CB 2C             14957 	sra	h
+   41BF CB 1D             14958 	rr	l
+   41C1 CB 2C             14959 	sra	h
+   41C3 CB 1D             14960 	rr	l
+   41C5 CB 2C             14961 	sra	h
+   41C7 CB 1D             14962 	rr	l
+   41C9 DD 75 FF          14963 	ld	-1 (ix),l
+   41CC 18 5E             14964 	jr	00110$
+                          14965 ;carwar.c:597: case 6: TransformColor(1, 2); break;
+   41CE                   14966 00107$:
+   41CE 69                14967 	ld	l,c
+   41CF 26 00             14968 	ld	h,#0x00
+   41D1 CB 2C             14969 	sra	h
+   41D3 CB 1D             14970 	rr	l
+   41D5 CB 2C             14971 	sra	h
+   41D7 CB 1D             14972 	rr	l
+   41D9 4D                14973 	ld	c,l
+   41DA 68                14974 	ld	l,b
+   41DB 26 00             14975 	ld	h,#0x00
+   41DD CB 2C             14976 	sra	h
+   41DF CB 1D             14977 	rr	l
+   41E1 CB 2C             14978 	sra	h
+   41E3 CB 1D             14979 	rr	l
+   41E5 45                14980 	ld	b,l
+   41E6 DD 6E FF          14981 	ld	l,-1 (ix)
+   41E9 26 00             14982 	ld	h,#0x00
+   41EB CB 2C             14983 	sra	h
+   41ED CB 1D             14984 	rr	l
+   41EF CB 2C             14985 	sra	h
+   41F1 CB 1D             14986 	rr	l
+   41F3 DD 75 FF          14987 	ld	-1 (ix),l
+   41F6 18 34             14988 	jr	00110$
+                          14989 ;carwar.c:598: case 7: 
+   41F8                   14990 00108$:
+                          14991 ;carwar.c:599: default: TransformColor(1, 3); break;
+   41F8                   14992 00109$:
+   41F8 69                14993 	ld	l,c
+   41F9 26 00             14994 	ld	h,#0x00
+   41FB CB 2C             14995 	sra	h
+   41FD CB 1D             14996 	rr	l
+   41FF CB 2C             14997 	sra	h
+   4201 CB 1D             14998 	rr	l
+   4203 CB 2C             14999 	sra	h
+   4205 CB 1D             15000 	rr	l
+   4207 4D                15001 	ld	c,l
+   4208 68                15002 	ld	l,b
+   4209 26 00             15003 	ld	h,#0x00
+   420B CB 2C             15004 	sra	h
+   420D CB 1D             15005 	rr	l
+   420F CB 2C             15006 	sra	h
+   4211 CB 1D             15007 	rr	l
+   4213 CB 2C             15008 	sra	h
+   4215 CB 1D             15009 	rr	l
+   4217 45                15010 	ld	b,l
+   4218 DD 6E FF          15011 	ld	l,-1 (ix)
+   421B 26 00             15012 	ld	h,#0x00
+   421D CB 2C             15013 	sra	h
+   421F CB 1D             15014 	rr	l
+   4221 CB 2C             15015 	sra	h
+   4223 CB 1D             15016 	rr	l
+   4225 CB 2C             15017 	sra	h
+   4227 CB 1D             15018 	rr	l
+   4229 DD 75 FF          15019 	ld	-1 (ix),l
+                          15020 ;carwar.c:600: }
+   422C                   15021 00110$:
+                          15022 ;carwar.c:601: return (g << 5) + (r << 2) + b;
+   422C 79                15023 	ld	a,c
+   422D 0F                15024 	rrca
+   422E 0F                15025 	rrca
+   422F 0F                15026 	rrca
+   4230 E6 E0             15027 	and	a,#0xE0
+   4232 6F                15028 	ld	l,a
+   4233 CB 20             15029 	sla	b
+   4235 CB 20             15030 	sla	b
+   4237 7D                15031 	ld	a,l
+   4238 80                15032 	add	a,b
+   4239 DD 86 FF          15033 	add	a,-1 (ix)
    423C 6F                15034 	ld	l,a
-   423D CB 20             15035 	sla	b
-   423F CB 20             15036 	sla	b
-   4241 7D                15037 	ld	a,l
-   4242 80                15038 	add	a,b
-   4243 DD 86 FF          15039 	add	a,-1 (ix)
-   4246 6F                15040 	ld	l,a
-   4247 DD F9             15041 	ld	sp,ix
-   4249 DD E1             15042 	pop	ix
-   424B C9                15043 	ret
-   424C                   15044 _DarkColor_end::
-                          15045 	.area _CODE
-                          15046 	.area _CABS
+   423D DD F9             15035 	ld	sp,ix
+   423F DD E1             15036 	pop	ix
+   4241 C9                15037 	ret
+   4242                   15038 _DarkenColor_end::
+                          15039 	.area _CODE
+                          15040 	.area _CABS
