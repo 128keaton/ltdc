@@ -6,6 +6,7 @@
 
 //----------------------------------------
 // D E F I N E S
+#define CAR_NUM			4
 
 #define CAR_TURN_RIGHT  0x01
 #define CAR_TURN_LEFT   0x02
@@ -18,6 +19,19 @@
 #define COLOR_YELLOW	144
 #define COLOR_WHITE     255
 
+#define BLOCK_SHADOW	4
+#define ROAD_SHADOW		3
+
+enum
+{
+	OP_NONE = 0,
+	OP_HOLE,
+	OP_WALL,
+	OP_JUMP,
+	OP_ROAD = 64,
+	OP_CLAY,
+};
+
 //----------------------------------------
 // M A C R O S
 
@@ -28,6 +42,12 @@
 
 //----------------------------------------
 // T Y P E S
+
+typedef struct
+{
+	u8 mul;
+	u8 div;
+} DarkFactor;
 
 typedef struct
 {
@@ -58,10 +78,12 @@ typedef struct
 //	VdpBuffer36 buffer36;
 //};
 
-#define ROT_0	0		// 0°
-#define ROT_1	0x20	// 90°
-#define ROT_2	0x40	// 180°
-#define ROT_3	0x80	// 270°
+#define ROT_0	0x00	// 0°
+#define ROT_90	0x10	// 90°
+#define ROT_180	0x20	// 180°
+#define ROT_270	0x30	// 270°
+#define SYM_H	0x40	// Horizontal symmetry
+#define SYM_V	0x50	// Vertical symmetry
 typedef struct
 {
 	u8 tile; // Tile index + rotation flag
@@ -75,6 +97,9 @@ typedef struct
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void CheckCollision(u8 car1, u8 car2);
+void BuildTrack();
+void ShadeTrack();
+u8 DarkColor(u8 color, u8 power);
 
 //----------------------------------------
 // D A T A
@@ -96,7 +121,7 @@ void CheckCollision(u8 car1, u8 car2);
 
 const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 
-const Car cars[4] = 
+const Car cars[CAR_NUM] = 
 {
 	// Cop
 	{ 5, 24, 4 },
@@ -114,17 +139,17 @@ const TrackTile track01[] =
 	{ 0 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_1, COLOR_GREEN, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_GREEN, COLOR_GRAY },
 	{ 0 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_1, COLOR_GREEN, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_GREEN, COLOR_GRAY },
 	// line 1
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 1 + ROT_0, COLOR_GRAY, COLOR_GREEN },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 0 + ROT_3, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_2, COLOR_GREEN, COLOR_GRAY },
-	{ 1 + ROT_1, COLOR_GRAY, COLOR_GREEN },
+	{ 0 + ROT_270, COLOR_GREEN, COLOR_GRAY },
+	{ 0 + ROT_180, COLOR_GREEN, COLOR_GRAY },
+	{ 1 + ROT_90, COLOR_GRAY, COLOR_GREEN },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	// line 2
 	{ 3 + ROT_0, COLOR_WHITE, COLOR_GRAY },
@@ -133,7 +158,7 @@ const TrackTile track01[] =
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 9 + ROT_1, COLOR_YELLOW, COLOR_GRAY },
+	{ 9 + ROT_90, COLOR_YELLOW, COLOR_GRAY },
 	// line 3
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
@@ -147,22 +172,23 @@ const TrackTile track01[] =
 	{ 0 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 11 + ROT_3, COLOR_ORANGE, COLOR_YELLOW },
+	{ 11 + ROT_270, COLOR_ORANGE, COLOR_YELLOW },
 	{ 4 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
 	// line 5
-	{ 0 + ROT_3, COLOR_GREEN, COLOR_GRAY },
+	{ 0 + ROT_270, COLOR_GREEN, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
 	{ 1 + ROT_0, COLOR_GRAY, COLOR_GREEN },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 1 + ROT_1, COLOR_YELLOW, COLOR_GREEN },
+	{ 1 + ROT_90, COLOR_YELLOW, COLOR_GREEN },
 	{ 2 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
-	{ 0 + ROT_2, COLOR_GREEN, COLOR_YELLOW },
+	{ 0 + ROT_180, COLOR_GREEN, COLOR_YELLOW },
 };
 
-Player __at(0xC000) players[4];
+Player __at(0xC000) players[CAR_NUM];
 VdpBuffer36 __at(0xC100) buffer36;
 VdpBuffer32 __at(0xC200) buffer32;
+u8 __at(0xC300) colorCode[256];
 //struct GameData __at(0xD000) game;
 
 //----------------------------------------
@@ -192,21 +218,30 @@ void main(void)
  */
 void MainLoop()
 {
-	u8 i = 0, j, byte;
-	//u8 bEnd = 0;
+	u8 i = 0;
 	u8 page = 0;
 	u8 keyLine, angle;
 	Player* curPly;
-	u16 x, y, yOffset, lx, ly;
-	const TrackTile* tile;
+	u16 x, yOffset;
 
 	// Init
-	SetFreq(FREQ_50);
+	//SetFreq(FREQ_50);
 	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
 	FillVRAM(0, 0,   256, 256, 0);
 	FillVRAM(0, 256, 256, 256, 0);
+
+	// Init color table
+	for(x=0; x<256; x++)
+		colorCode[x] = OP_NONE;
+
+	colorCode[COLOR_BLACK]  = OP_HOLE;
+	colorCode[COLOR_GREEN]  = OP_WALL;
+	colorCode[COLOR_GRAY]   = OP_ROAD;
+	colorCode[COLOR_ORANGE] = OP_JUMP;
+	colorCode[COLOR_YELLOW] = OP_CLAY;
+	colorCode[COLOR_WHITE]  = OP_ROAD;
 
 	//----------------------------------------
 	// Initialize sprites
@@ -218,47 +253,11 @@ void MainLoop()
 	//----------------------------------------
 	// Build background
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
-	//for(x=0; x<=255; x++)
-	//	for(y=0; y<=211; y++)
-	//	{
-	//		i = (x + y) % 16; // 0:16
-	//		i /= 2; // 0:8
-	//		i += 2; // 2:10
-	//		if(i > 5)
-	//			i = 12 - i; // 2:5 & 6:3
-	//		DrawPoint8(x, y, (i << 5) + (i << 2) + (i >> 1));
-	//	}
-	FillVRAM(0, 0, 256, 212, COLOR_GREEN);
-	for(i=0; i<7; i++)
-	{
-		for(j=0; j<6; j++)
-		{
-			tile = &track01[i + j * 7];
-			for(x=0; x<32; x++)
-			{
-				for(y=0; y<32; y++)
-				{
-					if(tile->tile & ROT_1)      { lx = y;      ly = 31 - x; }
-					else if(tile->tile & ROT_2) { lx = 31 - x; ly = 31 - y; }
-					else if(tile->tile & ROT_3) { lx = 31 - y; ly = x; }
-					else                        { lx = x;      ly = y; }
-					byte = trackTiles[32 * 4 * (tile->tile & 0x0F) + (lx / 8) + (ly * 4)];
-					if(byte & (1 << (7 - (lx & 0x07))))
-						DrawPoint8(16 + 32 * i + x, 8 + 32 * j + y, tile->color1);
-					else
-						DrawPoint8(16 + 32 * i + x, 8 + 32 * j + y, tile->color0);
-				}
-			}
-		}
-	}
+	BuildTrack();
+
 	PrintSprite(64, 64, "SHADE\nTRACK", (u16)&defaultColor);
-	//for(x=0; x<256; x++)
-	//{
-	//	for(y=0; y<211; y++)
-	//	{
-	//		if()
-	//	}
-	//}
+	ShadeTrack();
+
 	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 	ClearSprite();
 
@@ -277,7 +276,7 @@ void MainLoop()
 	//----------------------------------------
 	// Initialize background backup
 	PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
-	for(i=0; i<4; i++)
+	for(i=0; i<CAR_NUM; i++)
 	{
 		InitializePlayer(&players[i], i, 50 + 50 * i, 100);
 		VRAMtoVRAM(ScrPosX(players[i].posX), (256 * 0) + ScrPosY(players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
@@ -294,7 +293,7 @@ void MainLoop()
 		page = 1 - page;
 		yOffset = 256 * page;
 
-		for(i=0; i<4; i++)
+		for(i=0; i<CAR_NUM; i++)
 			players[i].flag = 0;
 
 		//----------------------------------------
@@ -361,14 +360,14 @@ void MainLoop()
 
 		//----------------------------------------
 		// Restore background
-		for(i=0; i<4; i++)
+		for(i=0; i<CAR_NUM; i++)
 		{
 			VRAMtoVRAM((13 * i) + (52 * page), 212, ScrPosX(players[i].prevX), yOffset + ScrPosY(players[i].prevY), 13, 11);
 		}
 
 		//----------------------------------------
 		// Update physic
-		for(i=0; i<4; i++)
+		for(i=0; i<CAR_NUM; i++)
 		{
 			curPly = &players[i];
 
@@ -408,7 +407,7 @@ void MainLoop()
 		CheckCollision(2, 3);
 	
 		// Fix position
-		for(i=0; i<4; i++)
+		for(i=0; i<CAR_NUM; i++)
 		{
 			curPly = &players[i];
 			if(curPly->posY < (5 << 8))
@@ -422,7 +421,7 @@ void MainLoop()
 
 		//----------------------------------------
 		// Draw cars
-		for(i=0; i<4; i++)
+		for(i=0; i<CAR_NUM; i++)
 		{
 			VRAMtoVRAMTrans(13 * (players[i].rot / 16), 256 + 212 + (11 * i), ScrPosX(players[i].posX), yOffset + ScrPosY(players[i].posY), 13, 11);
 		}
@@ -476,4 +475,110 @@ void CheckCollision(u8 car1, u8 car2)
 		players[car2].speed = dist;
 		players[car2].posY = players[car2].prevY;
 	}
+}
+
+/***/
+void BuildTrack()
+{
+	u8 i, j, byte;
+	u16 x, y, lx, ly;
+	const TrackTile* block;
+
+	//for(x=0; x<=255; x++)
+	//	for(y=0; y<=211; y++)
+	//	{
+	//		i = (x + y) % 16; // 0:16
+	//		i /= 2; // 0:8
+	//		i += 2; // 2:10
+	//		if(i > 5)
+	//			i = 12 - i; // 2:5 & 6:3
+	//		DrawPoint8(x, y, (i << 5) + (i << 2) + (i >> 1));
+	//	}
+
+	FillVRAM(0, 0, 256, 212, COLOR_GREEN);
+	for(i=0; i<7; i++)
+	{
+		for(j=0; j<6; j++)
+		{
+			block = &track01[i + j * 7];
+			if((block->tile & 0x0F) == 2) // Plein block
+			{
+				FillVRAM(16 + (32 * i), 8 + (32 * j), 32, 32, block->color1);
+			}
+			else
+			{
+				for(x=0; x<32; x++)
+				{
+					for(y=0; y<32; y++)
+					{
+						if((block->tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
+						else if((block->tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
+						else if((block->tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
+						else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
+						else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
+						else /* SYM_V */                        { lx = 31 - x; ly = y; }
+						byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx / 8) + (ly * 4)];
+						if(byte & (1 << (7 - (lx & 0x07))))
+							WriteVRAM((16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
+						else
+							WriteVRAM((16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color0);
+					}
+				}
+			}
+		}
+	}
+}
+
+/***/
+void ShadeTrack()
+{
+	u8 cur, next;
+	u16 x, y, i;
+
+	cur = ReadVRAM(0);
+	for(x=0; x<256; x++)
+	{
+		for(y=0; y<211; y++)
+		{
+			cur = ReadVRAM(x + 256 * y);
+			next = ReadVRAM(x + 256 * (y + 1));
+			if(colorCode[cur] < OP_ROAD && colorCode[next] >= OP_ROAD)
+			{
+				for(i=0; i<BLOCK_SHADOW; i++)
+				{
+					cur = ReadVRAM(x + 256 * (y - i));
+					if((y - i < 212) && (colorCode[cur] < OP_ROAD))
+						WriteVRAM(x + 256 * (y - i), DarkColor(cur, 4 - i));
+					else
+						break;
+				}
+				for(i=1; i<=ROAD_SHADOW; i++)
+				{
+					cur = ReadVRAM(x + 256 * (y + i));
+					if((y + i < 212) && (colorCode[cur] >= OP_ROAD))
+						WriteVRAM(x + 256 * (y + i), DarkColor(cur, 3 - i));
+					else
+						break;
+				}
+				y += i;
+			}
+		}
+	}
+}
+
+/***/
+u8 DarkColor(u8 color, u8 power)
+{
+	const DarkFactor factor[] =
+	{
+		{ 4, 5 },
+		{ 3, 4 },
+		{ 2, 3 },
+		{ 1, 2 },
+	};
+	u8 g, r ,b;
+	g = ((color & 0xE0) >> 5) * factor[power].mul / factor[power].div;
+	r = ((color & 0x1C) >> 2) * factor[power].mul / factor[power].div;
+	b = (color & 0x03) * factor[power].mul / factor[power].div;
+	return (g << 5) + (r << 2) + b;
 }

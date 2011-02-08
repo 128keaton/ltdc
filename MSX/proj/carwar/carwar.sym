@@ -3,35 +3,44 @@
 Symbol Table
 
     .__.ABS.                                                    =  0000 G
-  0 _CheckCollision                                                3C65 GR
-  0 _CheckCollision_end                                            3DB8 GR
-  0 _CheckCollision_start                                          3C65 GR
+  0 _BuildTrack                                                    3BA8 GR
+  0 _BuildTrack_end                                                3E9D GR
+  0 _BuildTrack_start                                              3BA8 GR
+  0 _CheckCollision                                                3A55 GR
+  0 _CheckCollision_end                                            3BA8 GR
+  0 _CheckCollision_start                                          3A55 GR
     _ClearSprite                                                   **** GX
-    _DrawPoint8                                                    **** GX
+  0 _DarkColor                                                     4055 GR
+  0 _DarkColor_end                                                 4170 GR
+  0 _DarkColor_start                                               4055 GR
     _FillVRAM                                                      **** GX
     _GetKeyMatrixLine                                              **** GX
-  0 _InitializePlayer                                              3B8B GR
-  0 _InitializePlayer_end                                          3C65 GR
-  0 _InitializePlayer_start                                        3B8B GR
+  0 _InitializePlayer                                              397B GR
+  0 _InitializePlayer_end                                          3A55 GR
+  0 _InitializePlayer_start                                        397B GR
     _Joystick                                                      **** GX
     _Joytrig                                                       **** GX
   0 _MainLoop                                                      2F7B GR
-  0 _MainLoop_end                                                  3B57 GR
+  0 _MainLoop_end                                                  3947 GR
   0 _MainLoop_start                                                2F7B GR
     _PrintSprite                                                   **** GX
     _RAMtoVRAM                                                     **** GX
-    _SetFreq                                                       **** GX
+    _ReadVRAM                                                      **** GX
     _SetPage8                                                      **** GX
     _SetScreen8                                                    **** GX
     _SetSpriteMode                                                 **** GX
+  0 _ShadeTrack                                                    3E9D GR
+  0 _ShadeTrack_end                                                4055 GR
+  0 _ShadeTrack_start                                              3E9D GR
     _VRAMtoVRAM                                                    **** GX
     _VRAMtoVRAMTrans                                               **** GX
+    _WriteVRAM                                                     **** GX
     __divsint_rrx_s                                                **** GX
     __mulint_rrx_s                                                 **** GX
-  0 __str_0                                                        3B57 R
-  0 __str_1                                                        3B63 R
-  0 __str_2                                                        3B6F R
-  0 __str_3                                                        3B79 R
+  0 __str_0                                                        3947 R
+  0 __str_1                                                        3953 R
+  0 __str_2                                                        395F R
+  0 __str_3                                                        3969 R
     _buffer32                                                   =  C200 G
     _buffer36                                                   =  C100 G
   0 _car1                                                          001A GR
@@ -40,6 +49,7 @@ Symbol Table
   0 _car4                                                          1AEA GR
   0 _cars                                                          2EF1 GR
   0 _charTable                                                     2469 GR
+    _colorCode                                                  =  C300 G
   0 _defaultColor                                                  2EE9 GR
   0 _g_Cosinus                                                     2E69 R
   0 _g_Sinus                                                       2DE9 R
@@ -57,7 +67,7 @@ Symbol Table
 
 Area Table
 
-   0 _CODE                                      size 3DB8   flags 0
+   0 _CODE                                      size 4170   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0
