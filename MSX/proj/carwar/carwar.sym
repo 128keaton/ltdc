@@ -11,7 +11,7 @@ Symbol Table
   0 _CheckCollision_start                                          3A55 GR
     _ClearSprite                                                   **** GX
   0 _DarkColor                                                     4055 GR
-  0 _DarkColor_end                                                 4170 GR
+  0 _DarkColor_end                                                 424C GR
   0 _DarkColor_start                                               4055 GR
     _FillVRAM                                                      **** GX
     _GetKeyMatrixLine                                              **** GX
@@ -67,7 +67,7 @@ Symbol Table
 
 Area Table
 
-   0 _CODE                                      size 4170   flags 0
+   0 _CODE                                      size 424C   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0
