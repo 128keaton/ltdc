@@ -100,7 +100,7 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void CheckCollision(u8 car1, u8 car2);
 void BuildTrack();
 void ShadeTrack();
-u8 DarkColor(u8 color, u8 power);
+u8 DarkenColor(u8 color, u8 power);
 
 //----------------------------------------
 // D A T A
@@ -549,7 +549,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(x + 256 * (y - i));
 					if((y - i < 212) && (colorCode[cur] < OP_ROAD))
-						WriteVRAM(x + 256 * (y - i), DarkColor(cur, BASE_SHADOW - i));
+						WriteVRAM(x + 256 * (y - i), DarkenColor(cur, 3/*BASE_SHADOW - i*/));
 					else
 						break;
 				}
@@ -557,7 +557,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(x + 256 * (y + i));
 					if((y + i < 212) && (colorCode[cur] >= OP_ROAD))
-						WriteVRAM(x + 256 * (y + i), DarkColor(cur, BASE_SHADOW - i - 1));
+						WriteVRAM(x + 256 * (y + i), DarkenColor(cur, 3/*BASE_SHADOW - i - 1*/));
 					else
 						break;
 				}
@@ -569,8 +569,18 @@ void ShadeTrack()
 
 #define TransformColor(mul, shift) g = (g * mul) >> shift; r = (r * mul) >> shift; b = (b * mul) >> shift;
 
-/***/
-u8 DarkColor(u8 color, u8 power)
+/** Darken a color
+	Power:
+	0: x1
+	1: x0.875
+	2: x0.75
+	3: x0.625
+	4: x0.5
+	5: x0.375
+	6: x0.25
+	7: x0.125
+*/
+u8 DarkenColor(u8 color, u8 power)
 {
 	u8 g, r ,b;
 	g = ((color & 0xE0) >> 5);

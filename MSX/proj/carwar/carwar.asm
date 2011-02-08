@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.0.0 #6037 (Oct 31 2010) (MINGW32)
-; This file was generated Tue Feb 08 15:09:40 2011
+; This file was generated Tue Feb 08 15:15:07 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -29,7 +29,7 @@
 	.globl _CheckCollision
 	.globl _BuildTrack
 	.globl _ShadeTrack
-	.globl _DarkColor
+	.globl _DarkenColor
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -14607,13 +14607,10 @@ _ShadeTrack:
 	ld	a,(de)
 	sub	a,#0x40
 	jr	NC,00108$
-;carwar.c:552: WriteVRAM(x + 256 * (y - i), DarkColor(cur, BASE_SHADOW - i));
-	ld	l,-6 (ix)
-	ld	a,#0x05
-	sub	a,l
-	ld	b,a
+;carwar.c:552: WriteVRAM(x + 256 * (y - i), DarkenColor(cur, 3/*BASE_SHADOW - i*/));
+	ld	b, #0x03
 	push	bc
-	call	_DarkColor
+	call	_DarkenColor
 	pop	af
 	ld	a,l
 	push	af
@@ -14679,13 +14676,10 @@ _ShadeTrack:
 	ld	a,(de)
 	sub	a,#0x40
 	jr	C,00116$
-;carwar.c:560: WriteVRAM(x + 256 * (y + i), DarkColor(cur, BASE_SHADOW - i - 1));
-	ld	l,-6 (ix)
-	ld	a,#0x04
-	sub	a,l
-	ld	b,a
+;carwar.c:560: WriteVRAM(x + 256 * (y + i), DarkenColor(cur, 3/*BASE_SHADOW - i - 1*/));
+	ld	b, #0x03
 	push	bc
-	call	_DarkColor
+	call	_DarkenColor
 	pop	af
 	ld	a,l
 	push	af
@@ -14726,17 +14720,17 @@ _ShadeTrack:
 	pop	ix
 	ret
 _ShadeTrack_end::
-;carwar.c:573: u8 DarkColor(u8 color, u8 power)
+;carwar.c:583: u8 DarkenColor(u8 color, u8 power)
 ;	---------------------------------
-; Function DarkColor
+; Function DarkenColor
 ; ---------------------------------
-_DarkColor_start::
-_DarkColor:
+_DarkenColor_start::
+_DarkenColor:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;carwar.c:576: g = ((color & 0xE0) >> 5);
+;carwar.c:586: g = ((color & 0xE0) >> 5);
 	ld	a,4 (ix)
 	and	a,#0xE0
 	ld	c,a
@@ -14745,17 +14739,17 @@ _DarkColor:
 	srl	c
 	srl	c
 	srl	c
-;carwar.c:577: r = ((color & 0x1C) >> 2);
+;carwar.c:587: r = ((color & 0x1C) >> 2);
 	ld	a,4 (ix)
 	and	a,#0x1C
 	ld	b,a
 	srl	b
 	srl	b
-;carwar.c:578: b = (color & 0x03);
+;carwar.c:588: b = (color & 0x03);
 	ld	a,4 (ix)
 	and	a,#0x03
 	ld	-1 (ix),a
-;carwar.c:579: switch(power)
+;carwar.c:589: switch(power)
 	ld	a,#0x07
 	sub	a,5 (ix)
 	jp	C,00109$
@@ -14777,9 +14771,9 @@ _DarkColor:
 	jp	00106$
 	jp	00107$
 	jp	00108$
-;carwar.c:581: case 0: break;
+;carwar.c:591: case 0: break;
 	jp	00110$
-;carwar.c:582: case 1: TransformColor(7, 3); break;
+;carwar.c:592: case 1: TransformColor(7, 3); break;
 00102$:
 	ld	e,c
 	ld	d,#0x00
@@ -14827,7 +14821,7 @@ _DarkColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:583: case 2: TransformColor(3, 2); break;
+;carwar.c:593: case 2: TransformColor(3, 2); break;
 00103$:
 	ld	e,c
 	ld	d,#0x00
@@ -14863,7 +14857,7 @@ _DarkColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:584: case 3: TransformColor(5, 3); break;
+;carwar.c:594: case 3: TransformColor(5, 3); break;
 00104$:
 	ld	e,c
 	ld	d,#0x00
@@ -14908,7 +14902,7 @@ _DarkColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:585: case 4: TransformColor(1, 1); break;
+;carwar.c:595: case 4: TransformColor(1, 1); break;
 00105$:
 	ld	l,c
 	ld	h,#0x00
@@ -14926,7 +14920,7 @@ _DarkColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:586: case 5: TransformColor(3, 3); break;
+;carwar.c:596: case 5: TransformColor(3, 3); break;
 00106$:
 	ld	e,c
 	ld	d,#0x00
@@ -14968,7 +14962,7 @@ _DarkColor:
 	rr	l
 	ld	-1 (ix),l
 	jr	00110$
-;carwar.c:587: case 6: TransformColor(1, 2); break;
+;carwar.c:597: case 6: TransformColor(1, 2); break;
 00107$:
 	ld	l,c
 	ld	h,#0x00
@@ -14992,9 +14986,9 @@ _DarkColor:
 	rr	l
 	ld	-1 (ix),l
 	jr	00110$
-;carwar.c:588: case 7: 
+;carwar.c:598: case 7: 
 00108$:
-;carwar.c:589: default: TransformColor(1, 3); break;
+;carwar.c:599: default: TransformColor(1, 3); break;
 00109$:
 	ld	l,c
 	ld	h,#0x00
@@ -15023,9 +15017,9 @@ _DarkColor:
 	sra	h
 	rr	l
 	ld	-1 (ix),l
-;carwar.c:590: }
+;carwar.c:600: }
 00110$:
-;carwar.c:591: return (g << 5) + (r << 2) + b;
+;carwar.c:601: return (g << 5) + (r << 2) + b;
 	ld	a,c
 	rrca
 	rrca
@@ -15041,6 +15035,6 @@ _DarkColor:
 	ld	sp,ix
 	pop	ix
 	ret
-_DarkColor_end::
+_DarkenColor_end::
 	.area _CODE
 	.area _CABS
