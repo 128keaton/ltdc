@@ -3,63 +3,82 @@
 Symbol Table
 
     .__.ABS.                                                    =  0000 G
-  0 _BuildTrack                                                    3BA8 GR
-  0 _BuildTrack_end                                                3E9D GR
-  0 _BuildTrack_start                                              3BA8 GR
-  0 _CheckCollision                                                3A55 GR
-  0 _CheckCollision_end                                            3BA8 GR
-  0 _CheckCollision_start                                          3A55 GR
+  0 _CheckCollision                                                3F6B GR
+  0 _CheckCollision_end                                            40BE GR
+  0 _CheckCollision_start                                          3F6B GR
     _ClearSprite                                                   **** GX
-  0 _DarkenColor                                                   404B GR
-  0 _DarkenColor_end                                               4242 GR
-  0 _DarkenColor_start                                             404B GR
+  0 _DarkenColor                                                   45B2 GR
+  0 _DarkenColor_end                                               47A9 GR
+  0 _DarkenColor_start                                             45B2 GR
     _FillVRAM                                                      **** GX
     _GetKeyMatrixLine                                              **** GX
-  0 _InitializePlayer                                              397B GR
-  0 _InitializePlayer_end                                          3A55 GR
-  0 _InitializePlayer_start                                        397B GR
+  0 _InitializePlayer                                              3E91 GR
+  0 _InitializePlayer_end                                          3F6B GR
+  0 _InitializePlayer_start                                        3E91 GR
     _Joystick                                                      **** GX
     _Joytrig                                                       **** GX
-  0 _MainLoop                                                      2F7B GR
-  0 _MainLoop_end                                                  3947 GR
-  0 _MainLoop_start                                                2F7B GR
+  0 _MainLoop                                                      3233 GR
+  0 _MainLoop_end                                                  324C GR
+  0 _MainLoop_start                                                3233 GR
     _PrintSprite                                                   **** GX
     _RAMtoVRAM                                                     **** GX
     _ReadVRAM                                                      **** GX
     _SetPage8                                                      **** GX
     _SetScreen8                                                    **** GX
     _SetSpriteMode                                                 **** GX
-  0 _ShadeTrack                                                    3E9D GR
-  0 _ShadeTrack_end                                                404B GR
-  0 _ShadeTrack_start                                              3E9D GR
+  0 _StateBuildTrack                                               40BE GR
+  0 _StateBuildTrack_end                                           43D7 GR
+  0 _StateBuildTrack_start                                         40BE GR
+  0 _StateInitialize                                               324C GR
+  0 _StateInitialize_end                                           33CF GR
+  0 _StateInitialize_start                                         324C GR
+  0 _StateMainMenu                                                 3531 GR
+  0 _StateMainMenu_end                                             3575 GR
+  0 _StateMainMenu_start                                           3531 GR
+  0 _StateShadeTrack                                               43E3 GR
+  0 _StateShadeTrack_end                                           45A6 GR
+  0 _StateShadeTrack_start                                         43E3 GR
+  0 _StateStartGame                                                3575 GR
+  0 _StateStartGame_end                                            37AB GR
+  0 _StateStartGame_start                                          3575 GR
+  0 _StateTitle                                                    33CF GR
+  0 _StateTitle_end                                                3522 GR
+  0 _StateTitle_start                                              33CF GR
+  0 _StateUpdateGame                                               37C7 GR
+  0 _StateUpdateGame_end                                           3E91 GR
+  0 _StateUpdateGame_start                                         37C7 GR
     _VRAMtoVRAM                                                    **** GX
     _VRAMtoVRAMTrans                                               **** GX
     _WriteVRAM                                                     **** GX
     __divsint_rrx_s                                                **** GX
+    __modsint_rrx_s                                                **** GX
     __mulint_rrx_s                                                 **** GX
-  0 __str_0                                                        3947 R
-  0 __str_1                                                        3953 R
-  0 __str_2                                                        395F R
-  0 __str_3                                                        3969 R
-    _buffer32                                                   =  C200 G
-    _buffer36                                                   =  C100 G
+  0 __str_0                                                        3522 R
+  0 __str_1                                                        37AB R
+  0 __str_2                                                        37B5 R
+  0 __str_3                                                        43D7 R
+  0 __str_4                                                        45A6 R
+    _buffer32                                                   =  C300 G
+    _buffer36                                                   =  C200 G
   0 _car1                                                          001A GR
   0 _car2                                                          090A GR
   0 _car3                                                          11FA GR
   0 _car4                                                          1AEA GR
-  0 _cars                                                          2EF1 GR
+  0 _cars                                                          31A9 GR
   0 _charTable                                                     2469 GR
-    _colorCode                                                  =  C300 G
-  0 _defaultColor                                                  2EE9 GR
-  0 _g_Cosinus                                                     2E69 R
-  0 _g_Sinus                                                       2DE9 R
+    _colorCode                                                  =  C400 G
+  0 _defaultColor                                                  31A1 GR
+  0 _g_Cosinus                                                     3121 R
+  0 _g_Sinus                                                       30A1 R
     _g_slotPort                                                 =  00A8 
+    _game                                                       =  C100 G
   0 _main                                                          0000 GR
   0 _main_end                                                      001A GR
   0 _main_start                                                    0000 GR
     _players                                                    =  C000 G
   0 _shadow                                                        23DA GR
-  0 _track01                                                       2EFD GR
+  0 _title                                                         2DE9 GR
+  0 _track01                                                       31B5 GR
   0 _trackTiles                                                    25E9 GR
     _waitRetrace                                                   **** GX
 
@@ -67,7 +86,7 @@ Symbol Table
 
 Area Table
 
-   0 _CODE                                      size 4242   flags 0
+   0 _CODE                                      size 47A9   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0
