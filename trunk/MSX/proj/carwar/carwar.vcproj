@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\data\sprt_title.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\sprt_track.h"
 				>
 			</File>

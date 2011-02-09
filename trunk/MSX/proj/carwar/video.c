@@ -655,22 +655,26 @@ void VPDCommand36(u16 address)
 
 void PrintSprite(u8 X, u8 Y, const char* text, u16 colorTab)
 {
-	u8 sprtIdx = 0;
+	u8 textIdx = 0, sprtIdx = 0;
 	u8 curX = X;
 	u8 curY = Y;
-	while(text[sprtIdx] != 0)
+	while(text[textIdx] != 0)
 	{
-		if(text[sprtIdx] == '\n')
+		if(text[textIdx] == '\n')
 		{
 			curX = X;
 			curY += 9;
 		}
 		else
 		{
-			SetSpriteMultiColor(sprtIdx, curX, curY, text[sprtIdx] - '0', colorTab);
+			if(text[textIdx] != ' ')
+			{
+				SetSpriteMultiColor(sprtIdx, curX, curY, text[textIdx] - '0', colorTab);
+				sprtIdx++;
+			}
 			curX += 8;
 		}
-		sprtIdx++;
+		textIdx++;
 	}
 	SetSpriteUniColor(sprtIdx, 0, 216, 0, 0);
 }
