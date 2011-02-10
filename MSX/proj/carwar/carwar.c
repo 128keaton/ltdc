@@ -1,5 +1,4 @@
 /* 3D on MSX */
-
 #include "core.h"
 #include "bios.h"
 #include "video.h"
@@ -14,24 +13,49 @@
 
 #define COLOR_BLACK     0
 #define COLOR_GREEN		224
+#define COLOR_LIGHTBLUE	75
+#define COLOR_BLUE		3
 #define COLOR_GRAY		146
 #define COLOR_ORANGE	93
 #define COLOR_YELLOW	144
 #define COLOR_WHITE     255
 
 #define BLOCK_SHADOW	3
-#define ROAD_SHADOW		2
+#define ROAD_SHADOW		4
 #define SHADOW_POWER	2
+
+#define LINE_SPACE		2
 
 // Color operator
 enum
 {
 	OP_NONE = 0,
-	OP_HOLE,
 	OP_WALL,
-	OP_JUMP,
+	OP_BLADE,
+	OP_ROCK,
+	OP_BUMPER,
+
 	OP_ROAD = 64,
+	OP_MUD,
 	OP_SAND,
+	OP_GRASS,
+	OP_SNOW,
+	OP_ICE,
+	OP_WATER,
+	OP_SEA,
+	OP_JUMPER,
+	OP_SPEEDER,
+	OP_HOLE,
+	OP_MAGMA,
+};
+
+// 
+enum
+{
+	RULE_RACE,     // Race
+	RULE_SURVIVOR, // Deathmatch
+	RULE_TAG,      // Chat
+	RULE_SOCCER,   // Soccer
 };
 
 // Tile render flag
@@ -53,13 +77,7 @@ enum
 //----------------------------------------
 // T Y P E S
 
-typedef struct
-{
-	u8 mul;
-	u8 div;
-} DarkFactor;
-
-typedef struct
+typedef struct tagCar
 {
 	u8 rotSpeed;
 	u8 maxSpeed;
@@ -67,6 +85,20 @@ typedef struct
 } Car;
 
 typedef struct
+{
+	u8 tile; // Tile index + rotation flag
+	u8 color0;
+	u8 color1;
+} TrackTile;
+
+typedef struct tagMenuEntry
+{
+	const char* text;
+	u8 nextIdx;
+	void (*action)(void);
+} MenuEntry;
+
+typedef struct tagPlayer
 {
 	u16 posX;  // position X
 	u16 posY;  // position Y
@@ -82,21 +114,15 @@ typedef struct
 
 typedef struct
 {
-	u8 page;
-	u16 yOffset;
-	void (*state)(void);
-	//Car         cars[4];
-	//Player      players[4];
-	//VdpBuffer32 buffer32;
-	//VdpBuffer36 buffer36;
+	u8               menu;
+	u8               item;
+	u8               rule;
+	u8               page;
+	u16              yOffset;
+	u8               colorCode[256];
+	struct tagPlayer players[4];
+	void            (*state)(void);
 } GameData;
-
-typedef struct
-{
-	u8 tile; // Tile index + rotation flag
-	u8 color0;
-	u8 color1;
-} TrackTile;
 
 //----------------------------------------
 // P R O T O T Y P E S
@@ -104,8 +130,15 @@ typedef struct
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void CheckCollision(u8 car1, u8 car2);
-u8 DarkenColor(u8 color, u8 power);
 
+void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
+void DrawText(u16 x, u16 y, const char* text, u8 color);
+
+// Color process
+u8 DarkenColor(u8 color, u8 power);
+u8 GrayGradiant(u8 index);
+
+// States
 void StateInitialize();
 void StateTitle();
 void StateMainMenu();
@@ -115,7 +148,7 @@ void StateStartGame();
 void StateUpdateGame();
 
 //----------------------------------------
-// D A T A
+// R O M   D A T A
 
 // Sprites
 // SX : 13
@@ -150,61 +183,79 @@ const Car cars[CAR_NUM] =
 const TrackTile track01[] = 
 {
 	// line 0
-	{ 0 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_GREEN, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_LIGHTBLUE, COLOR_GRAY },
 	// line 1
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 1 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 0 + ROT_270, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_180, COLOR_GREEN, COLOR_GRAY },
-	{ 1 + ROT_90, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 1 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 0 + ROT_270, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 0 + ROT_180, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 1 + ROT_90, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
 	// line 2
 	{ 3 + ROT_0, COLOR_WHITE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
 	{ 9 + ROT_90, COLOR_YELLOW, COLOR_GRAY },
 	// line 3
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 1 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 1 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
 	// line 4
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
 	{ 11 + ROT_270, COLOR_ORANGE, COLOR_YELLOW },
-	{ 4 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
+	{ 4 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
 	// line 5
-	{ 0 + ROT_270, COLOR_GREEN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_GRAY },
-	{ 1 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GREEN },
-	{ 1 + ROT_90, COLOR_YELLOW, COLOR_GREEN },
-	{ 2 + ROT_0, COLOR_GREEN, COLOR_YELLOW },
-	{ 0 + ROT_180, COLOR_GREEN, COLOR_YELLOW },
+	{ 0 + ROT_270, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 1 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 1 + ROT_90, COLOR_YELLOW, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
+	{ 0 + ROT_180, COLOR_LIGHTBLUE, COLOR_YELLOW },
 };
 
-Player      __at(0xC000) players[CAR_NUM];
-GameData    __at(0xC100) game;
-VdpBuffer36 __at(0xC200) buffer36;
-VdpBuffer32 __at(0xC300) buffer32;
-u8          __at(0xC400) colorCode[256];
-//struct GameData __at(0xD000) game;
+const MenuEntry menus[] =
+{
+	{ "PLAY",     5, 0 }, // 0
+	{ "EDITOR",   0xFF, 0 }, // 1
+	{ "OPTIONS",  0xFF, 0 }, // 2
+	{ "CREDITS",  0xFF, 0 }, // 3
+	{ 0, 0, 0 }, // 4
+	{ "RACE",     11, 0 }, // 5
+	{ "SURVIVOR", 11, 0 }, // 6
+	{ "TAG",      11, 0 }, // 7
+	{ "SOCCER",   11, 0 }, // 8
+	{ "BACK",     0, 0 }, // 9
+	{ 0, 0, 0 }, // 10
+	{ "TRACK FROM ROM",  0xFE, 0 }, // 11
+	{ "TRACK FROM DISK", 0xFF, 0 }, // 12
+	{ "BACK",     5, 0 }, // 13
+	{ 0, 0, 0 }, // 14
+};
+
+//----------------------------------------
+// R A M   D A T A
+
+// Game data
+GameData __at(0xC000) game;
 
 //----------------------------------------
 // P R O G R A M
@@ -249,7 +300,7 @@ void StateInitialize()
 
 	// Init
 	//SetFreq(FREQ_50);
-	SetScreen8(LINES_212);
+	SetScreen8(LINES_212 + FREQ_60);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
 	FillVRAM(0, 0,   256, 256, 0);
@@ -257,20 +308,20 @@ void StateInitialize()
 
 	// Init color table
 	for(x=0; x<256; x++)
-		colorCode[x] = OP_NONE;
+		game.colorCode[x] = OP_NONE;
 
-	colorCode[COLOR_BLACK]  = OP_HOLE;
-	colorCode[COLOR_GREEN]  = OP_WALL;
-	colorCode[COLOR_GRAY]   = OP_ROAD;
-	colorCode[COLOR_ORANGE] = OP_JUMP;
-	colorCode[COLOR_YELLOW] = OP_SAND;
-	colorCode[COLOR_WHITE]  = OP_ROAD;
-	colorCode[DarkenColor(COLOR_BLACK, SHADOW_POWER)]  = OP_HOLE;
-	colorCode[DarkenColor(COLOR_GREEN, SHADOW_POWER)]  = OP_WALL;
-	colorCode[DarkenColor(COLOR_GRAY, SHADOW_POWER)]   = OP_ROAD;
-	colorCode[DarkenColor(COLOR_ORANGE, SHADOW_POWER)] = OP_JUMP;
-	colorCode[DarkenColor(COLOR_YELLOW, SHADOW_POWER)] = OP_SAND;
-	colorCode[DarkenColor(COLOR_WHITE, SHADOW_POWER)]  = OP_ROAD;
+	game.colorCode[COLOR_BLACK]     = OP_HOLE;
+	game.colorCode[COLOR_LIGHTBLUE] = OP_WALL;
+	game.colorCode[COLOR_GRAY]      = OP_ROAD;
+	game.colorCode[COLOR_ORANGE]    = OP_JUMPER;
+	game.colorCode[COLOR_YELLOW]    = OP_SAND;
+	game.colorCode[COLOR_WHITE]     = OP_ROAD;
+	game.colorCode[DarkenColor(COLOR_BLACK, SHADOW_POWER)]     = OP_HOLE;
+	game.colorCode[DarkenColor(COLOR_LIGHTBLUE, SHADOW_POWER)] = OP_WALL;
+	game.colorCode[DarkenColor(COLOR_GRAY, SHADOW_POWER)]      = OP_ROAD;
+	game.colorCode[DarkenColor(COLOR_ORANGE, SHADOW_POWER)]    = OP_JUMPER;
+	game.colorCode[DarkenColor(COLOR_YELLOW, SHADOW_POWER)]    = OP_SAND;
+	game.colorCode[DarkenColor(COLOR_WHITE, SHADOW_POWER)]     = OP_ROAD;
 
 	//----------------------------------------
 	// Initialize (ASCII table) sprites
@@ -283,12 +334,12 @@ void StateInitialize()
 	game.state = StateTitle;
 }
 
-#define TITLE_X	12
+#define TITLE_X	16
 #define TITLE_Y	32
 
 void StateTitle()
 {
-	u8 i, j, byte, col;
+	u8 i, j, byte;
 	// Hide working screen
 	game.page = 1;
 	SetPage8(game.page);
@@ -300,34 +351,52 @@ void StateTitle()
 			byte = title[(i / 8) + (j * 232 / 8)];
 			if(byte & (1 << (7 - (i & 0x07))))
 			{
-				col = (i + j) % 16; // 0:16
-				col /= 2; // 0:8
-				col += 2; // 2:10
-				if(col > 5)
-					col = 12 - col; // 2:5 & 6:3
-				WriteVRAM(TITLE_X + i + 256 * (TITLE_Y + j), (col << 5) + (col << 2) + (col >> 1));
+				WriteVRAM(TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
 			}
 		}
 	}
+
 	// Copy title to both screen
 	VRAMtoVRAM(TITLE_X, TITLE_Y, TITLE_X, TITLE_Y + 256, 232, 24);
-	PrintSprite(100, 150, "PRESS\n  A\n KEY", (u16)&defaultColor);
 
+	game.page = 0;
+	game.menu = 0;
+	game.item = 0;
 	game.state = StateMainMenu;
 }
 
 void StateMainMenu()
 {
-	u8 keyLine;
+	u8 keyLine, item;
 
 	SetPage8(game.page);
 	game.page = 1 - game.page;
+	game.yOffset = 256 * game.page;
 
 	keyLine = GetKeyMatrixLine(8);
 	if((keyLine & KEY_SPACE) == 0
 	|| Joytrig(1) != 0
 	|| Joytrig(2) != 0) 
 		game.state = StateStartGame;
+
+	if((keyLine & KEY_UP) == 0)
+		game.item--;
+	else if((keyLine & KEY_DOWN) == 0)
+		game.item++;
+
+	for(item = 0; menus[game.menu + item].text != 0; item++)
+	{
+		if(game.menu + item == game.item)
+		{
+			DrawText(68, 100 + (10 * item) + game.yOffset, ">", COLOR_LIGHTBLUE);
+			DrawText(80, 100 + (10 * item) + game.yOffset, menus[game.menu + item].text, COLOR_LIGHTBLUE);
+		}
+		else
+		{
+			FillVRAM(68, 100 + (10 * item) + game.yOffset, 8, 8, COLOR_BLACK);
+			DrawText(80, 100 + (10 * item) + game.yOffset, menus[game.menu + item].text, COLOR_WHITE);
+		}
+	}
 
 	waitRetrace();
 }
@@ -361,9 +430,9 @@ void StateStartGame()
 	PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
 	for(i=0; i<CAR_NUM; i++)
 	{
-		InitializePlayer(&players[i], i, 50 + 50 * i, 100);
-		VRAMtoVRAM(ScrPosX(players[i].posX), (256 * 0) + ScrPosY(players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
-		VRAMtoVRAM(ScrPosX(players[i].posX), (256 * 1) + ScrPosY(players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+		InitializePlayer(&game.players[i], i, 50 + 50 * i, 100);
+		VRAMtoVRAM(ScrPosX(game.players[i].posX), (256 * 0) + ScrPosY(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
+		VRAMtoVRAM(ScrPosX(game.players[i].posX), (256 * 1) + ScrPosY(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
 	}
 
 	ClearSprite();
@@ -382,11 +451,11 @@ void StateUpdateGame()
 	game.yOffset = 256 * game.page;
 
 	for(i=0; i<CAR_NUM; i++)
-		players[i].flag = 0;
+		game.players[i].flag = 0;
 
 	//----------------------------------------
 	// Player 1 gameplay
-	curPly = &players[0];
+	curPly = &game.players[0];
 	keyLine = GetKeyMatrixLine(8);
 	if((keyLine & KEY_LEFT) == 0)
 		curPly->flag |= CAR_TURN_LEFT;
@@ -397,7 +466,7 @@ void StateUpdateGame()
 
 	//----------------------------------------
 	// Player 2 gameplay
-	curPly = &players[1];
+	curPly = &game.players[1];
 	keyLine = GetKeyMatrixLine(5);
 	if((keyLine & KEY_Z) == 0)
 		curPly->flag |= CAR_TURN_LEFT;
@@ -410,7 +479,7 @@ void StateUpdateGame()
 
 	//----------------------------------------
 	// Player 3 gameplay
-	curPly = &players[2];
+	curPly = &game.players[2];
 	switch (Joystick(1)) // Joy 1 direction
 	{
 	case 2: // up-right
@@ -429,7 +498,7 @@ void StateUpdateGame()
 
 	//----------------------------------------
 	// Player 4 gameplay
-	curPly = &players[3];
+	curPly = &game.players[3];
 	switch (Joystick(2)) // Joy 2 direction
 	{
 	case 2: // up-right
@@ -450,14 +519,14 @@ void StateUpdateGame()
 	// Restore background
 	for(i=0; i<CAR_NUM; i++)
 	{
-		VRAMtoVRAM((13 * i) + (52 * game.page), 212, ScrPosX(players[i].prevX), game.yOffset + ScrPosY(players[i].prevY), 13, 11);
+		VRAMtoVRAM((13 * i) + (52 * game.page), 212, ScrPosX(game.players[i].prevX), game.yOffset + ScrPosY(game.players[i].prevY), 13, 11);
 	}
 
 	//----------------------------------------
 	// Update physic
 	for(i=0; i<CAR_NUM; i++)
 	{
-		curPly = &players[i];
+		curPly = &game.players[i];
 
 		if(curPly->flag & CAR_TURN_LEFT)
 		{
@@ -497,7 +566,7 @@ void StateUpdateGame()
 	// Fix position
 	for(i=0; i<CAR_NUM; i++)
 	{
-		curPly = &players[i];
+		curPly = &game.players[i];
 		if(curPly->posY < (5 << 8))
 			curPly->posY = (5 << 8);
 		else if(curPly->posY > (206 << 8))
@@ -511,7 +580,7 @@ void StateUpdateGame()
 	// Draw cars
 	for(i=0; i<CAR_NUM; i++)
 	{
-		VRAMtoVRAMTrans(13 * (players[i].rot / 16), 256 + 212 + (11 * i), ScrPosX(players[i].posX), game.yOffset + ScrPosY(players[i].posY), 13, 11);
+		VRAMtoVRAMTrans(13 * (game.players[i].rot / 16), 256 + 212 + (11 * i), ScrPosX(game.players[i].posX), game.yOffset + ScrPosY(game.players[i].posY), 13, 11);
 	}
 
 	waitRetrace();
@@ -535,9 +604,9 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 void CheckCollision(u8 car1, u8 car2)
 {
 	i16 x, y, dist;
-	dist = players[car1].posX - players[car2].posX;
+	dist = game.players[car1].posX - game.players[car2].posX;
 	x = dist >> 8;
-	dist = players[car1].posY - players[car2].posY;
+	dist = game.players[car1].posY - game.players[car2].posY;
 	y = dist >> 8;
 	dist = (x * x) + (y * y);
 	//if(car1 == 0 && car2 == 1)
@@ -552,11 +621,11 @@ void CheckCollision(u8 car1, u8 car2)
 	//}
 	if(dist < 11 * 11) // Collision occured
 	{
-		dist = players[car1].speed;
-		players[car1].speed = players[car2].speed;
-		players[car1].posX = players[car1].prevX;
-		players[car2].speed = dist;
-		players[car2].posY = players[car2].prevY;
+		dist = game.players[car1].speed;
+		game.players[car1].speed = game.players[car2].speed;
+		game.players[car1].posX = game.players[car1].prevX;
+		game.players[car2].speed = dist;
+		game.players[car2].posY = game.players[car2].prevY;
 	}
 }
 
@@ -569,18 +638,8 @@ void StateBuildTrack()
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
 
-	//for(x=0; x<=255; x++)
-	//	for(y=0; y<=211; y++)
-	//	{
-	//		i = (x + y) % 16; // 0:16
-	//		i /= 2; // 0:8
-	//		i += 2; // 2:10
-	//		if(i > 5)
-	//			i = 12 - i; // 2:5 & 6:3
-	//		DrawPoint8(x, y, (i << 5) + (i << 2) + (i >> 1));
-	//	}
-
-	FillVRAM(0, 0, 256, 212, COLOR_GREEN);
+	FillVRAM(0, 0, 128, 212, COLOR_LIGHTBLUE);
+	FillVRAM(128, 0, 128, 212, COLOR_LIGHTBLUE);
 	for(i=0; i<7; i++)
 	{
 		for(j=0; j<6; j++)
@@ -630,12 +689,12 @@ void StateShadeTrack()
 		{
 			cur = ReadVRAM(x + 256 * y);
 			next = ReadVRAM(x + 256 * (y + 1));
-			if(colorCode[cur] < OP_ROAD && colorCode[next] >= OP_ROAD)
+			if(game.colorCode[cur] < OP_ROAD && game.colorCode[next] >= OP_ROAD)
 			{
 				for(i=0; i<BLOCK_SHADOW; i++)
 				{
 					cur = ReadVRAM(x + 256 * (y - i));
-					if((y - i < 212) && (colorCode[cur] < OP_ROAD))
+					if((y - i < 212) && (game.colorCode[cur] < OP_ROAD))
 						WriteVRAM(x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
 					else
 						break;
@@ -643,7 +702,7 @@ void StateShadeTrack()
 				for(i=1; i<=ROAD_SHADOW; i++)
 				{
 					cur = ReadVRAM(x + 256 * (y + i));
-					if((y + i < 212) && (colorCode[cur] >= OP_ROAD))
+					if((y + i < 212) && (game.colorCode[cur] >= OP_ROAD))
 						WriteVRAM(x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
 					else
 						break;
@@ -677,4 +736,55 @@ u8 DarkenColor(u8 color, u8 power)
 	default: TransformColor(1, 3); break;
 	}
 	return (g << 5) + (r << 2) + b;
+}
+
+u8 GrayGradiant(u8 index)
+{
+	u8 col;
+	col = index & 0xF; // 0:16
+	col /= 2; // 0:8
+	col += 2; // 2:10
+	if(col > 5)
+		col = 12 - col; // 2:5 & 6:3
+	return (col << 5) + (col << 2) + (col >> 1);
+}
+
+void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
+{
+	u8 byte;
+	u16 i, j;
+	for(j=0; j<8; j++)
+	{
+		for(i=0; i<8; i++)
+		{
+			byte = charTable[chr * 8 + j];
+			if(byte & (1 << (7 - (i & 0x07))))
+				WriteVRAM(x + i + 256 * (y + j), color);
+		}
+	}
+}
+
+void DrawText(u16 x, u16 y, const char* text, u8 color)
+{
+	u8 textIdx = 0, sprtIdx = 0;
+	u16 curX = x;
+	u16 curY = y;
+	while(text[textIdx] != 0)
+	{
+		if(text[textIdx] == '\n')
+		{
+			curX = x;
+			curY += 8 + LINE_SPACE;
+		}
+		else
+		{
+			if(text[textIdx] != ' ')
+			{
+				DrawCharacter(curX, curY, text[textIdx] - '0', color);
+				sprtIdx++;
+			}
+			curX += 8;
+		}
+		textIdx++;
+	}
 }
