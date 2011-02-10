@@ -30,7 +30,7 @@
 #define RG6SAV  #0xF3E5
 #define RG7SAV  #0xF3E6
 #define RG8SAV  #0xF3E7
-#define RG9SAV  #0xF3E8
+//#define RG9SAV  #0xF3E8
 
 #define VDP_SX	#32
 #define VDP_SX8	#33
@@ -74,11 +74,11 @@
 
 #define LINES_192		0x00
 #define LINES_212		0x80 // 1000 0000
-#define LINES_MASK		0x7F // 0111 1111
+//#define LINES_MASK		0x7F // 0111 1111
 
 #define FREQ_50			0x20 // 0000 0010
 #define FREQ_60			0x00
-#define FREQ_MASK		0xFD // 1111 1101
+//#define FREQ_MASK		0xFD // 1111 1101
 
 //----------------------------------------
 // M A C R O S
@@ -91,7 +91,7 @@
 //----------------------------------------
 // T Y P E S
 
-typedef struct
+typedef struct tagVdpBuffer36
 {
 	u16 DX;  // 36-37
 	u16 DY;  // 38-39
@@ -102,7 +102,7 @@ typedef struct
 	u8  CMD; // 46
 } VdpBuffer36;
 
-typedef struct
+typedef struct tagVdpBuffer32
 {
 	u16 SX;  // 32-33
 	u16 SY;  // 34-35
@@ -126,7 +126,7 @@ typedef struct
 //----------------------------------------
 // P R O T O T Y P E S
 
-void SetScreen8(u8 lines);
+void SetScreen8(u8 flag);
 void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas);
 void SetPage8(u8 page);
 void DrawPoint8(u8 posX, u8 posY, u8 color);
