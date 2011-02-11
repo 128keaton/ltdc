@@ -133,7 +133,7 @@ void DrawPoint8(u8 posX, u8 posY, u8 color);
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
 void waitRetrace();
 void WaitForVDP();
-void WriteVRAM(u16 addr, u8 value);
+void WriteVRAM(u8 page, u16 addr, u8 value);
 u8 ReadVRAM(u16 addr);
 void SetFreq(u8 freq);
 void PrintSprite(u8 X, u8 Y, const char* text, u16 colorTab);

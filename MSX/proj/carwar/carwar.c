@@ -116,12 +116,14 @@ typedef struct
 {
 	u8               menu;
 	u8               item;
+	u8               itemNum;
 	u8               rule;
 	u8               page;
 	u16              yOffset;
 	u8               colorCode[256];
 	struct tagPlayer players[4];
 	void            (*state)(void);
+	u8               bitToByte[256 * 8];
 } GameData;
 
 //----------------------------------------
@@ -129,10 +131,11 @@ typedef struct
 
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
+void InitializeMenu(u8 menu);
 void CheckCollision(u8 car1, u8 car2);
 
-void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
-void DrawText(u16 x, u16 y, const char* text, u8 color);
+void DrawCharacter(u8 page, u16 x, u16 y, u8 chr, u8 color);
+void DrawText(u8 page, u16 x, u16 y, const char* text, u8 color);
 
 // Color process
 u8 DarkenColor(u8 color, u8 power);
@@ -296,7 +299,7 @@ void MainLoop()
 /** STATE initialize system */
 void StateInitialize()
 {
-	u16 x;
+	u16 x, i;
 
 	// Init
 	//SetFreq(FREQ_50);
@@ -329,9 +332,27 @@ void StateInitialize()
 	{
 		RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
 	}
+
+	for(x=0; x<256; x++)
+	{
+		for(i=0; i<8; i++)
+		{
+			if(x & (1 << (7 - (i & 0x07))))
+				game.bitToByte[x * 8 + i] = 0xFF;
+			else
+				game.bitToByte[x * 8 + i] = 0x00;
+		}		
+	}
 	
 	game.page = 0;
 	game.state = StateTitle;
+}
+
+void InitializeMenu(u8 menu)
+{
+	game.menu = menu;
+	game.item = menu;
+	for(game.itemNum=0; menus[game.menu + game.itemNum].text != 0; game.itemNum++) {}
 }
 
 #define TITLE_X	16
@@ -351,7 +372,7 @@ void StateTitle()
 			byte = title[(i / 8) + (j * 232 / 8)];
 			if(byte & (1 << (7 - (i & 0x07))))
 			{
-				WriteVRAM(TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
+				WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
 			}
 		}
 	}
@@ -359,11 +380,13 @@ void StateTitle()
 	// Copy title to both screen
 	VRAMtoVRAM(TITLE_X, TITLE_Y, TITLE_X, TITLE_Y + 256, 232, 24);
 
+	InitializeMenu(0);
 	game.page = 0;
-	game.menu = 0;
-	game.item = 0;
 	game.state = StateMainMenu;
 }
+
+#define MENU_X	100
+#define MENU_Y	100
 
 void StateMainMenu()
 {
@@ -379,22 +402,22 @@ void StateMainMenu()
 	|| Joytrig(2) != 0) 
 		game.state = StateStartGame;
 
-	if((keyLine & KEY_UP) == 0)
+	if(((keyLine & KEY_UP) == 0) && (game.item > game.menu))
 		game.item--;
-	else if((keyLine & KEY_DOWN) == 0)
+	else if(((keyLine & KEY_DOWN) == 0) && (game.item < game.menu + game.itemNum - 1))
 		game.item++;
 
-	for(item = 0; menus[game.menu + item].text != 0; item++)
+	FillVRAM(MENU_X - 12, MENU_Y + game.yOffset, 8, 8 + (10 * game.itemNum - 1), COLOR_BLACK);
+	for(item = 0; item < game.itemNum; item++)
 	{
 		if(game.menu + item == game.item)
 		{
-			DrawText(68, 100 + (10 * item) + game.yOffset, ">", COLOR_LIGHTBLUE);
-			DrawText(80, 100 + (10 * item) + game.yOffset, menus[game.menu + item].text, COLOR_LIGHTBLUE);
+			DrawText(game.page, MENU_X - 12, MENU_Y + (10 * item), ">", COLOR_LIGHTBLUE);
+			DrawText(game.page, MENU_X, MENU_Y + (10 * item), menus[game.menu + item].text, COLOR_LIGHTBLUE);
 		}
 		else
 		{
-			FillVRAM(68, 100 + (10 * item) + game.yOffset, 8, 8, COLOR_BLACK);
-			DrawText(80, 100 + (10 * item) + game.yOffset, menus[game.menu + item].text, COLOR_WHITE);
+			DrawText(game.page, MENU_X, MENU_Y + (10 * item), menus[game.menu + item].text, COLOR_WHITE);
 		}
 	}
 
@@ -663,9 +686,9 @@ void StateBuildTrack()
 						else /* SYM_V */                         { lx = 31 - x; ly = y; }
 						byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx / 8) + (ly * 32 / 8)];
 						if(byte & (1 << (7 - (lx & 0x07))))
-							WriteVRAM((16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
+							WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
 						else
-							WriteVRAM((16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color0);
+							WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color0);
 					}
 				}
 			}
@@ -695,7 +718,7 @@ void StateShadeTrack()
 				{
 					cur = ReadVRAM(x + 256 * (y - i));
 					if((y - i < 212) && (game.colorCode[cur] < OP_ROAD))
-						WriteVRAM(x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
+						WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
 					else
 						break;
 				}
@@ -703,7 +726,7 @@ void StateShadeTrack()
 				{
 					cur = ReadVRAM(x + 256 * (y + i));
 					if((y + i < 212) && (game.colorCode[cur] >= OP_ROAD))
-						WriteVRAM(x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
+						WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
 					else
 						break;
 				}
@@ -749,22 +772,23 @@ u8 GrayGradiant(u8 index)
 	return (col << 5) + (col << 2) + (col >> 1);
 }
 
-void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
+void DrawCharacter(u8 page, u16 x, u16 y, u8 chr, u8 color)
 {
-	u8 byte;
-	u16 i, j;
+	//u8 byte;
+	u16 /*i,*/ j;
 	for(j=0; j<8; j++)
 	{
-		for(i=0; i<8; i++)
-		{
-			byte = charTable[chr * 8 + j];
-			if(byte & (1 << (7 - (i & 0x07))))
-				WriteVRAM(x + i + 256 * (y + j), color);
-		}
+		RAMtoVRAM(x, y + j + 256 * page, 8, 1, game.bitToByte[/*charTable[chr * 8 + */j/*]*/]);
+		//for(i=0; i<8; i++)
+		//{
+		//	byte = charTable[chr * 8 + j];
+		//	if(byte & (1 << (7 - (i & 0x07))))
+		//		WriteVRAM(page, x + i + 256 * (y + j), color);
+		//}
 	}
 }
 
-void DrawText(u16 x, u16 y, const char* text, u8 color)
+void DrawText(u8 page, u16 x, u16 y, const char* text, u8 color)
 {
 	u8 textIdx = 0, sprtIdx = 0;
 	u16 curX = x;
@@ -780,7 +804,7 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 		{
 			if(text[textIdx] != ' ')
 			{
-				DrawCharacter(curX, curY, text[textIdx] - '0', color);
+				DrawCharacter(page, curX, curY, text[textIdx] - '0', color);
 				sprtIdx++;
 			}
 			curX += 8;
