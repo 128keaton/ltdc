@@ -240,6 +240,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\build_trigo.bat"
+				>
+			</File>
+			<File
 				RelativePath=".\core.h"
 				>
 			</File>
@@ -257,6 +261,14 @@
 			</File>
 			<File
 				RelativePath=".\proj64.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\rot16.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\rot64.inc"
 				>
 			</File>
 			<File
