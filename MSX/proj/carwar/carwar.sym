@@ -3,102 +3,123 @@
 Symbol Table
 
     .__.ABS.                                                    =  0000 G
-  0 _CheckCollision                                                426C GR
-  0 _CheckCollision_end                                            43BF GR
-  0 _CheckCollision_start                                          426C GR
+  0 _CheckCollision                                                48A7 GR
+  0 _CheckCollision_end                                            49FA GR
+  0 _CheckCollision_start                                          48A7 GR
     _ClearSprite                                                   **** GX
-  0 _DarkenColor                                                   48E3 GR
-  0 _DarkenColor_end                                               4ADA GR
-  0 _DarkenColor_start                                             48E3 GR
-  0 _DrawCharacter                                                 4B09 GR
-  0 _DrawCharacter_end                                             4B73 GR
-  0 _DrawCharacter_start                                           4B09 GR
-  0 _DrawText                                                      4B73 GR
-  0 _DrawText_end                                                  4C00 GR
-  0 _DrawText_start                                                4B73 GR
+  0 _DarkenColor                                                   4F1E GR
+  0 _DarkenColor_end                                               5115 GR
+  0 _DarkenColor_start                                             4F1E GR
+  0 _DrawCharacter                                                 5144 GR
+  0 _DrawCharacter_end                                             522A GR
+  0 _DrawCharacter_start                                           5144 GR
+  0 _DrawText                                                      522A GR
+  0 _DrawText_end                                                  52B1 GR
+  0 _DrawText_start                                                522A GR
     _FillVRAM                                                      **** GX
     _GetKeyMatrixLine                                              **** GX
-  0 _GrayGradiant                                                  4ADA GR
-  0 _GrayGradiant_end                                              4B09 GR
-  0 _GrayGradiant_start                                            4ADA GR
-  0 _InitializeMenu                                                3526 GR
-  0 _InitializeMenu_end                                            3566 GR
-  0 _InitializeMenu_start                                          3526 GR
-  0 _InitializePlayer                                              4192 GR
-  0 _InitializePlayer_end                                          426C GR
-  0 _InitializePlayer_start                                        4192 GR
+  0 _GrayGradiant                                                  5115 GR
+  0 _GrayGradiant_end                                              5144 GR
+  0 _GrayGradiant_start                                            5115 GR
+  0 _InitializeMenu                                                396B GR
+  0 _InitializeMenu_end                                            3B05 GR
+  0 _InitializeMenu_start                                          396B GR
+  0 _InitializePlayer                                              47CD GR
+  0 _InitializePlayer_end                                          48A7 GR
+  0 _InitializePlayer_start                                        47CD GR
     _Joystick                                                      **** GX
     _Joytrig                                                       **** GX
-  0 _MainLoop                                                      32DC GR
-  0 _MainLoop_end                                                  32F5 GR
-  0 _MainLoop_start                                                32DC GR
+  0 _MainLoop                                                      3721 GR
+  0 _MainLoop_end                                                  373A GR
+  0 _MainLoop_start                                                3721 GR
     _PrintSprite                                                   **** GX
     _RAMtoVRAM                                                     **** GX
     _ReadVRAM                                                      **** GX
     _SetPage8                                                      **** GX
     _SetScreen8                                                    **** GX
     _SetSpriteMode                                                 **** GX
-  0 _StateBuildTrack                                               43BF GR
-  0 _StateBuildTrack_end                                           46F8 GR
-  0 _StateBuildTrack_start                                         43BF GR
-  0 _StateInitialize                                               32F5 GR
-  0 _StateInitialize_end                                           3526 GR
-  0 _StateInitialize_start                                         32F5 GR
-  0 _StateMainMenu                                                 3689 GR
-  0 _StateMainMenu_end                                             3874 GR
-  0 _StateMainMenu_start                                           3689 GR
-  0 _StateShadeTrack                                               4704 GR
-  0 _StateShadeTrack_end                                           48D7 GR
-  0 _StateShadeTrack_start                                         4704 GR
-  0 _StateStartGame                                                3876 GR
-  0 _StateStartGame_end                                            3AAC GR
-  0 _StateStartGame_start                                          3876 GR
-  0 _StateTitle                                                    3566 GR
-  0 _StateTitle_end                                                3689 GR
-  0 _StateTitle_start                                              3566 GR
-  0 _StateUpdateGame                                               3AC8 GR
-  0 _StateUpdateGame_end                                           4192 GR
-  0 _StateUpdateGame_start                                         3AC8 GR
+  0 _StartGame                                                     3C46 GR
+  0 _StartGame_end                                                 3C4F GR
+  0 _StartGame_start                                               3C46 GR
+  0 _StateBuildTrack                                               49FA GR
+  0 _StateBuildTrack_end                                           4D33 GR
+  0 _StateBuildTrack_start                                         49FA GR
+  0 _StateInitialize                                               373A GR
+  0 _StateInitialize_end                                           396B GR
+  0 _StateInitialize_start                                         373A GR
+  0 _StateMainMenu                                                 3C4F GR
+  0 _StateMainMenu_end                                             3EB2 GR
+  0 _StateMainMenu_start                                           3C4F GR
+  0 _StateShadeTrack                                               4D3F GR
+  0 _StateShadeTrack_end                                           4F12 GR
+  0 _StateShadeTrack_start                                         4D3F GR
+  0 _StateStartGame                                                3EB4 GR
+  0 _StateStartGame_end                                            40E7 GR
+  0 _StateStartGame_start                                          3EB4 GR
+  0 _StateTitle                                                    3B05 GR
+  0 _StateTitle_end                                                3C46 GR
+  0 _StateTitle_start                                              3B05 GR
+  0 _StateUpdateGame                                               4103 GR
+  0 _StateUpdateGame_end                                           47CD GR
+  0 _StateUpdateGame_start                                         4103 GR
+    _VPDCommand32                                                  **** GX
+    _VPDCommand36                                                  **** GX
+    _VPDCommandLoop                                                **** GX
     _VRAMtoVRAM                                                    **** GX
     _VRAMtoVRAMTrans                                               **** GX
     _WriteVRAM                                                     **** GX
     __divsint_rrx_s                                                **** GX
     __mulint_rrx_s                                                 **** GX
-  0 __str_12                                                       3874 R
-  0 __str_13                                                       3AAC R
-  0 __str_14                                                       3AB6 R
-  0 __str_15                                                       46F8 R
-  0 __str_16                                                       48D7 R
+  0 __str_22                                                       3EB2 R
+  0 __str_23                                                       40E7 R
+  0 __str_24                                                       40F1 R
+  0 __str_25                                                       4D33 R
+  0 __str_26                                                       4F12 R
   0 _car1                                                          001A GR
   0 _car2                                                          090A GR
   0 _car3                                                          11FA GR
   0 _car4                                                          1AEA GR
-  0 _cars                                                          31A9 GR
+  0 _cars                                                          356A GR
   0 _charTable                                                     2469 GR
-  0 _defaultColor                                                  31A1 GR
-  0 _g_Cosinus                                                     3121 R
-  0 _g_Sinus                                                       30A1 R
+  0 _defaultColor                                                  3562 GR
+  0 _g_Cosinus64                                                   3121 R
+  0 _g_Rotation16                                                  31A1 R
+  0 _g_Sinus64                                                     30A1 R
     _g_slotPort                                                 =  00A8 
     _game                                                       =  C000 G
   0 _main                                                          0000 GR
   0 _main_end                                                      001A GR
   0 _main_start                                                    0000 GR
-  0 _menus                                                         3233 GR
+  0 _menuMain                                                      35F4 GR
+  0 _menuMode                                                      3608 GR
+  0 _menuPlayer                                                    3630 GR
+  0 _menuTrack                                                     3621 GR
+  0 _menus                                                         3644 GR
   0 _shadow                                                        23DA GR
-  0 _str_0                                                         327E R
-  0 _str_1                                                         3283 R
-  0 _str_10                                                        32C7 R
-  0 _str_11                                                        32D7 R
-  0 _str_2                                                         328A R
-  0 _str_3                                                         3292 R
-  0 _str_4                                                         329A R
-  0 _str_5                                                         329F R
-  0 _str_6                                                         32A8 R
-  0 _str_7                                                         32AC R
-  0 _str_8                                                         32B3 R
-  0 _str_9                                                         32B8 R
+  0 _str_0                                                         3660 R
+  0 _str_1                                                         3665 R
+  0 _str_10                                                        36A3 R
+  0 _str_11                                                        36AD R
+  0 _str_12                                                        36B7 R
+  0 _str_13                                                        36C1 R
+  0 _str_14                                                        36CB R
+  0 _str_15                                                        36CC R
+  0 _str_16                                                        36D8 R
+  0 _str_17                                                        36E2 R
+  0 _str_18                                                        36EE R
+  0 _str_19                                                        36FB R
+  0 _str_2                                                         366C R
+  0 _str_20                                                        3707 R
+  0 _str_21                                                        3715 R
+  0 _str_3                                                         3674 R
+  0 _str_4                                                         367C R
+  0 _str_5                                                         3681 R
+  0 _str_6                                                         368A R
+  0 _str_7                                                         368E R
+  0 _str_8                                                         3695 R
+  0 _str_9                                                         369A R
   0 _title                                                         2DE9 GR
-  0 _track01                                                       31B5 GR
+  0 _track01                                                       3576 GR
   0 _trackTiles                                                    25E9 GR
     _waitRetrace                                                   **** GX
 
@@ -106,7 +127,7 @@ Symbol Table
 
 Area Table
 
-   0 _CODE                                      size 4C00   flags 0
+   0 _CODE                                      size 52B1   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0

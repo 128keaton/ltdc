@@ -48,18 +48,30 @@
 #define VDP_ARG	#45
 #define VDP_CMD	#46
 
-#define VDP_CMD_HMMC	0xF0
-#define VDP_CMD_YMMM	0xE0
-#define VDP_CMD_HMMM	0xD0
-#define VDP_CMD_HMMV	0xC0
-#define VDP_CMD_LMMC 
-#define VDP_CMD_LMCM 
-#define VDP_CMD_LMMM 
-#define VDP_CMD_LMMV 
-#define VDP_CMD_LINE 
-#define VDP_CMD_SRCH	0x60
-#define VDP_CMD_PSET    0x50
-#define VDP_CMD_POINT
+#define VDP_CMD_HMMC	0xF0 // 1111
+#define VDP_CMD_YMMM	0xE0 // 1110
+#define VDP_CMD_HMMM	0xD0 // 1101
+#define VDP_CMD_HMMV	0xC0 // 1100
+#define VDP_CMD_LMMC	0xB0 // 1011
+#define VDP_CMD_LMCM	0xA0 // 1010
+#define VDP_CMD_LMMM	0x90 // 1001
+#define VDP_CMD_LMMV	0x80 // 1000
+#define VDP_CMD_LINE	0x70 // 0111
+#define VDP_CMD_SRCH	0x60 // 0110
+#define VDP_CMD_PSET	0x50 // 0101
+#define VDP_CMD_POINT	0x40 // 0100
+
+#define VDP_OP_IMP		0x00 // 0000
+#define VDP_OP_AND		0x01 // 0001
+#define VDP_OP_OR		0x02 // 0010
+#define VDP_OP_XOR		0x03 // 0011
+#define VDP_OP_NOT		0x04 // 0100
+#define VDP_OP_TIMP		0x08 // 1000
+#define VDP_OP_TAND		0x09 // 1001
+#define VDP_OP_TOR		0x0A // 1010
+#define VDP_OP_TXOR		0x0B // 1011
+#define VDP_OP_TNOT		0x0C // 1100
+
 
 #define DISP_PAGE	(1 << 5)
 
