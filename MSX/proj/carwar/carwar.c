@@ -76,14 +76,6 @@ enum
 #define SYM_V	0x50	// Vertical symmetry
 
 //----------------------------------------
-// M A C R O S
-
-//#define ScrPosX(a) ((a >> 7) - 128 - 6)
-//#define ScrPosY(a) ((a >> 7) - 128 - 5)
-#define ScrPosX(a) ((a >> 8) - 6)
-#define ScrPosY(a) ((a >> 8) - 5)
-
-//----------------------------------------
 // T Y P E S
 
 typedef struct tagCar
@@ -121,13 +113,12 @@ typedef struct tagPlayer
 	u16 posY;  // position Y
 	u16 prevX; // previous position X
 	u16 prevY; // previous position Y
-	i16 dX;    // velocity X
-	i16 dY;    // velocity Y
+	i16 velX;    // velocity X
+	i16 velY;    // velocity Y
 	u8 car;    // car index
 	u8 flag;   // move flag
 	u8 rot;    // rotation
-	u8 speed;
-} Player; // 16 bytes
+} Player;
 
 typedef struct
 {
@@ -145,6 +136,13 @@ typedef struct
 	VdpBuffer36      vdp36;
 } GameData;
 
+
+//----------------------------------------
+// M A C R O S
+
+#define ScrPosX(a) ((a >> 8) - 6)
+#define ScrPosY(a) ((a >> 8) - 5)
+
 #define HMMC(dx, dy, nx, ny, ram)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMC;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
 #define HMMM(sx, sy, dx, dy, nx, ny)  game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; game.vdp32.CLR = 0; game.vdp32.ARG = 0; game.vdp32.CMD = VDP_CMD_HMMM; VPDCommand32((u16)&game.vdp32);
 #define HMMV(dx, dy, nx, ny, col)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMV;                                       VPDCommand36((u16)&game.vdp36);
@@ -157,6 +155,7 @@ void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void InitializeMenu(u8 menu);
 void CheckCollision(u8 car1, u8 car2);
+i8 AngleDifferent64(i8 angleA, i8 angleB);
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -202,13 +201,13 @@ const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 const Car cars[CAR_NUM] = 
 {
 	// Cop
-	{ 5, 24, 4 },
+	{ 5, 24, 2 },
 	//
-	{ 4, 32, 4 },
+	{ 4, 32, 2 },
 	// Ferrari
-	{ 4, 30, 4 },
+	{ 4, 30, 2 },
 	// Turtule
-	{ 6, 16, 4 },
+	{ 6, 16, 2 },
 };
 
 const TrackTile track01[] = 
@@ -281,7 +280,6 @@ const MenuEntry menuMode[] =
 	{ "TAG",      2, 0 },
 	{ "SOCCER",   2, 0 },
 	{ "BACK",     3, 0 },
-
 };
 
 // Menu 2
@@ -297,15 +295,15 @@ const MenuEntry menuPlayer[] =
 {
 	{ "2 PLAYERS", 1, 0 },
 	{ "3 PLAYERS", 1, 0 },
-	{ "3 PLAYERS", 1, 0 },
+	{ "4 PLAYERS", 1, 0 },
 	{ "BACK",      0, 0 },
 };
 
 const Menu menus[] =
 {
-	{ "", "PRESS SPACE", menuMain, numberof(menuMain) },
-	{ "GAME MODE", "PRESS SPACE", menuMode, numberof(menuMode) },
-	{ "TRACK SELECT", "PRESS SPACE", menuTrack, numberof(menuTrack) },
+	{ "",              "PRESS SPACE", menuMain,   numberof(menuMain) },
+	{ "GAME MODE",     "PRESS SPACE", menuMode,   numberof(menuMode) },
+	{ "TRACK SELECT",  "PRESS SPACE", menuTrack,  numberof(menuTrack) },
 	{ "PLAYER SELECT", "PRESS SPACE", menuPlayer, numberof(menuPlayer) },
 };
 
@@ -321,9 +319,8 @@ GameData __at(0xC000) game;
 ///
 __sfr __at(0xA8) g_slotPort;
 
-/**
- * Program entry point
- */
+//----------------------------------------
+/** Program entry point */
 void main(void)
 {
 	__asm
@@ -351,23 +348,23 @@ void MainLoop()
 	}
 }
 
-/** STATE initialize system */
+/** State - initialize system */
 void StateInitialize()
 {
 	u16 x, i;
 
 	// Init
-	//SetFreq(FREQ_50);
-	SetScreen8(LINES_212 + FREQ_60);
+	SetFreq(FREQ_60);
+	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
+	// Clear all VRAM
 	FillVRAM(0, 0,   256, 256, 0);
 	FillVRAM(0, 256, 256, 256, 0);
 
 	// Init color table
 	for(x=0; x<256; x++)
 		game.colorCode[x] = OP_NONE;
-
 	game.colorCode[COLOR_BLACK]     = OP_HOLE;
 	game.colorCode[COLOR_LIGHTBLUE] = OP_WALL;
 	game.colorCode[COLOR_GRAY]      = OP_ROAD;
@@ -381,7 +378,6 @@ void StateInitialize()
 	game.colorCode[DarkenColor(COLOR_YELLOW, SHADOW_POWER)]    = OP_SAND;
 	game.colorCode[DarkenColor(COLOR_WHITE, SHADOW_POWER)]     = OP_ROAD;
 
-	//----------------------------------------
 	// Initialize (ASCII table) sprites
 	for(x=0; x<sizeof(charTable)/8; x++)
 	{
@@ -405,7 +401,7 @@ void StateInitialize()
 	game.state = StateStartGame;
 }
 
-
+/** Initialize a given menu */
 void InitializeMenu(u8 menu)
 {
 	u8 item;
@@ -426,6 +422,7 @@ void InitializeMenu(u8 menu)
 	HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
 }
 
+/** State - Initialize title */
 void StateTitle()
 {
 	u8 i, j, byte;
@@ -453,11 +450,13 @@ void StateTitle()
 	game.state = StateMainMenu;
 }
 
+/** Menu callback - Start game */
 void StartGame()
 {
 	game.state = StateStartGame;
 }
 
+/** State - Process main menu */
 void StateMainMenu()
 {
 	u8 keyLine;
@@ -503,6 +502,7 @@ void StateMainMenu()
 	waitRetrace();
 }
 
+/** State - Start game */
 void StateStartGame()
 {
 	u8 i;
@@ -512,7 +512,7 @@ void StateStartGame()
 
 	//----------------------------------------
 	// Build background
-	StateBuildTrack();
+	//StateBuildTrack();
 	//StateShadeTrack();
 	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 
@@ -542,11 +542,12 @@ void StateStartGame()
 	game.state = StateUpdateGame;
 }
 
+/** State - Process game */
 void StateUpdateGame()
 {
-	u8 i;
-	u8 keyLine, angle;
+	u8 i, keyLine, angle, dir;
 	Player* curPly;
+	i16 x, y, speed;
 
 	SetPage8(game.page);
 	game.page = 1 - game.page;
@@ -641,27 +642,56 @@ void StateUpdateGame()
 		if(curPly->flag & CAR_MOVE)
 		{
 			angle = curPly->rot / 4;
-			curPly->dX = g_Cosinus64[angle];
-			curPly->dY = g_Sinus64[angle];
-			curPly->speed += 2;
+			curPly->velX += cars[curPly->car].accel * g_Cosinus64[angle];
+			curPly->velY += cars[curPly->car].accel * g_Sinus64[angle];
 		}
 
-		if(curPly->speed > 0)
-			curPly->speed--;
-		if(curPly->speed > cars[curPly->car].maxSpeed)
-			curPly->speed = cars[curPly->car].maxSpeed;
+		//x = curPly->velX >> 8;
+		//y = curPly->velY >> 8;
+		//speed = (x * x) + (y * y);
+		//if(speed < (1 * 1) * 8)
+		//{
+		//	curPly->velX = 0;
+		//	curPly->velY = 0;
+		//}
+		//else if(speed > (cars[curPly->car].maxSpeed * cars[curPly->car].maxSpeed) * 8)
+		//{
+		//	curPly->velX = 0;
+		//	curPly->velY = 0;
+		//}
+		//else
+		//{
+		//	while((x > 15) || (y > 15))
+		//	{
+		//		x /= 2;
+		//		y /= 2;
+		//	}
+		//	dir = AngleDifferent64((i8)x, (i8)y);
+		//	dir += 32;
+		//	dir &= 0x3F;
+		//	curPly->velX -= 1 * g_Cosinus64[dir];
+		//	curPly->velY -= 1 * g_Sinus64[dir];
+		//}
+
+		//if(curPly->speed > 0)
+		//	curPly->speed--;
+		//if(curPly->speed > cars[curPly->car].maxSpeed)
+		//	curPly->speed = cars[curPly->car].maxSpeed;
 
 		curPly->prevX = curPly->posX;
 		curPly->prevY = curPly->posY;
-		curPly->posX += (curPly->speed * curPly->dX) / 8;
-		curPly->posY -= (curPly->speed * curPly->dY) / 8;
+		curPly->posX += curPly->velX / 8;
+		curPly->posY -= curPly->velY / 8;
 	}
 
 	// Check collision
+	// 2 players
 	CheckCollision(0, 1);
+	// 3 players
 	CheckCollision(0, 2);
-	CheckCollision(0, 3);
 	CheckCollision(1, 2);
+	// 4 players
+	CheckCollision(0, 3);
 	CheckCollision(1, 3);
 	CheckCollision(2, 3);
 
@@ -684,7 +714,7 @@ void StateUpdateGame()
 	{
 		VRAMtoVRAMTrans(13 * (game.players[i].rot / 16), 256 + 212 + (11 * i), ScrPosX(game.players[i].posX), game.yOffset + ScrPosY(game.players[i].posY), 13, 11);
 	}
-
+		
 	waitRetrace();
 }
 
@@ -696,19 +726,30 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 	ply->posY = 128 + posY << 7; // position Y
 	ply->prevX = ply->posX; // previous position X
 	ply->prevY = ply->posY; // previous position Y
-	ply->rot = 0; // rotation
-	ply->dX = 0; // velocity X
-	ply->dY = 0; // velocity Y
-	ply->speed = 0;
+	ply->rot = 64; // rotation
+	ply->velX = 0; // velocity X
+	ply->velY = 0; // velocity Y
 }
 
 /***/
+i8 AngleDifferent64(i8 angleA, i8 angleB)
+{
+	i8 diff;
+	diff = angleB - angleA;
+	if(diff < -32)
+		diff += 64;
+	if(diff > 32)
+		diff -= 64;
+	return diff;
+}
+
+/** Check collision */
 void CheckCollision(u8 car1, u8 car2)
 {
 	i16 x, y, dist;
-	dist = game.players[car1].posX - game.players[car2].posX;
+	dist = game.players[car2].posX - game.players[car1].posX;
 	x = dist >> 8;
-	dist = game.players[car1].posY - game.players[car2].posY;
+	dist = game.players[car2].posY - game.players[car1].posY;
 	y = dist >> 8;
 	dist = (x * x) + (y * y);
 	//if(car1 == 0 && car2 == 1)
@@ -723,10 +764,16 @@ void CheckCollision(u8 car1, u8 car2)
 	//}
 	if(dist < 11 * 11) // Collision occured
 	{
-		dist = game.players[car1].speed;
-		game.players[car1].speed = game.players[car2].speed;
+		SetSpriteUniColor(0, 
+			(game.players[car1].posX >> 8) + (x >> 1) - 4, 
+			(game.players[car1].posY >> 8) + (y >> 1) - 4, 
+			'X' - '0', 0x0F);
+		SetSpriteUniColor(1, 0, 216, 0, 0);
+
+		//dist = game.players[car1].speed;
+		//game.players[car1].speed = game.players[car2].speed;
+		//game.players[car2].speed = dist;
 		game.players[car1].posX = game.players[car1].prevX;
-		game.players[car2].speed = dist;
 		game.players[car2].posY = game.players[car2].prevY;
 	}
 }

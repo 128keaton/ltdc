@@ -21,6 +21,7 @@
 #define RTC_ADDR #0xB4   // RTC address
 #define RTC_DATA #0xB5   // RTC data
 
+// MSX 1
 #define RG0SAV  #0xF3DF
 #define RG1SAV  #0xF3E0
 #define RG2SAV  #0xF3E1
@@ -29,8 +30,27 @@
 #define RG5SAV  #0xF3E4
 #define RG6SAV  #0xF3E5
 #define RG7SAV  #0xF3E6
-#define RG8SAV  #0xF3E7
-//#define RG9SAV  #0xF3E8
+// MSX 2
+#define RG8SAV  #0xFFE7 
+#define RG9SAV  #0xFFE8 
+#define RG10SAV #0xFFE9 
+#define RG11SAV #0xFFEA 
+#define RG12SAV #0xFFEB 
+#define RG13SAV #0xFFEC 
+#define RG14SAV #0xFFED 
+#define RG15SAV #0xFFEE 
+#define RG16SAV #0xFFEF 
+#define RG17SAV #0xFFF0 
+#define RG18SAV #0xFFF1 
+#define RG19SAV #0xFFF2 
+#define RG20SAV #0xFFF3 
+#define RG21SAV #0xFFF4 
+#define RG22SAV #0xFFF5 
+#define RG23SAV #0xFFF7 
+// MSX 2+
+#define RG25SAV #0xFFFA
+#define RG26SAV #0xFFFB
+#define RG27SAV #0xFFFC
 
 #define VDP_SX	#32
 #define VDP_SX8	#33
@@ -86,11 +106,11 @@
 
 #define LINES_192		0x00
 #define LINES_212		0x80 // 1000 0000
-//#define LINES_MASK		0x7F // 0111 1111
+#define LINES_MASK		0x7F // 0111 1111
 
 #define FREQ_50			0x20 // 0000 0010
 #define FREQ_60			0x00
-//#define FREQ_MASK		0xFD // 1111 1101
+#define FREQ_MASK		0xFD // 1111 1101
 
 //----------------------------------------
 // M A C R O S
