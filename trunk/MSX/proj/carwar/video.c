@@ -37,24 +37,35 @@ void SetScreen8(u8 flag)
 		out		(VDP_ADDR),a
 
 		//; - modification registre 2 -
-		ld		a,#0x1F // 00011111b (addr de la page graphique 0)
+		ld		a,#0x1F ;// 00011111b (addr de la page graphique 0)
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(2)
 		out		(VDP_ADDR),a
 
-		//; - modification registre 9 -
-		//ld		a,(RG9SAV)
-		//res		#7,a           //; bit 7 a 0
-		//or		4(ix) ;// 192 (0x00) or 212 lines (0x80)?
-		//ld		(RG9SAV),a
-		//out		(VDP_ADDR),a
+		//; - modification registre 7 -
+		xor		a ;// Set black for text & background color
+		out		(VDP_ADDR),a
 
-		ld		a, 4(ix) ;// 192 (0x00) or 212 lines (0x80) + Freq 50Hz (0x02) or 60Hz (0x00)?
+		ld		a,VDP_REG(7)
+		out		(VDP_ADDR),a
+
+		//; - modification registre 9 -
+		ld		a,(RG9SAV)
+		res		#7,a           //; bit 7 a 0
+		or		4(ix) ;// 192 (0x00) or 212 lines (0x80)?
+		ld		(RG9SAV),a
 		out		(VDP_ADDR),a
 
 		ld		a,VDP_REG(9)
 		out		(VDP_ADDR),a
+
+		//; - modification registre 16 -
+		//xor		a
+		//out		(VDP_ADDR),a
+
+		//ld		a,VDP_REG(16)
+		//out		(VDP_ADDR),a
 
 	ei //; on autorise les interruptions
 
@@ -123,28 +134,29 @@ void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
 
 
 /** Set frequence 50/60Hz */
-//void SetFreq(u8 freq)
-//{
-//	freq;
-//
-//	WaitForVDP();
-//
-//	__asm
-//
-//		//; - modification registre 9 -
-//		ld		a,(RG9SAV)
-//		and		#FREQ_MASK ;// 1111 1101
-//		or		4(ix)
-//		ld		(RG9SAV),a
-//	di //; on interdit les interruptions
-//		out		(VDP_ADDR),a
-//
-//		ld		a,VDP_REG(9)
-//	ei //; on autorise les interruptions
-//		out		(VDP_ADDR),a
-//
-//	__endasm;
-//}
+void SetFreq(u8 freq)
+{
+	freq;
+
+	WaitForVDP();
+
+	__asm
+
+		//; - modification registre 9 -
+		ld		a,(RG9SAV)
+		//and		#FREQ_MASK ;// 1111 1101
+		res		#1,a ;// bit 1 à 0
+		or		4(ix)
+		ld		(RG9SAV),a
+	di //; on interdit les interruptions
+		out		(VDP_ADDR),a
+
+		ld		a,VDP_REG(9)
+	ei //; on autorise les interruptions
+		out		(VDP_ADDR),a
+
+	__endasm;
+}
 
 /** Set current page for mode 8 */
 void SetPage8(u8 page)
