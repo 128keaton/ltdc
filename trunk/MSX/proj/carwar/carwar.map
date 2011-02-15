@@ -15,7 +15,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
             0000  l__HOME                          
             0000  l__OVERLAY                       
             4010  s__CODE                          
-            5C5F  l__CODE                          
+            68AD  l__CODE                          
             C000  _game                            
             C000  s__CABS                          
             C000  s__DATA                          
@@ -28,7 +28,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   5C5F =  23647. bytes (REL,CON)
+_CODE                              4010   68AD =  26797. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
@@ -74,168 +74,247 @@ _CODE                              4010   5C5F =  23647. bytes (REL,CON)
             8108  _StateStartGame_end              
             8124  _StateUpdateGame                 
             8124  _StateUpdateGame_start           
-            87F9  _InitializePlayer                
-            87F9  _InitializePlayer_start          
-            87F9  _StateUpdateGame_end             
-            88CD  _AngleDifferent64                
-            88CD  _AngleDifferent64_start          
-            88CD  _InitializePlayer_end            
-            88FD  _AngleDifferent64_end            
-            88FD  _CheckCollision                  
+            8A75  _InitializePlayer                
+            8A75  _InitializePlayer_start          
+            8A75  _StateUpdateGame_end             
+            8B49  _AngleDifferent64                
+            8B49  _AngleDifferent64_start          
+            8B49  _InitializePlayer_end            
+            8B79  _AngleDifferent64_end            
+            8B79  _VectorToAngle64                 
 ASxxxx Linker V02.00 + NoICE + sdld,  page 3.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   5C5F =  23647. bytes (REL,CON)
+_CODE                              4010   68AD =  26797. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            88FD  _CheckCollision_start            
-            8A8C  _CheckCollision_end              
-            8A8C  _StateBuildTrack                 
-            8A8C  _StateBuildTrack_start           
-            8DC5  _StateBuildTrack_end             
-            8DD1  _StateShadeTrack                 
-            8DD1  _StateShadeTrack_start           
-            8FA4  _StateShadeTrack_end             
-            8FB0  _DarkenColor                     
-            8FB0  _DarkenColor_start               
-            91A7  _DarkenColor_end                 
-            91A7  _GrayGradiant                    
-            91A7  _GrayGradiant_start              
-            91D6  _DrawCharacter                   
-            91D6  _DrawCharacter_start             
-            91D6  _GrayGradiant_end                
-            92BC  _DrawCharacter_end               
-            92BC  _DrawText                        
-            92BC  _DrawText_start                  
-            9343  _DrawText_end                    
-            9343  _Joystick                        
-            9343  _Joystick_start                  
-            9355  _Joystick_end                    
-            9355  _Joytrig                         
-            9355  _Joytrig_start                   
-            9369  _GetKeyMatrixLine                
-            9369  _GetKeyMatrixLine_start          
-            9369  _Joytrig_end                     
-            937B  _GetKeyMatrixLine_end            
-            937B  _SetScreen8                      
-            937B  _SetScreen8_start                
-            93CD  _SetScreen8_end                  
-            93CD  _SetSpriteMode                   
-            93CD  _SetSpriteMode_start             
-            941A  _SetFreq                         
-            941A  _SetFreq_start                   
-            941A  _SetSpriteMode_end               
-            943B  _SetFreq_end                     
-            943B  _SetPage8                        
-            943B  _SetPage8_start                  
-            9459  _DrawPoint8                      
-            9459  _DrawPoint8_start                
-            9459  _SetPage8_end                    
-            94C4  _DrawLine8                       
-            94C4  _DrawLine8_start                 
-            94C4  _DrawPoint8_end                  
-            94D2  _DrawLine8_end                   
-            94D2  _waitRetrace                     
-            94D2  _waitRetrace_start               
-            94DD  _WaitForVDP                      
-            94DD  _WaitForVDP_start                
+            8B79  _VectorToAngle64_start           
+            8C36  _CheckCollision                  
+            8C36  _CheckCollision_start            
+            8C36  _VectorToAngle64_end             
+            8DC5  _CheckCollision_end              
+            8DC5  _StateBuildTrack                 
+            8DC5  _StateBuildTrack_start           
+            90FE  _StateBuildTrack_end             
+            910A  _StateShadeTrack                 
+            910A  _StateShadeTrack_start           
+            92DD  _StateShadeTrack_end             
+            92E9  _DarkenColor                     
+            92E9  _DarkenColor_start               
+            94E0  _DarkenColor_end                 
+            94E0  _GrayGradiant                    
+            94E0  _GrayGradiant_start              
+            950F  _DrawCharacter                   
+            950F  _DrawCharacter_start             
+            950F  _GrayGradiant_end                
+            95F5  _DrawCharacter_end               
+            95F5  _DrawText                        
+            95F5  _DrawText_start                  
+            967C  _DebugPrintInt                   
+            967C  _DebugPrintInt_start             
+            967C  _DrawText_end                    
+            97F4  _DebugPrintInt_end               
+            97F4  _Joystick                        
+            97F4  _Joystick_start                  
+            9806  _Joystick_end                    
+            9806  _Joytrig                         
+            9806  _Joytrig_start                   
+            981A  _GetKeyMatrixLine                
+            981A  _GetKeyMatrixLine_start          
+            981A  _Joytrig_end                     
+            982C  _GetKeyMatrixLine_end            
+            982C  _SetScreen8                      
+            982C  _SetScreen8_start                
+            987E  _SetScreen8_end                  
+            987E  _SetSpriteMode                   
+            987E  _SetSpriteMode_start             
+            98CB  _SetFreq                         
+            98CB  _SetFreq_start                   
+            98CB  _SetSpriteMode_end               
+            98EC  _SetFreq_end                     
+            98EC  _SetPage8                        
+            98EC  _SetPage8_start                  
+            990A  _DrawPoint8                      
+            990A  _DrawPoint8_start                
+            990A  _SetPage8_end                    
+            9975  _DrawLine8                       
+            9975  _DrawLine8_start                 
 ASxxxx Linker V02.00 + NoICE + sdld,  page 4.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   5C5F =  23647. bytes (REL,CON)
+_CODE                              4010   68AD =  26797. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            94DD  _waitRetrace_end                 
-            94F5  _WaitForVDP_end                  
-            94F5  _WriteVRAM                       
-            94F5  _WriteVRAM_start                 
-            952D  _ReadVRAM                        
-            952D  _ReadVRAM_start                  
-            952D  _WriteVRAM_end                   
-            955A  _ReadVRAM_end                    
-            955A  _VPDCommandLoop                  
-            955A  _VPDCommandLoop_start            
-            9592  _RAMtoVRAM                       
-            9592  _RAMtoVRAM_start                 
-            9592  _VPDCommandLoop_end              
-            9608  _RAMtoVRAMTrans                  
-            9608  _RAMtoVRAMTrans_start            
-            9608  _RAMtoVRAM_end                   
-            967E  _FillVRAM                        
-            967E  _FillVRAM_start                  
-            967E  _RAMtoVRAMTrans_end              
-            96E5  _FillVRAM_end                    
-            96E5  _VRAMtoVRAM                      
-            96E5  _VRAMtoVRAM_start                
-            9765  _VRAMtoVRAMTrans                 
-            9765  _VRAMtoVRAMTrans_start           
-            9765  _VRAMtoVRAM_end                  
-            97E5  _VPDCommand32                    
-            97E5  _VPDCommand32_start              
-            97E5  _VRAMtoVRAMTrans_end             
-            9823  _VPDCommand32_end                
-            9823  _VPDCommand36                    
-            9823  _VPDCommand36_start              
-            9859  _PrintSprite                     
-            9859  _PrintSprite_start               
-            9859  _VPDCommand36_end                
-            98D7  _ClearSprite                     
-            98D7  _ClearSprite_start               
-            98D7  _PrintSprite_end                 
-            98E9  _ClearSprite_end                 
-            98E9  _SetSpriteMultiColor             
-            98E9  _SetSpriteMultiColor_start       
-            99BC  _SetSpriteMultiColor_end         
-            99BC  _SetSpriteUniColor               
-            99BC  _SetSpriteUniColor_start         
-            9A8D  _SetSpriteUniColor_end           
-            9A8D  _last_error                      
-            9A8E  _open                            
-            9AB5  _creat                           
-            9ADF  _close                           
-            9AF6  _dup                             
-            9B17  _read                            
-            9B42  _write                           
+            9975  _DrawPoint8_end                  
+            9983  _DrawLine8_end                   
+            9983  _waitRetrace                     
+            9983  _waitRetrace_start               
+            998E  _WaitForVDP                      
+            998E  _WaitForVDP_start                
+            998E  _waitRetrace_end                 
+            99A6  _WaitForVDP_end                  
+            99A6  _WriteVRAM                       
+            99A6  _WriteVRAM_start                 
+            99DE  _ReadVRAM                        
+            99DE  _ReadVRAM_start                  
+            99DE  _WriteVRAM_end                   
+            9A0B  _ReadVRAM_end                    
+            9A0B  _VPDCommandLoop                  
+            9A0B  _VPDCommandLoop_start            
+            9A43  _RAMtoVRAM                       
+            9A43  _RAMtoVRAM_start                 
+            9A43  _VPDCommandLoop_end              
+            9AB9  _RAMtoVRAMTrans                  
+            9AB9  _RAMtoVRAMTrans_start            
+            9AB9  _RAMtoVRAM_end                   
+            9B2F  _FillVRAM                        
+            9B2F  _FillVRAM_start                  
+            9B2F  _RAMtoVRAMTrans_end              
+            9B96  _FillVRAM_end                    
+            9B96  _VRAMtoVRAM                      
+            9B96  _VRAMtoVRAM_start                
+            9C16  _VRAMtoVRAMTrans                 
+            9C16  _VRAMtoVRAMTrans_start           
+            9C16  _VRAMtoVRAM_end                  
+            9C96  _VPDCommand32                    
+            9C96  _VPDCommand32_start              
+            9C96  _VRAMtoVRAMTrans_end             
+            9CD4  _VPDCommand32_end                
+            9CD4  _VPDCommand36                    
+            9CD4  _VPDCommand36_start              
+            9D0A  _PrintSprite                     
+            9D0A  _PrintSprite_start               
+            9D0A  _VPDCommand36_end                
+            9D88  _ClearSprite                     
+            9D88  _ClearSprite_start               
+            9D88  _PrintSprite_end                 
+            9D9A  _ClearSprite_end                 
+            9D9A  _SetSpriteMultiColor             
+            9D9A  _SetSpriteMultiColor_start       
+            9E6D  _SetSpriteMultiColor_end         
+            9E6D  _SetSpriteUniColor               
+            9E6D  _SetSpriteUniColor_start         
+            9F3E  _SetSpriteUniColor_end           
+            9F3E  _last_error                      
 ASxxxx Linker V02.00 + NoICE + sdld,  page 5.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   5C5F =  23647. bytes (REL,CON)
+_CODE                              4010   68AD =  26797. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            9B6D  _lseek                           
-            9B9B  _exit                            
-            9BAE  __modschar_rrx_s                 
-            9BB5  __modschar_rrx_hds               
-            9BBB  __modsint_rrx_s                  
-            9BC1  __modsint_rrx_hds                
-            9BC7  __divsint_rrx_s                  
-            9BD0  __divschar_rrx_s                 
-            9BD7  __div8                           
-            9BD7  __divschar_rrx_hds               
-            9BDB  __div_signexte                   
-            9BDF  __div16                          
-            9BDF  __divsint_rrx_hds                
-            9C05  __get_remainder                  
-            9C0F  __divuint_rrx_s                  
-            9C17  __divuchar_rrx_s                 
-            9C1E  __divu8                          
-            9C1E  __divuchar_rrx_hds               
-            9C21  __divu16                         
-            9C21  __divuint_rrx_hds                
-            9C53  __mulint_rrx_s                   
-            9C59  __mulint_rrx_hds                 
-            9C59  __muluchar_rrx_hds               
-            9C5B  __mul16                          
+            9F3F  _open                            
+            9F66  _creat                           
+            9F90  _close                           
+            9FA7  _dup                             
+            9FC8  _read                            
+            9FF3  _write                           
+            A01E  _lseek                           
+            A04C  _exit                            
+            A05F  __modschar_rrx_s                 
+            A066  __modschar_rrx_hds               
+            A06C  __modsint_rrx_s                  
+            A072  __modsint_rrx_hds                
+            A078  __divsint_rrx_s                  
+            A081  __divschar_rrx_s                 
+            A088  __div8                           
+            A088  __divschar_rrx_hds               
+            A08C  __div_signexte                   
+            A090  __div16                          
+            A090  __divsint_rrx_hds                
+            A0B6  __get_remainder                  
+            A0C0  __divuint_rrx_s                  
+            A0C8  __divuchar_rrx_s                 
+            A0CF  __divu8                          
+            A0CF  __divuchar_rrx_hds               
+            A0D2  __divu16                         
+            A0D2  __divuint_rrx_hds                
+            A104  __mulint_rrx_s                   
+            A10A  __mulint_rrx_hds                 
+            A10A  __muluchar_rrx_hds               
+            A10C  __mul16                          
+            A120  __mullong_rrf_s                  
+            A120  __mullong_rrx_s                  
+            A123  __modslong_rrf_s                 
+            A123  __modslong_rrx_s                 
+            A126  __modulong_rrf_s                 
+            A126  __modulong_rrx_s                 
+            A129  __divslong_rrf_s                 
+            A129  __divslong_rrx_s                 
+            A12C  __divulong_rrf_s                 
+            A12C  __divulong_rrx_s                 
+            A12F  __mulint_rrf_s                   
+            A135  __divsint_rrf_s                  
+            A13B  __divuint_rrf_s                  
+            A141  __mulschar_rrf_s                 
+            A147  __divschar_rrf_s                 
+            A14D  __modschar_rrf_s                 
+            A153  __muluchar_rrf_s                 
+            A159  __divuchar_rrf_s                 
+            A15F  __moduchar_rrf_s                 
+            A165  __mulsuchar_rrf_s                
+            A16B  __divsuchar_rrf_s                
 ASxxxx Linker V02.00 + NoICE + sdld,  page 6.
+Hexadecimal
+
+Area                               Addr   Size   Decimal Bytes (Attributes)
+--------------------------------   ----   ----   ------- ----- ------------
+_CODE                              4010   68AD =  26797. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  ---------------------------------   ------------------------
+            A171  __modsuchar_rrf_s                
+            A177  __muluschar_rrf_s                
+            A17D  __divuschar_rrf_s                
+            A183  __moduschar_rrf_s                
+            A189  __modsint_rrf_s                  
+            A18F  __moduint_rrf_s                  
+            A195  __rrulong_rrf_s                  
+            A19B  __rrslong_rrf_s                  
+            A1A1  __rlulong_rrf_s                  
+            A1A7  __rlslong_rrf_s                  
+            A1AD  __mullong                        
+            A1AD  __mullong_start                  
+            A455  __moduchar_rrx_s                 
+            A455  __mullong_end                    
+            A45C  __moduchar_rrx_hds               
+            A461  __moduint_rrx_s                  
+            A467  __moduint_rrx_hds                
+            A46C  __rrulong_rrx_s                  
+            A486  __rrslong_rrx_s                  
+            A4A0  __rlslong_rrx_s                  
+            A4A0  __rlulong_rrx_s                  
+            A4B7  __modsuchar_rrx_s                
+            A4C6  __moduschar_rrx_s                
+            A4D8  __divsuchar_rrx_s                
+            A4E4  __divuschar_rrx_s                
+            A4F3  __muluchar_rrx_s                 
+            A505  __mulsuchar_rrx_s                
+            A50F  __muluschar_rrx_s                
+            A519  __mulschar_rrx_s                 
+            A520  __mulschar_rrx_hds               
+            A52C  __modslong                       
+            A52C  __modslong_start                 
+            A601  __modslong_end                   
+            A601  __modulong                       
+            A601  __modulong_start                 
+            A708  __divslong                       
+            A708  __divslong_start                 
+            A708  __modulong_end                   
+            A7EA  __divslong_end                   
+            A7EA  __divulong                       
+            A7EA  __divulong_start                 
+            A8BD  __divulong_end                   
+
+ASxxxx Linker V02.00 + NoICE + sdld,  page 7.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -244,7 +323,7 @@ _DATA                              C000   0000 =      0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-ASxxxx Linker V02.00 + NoICE + sdld,  page 7.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 8.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -253,7 +332,7 @@ _OVERLAY                           C000   0000 =      0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-ASxxxx Linker V02.00 + NoICE + sdld,  page 8.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 9.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -262,7 +341,7 @@ _HOME                              C000   0000 =      0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-ASxxxx Linker V02.00 + NoICE + sdld,  page 9.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 10.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -271,7 +350,7 @@ _GSINIT                            C000   0000 =      0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-ASxxxx Linker V02.00 + NoICE + sdld,  page 10.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 11.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -280,7 +359,7 @@ _GSFINAL                           C000   0000 =      0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-ASxxxx Linker V02.00 + NoICE + sdld,  page 11.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 12.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -289,7 +368,7 @@ _CABS                              C000   0000 =      0. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-ASxxxx Linker V02.00 + NoICE + sdld,  page 12.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 13.
 
 Files Linked                              [ module(s) ]
 
@@ -301,12 +380,23 @@ files.rel                                 [  ]
 
 Libraries Linked                          [ object file ]
 
-C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ modsigned.rel ]
-C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divsigned.rel ]
-C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divunsigned.rel ]
-C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ mul.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modsigned.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divsigned.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divunsigned.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ mul.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ stubs.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _mullong.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modunsigned.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ shift.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modmixed.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divmixed.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ mulchar.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _modslong.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _modulong.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _divslong.rel ]
+E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _divulong.rel ]
 
-ASxxxx Linker V02.00 + NoICE + sdld,  page 13.
+ASxxxx Linker V02.00 + NoICE + sdld,  page 14.
 
 User Base Address Definitions
 
