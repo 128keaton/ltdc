@@ -1,5 +1,8 @@
-/* Trigo Table Generator 1.1 */
-/* Entry number: 64, Shift value: 8, Bytes number: 2 */
+/* Trigo Table Generator */
+/* @version: 1.2 */
+/* @author: Guillaume Blanchard / Aoineko (aoineko@free.fr) */
+/* @date: 16/02/2011 */
+/* Parameters: Entry number=64, Shift value=8, Bytes number=2 */
 
 static const int g_Sinus64[64] =
 {

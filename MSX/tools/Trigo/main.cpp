@@ -3,8 +3,11 @@
 #include <math.h>
 #include <string.h>
 
-const char* ARGV[] = { "", "-num", "16", "-shift", "4", "-bytes", "1", "rot" };
+const char* ARGV[] = { "", "-num", "1024", "-shift", "3", "-bytes", "1", "sqrt" };
 const int ARGC = sizeof(ARGV)/sizeof(ARGV[0]);
+
+#define VERSION_MAJ 1
+#define VERSION_MIN 2
 
 static double PI = 3.1415926535;
 static double PI_2 = 2.0 * PI;
@@ -35,21 +38,22 @@ double ComputeAngle(double x, double y)
 
 void Help()
 {
-	printf("/* Usage: trigo [options] [tables] */\n");
-	printf("/* Options: */\n");
-	printf("/*    -num   <x>   Entries number */\n");
-	printf("/*    -shift <x>   Shift value */\n");
-	printf("/*    -bytes <x>   Bytes number */\n");
-	printf("/*    -help        This help */\n");
-	printf("/* Tables: */\n");
-	printf("/*    sin          Sinus table */\n");
-	printf("/*    cos          Cosinus table */\n");
-	printf("/*    tan          Tangente table */\n");
-	printf("/*    asin         Arc-sinus table */\n");
-	printf("/*    acos         Arc-cosinus table */\n");
-	printf("/*    atan         Arc-tangente table */\n");
-	printf("/*    proj         Projection */\n");
-	printf("/*    rot          Rotation angle */\n");
+	printf("Usage: trigo [options] [tables]\n");
+	printf("Options:\n");
+	printf("   -num   <x>   Entries number\n");
+	printf("   -shift <x>   Shift value\n");
+	printf("   -bytes <x>   Bytes number\n");
+	printf("   -help        This help\n");
+	printf("Tables:\n");
+	printf("   sin          Sinus table\n");
+	printf("   cos          Cosinus table\n");
+	printf("   tan          Tangente table\n");
+	printf("   asin         Arc-sinus table\n");
+	printf("   acos         Arc-cosinus table\n");
+	printf("   atan         Arc-tangente table\n");
+	printf("   proj         3d vector projection tables\n");
+	printf("   rot          Rotation angle table\n");
+	printf("   sqrt         Square-root table\n");
 }
 
 int main(int argc, const char* argv[])
@@ -57,10 +61,13 @@ int main(int argc, const char* argv[])
 	//argc = ARGC; // for debug purpose
 	//argv = ARGV; // for debug purpose
 
-	printf("/* Trigo Table Generator 1.1 */\n");
+	printf("/* Trigo Table Generator */\n");
+	printf("/* @version: %i.%i */\n", VERSION_MAJ, VERSION_MIN);
+	printf("/* @author: Guillaume Blanchard / Aoineko (aoineko@free.fr) */\n");
+	printf("/* @date: 16/02/2011 */\n");
 	if(argc < 2)
 	{
-		printf("/* Error: No enough parameters! */\n");
+		printf("Error: No enough parameters!\n");
 		Help();
 		return 1;
 	}
@@ -97,7 +104,7 @@ int main(int argc, const char* argv[])
 		}
 	}
 
-	printf("/* Entry number: %d, Shift value: %d, Bytes number: %d */\n", number, shift, bytes);
+	printf("/* Parameters: Entry number=%d, Shift value=%d, Bytes number=%d */\n", number, shift, bytes);
 
 	for(int argIndex = 1; argIndex < argc; argIndex++)
 	{
@@ -231,6 +238,26 @@ int main(int argc, const char* argv[])
 			}
 			printf("\n};\n");
 		}
+		else if(strcmp(argv[argIndex], "sqrt") == 0)
+		{
+			// square-root
+			printf("\nstatic const %s g_SquareRoot%d[%d] =\n{\n\t", bytes == 1 ? "char" : "int", number, number);
+			for(int i=0; i<number; i++)
+			{
+				double x = multi * sqrt((double)i);
+				if(bytes == 1)
+					printf("0x%02X, ", 0xFF & (int)x);
+				else
+					printf("0x%04X, ", 0xFFFF & (int)x);
+				if((i % 8 == 7) && (i < number - 1))
+					printf("\n\t");
+			}
+			printf("\n};\n");
+		}
+		//else
+		//{
+		//	printf("\n/* Error: Unknow table type \'%s\'! */\n", argv[argIndex]);
+		//}
 	}
 
 	return 0;
