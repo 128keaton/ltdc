@@ -1,5 +1,8 @@
-/* Trigo Table Generator 1.1 */
-/* Entry number: 16, Shift value: 6, Bytes number: 1 */
+/* Trigo Table Generator */
+/* @version: 1.2 */
+/* @author: Guillaume Blanchard / Aoineko (aoineko@free.fr) */
+/* @date: 16/02/2011 */
+/* Parameters: Entry number=16, Shift value=6, Bytes number=1 */
 
 static const char g_Rotation16[961] =
 {

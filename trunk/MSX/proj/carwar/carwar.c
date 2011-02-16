@@ -78,6 +78,21 @@ enum
 //----------------------------------------
 // T Y P E S
 
+typedef struct tagVectorU8
+{
+	u8 x, y;
+} VectorU8;
+
+typedef struct tagVectorU16
+{
+	u16 x, y;
+} VectorU16;
+
+typedef struct tagVectorI16
+{
+	i16 x, y;
+} VectorI16;
+
 typedef struct tagCar
 {
 	u8 rotSpeed;
@@ -85,12 +100,20 @@ typedef struct tagCar
 	u8 accel;
 } Car;
 
-typedef struct
+typedef struct tagTrackTile
 {
 	u8 tile; // Tile index + rotation flag
 	u8 color0;
 	u8 color1;
 } TrackTile;
+
+typedef struct tagTrack
+{
+	u8 width;
+	u8 height;
+	TrackTile* tiles;
+	struct tagVectorU8 startPos[4];
+} Track;
 
 typedef struct tagMenuEntry
 {
@@ -187,10 +210,10 @@ void StartGame();
 // R O M   D A T A
 
 // Sprites
-// SX : 13
-// SY : 11
-// 16 sprites/car (208 px)
-// 4 cars (44 px)
+// SX: 13
+// SY: 11
+// width: 16 sprites/car (208 px)
+// height: 4 cars (44 px)
 #include "data/sprt_car_1.h"
 #include "data/sprt_car_2.h"
 #include "data/sprt_car_3.h"
@@ -202,22 +225,23 @@ void StartGame();
 
 #include "trigo64.inc"
 #include "rot64.inc"
+#include "sqrt1024.inc"
 
 const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 
 const Car cars[CAR_NUM] = 
 {
 	// Cop
-	{ 5, 40, 4 },
+	{ 5, 20, 4 },
 	//
-	{ 4, 60, 4 },
+	{ 4, 30, 4 },
 	// Ferrari
-	{ 4, 50, 4 },
+	{ 4, 25, 4 },
 	// Turtule
-	{ 6, 30, 4 },
+	{ 6, 15, 4 },
 };
 
-const TrackTile track01[] = 
+const TrackTile trackTiles01[] = 
 {
 	// line 0
 	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
@@ -268,6 +292,8 @@ const TrackTile track01[] =
 	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
 	{ 0 + ROT_180, COLOR_LIGHTBLUE, COLOR_YELLOW },
 };
+
+const Track track01 = { 7, 6, trackTiles01, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } };
 
 // Menu 0
 const MenuEntry menuMain[] =
@@ -539,7 +565,7 @@ void StateStartGame()
 	PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
 	for(i=0; i<CAR_NUM; i++)
 	{
-		InitializePlayer(&game.players[i], i, 50 + 50 * i, 100);
+		InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
 		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
 		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
 	}
@@ -554,7 +580,7 @@ void StateUpdateGame()
 {
 	u8 i, keyLine, angle, dir;
 	Player* curPly;
-	u16 x, y, speedSq;
+	u16 x, y, speed, speedSq;
 	i8 diff;
 
 	SetPage8(game.page);
@@ -654,10 +680,13 @@ void StateUpdateGame()
 		else
 		{
 			dir = VectorToAngle64(curPly->velX, curPly->velY);
-			dir += 32; // +180°
 			dir &= 0x3F; // %64
-			curPly->velX += FRICTION * g_Cosinus64[dir];
-			curPly->velY += FRICTION * g_Sinus64[dir];
+			curPly->velX -= FRICTION * g_Cosinus64[dir];
+			curPly->velY -= FRICTION * g_Sinus64[dir];
+		}
+
+		// Transfert some part of velocity to car direction
+		{
 		}
 
 		// Engine velocity
@@ -685,11 +714,6 @@ void StateUpdateGame()
 		if(speedSq > cars[curPly->car].maxSpeed * cars[curPly->car].maxSpeed)
 		{
 			dir = VectorToAngle64(curPly->velX, curPly->velY);
-			//diff = AngleDifferent64(dir, curPly->rot / 4);
-			//if(diff < 0)
-			//	dir--;
-			//else if(diff > 0)
-			//	dir++;
 			dir &= 0x3F; // %64
 			curPly->velX = cars[curPly->car].maxSpeed * g_Cosinus64[dir];
 			curPly->velY = cars[curPly->car].maxSpeed * g_Sinus64[dir];
@@ -740,8 +764,8 @@ void StateUpdateGame()
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 {
 	ply->car = car; // car index
-	ply->posX = 128 + posX << 7; // position X
-	ply->posY = 128 + posY << 7; // position Y
+	ply->posX = posX << 8; // position X
+	ply->posY = posY << 8; // position Y
 	ply->prevX = ply->posX; // previous position X
 	ply->prevY = ply->posY; // previous position Y
 	ply->rot = 64; // rotation
@@ -783,16 +807,6 @@ void CheckCollision(u8 car1, u8 car2)
 	dist = game.players[car2].posY - game.players[car1].posY;
 	y = dist >> 8;
 	dist = (x * x) + (y * y);
-	//if(car1 == 0 && car2 == 1)
-	//{
-	//	SetSpriteUniColor(0, 200, 8, (dist / 100000) % 10, 0x0F);
-	//	SetSpriteUniColor(1, 208, 8, (dist / 10000) % 10, 0x0F);
-	//	SetSpriteUniColor(2, 216, 8, (dist / 1000) % 10, 0x0F);
-	//	SetSpriteUniColor(3, 224, 8, (dist / 100) % 10, 0x0F);
-	//	SetSpriteUniColor(4, 232, 8, (dist / 10) % 10, 0x0F);
-	//	SetSpriteUniColor(5, 240, 8, dist % 10, 0x0F);
-	//	SetSpriteUniColor(6, 0, 216, 0, 0);
-	//}
 	if(dist < 11 * 11) // Collision occured
 	{
 		SetSpriteUniColor(0, 
@@ -801,9 +815,10 @@ void CheckCollision(u8 car1, u8 car2)
 			'X' - '0', 0x0F);
 		SetSpriteUniColor(1, 0, 216, 0, 0);
 
-		//dist = game.players[car1].speed;
-		//game.players[car1].speed = game.players[car2].speed;
-		//game.players[car2].speed = dist;
+		game.players[car1].velX = 0;
+		game.players[car1].velY = 0;
+		game.players[car2].velX = 0;
+		game.players[car2].velY = 0;
 		game.players[car1].posX = game.players[car1].prevX;
 		game.players[car2].posY = game.players[car2].prevY;
 	}
@@ -824,7 +839,7 @@ void StateBuildTrack()
 	{
 		for(j=0; j<6; j++)
 		{
-			block = &track01[i + j * 7];
+			block = &track01.tiles[i + j * 7];
 			if((block->tile & 0x0F) == 2) // Plein block
 			{
 				FillVRAM(16 + (32 * i), 8 + (32 * j), 32, 32, block->color1);

@@ -272,6 +272,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\sqrt1024.inc"
+				>
+			</File>
+			<File
 				RelativePath=".\trigo16.inc"
 				>
 			</File>
