@@ -184,6 +184,7 @@ void InitializeMenu(u8 menu);
 void CheckCollision(u8 car1, u8 car2);
 i8 AngleDifferent64(i8 angleA, i8 angleB);
 u8 VectorToAngle64(i16 x, i16 y);
+u16 GetVectorLenght(i16 x, i16 y);
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -229,6 +230,7 @@ void StartGame();
 
 const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 
+// rotSpeed, maxSpeed, accel
 const Car cars[CAR_NUM] = 
 {
 	// Cop
@@ -796,6 +798,25 @@ u8 VectorToAngle64(i16 x, i16 y)
 	x += 15; // x E [0;30]
 	y += 15; // x E [0;30]
 	return g_Rotation16[(x * 31) + y];
+}
+
+/***/
+u16 GetVectorLenght(i16 x, i16 y)
+{
+	u16 lenSq, ret;
+	u8 div;
+
+	div = 1;
+	lenSq = x*x + y*y; // get squared length
+	while(lenSq >= 1024)
+	{
+		lenSq /= 2;
+		div++;
+	}
+	div *= div; // squared the div factor
+	ret = g_SquareRoot1024[lenSq]; // get square root (.2^3)
+	ret *= div; // re-inject diviser
+	return ret >> 3; // get length
 }
 
 /** Check collision */
