@@ -19,6 +19,7 @@
 #define COLOR_ORANGE	93
 #define COLOR_YELLOW	144
 #define COLOR_WHITE     255
+#define COLOR_SABLE     150
 
 #define BLOCK_SHADOW	3
 #define ROAD_SHADOW		4
@@ -235,13 +236,13 @@ const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 const Car cars[CAR_NUM] = 
 {
 	// Cop
-	{ 5, 20, 4 },
+	{ 5, 40, 8 },
 	//
-	{ 4, 30, 4 },
+	{ 4, 60, 8 },
 	// Ferrari
-	{ 4, 25, 4 },
+	{ 4, 55, 8 },
 	// Turtule
-	{ 6, 15, 4 },
+	{ 6, 30, 8 },
 };
 
 const TrackTile trackTiles01[] = 
@@ -542,6 +543,7 @@ void StateMainMenu()
 void StateStartGame()
 {
 	u8 i;
+	const u8 colors[] = { COLOR_BLACK, COLOR_GREEN, COLOR_LIGHTBLUE, COLOR_BLUE, COLOR_GRAY, COLOR_ORANGE, COLOR_YELLOW, COLOR_WHITE, COLOR_SABLE, 0, 0, 0, 0, 0, 0, 0 };
 
 	game.page = 0;
 	SetPage8(game.page);
@@ -550,6 +552,9 @@ void StateStartGame()
 	// Build background
 	//StateBuildTrack();
 	//StateShadeTrack();
+	for(i=0; i<16; i++)
+		FillVRAM(64 * (i % 4), 53 * (i / 4), 64, 53, colors[i]);
+
 	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 
 	//----------------------------------------
@@ -670,7 +675,7 @@ void StateUpdateGame()
 		curPly = &game.players[i];
 
 		// Friction
-#define FRICTION (2)
+#define FRICTION (4)
 		x = Abs16(curPly->velX);
 		x >>= 8;
 		y = Abs16(curPly->velY);
@@ -689,7 +694,7 @@ void StateUpdateGame()
 		}
 
 		// Transfert some part of velocity to car direction
-#define TRANSFERT (4)
+#define TRANSFERT (8)
 		x = Abs16(curPly->velX);
 		x >>= 8;
 		y = Abs16(curPly->velY);
@@ -757,8 +762,8 @@ void StateUpdateGame()
 		// Apply velocity
 		curPly->prevX = curPly->posX;
 		curPly->prevY = curPly->posY;
-		curPly->posX += curPly->velX / 8;
-		curPly->posY -= curPly->velY / 8;
+		curPly->posX += curPly->velX / (8 * 2);
+		curPly->posY -= curPly->velY / (8 * 2);
 
 		if(curPly->posY < (5 << 8))
 			curPly->posY = (5 << 8);
