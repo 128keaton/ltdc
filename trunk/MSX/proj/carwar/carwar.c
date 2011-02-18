@@ -181,9 +181,10 @@ typedef struct
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void InitializeMenu(u8 menu);
-void CheckCollision(u8 car1, u8 car2);
+void CheckCollision(u8 idx, u8 car1, u8 car2);
 i8 AngleDifferent64(i8 angleA, i8 angleB);
-u8 VectorToAngle64(i16 x, i16 y);
+//u8 VectorToAngle64(i16 x, i16 y);
+u8 VectorToAngle256(i16 x, i16 y);
 u16 GetVectorLenght(i16 x, i16 y);
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
@@ -224,8 +225,8 @@ void StartGame();
 #include "data/sprt_track.h"
 #include "data/sprt_title.h"
 
-#include "trigo64.inc"
-#include "rot64.inc"
+#include "trigo256.inc"
+#include "rot256.inc"
 #include "sqrt1024.inc"
 
 const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
@@ -573,6 +574,8 @@ void StateStartGame()
 	}
 
 	ClearSprite();
+	for(i=0; i<32; i++)
+		SetSpriteUniColor(i, 0, 248, 0, 0);
 
 	game.state = StateUpdateGame;
 }
@@ -580,10 +583,9 @@ void StateStartGame()
 /** State - Process game */
 void StateUpdateGame()
 {
-	u8 i, keyLine, angle, dir;
+	u8 i, keyLine, dir;
 	Player* curPly;
 	u16 x, y, speed, speedSq;
-	i8 diff;
 
 	SetPage8(game.page);
 	game.page = 1 - game.page;
@@ -681,14 +683,29 @@ void StateUpdateGame()
 		}
 		else
 		{
-			dir = VectorToAngle64(curPly->velX, curPly->velY);
-			dir &= 0x3F; // %64
-			curPly->velX -= FRICTION * g_Cosinus64[dir];
-			curPly->velY -= FRICTION * g_Sinus64[dir];
+			dir = VectorToAngle256(curPly->velX, curPly->velY);
+			curPly->velX -= FRICTION * g_Cosinus256[dir];
+			curPly->velY -= FRICTION * g_Sinus256[dir];
 		}
 
 		// Transfert some part of velocity to car direction
+#define TRANSFERT (4)
+		x = Abs16(curPly->velX);
+		x >>= 8;
+		y = Abs16(curPly->velY);
+		y >>= 8;
+		speed = GetVectorLenght(x, y);
+		if(speed <= TRANSFERT)
 		{
+			curPly->velX = 0;
+			curPly->velY = 0;
+		}
+		else
+		{
+			speed = TRANSFERT;
+			dir = VectorToAngle256(curPly->velX, curPly->velY);
+			curPly->velX -= TRANSFERT * g_Cosinus256[dir];
+			curPly->velY -= TRANSFERT * g_Sinus256[dir];
 		}
 
 		// Engine velocity
@@ -702,10 +719,10 @@ void StateUpdateGame()
 		}
 		if(curPly->flag & CAR_MOVE)
 		{
-			angle = curPly->rot / 4;
-			curPly->velX += cars[curPly->car].accel * g_Cosinus64[angle];
-			curPly->velY += cars[curPly->car].accel * g_Sinus64[angle];
+			speed += cars[curPly->car].accel;
 		}
+		curPly->velX += speed * g_Cosinus256[curPly->rot];
+		curPly->velY += speed * g_Sinus256[curPly->rot];
 
 		// Cap max speed
 		x = Abs16(curPly->velX);
@@ -715,34 +732,34 @@ void StateUpdateGame()
 		speedSq = (x * x) + (y * y);
 		if(speedSq > cars[curPly->car].maxSpeed * cars[curPly->car].maxSpeed)
 		{
-			dir = VectorToAngle64(curPly->velX, curPly->velY);
-			dir &= 0x3F; // %64
-			curPly->velX = cars[curPly->car].maxSpeed * g_Cosinus64[dir];
-			curPly->velY = cars[curPly->car].maxSpeed * g_Sinus64[dir];
+			dir = VectorToAngle256(curPly->velX, curPly->velY);
+			curPly->velX = cars[curPly->car].maxSpeed * g_Cosinus256[dir];
+			curPly->velY = cars[curPly->car].maxSpeed * g_Sinus256[dir];
 		}
+	}
+
+	// Check collision
+	// 2 players
+	CheckCollision(0, 0, 1);
+	// 3 players
+	CheckCollision(1, 0, 2);
+	CheckCollision(2, 1, 2);
+	// 4 players
+	CheckCollision(3, 0, 3);
+	CheckCollision(4, 1, 3);
+	CheckCollision(5, 2, 3);
+
+	// Fix position
+	for(i=0; i<CAR_NUM; i++)
+	{
+		curPly = &game.players[i];
 
 		// Apply velocity
 		curPly->prevX = curPly->posX;
 		curPly->prevY = curPly->posY;
 		curPly->posX += curPly->velX / 8;
 		curPly->posY -= curPly->velY / 8;
-	}
 
-	// Check collision
-	// 2 players
-	CheckCollision(0, 1);
-	// 3 players
-	CheckCollision(0, 2);
-	CheckCollision(1, 2);
-	// 4 players
-	CheckCollision(0, 3);
-	CheckCollision(1, 3);
-	CheckCollision(2, 3);
-
-	// Fix position
-	for(i=0; i<CAR_NUM; i++)
-	{
-		curPly = &game.players[i];
 		if(curPly->posY < (5 << 8))
 			curPly->posY = (5 << 8);
 		else if(curPly->posY > (206 << 8))
@@ -788,7 +805,20 @@ i8 AngleDifferent64(i8 angleA, i8 angleB)
 }
 
 /** x & y must be in the range -15 and +15 */
-u8 VectorToAngle64(i16 x, i16 y)
+//u8 VectorToAngle64(i16 x, i16 y)
+//{
+//	while(Abs16(x) > 15 || Abs16(y) > 15)
+//	{
+//		x /= 2;
+//		y /= 2;
+//	}
+//	x += 15; // x E [0;30]
+//	y += 15; // x E [0;30]
+//	return g_Rotation16[(x * 31) + y];
+//}
+
+/** x & y must be in the range -15 and +15 */
+u8 VectorToAngle256(i16 x, i16 y)
 {
 	while(Abs16(x) > 15 || Abs16(y) > 15)
 	{
@@ -811,37 +841,42 @@ u16 GetVectorLenght(i16 x, i16 y)
 	while(lenSq >= 1024)
 	{
 		lenSq /= 2;
-		div++;
+		div *= 2;
 	}
-	div *= div; // squared the div factor
-	ret = g_SquareRoot1024[lenSq]; // get square root (.2^3)
-	ret *= div; // re-inject diviser
-	return ret >> 3; // get length
+	div = g_SquareRoot1024[div] >> 3; // squared-root the div factor
+	ret = g_SquareRoot1024[lenSq] >> 3; // get square root (.2^3)
+	return ret * div; // get length
 }
 
 /** Check collision */
-void CheckCollision(u8 car1, u8 car2)
+void CheckCollision(u8 idx, u8 car1, u8 car2)
 {
-	i16 x, y, dist;
+	i16 x1, y1, x2, y2, dist;
+
 	dist = game.players[car2].posX - game.players[car1].posX;
-	x = dist >> 8;
+	x1 = dist >> 8;
 	dist = game.players[car2].posY - game.players[car1].posY;
-	y = dist >> 8;
-	dist = (x * x) + (y * y);
+	y1 = dist >> 8;
+	dist = (x1 * x1) + (y1 * y1);
 	if(dist < 11 * 11) // Collision occured
 	{
-		SetSpriteUniColor(0, 
-			(game.players[car1].posX >> 8) + (x >> 1) - 4, 
-			(game.players[car1].posY >> 8) + (y >> 1) - 4, 
-			'X' - '0', 0x0F);
-		SetSpriteUniColor(1, 0, 216, 0, 0);
+		//SetSpriteUniColor(idx, 
+		//	(game.players[car1].posX >> 8) + (x1 >> 1) - 4, 
+		//	(game.players[car1].posY >> 8) + (y1 >> 1) - 4, 
+		//	'X' - '0', 0x0F);
 
-		game.players[car1].velX = 0;
-		game.players[car1].velY = 0;
-		game.players[car2].velX = 0;
-		game.players[car2].velY = 0;
-		game.players[car1].posX = game.players[car1].prevX;
-		game.players[car2].posY = game.players[car2].prevY;
+		x1 = game.players[car1].velX;
+		y1 = game.players[car1].velY;
+		x2 = game.players[car2].velX;
+		y2 = game.players[car2].velY;
+
+		game.players[car1].velX = x2 - x1;
+		game.players[car1].velY = y2 - y1;
+		game.players[car2].velX = x1 - x2;
+		game.players[car2].velY = y1 - y2;
+
+		//game.players[car1].posX = game.players[car1].prevX;
+		//game.players[car2].posY = game.players[car2].prevY;
 	}
 }
 

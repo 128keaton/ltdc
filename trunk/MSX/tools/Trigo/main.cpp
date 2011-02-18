@@ -241,7 +241,7 @@ int main(int argc, const char* argv[])
 		else if(strcmp(argv[argIndex], "sqrt") == 0)
 		{
 			// square-root
-			printf("\nstatic const %s g_SquareRoot%d[%d] =\n{\n\t", bytes == 1 ? "char" : "int", number, number);
+			printf("\nstatic const unsigned %s g_SquareRoot%d[%d] =\n{\n\t", bytes == 1 ? "char" : "int", number, number);
 			for(int i=0; i<number; i++)
 			{
 				double x = multi * sqrt((double)i);
