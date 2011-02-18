@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.0.0 #6037 (Oct 31 2010) (MINGW32)
-; This file was generated Fri Feb 18 01:08:20 2011
+; This file was generated Fri Feb 18 12:35:15 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -80,19 +80,19 @@ _game	=	0xc000
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;carwar.c:360: void main(void)
+;carwar.c:361: void main(void)
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main_start::
 _main:
-;carwar.c:366: __endasm;
+;carwar.c:367: __endasm;
 	
 		 di
 		 ld sp, (#0xFC4A)
 		 ei
 		
-;carwar.c:368: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+;carwar.c:369: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 	in	a,(_g_slotPort)
 	and	a,#0xCF
 	ld	c,a
@@ -104,7 +104,7 @@ _main:
 	ld	a,c
 	or	a,b
 	out	(_g_slotPort),a
-;carwar.c:370: MainLoop();
+;carwar.c:371: MainLoop();
 	call	_MainLoop
 	ret
 _main_end::
@@ -15051,17 +15051,17 @@ _defaultColor:
 	.db #0x01	; 1
 _cars:
 	.db #0x05	; 5
-	.db #0x14	; 20
+	.db #0x28	; 40
+	.db #0x08	; 8
 	.db #0x04	; 4
+	.db #0x3C	; 60
+	.db #0x08	; 8
 	.db #0x04	; 4
-	.db #0x1E	; 30
-	.db #0x04	; 4
-	.db #0x04	; 4
-	.db #0x19	; 25
-	.db #0x04	; 4
+	.db #0x37	; 55
+	.db #0x08	; 8
 	.db #0x06	; 6
-	.db #0x0F	; 15
-	.db #0x04	; 4
+	.db #0x1E	; 30
+	.db #0x08	; 8
 _trackTiles01:
 	.db #0x00	; 0
 	.db #0x4B	; 75	K
@@ -15335,20 +15335,20 @@ _str_20:
 _str_21:
 	.ascii "PRESS SPACE"
 	.db 0x00
-;carwar.c:375: void MainLoop()
+;carwar.c:376: void MainLoop()
 ;	---------------------------------
 ; Function MainLoop
 ; ---------------------------------
 _MainLoop_start::
 _MainLoop:
-;carwar.c:378: game.state = StateInitialize;
+;carwar.c:379: game.state = StateInitialize;
 	ld	hl,#0x0143 + _game
 	ld	(hl),#<(_StateInitialize)
 	inc	hl
 	ld	(hl),#>(_StateInitialize)
-;carwar.c:380: while(1)
+;carwar.c:381: while(1)
 00102$:
-;carwar.c:383: game.state();
+;carwar.c:384: game.state();
 	ld	hl,#0x0143 + _game
 	ld	c,(hl)
 	inc	hl
@@ -15363,7 +15363,7 @@ _MainLoop:
 	pop	bc
 	jr	00102$
 _MainLoop_end::
-;carwar.c:388: void StateInitialize()
+;carwar.c:389: void StateInitialize()
 ;	---------------------------------
 ; Function StateInitialize
 ; ---------------------------------
@@ -15375,19 +15375,19 @@ _StateInitialize:
 	ld	hl,#-6
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:393: SetFreq(FREQ_60);
+;carwar.c:394: SetFreq(FREQ_60);
 	ld	a,#0x00
 	push	af
 	inc	sp
 	call	_SetFreq
 	inc	sp
-;carwar.c:394: SetScreen8(LINES_212);
+;carwar.c:395: SetScreen8(LINES_212);
 	ld	a,#0x80
 	push	af
 	inc	sp
 	call	_SetScreen8
 	inc	sp
-;carwar.c:395: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
+;carwar.c:396: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 	ld	hl,#0x01EE
 	push	hl
 	ld	hl,#0x001F
@@ -15397,7 +15397,7 @@ _StateInitialize:
 	call	_SetSpriteMode
 	pop	af
 	pop	af
-;carwar.c:398: FillVRAM(0, 0,   256, 256, 0);
+;carwar.c:399: FillVRAM(0, 0,   256, 256, 0);
 	ld	h,#0x00
 	ex	(sp),hl
 	inc	sp
@@ -15413,7 +15413,7 @@ _StateInitialize:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:399: FillVRAM(0, 256, 256, 256, 0);
+;carwar.c:400: FillVRAM(0, 256, 256, 256, 0);
 	ld	a,#0x00
 	push	af
 	inc	sp
@@ -15429,41 +15429,41 @@ _StateInitialize:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:402: for(x=0; x<256; x++)
+;carwar.c:403: for(x=0; x<256; x++)
 	ld	bc,#0x0000
 00104$:
 	ld	a,b
 	sub	a,#0x01
 	jr	NC,00107$
-;carwar.c:403: game.colorCode[x] = OP_NONE;
+;carwar.c:404: game.colorCode[x] = OP_NONE;
 	ld	hl,#0x0007 + _game
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:402: for(x=0; x<256; x++)
+;carwar.c:403: for(x=0; x<256; x++)
 	inc	bc
 	jr	00104$
 00107$:
-;carwar.c:404: game.colorCode[COLOR_BLACK]     = OP_HOLE;
+;carwar.c:405: game.colorCode[COLOR_BLACK]     = OP_HOLE;
 	ld	hl,#0x0007 + _game
 	ld	(hl),#0x4A
-;carwar.c:405: game.colorCode[COLOR_LIGHTBLUE] = OP_WALL;
+;carwar.c:406: game.colorCode[COLOR_LIGHTBLUE] = OP_WALL;
 	ld	hl,#0x004b + 0x0007 + _game
 	ld	(hl),#0x01
-;carwar.c:406: game.colorCode[COLOR_GRAY]      = OP_ROAD;
+;carwar.c:407: game.colorCode[COLOR_GRAY]      = OP_ROAD;
 	ld	hl,#0x0092 + 0x0007 + _game
 	ld	(hl),#0x40
-;carwar.c:407: game.colorCode[COLOR_ORANGE]    = OP_JUMPER;
+;carwar.c:408: game.colorCode[COLOR_ORANGE]    = OP_JUMPER;
 	ld	hl,#0x005d + 0x0007 + _game
 	ld	(hl),#0x48
-;carwar.c:408: game.colorCode[COLOR_YELLOW]    = OP_SAND;
+;carwar.c:409: game.colorCode[COLOR_YELLOW]    = OP_SAND;
 	ld	hl,#0x0090 + 0x0007 + _game
 	ld	(hl),#0x42
-;carwar.c:409: game.colorCode[COLOR_WHITE]     = OP_ROAD;
+;carwar.c:410: game.colorCode[COLOR_WHITE]     = OP_ROAD;
 	ld	hl,#0x00ff + 0x0007 + _game
 	ld	(hl),#0x40
-;carwar.c:410: game.colorCode[DarkenColor(COLOR_BLACK, SHADOW_POWER)]     = OP_HOLE;
+;carwar.c:411: game.colorCode[DarkenColor(COLOR_BLACK, SHADOW_POWER)]     = OP_HOLE;
 	ld	hl,#0x0200
 	push	hl
 	call	_DarkenColor
@@ -15477,7 +15477,7 @@ _StateInitialize:
 	ld	b,a
 	ld	a,#0x4A
 	ld	(bc),a
-;carwar.c:411: game.colorCode[DarkenColor(COLOR_LIGHTBLUE, SHADOW_POWER)] = OP_WALL;
+;carwar.c:412: game.colorCode[DarkenColor(COLOR_LIGHTBLUE, SHADOW_POWER)] = OP_WALL;
 	ld	hl,#0x024B
 	push	hl
 	call	_DarkenColor
@@ -15491,7 +15491,7 @@ _StateInitialize:
 	ld	b,a
 	ld	a,#0x01
 	ld	(bc),a
-;carwar.c:412: game.colorCode[DarkenColor(COLOR_GRAY, SHADOW_POWER)]      = OP_ROAD;
+;carwar.c:413: game.colorCode[DarkenColor(COLOR_GRAY, SHADOW_POWER)]      = OP_ROAD;
 	ld	hl,#0x0292
 	push	hl
 	call	_DarkenColor
@@ -15505,7 +15505,7 @@ _StateInitialize:
 	ld	b,a
 	ld	a,#0x40
 	ld	(bc),a
-;carwar.c:413: game.colorCode[DarkenColor(COLOR_ORANGE, SHADOW_POWER)]    = OP_JUMPER;
+;carwar.c:414: game.colorCode[DarkenColor(COLOR_ORANGE, SHADOW_POWER)]    = OP_JUMPER;
 	ld	hl,#0x025D
 	push	hl
 	call	_DarkenColor
@@ -15519,7 +15519,7 @@ _StateInitialize:
 	ld	b,a
 	ld	a,#0x48
 	ld	(bc),a
-;carwar.c:414: game.colorCode[DarkenColor(COLOR_YELLOW, SHADOW_POWER)]    = OP_SAND;
+;carwar.c:415: game.colorCode[DarkenColor(COLOR_YELLOW, SHADOW_POWER)]    = OP_SAND;
 	ld	hl,#0x0290
 	push	hl
 	call	_DarkenColor
@@ -15533,7 +15533,7 @@ _StateInitialize:
 	ld	b,a
 	ld	a,#0x42
 	ld	(bc),a
-;carwar.c:415: game.colorCode[DarkenColor(COLOR_WHITE, SHADOW_POWER)]     = OP_ROAD;
+;carwar.c:416: game.colorCode[DarkenColor(COLOR_WHITE, SHADOW_POWER)]     = OP_ROAD;
 	ld	hl,#0x02FF
 	push	hl
 	call	_DarkenColor
@@ -15547,7 +15547,7 @@ _StateInitialize:
 	ld	b,a
 	ld	a,#0x40
 	ld	(bc),a
-;carwar.c:418: for(x=0; x<sizeof(charTable)/8; x++)
+;carwar.c:419: for(x=0; x<sizeof(charTable)/8; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00108$:
@@ -15556,7 +15556,7 @@ _StateInitialize:
 	ld	a,-1 (ix)
 	sbc	a,#0x00
 	jr	NC,00111$
-;carwar.c:420: RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
+;carwar.c:421: RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
 	ld	e,-2 (ix)
 	ld	d,-1 (ix)
 	sla	e
@@ -15599,20 +15599,20 @@ _StateInitialize:
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:418: for(x=0; x<sizeof(charTable)/8; x++)
+;carwar.c:419: for(x=0; x<sizeof(charTable)/8; x++)
 	inc	-2 (ix)
 	jr	NZ,00108$
 	inc	-1 (ix)
 	jr	00108$
 00111$:
-;carwar.c:424: for(x=0; x<256; x++)
+;carwar.c:425: for(x=0; x<256; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00116$:
 	ld	a,-1 (ix)
 	sub	a,#0x01
 	jp	NC,00119$
-;carwar.c:426: for(i=0; i<8; i++)
+;carwar.c:427: for(i=0; i<8; i++)
 	ld	e,-2 (ix)
 	ld	d,-1 (ix)
 	sla	e
@@ -15631,7 +15631,7 @@ _StateInitialize:
 	ld	a,-3 (ix)
 	sbc	a,#0x00
 	jr	NC,00118$
-;carwar.c:428: if(x & (1 << (7 - (i & 0x07))))
+;carwar.c:429: if(x & (1 << (7 - (i & 0x07))))
 	ld	a,-4 (ix)
 	and	a,#0x07
 	ld	l,a
@@ -15662,7 +15662,7 @@ _StateInitialize:
 	ld	a,l
 	or	a,h
 	jr	Z,00102$
-;carwar.c:429: game.bitToByte[x * 8 + i] = 0xFF;
+;carwar.c:430: game.bitToByte[x * 8 + i] = 0xFF;
 	ld	a,-6 (ix)
 	add	a,-4 (ix)
 	ld	c,a
@@ -15674,7 +15674,7 @@ _StateInitialize:
 	ld	(hl),#0xFF
 	jr	00114$
 00102$:
-;carwar.c:431: game.bitToByte[x * 8 + i] = 0x00;
+;carwar.c:432: game.bitToByte[x * 8 + i] = 0x00;
 	ld	a,e
 	add	a,-4 (ix)
 	ld	c,a
@@ -15685,22 +15685,22 @@ _StateInitialize:
 	add	hl,bc
 	ld	(hl),#0x00
 00114$:
-;carwar.c:426: for(i=0; i<8; i++)
+;carwar.c:427: for(i=0; i<8; i++)
 	inc	-4 (ix)
 	jr	NZ,00112$
 	inc	-3 (ix)
 	jr	00112$
 00118$:
-;carwar.c:424: for(x=0; x<256; x++)
+;carwar.c:425: for(x=0; x<256; x++)
 	inc	-2 (ix)
 	jp	NZ,00116$
 	inc	-1 (ix)
 	jp	00116$
 00119$:
-;carwar.c:435: game.page = 0;
+;carwar.c:436: game.page = 0;
 	ld	hl,#0x0004 + _game
 	ld	(hl),#0x00
-;carwar.c:437: game.state = StateStartGame;
+;carwar.c:438: game.state = StateStartGame;
 	ld	hl,#0x0143 + _game
 	ld	(hl),#<(_StateStartGame)
 	inc	hl
@@ -15709,7 +15709,7 @@ _StateInitialize:
 	pop	ix
 	ret
 _StateInitialize_end::
-;carwar.c:441: void InitializeMenu(u8 menu)
+;carwar.c:442: void InitializeMenu(u8 menu)
 ;	---------------------------------
 ; Function InitializeMenu
 ; ---------------------------------
@@ -15721,23 +15721,23 @@ _InitializeMenu:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:444: game.menu = menu;
+;carwar.c:445: game.menu = menu;
 	ld	hl,#_game
 	ld	a,4 (ix)
 	ld	(hl),a
-;carwar.c:445: game.item = 0;
+;carwar.c:446: game.item = 0;
 	ld	hl,#0x0001 + _game
 	ld	(hl),#0x00
-;carwar.c:447: game.page = 1;
+;carwar.c:448: game.page = 1;
 	ld	hl,#0x0004 + _game
 	ld	(hl),#0x01
-;carwar.c:448: SetPage8(game.page);
+;carwar.c:449: SetPage8(game.page);
 	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:450: HMMV(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
+;carwar.c:451: HMMV(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
 	ld	hl,#0x0954 + _game
 	ld	(hl),#0x54
 	inc	hl
@@ -15765,7 +15765,7 @@ _InitializeMenu:
 	push	hl
 	call	_VPDCommand36
 	pop	af
-;carwar.c:452: DrawText(MENU_X, MENU_Y, menus[game.menu].title, COLOR_WHITE);
+;carwar.c:453: DrawText(MENU_X, MENU_Y, menus[game.menu].title, COLOR_WHITE);
 	ld	a,(#_game)
 	ld	e,a
 	add	a,a
@@ -15793,7 +15793,7 @@ _InitializeMenu:
 	pop	af
 	pop	af
 	inc	sp
-;carwar.c:453: for(item = 0; item < menus[game.menu].itemNum; item++)
+;carwar.c:454: for(item = 0; item < menus[game.menu].itemNum; item++)
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
 	ld	-3 (ix),#0x00
@@ -15821,7 +15821,7 @@ _InitializeMenu:
 	ld	a,-1 (ix)
 	sub	a,(hl)
 	jp	NC,00104$
-;carwar.c:455: DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, menus[game.menu].items[item].text, menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
+;carwar.c:456: DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, menus[game.menu].items[item].text, menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
 	ld	hl,#_game
 	ld	l,(hl)
 	push	de
@@ -15911,7 +15911,7 @@ _InitializeMenu:
 	pop	af
 	inc	sp
 	pop	de
-;carwar.c:453: for(item = 0; item < menus[game.menu].itemNum; item++)
+;carwar.c:454: for(item = 0; item < menus[game.menu].itemNum; item++)
 	inc	de
 	inc	de
 	inc	de
@@ -15932,7 +15932,7 @@ _InitializeMenu:
 	inc	-1 (ix)
 	jp	00101$
 00104$:
-;carwar.c:458: HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
+;carwar.c:459: HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
 	ld	hl,#0x0945 + _game
 	ld	(hl),#0x54
 	inc	hl
@@ -15971,7 +15971,7 @@ _InitializeMenu:
 	pop	ix
 	ret
 _InitializeMenu_end::
-;carwar.c:462: void StateTitle()
+;carwar.c:463: void StateTitle()
 ;	---------------------------------
 ; Function StateTitle
 ; ---------------------------------
@@ -15983,23 +15983,23 @@ _StateTitle:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:466: game.page = 1;
+;carwar.c:467: game.page = 1;
 	ld	hl,#0x0004 + _game
 	ld	(hl),#0x01
-;carwar.c:467: SetPage8(game.page);
+;carwar.c:468: SetPage8(game.page);
 	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:469: for(j=0; j<24; j++)
+;carwar.c:470: for(j=0; j<24; j++)
 	ld	-2 (ix),#0x00
 	ld	de,#0x0000
 00107$:
 	ld	a,-2 (ix)
 	sub	a,#0x18
 	jp	NC,00110$
-;carwar.c:471: for(i=0; i<232; i++)
+;carwar.c:472: for(i=0; i<232; i++)
 	push	de
 	ld	hl,#0x0008
 	push	hl
@@ -16015,7 +16015,7 @@ _StateTitle:
 	ld	a,-1 (ix)
 	sub	a,#0xE8
 	jp	NC,00106$
-;carwar.c:473: byte = title[(i / 8) + (j * 232 / 8)];
+;carwar.c:474: byte = title[(i / 8) + (j * 232 / 8)];
 	ld	a,-1 (ix)
 	srl	a
 	srl	a
@@ -16030,7 +16030,7 @@ _StateTitle:
 	add	hl,bc
 	ld	a,(hl)
 	ld	-3 (ix),a
-;carwar.c:474: if(byte & (1 << (7 - (i & 0x07))))
+;carwar.c:475: if(byte & (1 << (7 - (i & 0x07))))
 	ld	a,-1 (ix)
 	and	a,#0x07
 	ld	l,a
@@ -16062,7 +16062,7 @@ _StateTitle:
 	ld	a,l
 	or	a,h
 	jr	Z,00105$
-;carwar.c:476: WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
+;carwar.c:477: WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
 	ld	a,-1 (ix)
 	add	a,-2 (ix)
 	ld	l,a
@@ -16108,11 +16108,11 @@ _StateTitle:
 	pop	af
 	pop	de
 00105$:
-;carwar.c:471: for(i=0; i<232; i++)
+;carwar.c:472: for(i=0; i<232; i++)
 	inc	-1 (ix)
 	jp	00103$
 00106$:
-;carwar.c:480: VRAMtoVRAM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
+;carwar.c:481: VRAMtoVRAM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
 	ld	l,-2 (ix)
 	ld	h,#0x00
 	ld	a,l
@@ -16143,27 +16143,27 @@ _StateTitle:
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:469: for(j=0; j<24; j++)
+;carwar.c:470: for(j=0; j<24; j++)
 	ld	hl,#0x00E8
 	add	hl,de
 	ex	de,hl
 	inc	-2 (ix)
 	jp	00107$
 00110$:
-;carwar.c:483: InitializeMenu(0);
+;carwar.c:484: InitializeMenu(0);
 	ld	a,#0x00
 	push	af
 	inc	sp
 	call	_InitializeMenu
 	inc	sp
-;carwar.c:484: game.pressed = 0;
+;carwar.c:485: game.pressed = 0;
 	ld	hl,#0x0002 + _game
 	ld	(hl),#0x00
-;carwar.c:485: game.page = 0;
+;carwar.c:486: game.page = 0;
 	inc	hl
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:486: game.state = StateMainMenu;
+;carwar.c:487: game.state = StateMainMenu;
 	ld	hl,#0x0143 + _game
 	ld	(hl),#<(_StateMainMenu)
 	inc	hl
@@ -16172,57 +16172,57 @@ _StateTitle:
 	pop	ix
 	ret
 _StateTitle_end::
-;carwar.c:490: void StartGame()
+;carwar.c:491: void StartGame()
 ;	---------------------------------
 ; Function StartGame
 ; ---------------------------------
 _StartGame_start::
 _StartGame:
-;carwar.c:492: game.state = StateStartGame;
+;carwar.c:493: game.state = StateStartGame;
 	ld	hl,#0x0143 + _game
 	ld	(hl),#<(_StateStartGame)
 	inc	hl
 	ld	(hl),#>(_StateStartGame)
 	ret
 _StartGame_end::
-;carwar.c:496: void StateMainMenu()
+;carwar.c:497: void StateMainMenu()
 ;	---------------------------------
 ; Function StateMainMenu
 ; ---------------------------------
 _StateMainMenu_start::
 _StateMainMenu:
-;carwar.c:500: SetPage8(game.page);
+;carwar.c:501: SetPage8(game.page);
 	ld	a,(#0x0004 + _game)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:501: game.page = 1 - game.page;
+;carwar.c:502: game.page = 1 - game.page;
 	ld	hl,#0x0004 + _game
 	ld	l,(hl)
 	ld	a,#0x01
 	sub	a,l
 	ld	hl,#0x0004 + _game
 	ld	(hl),a
-;carwar.c:502: game.yOffset = 256 * game.page;
+;carwar.c:503: game.yOffset = 256 * game.page;
 	ld	b, (hl)
 	ld	c,#0x00
 	ld	hl,#0x0005 + _game
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:505: keyLine = GetKeyMatrixLine(8);
+;carwar.c:506: keyLine = GetKeyMatrixLine(8);
 	ld	a,#0x08
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
 	ld	c,l
-;carwar.c:506: if((keyLine & KEY_SPACE) == 0
+;carwar.c:507: if((keyLine & KEY_SPACE) == 0
 	ld	a,c
 	and	a,#0x01
 	jr	Z,00105$
-;carwar.c:507: || Joytrig(1) != 0
+;carwar.c:508: || Joytrig(1) != 0
 	push	bc
 	ld	a,#0x01
 	push	af
@@ -16233,7 +16233,7 @@ _StateMainMenu:
 	xor	a,a
 	or	a,l
 	jr	NZ,00105$
-;carwar.c:508: || Joytrig(2) != 0)
+;carwar.c:509: || Joytrig(2) != 0)
 	push	bc
 	ld	a,#0x02
 	push	af
@@ -16245,7 +16245,7 @@ _StateMainMenu:
 	or	a,l
 	jp	Z,00106$
 00105$:
-;carwar.c:510: if(menus[game.menu].items[game.item].action != 0)
+;carwar.c:511: if(menus[game.menu].items[game.item].action != 0)
 	ld	a,(#_game)
 	ld	e,a
 	add	a,a
@@ -16297,7 +16297,7 @@ _StateMainMenu:
 	inc	hl
 	or	a,(hl)
 	jr	Z,00102$
-;carwar.c:511: menus[game.menu].items[game.item].action();
+;carwar.c:512: menus[game.menu].items[game.item].action();
 	ld	a,(#_game)
 	ld	e,a
 	add	a,a
@@ -16359,7 +16359,7 @@ _StateMainMenu:
 	pop	de
 	pop	bc
 00102$:
-;carwar.c:512: if((menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
+;carwar.c:513: if((menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
 	ld	a,(#_game)
 	ld	e,a
 	add	a,a
@@ -16412,7 +16412,7 @@ _StateMainMenu:
 	jr	Z,00139$
 	ret
 00139$:
-;carwar.c:513: InitializeMenu(menus[game.menu].items[game.item].nextIdx);
+;carwar.c:514: InitializeMenu(menus[game.menu].items[game.item].nextIdx);
 	ld	a,(#_game)
 	ld	e,a
 	add	a,a
@@ -16465,20 +16465,20 @@ _StateMainMenu:
 	inc	sp
 	call	_InitializeMenu
 	inc	sp
-;carwar.c:514: return;
+;carwar.c:515: return;
 	ret
 00106$:
-;carwar.c:518: if(game.pressed > 16)
+;carwar.c:519: if(game.pressed > 16)
 	ld	hl,#0x0002 + _game
 	ld	l,(hl)
 	ld	a,#0x10
 	sub	a,l
 	jr	NC,00110$
-;carwar.c:519: game.pressed = 0;
+;carwar.c:520: game.pressed = 0;
 	ld	hl,#0x0002 + _game
 	ld	(hl),#0x00
 00110$:
-;carwar.c:520: if(((keyLine & KEY_UP) == 0) && (game.item > 0))
+;carwar.c:521: if(((keyLine & KEY_UP) == 0) && (game.item > 0))
 	ld	a,c
 	and	a,#0x20
 	jr	NZ,00120$
@@ -16486,24 +16486,24 @@ _StateMainMenu:
 	ld	a,(hl)
 	or	a,a
 	jr	Z,00120$
-;carwar.c:522: if(game.pressed == 0)
+;carwar.c:523: if(game.pressed == 0)
 	inc	hl
 	ld	a,(hl)
 	or	a,a
 	jr	NZ,00112$
-;carwar.c:523: game.item--;
+;carwar.c:524: game.item--;
 	dec	hl
 	ld	a, (hl)
 	dec	a
 	ld	(#0x0001 + _game),a
 00112$:
-;carwar.c:524: game.pressed++;
+;carwar.c:525: game.pressed++;
 	ld	a,(#0x0002 + _game)
 	inc	a
 	ld	(#0x0002 + _game),a
 	jr	00121$
 00120$:
-;carwar.c:526: else if(((keyLine & KEY_DOWN) == 0) && (game.item < menus[game.menu].itemNum - 1))
+;carwar.c:527: else if(((keyLine & KEY_DOWN) == 0) && (game.item < menus[game.menu].itemNum - 1))
 	ld	a,c
 	and	a,#0x40
 	jr	NZ,00116$
@@ -16539,28 +16539,28 @@ _StateMainMenu:
 	xor	a,#0x80
 00144$:
 	jp	P,00116$
-;carwar.c:528: if(game.pressed == 0)
+;carwar.c:529: if(game.pressed == 0)
 	ld	hl,#0x0002 + _game
 	ld	a,(hl)
 	or	a,a
 	jr	NZ,00114$
-;carwar.c:529: game.item++;
+;carwar.c:530: game.item++;
 	dec	hl
 	ld	a, (hl)
 	inc	a
 	ld	(#0x0001 + _game),a
 00114$:
-;carwar.c:530: game.pressed++;
+;carwar.c:531: game.pressed++;
 	ld	a,(#0x0002 + _game)
 	inc	a
 	ld	(#0x0002 + _game),a
 	jr	00121$
 00116$:
-;carwar.c:533: game.pressed = 0;
+;carwar.c:534: game.pressed = 0;
 	ld	hl,#0x0002 + _game
 	ld	(hl),#0x00
 00121$:
-;carwar.c:536: HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * menus[game.menu].itemNum, COLOR_BLACK);
+;carwar.c:537: HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * menus[game.menu].itemNum, COLOR_BLACK);
 	ld	hl,#0x0954 + _game
 	ld	(hl),#0x54
 	inc	hl
@@ -16621,7 +16621,7 @@ _StateMainMenu:
 	push	hl
 	call	_VPDCommand36
 	pop	af
-;carwar.c:537: DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
+;carwar.c:538: DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
 	ld	hl,#0x0005 + _game
 	ld	a,(hl)
 	inc	hl
@@ -16660,14 +16660,14 @@ _StateMainMenu:
 	pop	af
 	pop	af
 	inc	sp
-;carwar.c:538: waitRetrace();
+;carwar.c:539: waitRetrace();
 	call	_waitRetrace
 	ret
 _StateMainMenu_end::
 __str_22:
 	.ascii "@"
 	.db 0x00
-;carwar.c:542: void StateStartGame()
+;carwar.c:543: void StateStartGame()
 ;	---------------------------------
 ; Function StateStartGame
 ; ---------------------------------
@@ -16676,19 +16676,173 @@ _StateStartGame:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-7
+	ld	hl,#-24
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:546: game.page = 0;
+;carwar.c:546: const u8 colors[] = { COLOR_BLACK, COLOR_GREEN, COLOR_LIGHTBLUE, COLOR_BLUE, COLOR_GRAY, COLOR_ORANGE, COLOR_YELLOW, COLOR_WHITE, COLOR_SABLE, 0, 0, 0, 0, 0, 0, 0 };
+	ld	hl,#0x0007
+	add	hl,sp
+	ld	c,l
+	ld	b,h
+	ld	(hl),#0x00
+	ld	e,c
+	ld	d,b
+	inc	de
+	ld	a,#0xE0
+	ld	(de),a
+	ld	e,c
+	ld	d,b
+	inc	de
+	inc	de
+	ld	a,#0x4B
+	ld	(de),a
+	ld	hl,#0x0003
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x03
+	ld	(de),a
+	ld	hl,#0x0004
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x92
+	ld	(de),a
+	ld	hl,#0x0005
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x5D
+	ld	(de),a
+	ld	hl,#0x0006
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x90
+	ld	(de),a
+	ld	hl,#0x0007
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0xFF
+	ld	(de),a
+	ld	hl,#0x0008
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x96
+	ld	(de),a
+	ld	hl,#0x0009
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+	ld	hl,#0x000A
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+	ld	hl,#0x000B
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+	ld	hl,#0x000C
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+	ld	hl,#0x000D
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+	ld	hl,#0x000E
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+	ld	hl,#0x000F
+	add	hl,bc
+	ex	de,hl
+	ld	a,#0x00
+	ld	(de),a
+;carwar.c:548: game.page = 0;
 	ld	hl,#0x0004 + _game
 	ld	(hl),#0x00
-;carwar.c:547: SetPage8(game.page);
-	ld	a, (hl)
+;carwar.c:549: SetPage8(game.page);
+	ld	l,(hl)
+	push	bc
+	ld	a,l
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:553: VRAMtoVRAM(0, 0, 0, 256, 256, 212);
+	pop	bc
+;carwar.c:555: for(i=0; i<16; i++)
+	ld	-1 (ix),#0x00
+00101$:
+	ld	a,-1 (ix)
+	sub	a,#0x10
+	jr	NC,00104$
+;carwar.c:556: FillVRAM(64 * (i % 4), 53 * (i / 4), 64, 53, colors[i]);
+	ld	a,c
+	add	a,-1 (ix)
+	ld	e,a
+	ld	a,b
+	adc	a,#0x00
+	ld	d,a
+	ld	a,(de)
+	ld	-18 (ix),a
+	ld	a,-1 (ix)
+	srl	a
+	srl	a
+	ld	e, a
+	ld	d, #0x00
+	ld	l, a
+	ld	h,d
+	add	hl,hl
+	add	hl,de
+	add	hl,hl
+	add	hl,hl
+	add	hl,de
+	add	hl,hl
+	add	hl,hl
+	add	hl,de
+	ld	-20 (ix),l
+	ld	-19 (ix),h
+	ld	a,-1 (ix)
+	and	a,#0x03
+	ld	e, a
+	ld	d, #0x00
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	sla	e
+	rl	d
+	push	bc
+	ld	a,-18 (ix)
+	push	af
+	inc	sp
+	ld	hl,#0x0035
+	push	hl
+	ld	l, #0x40
+	push	hl
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
+	push	hl
+	push	de
+	call	_FillVRAM
+	ld	hl,#0x0009
+	add	hl,sp
+	ld	sp,hl
+	pop	bc
+;carwar.c:555: for(i=0; i<16; i++)
+	inc	-1 (ix)
+	jr	00101$
+00104$:
+;carwar.c:558: VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 	ld	hl,#0x00D4
 	push	hl
 	ld	hl,#0x0100
@@ -16705,7 +16859,7 @@ _StateStartGame:
 	ld	hl,#0x000C
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:557: PrintSprite(64, 64, "INIT\nCARS", (u16)&defaultColor);
+;carwar.c:562: PrintSprite(64, 64, "INIT\nCARS", (u16)&defaultColor);
 	ld	c,#<(_defaultColor)
 	ld	b,#>(_defaultColor)
 	push	bc
@@ -16717,16 +16871,16 @@ _StateStartGame:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:558: for(i=0; i<16; i++)
+;carwar.c:563: for(i=0; i<16; i++)
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
-	ld	-3 (ix),#0x00
-	ld	-2 (ix),#0x00
-00101$:
+	ld	-20 (ix),#0x00
+	ld	-19 (ix),#0x00
+00105$:
 	ld	a,-1 (ix)
 	sub	a,#0x10
-	jp	NC,00104$
-;carwar.c:560: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
+	jp	NC,00108$
+;carwar.c:565: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
 	ld	hl,#_car1
 	add	hl,de
 	push	de
@@ -16737,15 +16891,15 @@ _StateStartGame:
 	push	hl
 	ld	hl,#0x01D4
 	push	hl
-	ld	l,-3 (ix)
-	ld	h,-2 (ix)
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:561: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
+;carwar.c:566: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
 	ld	hl,#_car2
 	add	hl,de
 	push	de
@@ -16756,15 +16910,15 @@ _StateStartGame:
 	push	hl
 	ld	hl,#0x01DF
 	push	hl
-	ld	l,-3 (ix)
-	ld	h,-2 (ix)
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:562: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
+;carwar.c:567: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
 	ld	hl,#_car3
 	add	hl,de
 	push	de
@@ -16775,15 +16929,15 @@ _StateStartGame:
 	push	hl
 	ld	hl,#0x01EA
 	push	hl
-	ld	l,-3 (ix)
-	ld	h,-2 (ix)
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:563: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
+;carwar.c:568: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
 	ld	hl,#_car4
 	add	hl,de
 	push	de
@@ -16794,28 +16948,28 @@ _StateStartGame:
 	push	hl
 	ld	hl,#0x01F5
 	push	hl
-	ld	l,-3 (ix)
-	ld	h,-2 (ix)
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
 	push	hl
 	call	_RAMtoVRAM
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:558: for(i=0; i<16; i++)
+;carwar.c:563: for(i=0; i<16; i++)
 	ld	hl,#0x008F
 	add	hl,de
 	ex	de,hl
-	ld	a,-3 (ix)
+	ld	a,-20 (ix)
 	add	a,#0x0D
-	ld	-3 (ix),a
-	ld	a,-2 (ix)
+	ld	-20 (ix),a
+	ld	a,-19 (ix)
 	adc	a,#0x00
-	ld	-2 (ix),a
+	ld	-19 (ix),a
 	inc	-1 (ix)
-	jp	00101$
-00104$:
-;carwar.c:568: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
+	jp	00105$
+00108$:
+;carwar.c:573: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
 	ld	c,#<(_defaultColor)
 	ld	b,#>(_defaultColor)
 	push	bc
@@ -16827,34 +16981,34 @@ _StateStartGame:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:569: for(i=0; i<CAR_NUM; i++)
+;carwar.c:574: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	b,#0x00
-	ld	-3 (ix),#0x00
-	ld	-2 (ix),#0x00
-00105$:
+	ld	-20 (ix),#0x00
+	ld	-19 (ix),#0x00
+00109$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	NC,00108$
-;carwar.c:571: InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
+	jp	NC,00112$
+;carwar.c:576: InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
 	ld	a,-1 (ix)
 	add	a,a
 	add	a,#<(0x0004 + _track01)
-	ld	-5 (ix),a
+	ld	-22 (ix),a
 	ld	a,#>(0x0004 + _track01)
 	adc	a,#0x00
-	ld	-4 (ix),a
-	ld	a,-5 (ix)
+	ld	-21 (ix),a
+	ld	a,-22 (ix)
 	add	a,#0x01
 	ld	l, a
-	ld	a, -4 (ix)
+	ld	a, -21 (ix)
 	adc	a, #0x00
 	ld	h, a
 	ld	d,(hl)
-	ld	l,-5 (ix)
-	ld	h,-4 (ix)
+	ld	l,-22 (ix)
+	ld	h,-21 (ix)
 	ld	a,(hl)
-	ld	-5 (ix),a
+	ld	-22 (ix),a
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	e,a
@@ -16864,7 +17018,7 @@ _StateStartGame:
 	push	bc
 	push	de
 	inc	sp
-	ld	h,-5 (ix)
+	ld	h,-22 (ix)
 	ld	l,-1 (ix)
 	push	hl
 	ld	l,e
@@ -16875,7 +17029,7 @@ _StateStartGame:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:572: VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
+;carwar.c:577: VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	l, a
@@ -16888,10 +17042,10 @@ _StateStartGame:
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFB
-	ld	-5 (ix),a
+	ld	-22 (ix),a
 	ld	a,h
 	adc	a,#0xFF
-	ld	-4 (ix),a
+	ld	-21 (ix),a
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	c,a
@@ -16914,11 +17068,11 @@ _StateStartGame:
 	push	hl
 	ld	l, #0xD4
 	push	hl
-	ld	l,-3 (ix)
-	ld	h,-2 (ix)
+	ld	l,-20 (ix)
+	ld	h,-19 (ix)
 	push	hl
-	ld	l,-5 (ix)
-	ld	h,-4 (ix)
+	ld	l,-22 (ix)
+	ld	h,-21 (ix)
 	push	hl
 	push	de
 	call	_VRAMtoVRAM
@@ -16926,13 +17080,13 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	bc
-;carwar.c:573: VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
-	ld	a,-3 (ix)
+;carwar.c:578: VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+	ld	a,-20 (ix)
 	add	a,#0x34
-	ld	-5 (ix),a
-	ld	a,-2 (ix)
+	ld	-22 (ix),a
+	ld	a,-19 (ix)
 	adc	a,#0x00
-	ld	-4 (ix),a
+	ld	-21 (ix),a
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	c,a
@@ -16950,10 +17104,10 @@ _StateStartGame:
 	ld	a, (hl)
 	ld	h, #0x00
 	add	a,#0xFB
-	ld	-7 (ix),a
+	ld	-24 (ix),a
 	ld	a,h
 	adc	a,#0x00
-	ld	-6 (ix),a
+	ld	-23 (ix),a
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	c,a
@@ -16976,11 +17130,11 @@ _StateStartGame:
 	push	hl
 	ld	l, #0xD4
 	push	hl
-	ld	l,-5 (ix)
-	ld	h,-4 (ix)
+	ld	l,-22 (ix)
+	ld	h,-21 (ix)
 	push	hl
-	ld	l,-7 (ix)
-	ld	h,-6 (ix)
+	ld	l,-24 (ix)
+	ld	h,-23 (ix)
 	push	hl
 	push	de
 	call	_VRAMtoVRAM
@@ -16988,28 +17142,28 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	bc
-;carwar.c:569: for(i=0; i<CAR_NUM; i++)
+;carwar.c:574: for(i=0; i<CAR_NUM; i++)
 	ld	a,b
 	add	a,#0x0F
 	ld	b,a
-	ld	a,-3 (ix)
+	ld	a,-20 (ix)
 	add	a,#0x0D
-	ld	-3 (ix),a
-	ld	a,-2 (ix)
+	ld	-20 (ix),a
+	ld	a,-19 (ix)
 	adc	a,#0x00
-	ld	-2 (ix),a
+	ld	-19 (ix),a
 	inc	-1 (ix)
-	jp	00105$
-00108$:
-;carwar.c:576: ClearSprite();
+	jp	00109$
+00112$:
+;carwar.c:581: ClearSprite();
 	call	_ClearSprite
-;carwar.c:577: for(i=0; i<32; i++)
+;carwar.c:582: for(i=0; i<32; i++)
 	ld	c,#0x00
-00109$:
+00113$:
 	ld	a,c
 	sub	a,#0x20
-	jr	NC,00112$
-;carwar.c:578: SetSpriteUniColor(i, 0, 248, 0, 0);
+	jr	NC,00116$
+;carwar.c:583: SetSpriteUniColor(i, 0, 248, 0, 0);
 	push	bc
 	ld	hl,#0x0000
 	push	hl
@@ -17023,11 +17177,11 @@ _StateStartGame:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:577: for(i=0; i<32; i++)
+;carwar.c:582: for(i=0; i<32; i++)
 	inc	c
-	jr	00109$
-00112$:
-;carwar.c:580: game.state = StateUpdateGame;
+	jr	00113$
+00116$:
+;carwar.c:585: game.state = StateUpdateGame;
 	ld	hl,#0x0143 + _game
 	ld	(hl),#<(_StateUpdateGame)
 	inc	hl
@@ -17048,7 +17202,7 @@ __str_24:
 	.db 0x0A
 	.ascii "BACKUP"
 	.db 0x00
-;carwar.c:584: void StateUpdateGame()
+;carwar.c:589: void StateUpdateGame()
 ;	---------------------------------
 ; Function StateUpdateGame
 ; ---------------------------------
@@ -17060,33 +17214,33 @@ _StateUpdateGame:
 	ld	hl,#-19
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:590: SetPage8(game.page);
+;carwar.c:595: SetPage8(game.page);
 	ld	a,(#0x0004 + _game)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:591: game.page = 1 - game.page;
+;carwar.c:596: game.page = 1 - game.page;
 	ld	hl,#0x0004 + _game
 	ld	l,(hl)
 	ld	a,#0x01
 	sub	a,l
 	ld	hl,#0x0004 + _game
 	ld	(hl),a
-;carwar.c:592: game.yOffset = 256 * game.page;
+;carwar.c:597: game.yOffset = 256 * game.page;
 	ld	b, (hl)
 	ld	c,#0x00
 	ld	hl,#0x0005 + _game
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:594: for(i=0; i<CAR_NUM; i++)
+;carwar.c:599: for(i=0; i<CAR_NUM; i++)
 	ld	bc,#0x0000
 00150$:
 	ld	a,c
 	sub	a,#0x04
 	jr	NC,00153$
-;carwar.c:595: game.players[i].flag = 0;
+;carwar.c:600: game.players[i].flag = 0;
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	e,a
@@ -17098,29 +17252,29 @@ _StateUpdateGame:
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:594: for(i=0; i<CAR_NUM; i++)
+;carwar.c:599: for(i=0; i<CAR_NUM; i++)
 	ld	a,b
 	add	a,#0x0F
 	ld	b,a
 	inc	c
 	jr	00150$
 00153$:
-;carwar.c:599: curPly = &game.players[0];
+;carwar.c:604: curPly = &game.players[0];
 	ld	hl,#_game + 263
 	ld	-4 (ix),l
 	ld	-3 (ix),h
-;carwar.c:600: keyLine = GetKeyMatrixLine(8);
+;carwar.c:605: keyLine = GetKeyMatrixLine(8);
 	ld	a,#0x08
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
 	ld	c,l
-;carwar.c:601: if((keyLine & KEY_LEFT) == 0)
+;carwar.c:606: if((keyLine & KEY_LEFT) == 0)
 	ld	a,c
 	and	a,#0x10
 	jr	NZ,00102$
-;carwar.c:602: curPly->flag |= CAR_TURN_LEFT;
+;carwar.c:607: curPly->flag |= CAR_TURN_LEFT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17131,11 +17285,11 @@ _StateUpdateGame:
 	or	a,#0x02
 	ld	(de),a
 00102$:
-;carwar.c:603: if((keyLine & KEY_RIGHT) == 0)
+;carwar.c:608: if((keyLine & KEY_RIGHT) == 0)
 	ld	a,c
 	and	a,#0x80
 	jr	NZ,00104$
-;carwar.c:604: curPly->flag |= CAR_TURN_RIGHT;
+;carwar.c:609: curPly->flag |= CAR_TURN_RIGHT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17146,11 +17300,11 @@ _StateUpdateGame:
 	or	a,#0x01
 	ld	(de),a
 00104$:
-;carwar.c:605: if((keyLine & KEY_UP) == 0)
+;carwar.c:610: if((keyLine & KEY_UP) == 0)
 	ld	a,c
 	and	a,#0x20
 	jr	NZ,00106$
-;carwar.c:606: curPly->flag |= CAR_MOVE;
+;carwar.c:611: curPly->flag |= CAR_MOVE;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17161,21 +17315,21 @@ _StateUpdateGame:
 	or	a,#0x04
 	ld	(de),a
 00106$:
-;carwar.c:610: curPly = &game.players[1];
+;carwar.c:615: curPly = &game.players[1];
 	ld	hl,#0x0107 + _game + 15
 	ld	-4 (ix),l
 	ld	-3 (ix),h
-;carwar.c:611: keyLine = GetKeyMatrixLine(5);
+;carwar.c:616: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:612: if((keyLine & KEY_Z) == 0)
+;carwar.c:617: if((keyLine & KEY_Z) == 0)
 	ld	a, l
 	and	a,#0x80
 	jr	NZ,00108$
-;carwar.c:613: curPly->flag |= CAR_TURN_LEFT;
+;carwar.c:618: curPly->flag |= CAR_TURN_LEFT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17186,17 +17340,17 @@ _StateUpdateGame:
 	or	a,#0x02
 	ld	(de),a
 00108$:
-;carwar.c:614: keyLine = GetKeyMatrixLine(3);
+;carwar.c:619: keyLine = GetKeyMatrixLine(3);
 	ld	a,#0x03
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:615: if((keyLine & KEY_C) == 0)
+;carwar.c:620: if((keyLine & KEY_C) == 0)
 	ld	a, l
 	and	a,#0x01
 	jr	NZ,00110$
-;carwar.c:616: curPly->flag |= CAR_TURN_RIGHT;
+;carwar.c:621: curPly->flag |= CAR_TURN_RIGHT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17207,17 +17361,17 @@ _StateUpdateGame:
 	or	a,#0x01
 	ld	(de),a
 00110$:
-;carwar.c:617: keyLine = GetKeyMatrixLine(5);
+;carwar.c:622: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:618: if((keyLine & KEY_X) == 0)
+;carwar.c:623: if((keyLine & KEY_X) == 0)
 	ld	a, l
 	and	a,#0x20
 	jr	NZ,00112$
-;carwar.c:619: curPly->flag |= CAR_MOVE;
+;carwar.c:624: curPly->flag |= CAR_MOVE;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17228,11 +17382,11 @@ _StateUpdateGame:
 	or	a,#0x04
 	ld	(de),a
 00112$:
-;carwar.c:623: curPly = &game.players[2];
+;carwar.c:628: curPly = &game.players[2];
 	ld	hl,#0x0107 + _game + 30
 	ld	-4 (ix),l
 	ld	-3 (ix),h
-;carwar.c:624: switch (Joystick(1)) // Joy 1 direction
+;carwar.c:629: switch (Joystick(1)) // Joy 1 direction
 	ld	a,#0x01
 	push	af
 	inc	sp
@@ -17258,7 +17412,7 @@ _StateUpdateGame:
 	ld	hl,#00239$
 	add	hl,de
 	add	hl,de
-;carwar.c:626: case 2: // up-right
+;carwar.c:631: case 2: // up-right
 	pop	de
 	jp	(hl)
 00239$:
@@ -17270,11 +17424,11 @@ _StateUpdateGame:
 	jr	00117$
 	jr	00118$
 00113$:
-;carwar.c:627: case 3: // right
+;carwar.c:632: case 3: // right
 00114$:
-;carwar.c:628: case 4: // down-right
+;carwar.c:633: case 4: // down-right
 00115$:
-;carwar.c:629: curPly->flag |= CAR_TURN_RIGHT;
+;carwar.c:634: curPly->flag |= CAR_TURN_RIGHT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17284,15 +17438,15 @@ _StateUpdateGame:
 	ld	a,(de)
 	or	a,#0x01
 	ld	(de),a
-;carwar.c:630: break;
+;carwar.c:635: break;
 	jr	00119$
-;carwar.c:631: case 6: // down-left
+;carwar.c:636: case 6: // down-left
 00116$:
-;carwar.c:632: case 7: // left
+;carwar.c:637: case 7: // left
 00117$:
-;carwar.c:633: case 8:// up-left
+;carwar.c:638: case 8:// up-left
 00118$:
-;carwar.c:634: curPly->flag |= CAR_TURN_LEFT;
+;carwar.c:639: curPly->flag |= CAR_TURN_LEFT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17302,9 +17456,9 @@ _StateUpdateGame:
 	ld	a,(de)
 	or	a,#0x02
 	ld	(de),a
-;carwar.c:636: }
+;carwar.c:641: }
 00119$:
-;carwar.c:637: if(Joytrig(1) != 0) // Joy 1 Button A
+;carwar.c:642: if(Joytrig(1) != 0) // Joy 1 Button A
 	ld	a,#0x01
 	push	af
 	inc	sp
@@ -17313,7 +17467,7 @@ _StateUpdateGame:
 	xor	a,a
 	or	a,l
 	jr	Z,00121$
-;carwar.c:638: curPly->flag |= CAR_MOVE;
+;carwar.c:643: curPly->flag |= CAR_MOVE;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17324,11 +17478,11 @@ _StateUpdateGame:
 	or	a,#0x04
 	ld	(de),a
 00121$:
-;carwar.c:642: curPly = &game.players[3];
+;carwar.c:647: curPly = &game.players[3];
 	ld	hl,#0x0107 + _game + 45
 	ld	-4 (ix),l
 	ld	-3 (ix),h
-;carwar.c:643: switch (Joystick(2)) // Joy 2 direction
+;carwar.c:648: switch (Joystick(2)) // Joy 2 direction
 	ld	a,#0x02
 	push	af
 	inc	sp
@@ -17354,7 +17508,7 @@ _StateUpdateGame:
 	ld	hl,#00242$
 	add	hl,de
 	add	hl,de
-;carwar.c:645: case 2: // up-right
+;carwar.c:650: case 2: // up-right
 	pop	de
 	jp	(hl)
 00242$:
@@ -17366,11 +17520,11 @@ _StateUpdateGame:
 	jr	00126$
 	jr	00127$
 00122$:
-;carwar.c:646: case 3: // right
+;carwar.c:651: case 3: // right
 00123$:
-;carwar.c:647: case 4: // down-right
+;carwar.c:652: case 4: // down-right
 00124$:
-;carwar.c:648: curPly->flag |= CAR_TURN_RIGHT;
+;carwar.c:653: curPly->flag |= CAR_TURN_RIGHT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17380,15 +17534,15 @@ _StateUpdateGame:
 	ld	a,(de)
 	or	a,#0x01
 	ld	(de),a
-;carwar.c:649: break;
+;carwar.c:654: break;
 	jr	00128$
-;carwar.c:650: case 6: // down-left
+;carwar.c:655: case 6: // down-left
 00125$:
-;carwar.c:651: case 7: // left
+;carwar.c:656: case 7: // left
 00126$:
-;carwar.c:652: case 8:// up-left
+;carwar.c:657: case 8:// up-left
 00127$:
-;carwar.c:653: curPly->flag |= CAR_TURN_LEFT;
+;carwar.c:658: curPly->flag |= CAR_TURN_LEFT;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17398,9 +17552,9 @@ _StateUpdateGame:
 	ld	a,(de)
 	or	a,#0x02
 	ld	(de),a
-;carwar.c:655: }
+;carwar.c:660: }
 00128$:
-;carwar.c:656: if(Joytrig(2) != 0) // Joy 2 Button A
+;carwar.c:661: if(Joytrig(2) != 0) // Joy 2 Button A
 	ld	a,#0x02
 	push	af
 	inc	sp
@@ -17409,7 +17563,7 @@ _StateUpdateGame:
 	xor	a,a
 	or	a,l
 	jr	Z,00199$
-;carwar.c:657: curPly->flag |= CAR_MOVE;
+;carwar.c:662: curPly->flag |= CAR_MOVE;
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	e,a
@@ -17419,7 +17573,7 @@ _StateUpdateGame:
 	ld	a,(de)
 	or	a,#0x04
 	ld	(de),a
-;carwar.c:661: for(i=0; i<CAR_NUM; i++)
+;carwar.c:666: for(i=0; i<CAR_NUM; i++)
 00199$:
 	ld	-1 (ix),#0x00
 	ld	-11 (ix),#0x00
@@ -17429,7 +17583,7 @@ _StateUpdateGame:
 	ld	a,-1 (ix)
 	sub	a,#0x04
 	jp	NC,00157$
-;carwar.c:663: VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY), 13, 11);
+;carwar.c:668: VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY), 13, 11);
 	ld	hl,#0x0005 + _game
 	ld	c,(hl)
 	inc	hl
@@ -17504,7 +17658,7 @@ _StateUpdateGame:
 	ld	iy,#0x000C
 	add	iy,sp
 	ld	sp,iy
-;carwar.c:661: for(i=0; i<CAR_NUM; i++)
+;carwar.c:666: for(i=0; i<CAR_NUM; i++)
 	ld	a,-11 (ix)
 	add	a,#0x0F
 	ld	-11 (ix),a
@@ -17517,14 +17671,14 @@ _StateUpdateGame:
 	inc	-1 (ix)
 	jp	00154$
 00157$:
-;carwar.c:668: for(i=0; i<CAR_NUM; i++)
+;carwar.c:673: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	-15 (ix),#0x00
 00158$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
 	jp	NC,00161$
-;carwar.c:670: curPly = &game.players[i];
+;carwar.c:675: curPly = &game.players[i];
 	ld	a,#<(0x0107 + _game)
 	add	a,-15 (ix)
 	ld	e,a
@@ -17532,7 +17686,7 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-4 (ix), e
 	ld	-3 (ix), a
-;carwar.c:674: x = Abs16(curPly->velX);
+;carwar.c:679: x = Abs16(curPly->velX);
 	ld	a,-4 (ix)
 	add	a,#0x08
 	ld	l, a
@@ -17560,11 +17714,11 @@ _StateUpdateGame:
 	ld	b,d
 00173$:
 	ld	-6 (ix),c
-;carwar.c:675: x >>= 8;
+;carwar.c:680: x >>= 8;
 	ld	-5 (ix), b
 	ld	-6 (ix), b
 	ld	-5 (ix),#0x00
-;carwar.c:676: y = Abs16(curPly->velY);
+;carwar.c:681: y = Abs16(curPly->velY);
 	ld	a,-4 (ix)
 	add	a,#0x0A
 	ld	-10 (ix),a
@@ -17592,10 +17746,10 @@ _StateUpdateGame:
 00174$:
 	ld	b,d
 00175$:
-;carwar.c:677: y >>= 8;
+;carwar.c:682: y >>= 8;
 	ld	c,b
 	ld	b,#0x00
-;carwar.c:678: speedSq = (x * x) + (y * y);
+;carwar.c:683: speedSq = (x * x) + (y * y);
 	push	bc
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
@@ -17624,13 +17778,13 @@ _StateUpdateGame:
 	adc	a,b
 	ld	-8 (ix), c
 	ld	-7 (ix), a
-;carwar.c:679: if(speedSq <= (FRICTION * FRICTION))
-	ld	a,#0x04
+;carwar.c:684: if(speedSq <= (FRICTION * FRICTION))
+	ld	a,#0x10
 	sub	a,-8 (ix)
 	ld	a,#0x00
 	sbc	a,-7 (ix)
 	jr	C,00132$
-;carwar.c:681: curPly->velX = 0;
+;carwar.c:686: curPly->velX = 0;
 	ld	a,-4 (ix)
 	add	a,#0x08
 	ld	l, a
@@ -17640,7 +17794,7 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:682: curPly->velY = 0;
+;carwar.c:687: curPly->velY = 0;
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	(hl),#0x00
@@ -17648,7 +17802,7 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	jp	00133$
 00132$:
-;carwar.c:686: dir = VectorToAngle256(curPly->velX, curPly->velY);
+;carwar.c:691: dir = VectorToAngle256(curPly->velX, curPly->velY);
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	c,(hl)
@@ -17671,7 +17825,7 @@ _StateUpdateGame:
 	pop	af
 	pop	af
 	ld	-2 (ix),l
-;carwar.c:687: curPly->velX -= FRICTION * g_Cosinus256[dir];
+;carwar.c:692: curPly->velX -= FRICTION * g_Cosinus256[dir];
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	c,(hl)
@@ -17694,6 +17848,7 @@ _StateUpdateGame:
 	ld	h,(hl)
 	ld	l,a
 	add	hl,hl
+	add	hl,hl
 	ld	a,c
 	sub	a,l
 	ld	e,a
@@ -17705,7 +17860,7 @@ _StateUpdateGame:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:688: curPly->velY -= FRICTION * g_Sinus256[dir];
+;carwar.c:693: curPly->velY -= FRICTION * g_Sinus256[dir];
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	c,(hl)
@@ -17723,6 +17878,7 @@ _StateUpdateGame:
 	ld	h,(hl)
 	ld	l,a
 	add	hl,hl
+	add	hl,hl
 	ld	a,c
 	sub	a,l
 	ld	e,a
@@ -17735,7 +17891,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	(hl),d
 00133$:
-;carwar.c:693: x = Abs16(curPly->velX);
+;carwar.c:698: x = Abs16(curPly->velX);
 	ld	a,-4 (ix)
 	add	a,#0x08
 	ld	-17 (ix),a
@@ -17765,11 +17921,11 @@ _StateUpdateGame:
 	ld	d,b
 00177$:
 	ld	-6 (ix),e
-;carwar.c:694: x >>= 8;
+;carwar.c:699: x >>= 8;
 	ld	-5 (ix), d
 	ld	-6 (ix), d
 	ld	-5 (ix),#0x00
-;carwar.c:695: y = Abs16(curPly->velY);
+;carwar.c:700: y = Abs16(curPly->velY);
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	c,(hl)
@@ -17791,10 +17947,10 @@ _StateUpdateGame:
 00178$:
 	ld	d,b
 00179$:
-;carwar.c:696: y >>= 8;
+;carwar.c:701: y >>= 8;
 	ld	c, d
 	ld	b,#0x00
-;carwar.c:697: speed = GetVectorLenght(x, y);
+;carwar.c:702: speed = GetVectorLenght(x, y);
 	push	bc
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
@@ -17804,19 +17960,19 @@ _StateUpdateGame:
 	pop	af
 	ld	c,l
 	ld	b,h
-;carwar.c:698: if(speed <= TRANSFERT)
-	ld	a,#0x04
+;carwar.c:703: if(speed <= TRANSFERT)
+	ld	a,#0x08
 	sub	a,c
 	ld	a,#0x00
 	sbc	a,b
 	jr	C,00135$
-;carwar.c:700: curPly->velX = 0;
+;carwar.c:705: curPly->velX = 0;
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:701: curPly->velY = 0;
+;carwar.c:706: curPly->velY = 0;
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	(hl),#0x00
@@ -17824,9 +17980,9 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	jp	00136$
 00135$:
-;carwar.c:705: speed = TRANSFERT;
-	ld	bc,#0x0004
-;carwar.c:706: dir = VectorToAngle256(curPly->velX, curPly->velY);
+;carwar.c:710: speed = TRANSFERT;
+	ld	bc,#0x0008
+;carwar.c:711: dir = VectorToAngle256(curPly->velX, curPly->velY);
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	a,(hl)
@@ -17849,7 +18005,7 @@ _StateUpdateGame:
 	pop	af
 	pop	bc
 	ld	-2 (ix),l
-;carwar.c:707: curPly->velX -= TRANSFERT * g_Cosinus256[dir];
+;carwar.c:712: curPly->velX -= TRANSFERT * g_Cosinus256[dir];
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	a,(hl)
@@ -17875,6 +18031,7 @@ _StateUpdateGame:
 	ld	l,a
 	add	hl,hl
 	add	hl,hl
+	add	hl,hl
 	ld	a,-19 (ix)
 	sub	a,l
 	ld	e,a
@@ -17886,7 +18043,7 @@ _StateUpdateGame:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:708: curPly->velY -= TRANSFERT * g_Sinus256[dir];
+;carwar.c:713: curPly->velY -= TRANSFERT * g_Sinus256[dir];
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	a,(hl)
@@ -17907,6 +18064,7 @@ _StateUpdateGame:
 	ld	l,a
 	add	hl,hl
 	add	hl,hl
+	add	hl,hl
 	ld	a,-19 (ix)
 	sub	a,l
 	ld	e,a
@@ -17919,7 +18077,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	(hl),d
 00136$:
-;carwar.c:712: if(curPly->flag & CAR_TURN_LEFT)
+;carwar.c:717: if(curPly->flag & CAR_TURN_LEFT)
 	ld	a,-4 (ix)
 	add	a,#0x0D
 	ld	-19 (ix),a
@@ -17931,7 +18089,7 @@ _StateUpdateGame:
 	ld	a,(hl)
 	and	a,#0x02
 	jr	Z,00138$
-;carwar.c:714: curPly->rot += cars[curPly->car].rotSpeed; 
+;carwar.c:719: curPly->rot += cars[curPly->car].rotSpeed; 
 	ld	a,-4 (ix)
 	add	a,#0x0E
 	ld	-13 (ix),a
@@ -17965,13 +18123,13 @@ _StateUpdateGame:
 	ld	h,-12 (ix)
 	ld	(hl),a
 00138$:
-;carwar.c:716: if(curPly->flag & CAR_TURN_RIGHT)
+;carwar.c:721: if(curPly->flag & CAR_TURN_RIGHT)
 	ld	l,-19 (ix)
 	ld	h,-18 (ix)
 	ld	a,(hl)
 	and	a,#0x01
 	jr	Z,00140$
-;carwar.c:718: curPly->rot -= cars[curPly->car].rotSpeed; 
+;carwar.c:723: curPly->rot -= cars[curPly->car].rotSpeed; 
 	ld	a,-4 (ix)
 	add	a,#0x0E
 	ld	-13 (ix),a
@@ -18005,13 +18163,13 @@ _StateUpdateGame:
 	ld	h,-12 (ix)
 	ld	(hl),a
 00140$:
-;carwar.c:720: if(curPly->flag & CAR_MOVE)
+;carwar.c:725: if(curPly->flag & CAR_MOVE)
 	ld	l,-19 (ix)
 	ld	h,-18 (ix)
 	ld	a,(hl)
 	and	a,#0x04
 	jr	Z,00142$
-;carwar.c:722: speed += cars[curPly->car].accel;
+;carwar.c:727: speed += cars[curPly->car].accel;
 	ld	a,-4 (ix)
 	add	a,#0x0C
 	ld	e,a
@@ -18036,7 +18194,7 @@ _StateUpdateGame:
 	ld	c,l
 	ld	b,h
 00142$:
-;carwar.c:724: curPly->velX += speed * g_Cosinus256[curPly->rot];
+;carwar.c:729: curPly->velX += speed * g_Cosinus256[curPly->rot];
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	a,(hl)
@@ -18085,7 +18243,7 @@ _StateUpdateGame:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:725: curPly->velY += speed * g_Sinus256[curPly->rot];
+;carwar.c:730: curPly->velY += speed * g_Sinus256[curPly->rot];
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	a,(hl)
@@ -18121,7 +18279,7 @@ _StateUpdateGame:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:728: x = Abs16(curPly->velX);
+;carwar.c:733: x = Abs16(curPly->velX);
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	c,(hl)
@@ -18145,11 +18303,11 @@ _StateUpdateGame:
 	ld	d,b
 00181$:
 	ld	-6 (ix),e
-;carwar.c:729: x >>= 8;
+;carwar.c:734: x >>= 8;
 	ld	-5 (ix), d
 	ld	-6 (ix), d
 	ld	-5 (ix),#0x00
-;carwar.c:730: y = Abs16(curPly->velY);
+;carwar.c:735: y = Abs16(curPly->velY);
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	c,(hl)
@@ -18171,10 +18329,10 @@ _StateUpdateGame:
 00182$:
 	ld	d,b
 00183$:
-;carwar.c:731: y >>= 8;
+;carwar.c:736: y >>= 8;
 	ld	c, d
 	ld	b,#0x00
-;carwar.c:732: speedSq = (x * x) + (y * y);
+;carwar.c:737: speedSq = (x * x) + (y * y);
 	push	bc
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
@@ -18201,7 +18359,7 @@ _StateUpdateGame:
 	adc	a,d
 	ld	-8 (ix), e
 	ld	-7 (ix), a
-;carwar.c:733: if(speedSq > cars[curPly->car].maxSpeed * cars[curPly->car].maxSpeed)
+;carwar.c:738: if(speedSq > cars[curPly->car].maxSpeed * cars[curPly->car].maxSpeed)
 	ld	a,-4 (ix)
 	add	a,#0x0C
 	ld	e,a
@@ -18243,7 +18401,7 @@ _StateUpdateGame:
 	ld	a,b
 	sbc	a,-7 (ix)
 	jp	NC,00160$
-;carwar.c:735: dir = VectorToAngle256(curPly->velX, curPly->velY);
+;carwar.c:740: dir = VectorToAngle256(curPly->velX, curPly->velY);
 	ld	l,-10 (ix)
 	ld	h,-9 (ix)
 	ld	a,(hl)
@@ -18266,7 +18424,7 @@ _StateUpdateGame:
 	pop	af
 	pop	de
 	ld	-2 (ix),l
-;carwar.c:736: curPly->velX = cars[curPly->car].maxSpeed * g_Cosinus256[dir];
+;carwar.c:741: curPly->velX = cars[curPly->car].maxSpeed * g_Cosinus256[dir];
 	ld	a,(de)
 	ld	e,a
 	add	a,a
@@ -18308,7 +18466,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:737: curPly->velY = cars[curPly->car].maxSpeed * g_Sinus256[dir];
+;carwar.c:742: curPly->velY = cars[curPly->car].maxSpeed * g_Sinus256[dir];
 	ld	hl,#_g_Sinus256
 	add	hl,de
 	ld	a,(hl)
@@ -18330,21 +18488,21 @@ _StateUpdateGame:
 	inc	hl
 	ld	(hl),b
 00160$:
-;carwar.c:668: for(i=0; i<CAR_NUM; i++)
+;carwar.c:673: for(i=0; i<CAR_NUM; i++)
 	ld	a,-15 (ix)
 	add	a,#0x0F
 	ld	-15 (ix),a
 	inc	-1 (ix)
 	jp	00158$
 00161$:
-;carwar.c:743: CheckCollision(0, 0, 1);
+;carwar.c:748: CheckCollision(0, 0, 1);
 	ld	hl,#0x0100
 	push	hl
 	ld	a,#0x00
 	push	af
 	inc	sp
 	call	_CheckCollision
-;carwar.c:745: CheckCollision(1, 0, 2);
+;carwar.c:750: CheckCollision(1, 0, 2);
 	inc	sp
 	ld	hl,#0x0200
 	ex	(sp),hl
@@ -18352,7 +18510,7 @@ _StateUpdateGame:
 	push	af
 	inc	sp
 	call	_CheckCollision
-;carwar.c:746: CheckCollision(2, 1, 2);
+;carwar.c:751: CheckCollision(2, 1, 2);
 	inc	sp
 	ld	hl,#0x0201
 	ex	(sp),hl
@@ -18360,7 +18518,7 @@ _StateUpdateGame:
 	push	af
 	inc	sp
 	call	_CheckCollision
-;carwar.c:748: CheckCollision(3, 0, 3);
+;carwar.c:753: CheckCollision(3, 0, 3);
 	inc	sp
 	ld	hl,#0x0300
 	ex	(sp),hl
@@ -18368,7 +18526,7 @@ _StateUpdateGame:
 	push	af
 	inc	sp
 	call	_CheckCollision
-;carwar.c:749: CheckCollision(4, 1, 3);
+;carwar.c:754: CheckCollision(4, 1, 3);
 	inc	sp
 	ld	hl,#0x0301
 	ex	(sp),hl
@@ -18376,7 +18534,7 @@ _StateUpdateGame:
 	push	af
 	inc	sp
 	call	_CheckCollision
-;carwar.c:750: CheckCollision(5, 2, 3);
+;carwar.c:755: CheckCollision(5, 2, 3);
 	inc	sp
 	ld	hl,#0x0302
 	ex	(sp),hl
@@ -18386,7 +18544,7 @@ _StateUpdateGame:
 	call	_CheckCollision
 	pop	af
 	inc	sp
-;carwar.c:753: for(i=0; i<CAR_NUM; i++)
+;carwar.c:758: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	-19 (ix),#0x00
 	ld	-15 (ix),#0x00
@@ -18395,7 +18553,7 @@ _StateUpdateGame:
 	ld	a,-1 (ix)
 	sub	a,#0x04
 	jp	NC,00165$
-;carwar.c:755: curPly = &game.players[i];
+;carwar.c:760: curPly = &game.players[i];
 	ld	a,#<(0x0107 + _game)
 	add	a,-19 (ix)
 	ld	c,a
@@ -18403,7 +18561,7 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-4 (ix), c
 	ld	-3 (ix), a
-;carwar.c:758: curPly->prevX = curPly->posX;
+;carwar.c:763: curPly->prevX = curPly->posX;
 	ld	a,-4 (ix)
 	add	a,#0x04
 	ld	e,a
@@ -18419,7 +18577,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:759: curPly->prevY = curPly->posY;
+;carwar.c:764: curPly->prevY = curPly->posY;
 	ld	a,-4 (ix)
 	add	a,#0x06
 	ld	e,a
@@ -18445,7 +18603,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	a,-9 (ix)
 	ld	(hl),a
-;carwar.c:760: curPly->posX += curPly->velX / 8;
+;carwar.c:765: curPly->posX += curPly->velX / (8 * 2);
 	ld	a,-4 (ix)
 	add	a,#0x08
 	ld	l, a
@@ -18456,7 +18614,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	d,(hl)
 	push	bc
-	ld	hl,#0x0008
+	ld	hl,#0x0010
 	push	hl
 	push	de
 	call	__divsint_rrx_s
@@ -18475,7 +18633,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:761: curPly->posY -= curPly->velY / 8;
+;carwar.c:766: curPly->posY -= curPly->velY / (8 * 2);
 	ld	a,-4 (ix)
 	add	a,#0x0A
 	ld	l, a
@@ -18485,7 +18643,7 @@ _StateUpdateGame:
 	ld	c,(hl)
 	inc	hl
 	ld	b,(hl)
-	ld	hl,#0x0008
+	ld	hl,#0x0010
 	push	hl
 	push	bc
 	call	__divsint_rrx_s
@@ -18504,11 +18662,11 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:763: if(curPly->posY < (5 << 8))
+;carwar.c:768: if(curPly->posY < (5 << 8))
 	ld	a,b
 	sub	a,#0x05
 	jr	NC,00148$
-;carwar.c:764: curPly->posY = (5 << 8);
+;carwar.c:769: curPly->posY = (5 << 8);
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	(hl),#0x00
@@ -18516,7 +18674,7 @@ _StateUpdateGame:
 	ld	(hl),#0x05
 	jr	00149$
 00148$:
-;carwar.c:765: else if(curPly->posY > (206 << 8))
+;carwar.c:770: else if(curPly->posY > (206 << 8))
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	a,(hl)
@@ -18528,14 +18686,14 @@ _StateUpdateGame:
 	ld	a,#0xCE
 	sbc	a,h
 	jr	NC,00149$
-;carwar.c:766: curPly->posY = (206 << 8);
+;carwar.c:771: curPly->posY = (206 << 8);
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0xCE
 00149$:
-;carwar.c:769: VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY), (13 * i) + (52 * game.page), 212, 13, 11);
+;carwar.c:774: VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY), (13 * i) + (52 * game.page), 212, 13, 11);
 	ld	hl,#0x0004 + _game
 	ld	e, (hl)
 	ld	d,#0x00
@@ -18605,7 +18763,7 @@ _StateUpdateGame:
 	ld	hl,#0x000C
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:753: for(i=0; i<CAR_NUM; i++)
+;carwar.c:758: for(i=0; i<CAR_NUM; i++)
 	ld	a,-19 (ix)
 	add	a,#0x0F
 	ld	-19 (ix),a
@@ -18618,7 +18776,7 @@ _StateUpdateGame:
 	inc	-1 (ix)
 	jp	00162$
 00165$:
-;carwar.c:774: for(i=0; i<CAR_NUM; i++)
+;carwar.c:779: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	b,#0x00
 	ld	-19 (ix),#0x00
@@ -18627,7 +18785,7 @@ _StateUpdateGame:
 	ld	a,-1 (ix)
 	sub	a,#0x04
 	jp	NC,00169$
-;carwar.c:776: VRAMtoVRAMTrans(13 * (game.players[i].rot / 16), 256 + 212 + (11 * i), PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY), 13, 11);
+;carwar.c:781: VRAMtoVRAMTrans(13 * (game.players[i].rot / 16), 256 + 212 + (11 * i), PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY), 13, 11);
 	ld	hl,#0x0005 + _game
 	ld	a,(hl)
 	ld	-17 (ix),a
@@ -18730,7 +18888,7 @@ _StateUpdateGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	bc
-;carwar.c:774: for(i=0; i<CAR_NUM; i++)
+;carwar.c:779: for(i=0; i<CAR_NUM; i++)
 	ld	a,b
 	add	a,#0x0F
 	ld	b,a
@@ -18743,13 +18901,13 @@ _StateUpdateGame:
 	inc	-1 (ix)
 	jp	00166$
 00169$:
-;carwar.c:779: waitRetrace();
+;carwar.c:784: waitRetrace();
 	call	_waitRetrace
 	ld	sp,ix
 	pop	ix
 	ret
 _StateUpdateGame_end::
-;carwar.c:783: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
+;carwar.c:788: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 ;	---------------------------------
 ; Function InitializePlayer
 ; ---------------------------------
@@ -18760,7 +18918,7 @@ _InitializePlayer:
 	add	ix,sp
 	push	af
 	push	af
-;carwar.c:785: ply->car = car; // car index
+;carwar.c:790: ply->car = car; // car index
 	ld	c,4 (ix)
 	ld	b,5 (ix)
 	ld	hl,#0x000C
@@ -18768,7 +18926,7 @@ _InitializePlayer:
 	ex	de,hl
 	ld	a,6 (ix)
 	ld	(de),a
-;carwar.c:786: ply->posX = posX << 8; // position X
+;carwar.c:791: ply->posX = posX << 8; // position X
 	ld	d, 7 (ix)
 	ld	e,#0x00
 	ld	l,c
@@ -18776,7 +18934,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:787: ply->posY = posY << 8; // position Y
+;carwar.c:792: ply->posY = posY << 8; // position Y
 	ld	hl,#0x0002
 	add	hl,bc
 	ld	-2 (ix),l
@@ -18788,7 +18946,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:788: ply->prevX = ply->posX; // previous position X
+;carwar.c:793: ply->prevX = ply->posX; // previous position X
 	ld	hl,#0x0004
 	add	hl,bc
 	ld	-4 (ix),l
@@ -18803,7 +18961,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:789: ply->prevY = ply->posY; // previous position Y
+;carwar.c:794: ply->prevY = ply->posY; // previous position Y
 	ld	hl,#0x0006
 	add	hl,bc
 	ld	-4 (ix),l
@@ -18818,19 +18976,19 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:790: ply->rot = 64; // rotation
+;carwar.c:795: ply->rot = 64; // rotation
 	ld	hl,#0x000E
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x40
 	ld	(de),a
-;carwar.c:791: ply->velX = 0; // velocity X
+;carwar.c:796: ply->velX = 0; // velocity X
 	ld	hl,#0x0008
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:792: ply->velY = 0; // velocity Y
+;carwar.c:797: ply->velY = 0; // velocity Y
 	ld	hl,#0x000A
 	add	hl,bc
 	ld	(hl),#0x00
@@ -18840,7 +18998,7 @@ _InitializePlayer:
 	pop	ix
 	ret
 _InitializePlayer_end::
-;carwar.c:796: i8 AngleDifferent64(i8 angleA, i8 angleB)
+;carwar.c:801: i8 AngleDifferent64(i8 angleA, i8 angleB)
 ;	---------------------------------
 ; Function AngleDifferent64
 ; ---------------------------------
@@ -18849,39 +19007,39 @@ _AngleDifferent64:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:799: diff = angleB - angleA;
+;carwar.c:804: diff = angleB - angleA;
 	ld	a,5 (ix)
 	sub	a,4 (ix)
-;carwar.c:800: if(diff < -32)
+;carwar.c:805: if(diff < -32)
 	ld	c,a
 	sub	a,#0xE0
 	jp	PO,00109$
 	xor	a,#0x80
 00109$:
 	jp	P,00102$
-;carwar.c:801: diff += 64;
+;carwar.c:806: diff += 64;
 	ld	a,c
 	add	a,#0x40
 	ld	c,a
 00102$:
-;carwar.c:802: if(diff > 32)
+;carwar.c:807: if(diff > 32)
 	ld	a,#0x20
 	sub	a,c
 	jp	PO,00110$
 	xor	a,#0x80
 00110$:
 	jp	P,00104$
-;carwar.c:803: diff -= 64;
+;carwar.c:808: diff -= 64;
 	ld	a,c
 	add	a,#0xC0
 	ld	c,a
 00104$:
-;carwar.c:804: return diff;
+;carwar.c:809: return diff;
 	ld	l,c
 	pop	ix
 	ret
 _AngleDifferent64_end::
-;carwar.c:821: u8 VectorToAngle256(i16 x, i16 y)
+;carwar.c:826: u8 VectorToAngle256(i16 x, i16 y)
 ;	---------------------------------
 ; Function VectorToAngle256
 ; ---------------------------------
@@ -18890,7 +19048,7 @@ _VectorToAngle256:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:823: while(Abs16(x) > 15 || Abs16(y) > 15)
+;carwar.c:828: while(Abs16(x) > 15 || Abs16(y) > 15)
 00102$:
 	ld	c,4 (ix)
 	ld	b,5 (ix)
@@ -18945,7 +19103,7 @@ _VectorToAngle256:
 	sbc	a,d
 	jr	NC,00104$
 00103$:
-;carwar.c:825: x /= 2;
+;carwar.c:830: x /= 2;
 	ld	hl,#0x0002
 	push	hl
 	ld	l,4 (ix)
@@ -18956,7 +19114,7 @@ _VectorToAngle256:
 	pop	af
 	ld	4 (ix), l
 	ld	5 (ix), h
-;carwar.c:826: y /= 2;
+;carwar.c:831: y /= 2;
 	ld	hl,#0x0002
 	push	hl
 	ld	l,6 (ix)
@@ -18969,21 +19127,21 @@ _VectorToAngle256:
 	ld	7 (ix), h
 	jr	00102$
 00104$:
-;carwar.c:828: x += 15; // x E [0;30]
+;carwar.c:833: x += 15; // x E [0;30]
 	ld	a,4 (ix)
 	add	a,#0x0F
 	ld	4 (ix),a
 	ld	a,5 (ix)
 	adc	a,#0x00
 	ld	5 (ix),a
-;carwar.c:829: y += 15; // x E [0;30]
+;carwar.c:834: y += 15; // x E [0;30]
 	ld	a,6 (ix)
 	add	a,#0x0F
 	ld	6 (ix),a
 	ld	a,7 (ix)
 	adc	a,#0x00
 	ld	7 (ix),a
-;carwar.c:830: return g_Rotation16[(x * 31) + y];
+;carwar.c:835: return g_Rotation16[(x * 31) + y];
 	ld	e,4 (ix)
 	ld	d,5 (ix)
 	ld	l,e
@@ -19009,7 +19167,7 @@ _VectorToAngle256:
 	pop	ix
 	ret
 _VectorToAngle256_end::
-;carwar.c:834: u16 GetVectorLenght(i16 x, i16 y)
+;carwar.c:839: u16 GetVectorLenght(i16 x, i16 y)
 ;	---------------------------------
 ; Function GetVectorLenght
 ; ---------------------------------
@@ -19019,9 +19177,9 @@ _GetVectorLenght:
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;carwar.c:839: div = 1;
+;carwar.c:844: div = 1;
 	ld	-1 (ix),#0x01
-;carwar.c:840: lenSq = x*x + y*y; // get squared length
+;carwar.c:845: lenSq = x*x + y*y; // get squared length
 	ld	l,4 (ix)
 	ld	h,5 (ix)
 	push	hl
@@ -19049,19 +19207,19 @@ _GetVectorLenght:
 	ld	a,d
 	adc	a,b
 	ld	b,a
-;carwar.c:841: while(lenSq >= 1024)
+;carwar.c:846: while(lenSq >= 1024)
 00101$:
 	ld	a,b
 	sub	a,#0x04
 	jr	C,00103$
-;carwar.c:843: lenSq /= 2;
+;carwar.c:848: lenSq /= 2;
 	srl	b
 	rr	c
-;carwar.c:844: div *= 2;
+;carwar.c:849: div *= 2;
 	sla	-1 (ix)
 	jr	00101$
 00103$:
-;carwar.c:846: div = g_SquareRoot1024[div] >> 3; // squared-root the div factor
+;carwar.c:851: div = g_SquareRoot1024[div] >> 3; // squared-root the div factor
 	ld	a,#<(_g_SquareRoot1024)
 	add	a,-1 (ix)
 	ld	e,a
@@ -19073,7 +19231,7 @@ _GetVectorLenght:
 	srl	a
 	srl	a
 	ld	-1 (ix),a
-;carwar.c:847: ret = g_SquareRoot1024[lenSq] >> 3; // get square root (.2^3)
+;carwar.c:852: ret = g_SquareRoot1024[lenSq] >> 3; // get square root (.2^3)
 	ld	hl,#_g_SquareRoot1024
 	add	hl,bc
 	ld	a,(hl)
@@ -19082,7 +19240,7 @@ _GetVectorLenght:
 	srl	a
 	ld	c, a
 	ld	b,#0x00
-;carwar.c:848: return ret * div; // get length
+;carwar.c:853: return ret * div; // get length
 	ld	l,-1 (ix)
 	ld	h,#0x00
 	push	hl
@@ -19092,7 +19250,7 @@ _GetVectorLenght:
 	pop	ix
 	ret
 _GetVectorLenght_end::
-;carwar.c:852: void CheckCollision(u8 idx, u8 car1, u8 car2)
+;carwar.c:857: void CheckCollision(u8 idx, u8 car1, u8 car2)
 ;	---------------------------------
 ; Function CheckCollision
 ; ---------------------------------
@@ -19104,7 +19262,7 @@ _CheckCollision:
 	ld	hl,#-12
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:856: dist = game.players[car2].posX - game.players[car1].posX;
+;carwar.c:861: dist = game.players[car2].posX - game.players[car1].posX;
 	ld	a,6 (ix)
 	ld	e,a
 	add	a,a
@@ -19148,13 +19306,13 @@ _CheckCollision:
 	ld	a,-11 (ix)
 	sbc	a,h
 	ld	-10 (ix), l
-;carwar.c:857: x1 = dist >> 8;
+;carwar.c:862: x1 = dist >> 8;
 	ld	-9 (ix), a
 	ld	-2 (ix), a
 	rlc	a
 	sbc	a,a
 	ld	-1 (ix),a
-;carwar.c:858: dist = game.players[car2].posY - game.players[car1].posY;
+;carwar.c:863: dist = game.players[car2].posY - game.players[car1].posY;
 	ld	a,#<(0x0107 + _game)
 	add	a,c
 	ld	l, a
@@ -19186,13 +19344,13 @@ _CheckCollision:
 	ld	a,-11 (ix)
 	sbc	a,h
 	ld	-10 (ix), l
-;carwar.c:859: y1 = dist >> 8;
+;carwar.c:864: y1 = dist >> 8;
 	ld	-9 (ix), a
 	ld	-4 (ix), a
 	rlc	a
 	sbc	a,a
 	ld	-3 (ix),a
-;carwar.c:860: dist = (x1 * x1) + (y1 * y1);
+;carwar.c:865: dist = (x1 * x1) + (y1 * y1);
 	push	bc
 	ld	l,-2 (ix)
 	ld	h,-1 (ix)
@@ -19223,7 +19381,7 @@ _CheckCollision:
 	adc	a,d
 	ld	-10 (ix), e
 	ld	-9 (ix), a
-;carwar.c:861: if(dist < 11 * 11) // Collision occured
+;carwar.c:866: if(dist < 11 * 11) // Collision occured
 	ld	a,-10 (ix)
 	sub	a,#0x79
 	ld	a,-9 (ix)
@@ -19232,7 +19390,7 @@ _CheckCollision:
 	xor	a,#0x80
 00106$:
 	jp	P,00103$
-;carwar.c:868: x1 = game.players[car1].velX;
+;carwar.c:873: x1 = game.players[car1].velX;
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	e,a
@@ -19246,7 +19404,7 @@ _CheckCollision:
 	ld	h,(hl)
 	ld	-2 (ix), a
 	ld	-1 (ix),h
-;carwar.c:869: y1 = game.players[car1].velY;
+;carwar.c:874: y1 = game.players[car1].velY;
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	e,a
@@ -19260,7 +19418,7 @@ _CheckCollision:
 	ld	h,(hl)
 	ld	-4 (ix), a
 	ld	-3 (ix),h
-;carwar.c:870: x2 = game.players[car2].velX;
+;carwar.c:875: x2 = game.players[car2].velX;
 	ld	a,#<(0x0107 + _game)
 	add	a,c
 	ld	e,a
@@ -19274,7 +19432,7 @@ _CheckCollision:
 	ld	h,(hl)
 	ld	-6 (ix), a
 	ld	-5 (ix),h
-;carwar.c:871: y2 = game.players[car2].velY;
+;carwar.c:876: y2 = game.players[car2].velY;
 	ld	a,#<(0x0107 + _game)
 	add	a,c
 	ld	e,a
@@ -19288,7 +19446,7 @@ _CheckCollision:
 	ld	h,(hl)
 	ld	-8 (ix), a
 	ld	-7 (ix),h
-;carwar.c:873: game.players[car1].velX = x2 - x1;
+;carwar.c:878: game.players[car1].velX = x2 - x1;
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	e,a
@@ -19310,7 +19468,7 @@ _CheckCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:874: game.players[car1].velY = y2 - y1;
+;carwar.c:879: game.players[car1].velY = y2 - y1;
 	ld	a,#<(0x0107 + _game)
 	add	a,b
 	ld	b,a
@@ -19334,7 +19492,7 @@ _CheckCollision:
 	ld	(hl),d
 	inc	hl
 	ld	(hl),b
-;carwar.c:875: game.players[car2].velX = x1 - x2;
+;carwar.c:880: game.players[car2].velX = x1 - x2;
 	ld	a,#<(0x0107 + _game)
 	add	a,c
 	ld	e,a
@@ -19356,7 +19514,7 @@ _CheckCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),e
-;carwar.c:876: game.players[car2].velY = y1 - y2;
+;carwar.c:881: game.players[car2].velY = y1 - y2;
 	ld	a,#<(0x0107 + _game)
 	add	a,c
 	ld	c,a
@@ -19383,7 +19541,7 @@ _CheckCollision:
 	pop	ix
 	ret
 _CheckCollision_end::
-;carwar.c:884: void StateBuildTrack()
+;carwar.c:889: void StateBuildTrack()
 ;	---------------------------------
 ; Function StateBuildTrack
 ; ---------------------------------
@@ -19395,7 +19553,7 @@ _StateBuildTrack:
 	ld	hl,#-29
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:890: PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
+;carwar.c:895: PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
 	ld	c,#<(_defaultColor)
 	ld	b,#>(_defaultColor)
 	push	bc
@@ -19406,7 +19564,7 @@ _StateBuildTrack:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:892: FillVRAM(0, 0, 128, 212, COLOR_LIGHTBLUE);
+;carwar.c:897: FillVRAM(0, 0, 128, 212, COLOR_LIGHTBLUE);
 	ld	h,#0x4B
 	ex	(sp),hl
 	inc	sp
@@ -19422,7 +19580,7 @@ _StateBuildTrack:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:893: FillVRAM(128, 0, 128, 212, COLOR_LIGHTBLUE);
+;carwar.c:898: FillVRAM(128, 0, 128, 212, COLOR_LIGHTBLUE);
 	ld	a,#0x4B
 	push	af
 	inc	sp
@@ -19438,13 +19596,13 @@ _StateBuildTrack:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:894: for(i=0; i<7; i++)
+;carwar.c:899: for(i=0; i<7; i++)
 	ld	-1 (ix),#0x00
 00134$:
 	ld	a,-1 (ix)
 	sub	a,#0x07
 	jp	NC,00137$
-;carwar.c:896: for(j=0; j<6; j++)
+;carwar.c:901: for(j=0; j<6; j++)
 	ld	-2 (ix),#0x00
 	ld	-17 (ix),#0x00
 	ld	-16 (ix),#0x00
@@ -19452,7 +19610,7 @@ _StateBuildTrack:
 	ld	a,-2 (ix)
 	sub	a,#0x06
 	jp	NC,00136$
-;carwar.c:898: block = &track01.tiles[i + j * 7];
+;carwar.c:903: block = &track01.tiles[i + j * 7];
 	ld	hl,#0x0002 + _track01
 	ld	e,(hl)
 	inc	hl
@@ -19483,14 +19641,14 @@ _StateBuildTrack:
 	adc	a,b
 	ld	-9 (ix), c
 	ld	-8 (ix), a
-;carwar.c:899: if((block->tile & 0x0F) == 2) // Plein block
+;carwar.c:904: if((block->tile & 0x0F) == 2) // Plein block
 	ld	l,-9 (ix)
 	ld	h,-8 (ix)
 	ld	a,(hl)
 	and	a,#0x0F
 	sub	a,#0x02
 	jr	NZ,00152$
-;carwar.c:901: FillVRAM(16 + (32 * i), 8 + (32 * j), 32, 32, block->color1);
+;carwar.c:906: FillVRAM(16 + (32 * i), 8 + (32 * j), 32, 32, block->color1);
 	ld	c,-9 (ix)
 	ld	b,-8 (ix)
 	inc	bc
@@ -19537,7 +19695,7 @@ _StateBuildTrack:
 	add	hl,sp
 	ld	sp,hl
 	jp	00132$
-;carwar.c:905: for(x=0; x<32; x++)
+;carwar.c:910: for(x=0; x<32; x++)
 00152$:
 	ld	c,-9 (ix)
 	ld	b,-8 (ix)
@@ -19569,7 +19727,7 @@ _StateBuildTrack:
 	ld	a,-4 (ix)
 	sbc	a,#0x00
 	jp	NC,00132$
-;carwar.c:907: for(y=0; y<32; y++)
+;carwar.c:912: for(y=0; y<32; y++)
 	ld	a,#0x1F
 	sub	a,-5 (ix)
 	ld	-11 (ix),a
@@ -19602,7 +19760,7 @@ _StateBuildTrack:
 	ld	a,-6 (ix)
 	sbc	a,#0x00
 	jp	NC,00128$
-;carwar.c:909: if((block->tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
+;carwar.c:914: if((block->tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
 	ld	l,-9 (ix)
 	ld	h,-8 (ix)
 	ld	a,(hl)
@@ -19620,7 +19778,7 @@ _StateBuildTrack:
 	ld	-28 (ix),a
 	jp	00115$
 00114$:
-;carwar.c:910: else if((block->tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
+;carwar.c:915: else if((block->tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
 	ld	a,l
 	sub	a,#0x10
 	jr	NZ,00111$
@@ -19634,7 +19792,7 @@ _StateBuildTrack:
 	ld	-28 (ix),a
 	jp	00115$
 00111$:
-;carwar.c:911: else if((block->tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
+;carwar.c:916: else if((block->tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
 	ld	a,l
 	sub	a,#0x20
 	jr	NZ,00108$
@@ -19650,7 +19808,7 @@ _StateBuildTrack:
 	ld	-28 (ix),a
 	jr	00115$
 00108$:
-;carwar.c:912: else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
+;carwar.c:917: else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
 	ld	a,l
 	sub	a,#0x30
 	jr	NZ,00105$
@@ -19666,7 +19824,7 @@ _StateBuildTrack:
 	ld	-28 (ix),a
 	jr	00115$
 00105$:
-;carwar.c:913: else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
+;carwar.c:918: else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
 	ld	a,l
 	sub	a,#0x40
 	jr	NZ,00102$
@@ -19682,7 +19840,7 @@ _StateBuildTrack:
 	ld	-28 (ix),a
 	jr	00115$
 00102$:
-;carwar.c:914: else /* SYM_V */                         { lx = 31 - x; ly = y; }
+;carwar.c:919: else /* SYM_V */                         { lx = 31 - x; ly = y; }
 	ld	a,-11 (ix)
 	ld	-27 (ix),a
 	ld	a,-10 (ix)
@@ -19692,7 +19850,7 @@ _StateBuildTrack:
 	ld	a,-6 (ix)
 	ld	-28 (ix),a
 00115$:
-;carwar.c:915: byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx / 8) + (ly * 32 / 8)];
+;carwar.c:920: byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx / 8) + (ly * 32 / 8)];
 	ld	l,-9 (ix)
 	ld	h,-8 (ix)
 	ld	a,(hl)
@@ -19734,7 +19892,7 @@ _StateBuildTrack:
 	add	hl, de
 	ld	a,(hl)
 	ld	-3 (ix),a
-;carwar.c:916: if(byte & (1 << (7 - (lx & 0x07))))
+;carwar.c:921: if(byte & (1 << (7 - (lx & 0x07))))
 	ld	a,-27 (ix)
 	and	a,#0x07
 	ld	l,a
@@ -19766,7 +19924,7 @@ _StateBuildTrack:
 	ld	a,l
 	or	a,h
 	jr	Z,00117$
-;carwar.c:917: WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
+;carwar.c:922: WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
 	ld	l,-13 (ix)
 	ld	h,-12 (ix)
 	ld	a,(hl)
@@ -19808,7 +19966,7 @@ _StateBuildTrack:
 	pop	bc
 	jr	00124$
 00117$:
-;carwar.c:919: WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color0);
+;carwar.c:924: WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color0);
 	ld	a,(bc)
 	ld	-29 (ix),a
 	ld	l,-2 (ix)
@@ -19847,19 +20005,19 @@ _StateBuildTrack:
 	pop	af
 	pop	bc
 00124$:
-;carwar.c:907: for(y=0; y<32; y++)
+;carwar.c:912: for(y=0; y<32; y++)
 	inc	-7 (ix)
 	jp	NZ,00122$
 	inc	-6 (ix)
 	jp	00122$
 00128$:
-;carwar.c:905: for(x=0; x<32; x++)
+;carwar.c:910: for(x=0; x<32; x++)
 	inc	-5 (ix)
 	jp	NZ,00126$
 	inc	-4 (ix)
 	jp	00126$
 00132$:
-;carwar.c:896: for(j=0; j<6; j++)
+;carwar.c:901: for(j=0; j<6; j++)
 	ld	a,-17 (ix)
 	add	a,#0x07
 	ld	-17 (ix),a
@@ -19869,11 +20027,11 @@ _StateBuildTrack:
 	inc	-2 (ix)
 	jp	00130$
 00136$:
-;carwar.c:894: for(i=0; i<7; i++)
+;carwar.c:899: for(i=0; i<7; i++)
 	inc	-1 (ix)
 	jp	00134$
 00137$:
-;carwar.c:925: ClearSprite();
+;carwar.c:930: ClearSprite();
 	call	_ClearSprite
 	ld	sp,ix
 	pop	ix
@@ -19884,7 +20042,7 @@ __str_25:
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x00
-;carwar.c:929: void StateShadeTrack()
+;carwar.c:934: void StateShadeTrack()
 ;	---------------------------------
 ; Function StateShadeTrack
 ; ---------------------------------
@@ -19896,7 +20054,7 @@ _StateShadeTrack:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:934: PrintSprite(64, 64, "SHADE\nTRACK", (u16)&defaultColor);
+;carwar.c:939: PrintSprite(64, 64, "SHADE\nTRACK", (u16)&defaultColor);
 	ld	c,#<(_defaultColor)
 	ld	b,#>(_defaultColor)
 	push	bc
@@ -19907,19 +20065,19 @@ _StateShadeTrack:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:936: cur = ReadVRAM(0);
+;carwar.c:941: cur = ReadVRAM(0);
 	ld	hl,#0x0000
 	ex	(sp),hl
 	call	_ReadVRAM
 	pop	af
-;carwar.c:937: for(x=0; x<256; x++)
+;carwar.c:942: for(x=0; x<256; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00124$:
 	ld	a,-1 (ix)
 	sub	a,#0x01
 	jp	NC,00127$
-;carwar.c:939: for(y=0; y<211; y++)
+;carwar.c:944: for(y=0; y<211; y++)
 	ld	-4 (ix),#0x00
 	ld	-3 (ix),#0x00
 00120$:
@@ -19928,7 +20086,7 @@ _StateShadeTrack:
 	ld	a,-3 (ix)
 	sbc	a,#0x00
 	jp	NC,00126$
-;carwar.c:941: cur = ReadVRAM(x + 256 * y);
+;carwar.c:946: cur = ReadVRAM(x + 256 * y);
 	ld	h,-4 (ix)
 	ld	l,#0x00
 	ld	a,-2 (ix)
@@ -19941,7 +20099,7 @@ _StateShadeTrack:
 	call	_ReadVRAM
 	pop	af
 	ld	c,l
-;carwar.c:942: next = ReadVRAM(x + 256 * (y + 1));
+;carwar.c:947: next = ReadVRAM(x + 256 * (y + 1));
 	ld	a,-4 (ix)
 	add	a,#0x01
 	ld	b,a
@@ -19961,7 +20119,7 @@ _StateShadeTrack:
 	pop	af
 	pop	bc
 	ld	b,l
-;carwar.c:943: if(game.colorCode[cur] < OP_ROAD && game.colorCode[next] >= OP_ROAD)
+;carwar.c:948: if(game.colorCode[cur] < OP_ROAD && game.colorCode[next] >= OP_ROAD)
 	ld	l,c
 	ld	h,#0x00
 	ld	a,#<(0x0007 + _game)
@@ -19984,7 +20142,7 @@ _StateShadeTrack:
 	ld	a,(de)
 	sub	a,#0x40
 	jp	C,00122$
-;carwar.c:945: for(i=0; i<BLOCK_SHADOW; i++)
+;carwar.c:950: for(i=0; i<BLOCK_SHADOW; i++)
 	ld	-6 (ix),#0x00
 	ld	-5 (ix),#0x00
 00105$:
@@ -19993,7 +20151,7 @@ _StateShadeTrack:
 	ld	a,-5 (ix)
 	sbc	a,#0x00
 	jr	NC,00108$
-;carwar.c:947: cur = ReadVRAM(x + 256 * (y - i));
+;carwar.c:952: cur = ReadVRAM(x + 256 * (y - i));
 	ld	a,-4 (ix)
 	sub	a,-6 (ix)
 	ld	b,a
@@ -20018,7 +20176,7 @@ _StateShadeTrack:
 	pop	de
 	pop	bc
 	ld	c,l
-;carwar.c:948: if((y - i < 212) && (game.colorCode[cur] < OP_ROAD))
+;carwar.c:953: if((y - i < 212) && (game.colorCode[cur] < OP_ROAD))
 	ld	a,b
 	sub	a,#0xD4
 	ld	a,e
@@ -20035,7 +20193,7 @@ _StateShadeTrack:
 	ld	a,(de)
 	sub	a,#0x40
 	jr	NC,00108$
-;carwar.c:949: WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
+;carwar.c:954: WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
 	ld	b, #0x02
 	push	bc
 	call	_DarkenColor
@@ -20052,13 +20210,13 @@ _StateShadeTrack:
 	call	_WriteVRAM
 	pop	af
 	pop	af
-;carwar.c:945: for(i=0; i<BLOCK_SHADOW; i++)
+;carwar.c:950: for(i=0; i<BLOCK_SHADOW; i++)
 	inc	-6 (ix)
 	jr	NZ,00105$
 	inc	-5 (ix)
 	jr	00105$
 00108$:
-;carwar.c:953: for(i=1; i<=ROAD_SHADOW; i++)
+;carwar.c:958: for(i=1; i<=ROAD_SHADOW; i++)
 	ld	-6 (ix),#0x01
 	ld	-5 (ix),#0x00
 00113$:
@@ -20067,7 +20225,7 @@ _StateShadeTrack:
 	ld	a,#0x00
 	sbc	a,-5 (ix)
 	jr	C,00116$
-;carwar.c:955: cur = ReadVRAM(x + 256 * (y + i));
+;carwar.c:960: cur = ReadVRAM(x + 256 * (y + i));
 	ld	a,-4 (ix)
 	add	a,-6 (ix)
 	ld	b,a
@@ -20092,7 +20250,7 @@ _StateShadeTrack:
 	pop	de
 	pop	bc
 	ld	c,l
-;carwar.c:956: if((y + i < 212) && (game.colorCode[cur] >= OP_ROAD))
+;carwar.c:961: if((y + i < 212) && (game.colorCode[cur] >= OP_ROAD))
 	ld	a,b
 	sub	a,#0xD4
 	ld	a,e
@@ -20109,7 +20267,7 @@ _StateShadeTrack:
 	ld	a,(de)
 	sub	a,#0x40
 	jr	C,00116$
-;carwar.c:957: WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
+;carwar.c:962: WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
 	ld	b, #0x02
 	push	bc
 	call	_DarkenColor
@@ -20126,13 +20284,13 @@ _StateShadeTrack:
 	call	_WriteVRAM
 	pop	af
 	pop	af
-;carwar.c:953: for(i=1; i<=ROAD_SHADOW; i++)
+;carwar.c:958: for(i=1; i<=ROAD_SHADOW; i++)
 	inc	-6 (ix)
 	jr	NZ,00113$
 	inc	-5 (ix)
 	jr	00113$
 00116$:
-;carwar.c:961: y += i;
+;carwar.c:966: y += i;
 	ld	a,-4 (ix)
 	add	a,-6 (ix)
 	ld	-4 (ix),a
@@ -20140,19 +20298,19 @@ _StateShadeTrack:
 	adc	a,-5 (ix)
 	ld	-3 (ix),a
 00122$:
-;carwar.c:939: for(y=0; y<211; y++)
+;carwar.c:944: for(y=0; y<211; y++)
 	inc	-4 (ix)
 	jp	NZ,00120$
 	inc	-3 (ix)
 	jp	00120$
 00126$:
-;carwar.c:937: for(x=0; x<256; x++)
+;carwar.c:942: for(x=0; x<256; x++)
 	inc	-2 (ix)
 	jp	NZ,00124$
 	inc	-1 (ix)
 	jp	00124$
 00127$:
-;carwar.c:965: ClearSprite();
+;carwar.c:970: ClearSprite();
 	call	_ClearSprite
 	ld	sp,ix
 	pop	ix
@@ -20163,7 +20321,7 @@ __str_26:
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x00
-;carwar.c:971: u8 DarkenColor(u8 color, u8 power)
+;carwar.c:976: u8 DarkenColor(u8 color, u8 power)
 ;	---------------------------------
 ; Function DarkenColor
 ; ---------------------------------
@@ -20173,7 +20331,7 @@ _DarkenColor:
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;carwar.c:974: g = ((color & 0xE0) >> 5);
+;carwar.c:979: g = ((color & 0xE0) >> 5);
 	ld	a,4 (ix)
 	and	a,#0xE0
 	ld	c,a
@@ -20182,17 +20340,17 @@ _DarkenColor:
 	srl	c
 	srl	c
 	srl	c
-;carwar.c:975: r = ((color & 0x1C) >> 2);
+;carwar.c:980: r = ((color & 0x1C) >> 2);
 	ld	a,4 (ix)
 	and	a,#0x1C
 	ld	b,a
 	srl	b
 	srl	b
-;carwar.c:976: b = (color & 0x03);
+;carwar.c:981: b = (color & 0x03);
 	ld	a,4 (ix)
 	and	a,#0x03
 	ld	-1 (ix),a
-;carwar.c:977: switch(power)
+;carwar.c:982: switch(power)
 	ld	a,#0x07
 	sub	a,5 (ix)
 	jp	C,00109$
@@ -20214,9 +20372,9 @@ _DarkenColor:
 	jp	00106$
 	jp	00107$
 	jp	00108$
-;carwar.c:979: case 0: break;                       // x1
+;carwar.c:984: case 0: break;                       // x1
 	jp	00110$
-;carwar.c:980: case 1: TransformColor(7, 3); break; // x0.875
+;carwar.c:985: case 1: TransformColor(7, 3); break; // x0.875
 00102$:
 	ld	e,c
 	ld	d,#0x00
@@ -20264,7 +20422,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:981: case 2: TransformColor(3, 2); break; // x0.75
+;carwar.c:986: case 2: TransformColor(3, 2); break; // x0.75
 00103$:
 	ld	e,c
 	ld	d,#0x00
@@ -20300,7 +20458,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:982: case 3: TransformColor(5, 3); break; // x0.625
+;carwar.c:987: case 3: TransformColor(5, 3); break; // x0.625
 00104$:
 	ld	e,c
 	ld	d,#0x00
@@ -20345,7 +20503,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:983: case 4: TransformColor(1, 1); break; // x0.5
+;carwar.c:988: case 4: TransformColor(1, 1); break; // x0.5
 00105$:
 	ld	l,c
 	ld	h,#0x00
@@ -20363,7 +20521,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:984: case 5: TransformColor(3, 3); break; // x0.375
+;carwar.c:989: case 5: TransformColor(3, 3); break; // x0.375
 00106$:
 	ld	e,c
 	ld	d,#0x00
@@ -20405,7 +20563,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jr	00110$
-;carwar.c:985: case 6: TransformColor(1, 2); break; // x0.25
+;carwar.c:990: case 6: TransformColor(1, 2); break; // x0.25
 00107$:
 	ld	l,c
 	ld	h,#0x00
@@ -20429,9 +20587,9 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jr	00110$
-;carwar.c:986: case 7:                              // x0.125
+;carwar.c:991: case 7:                              // x0.125
 00108$:
-;carwar.c:987: default: TransformColor(1, 3); break;
+;carwar.c:992: default: TransformColor(1, 3); break;
 00109$:
 	ld	l,c
 	ld	h,#0x00
@@ -20460,9 +20618,9 @@ _DarkenColor:
 	sra	h
 	rr	l
 	ld	-1 (ix),l
-;carwar.c:988: }
+;carwar.c:993: }
 00110$:
-;carwar.c:989: return (g << 5) + (r << 2) + b;
+;carwar.c:994: return (g << 5) + (r << 2) + b;
 	ld	a,c
 	rrca
 	rrca
@@ -20479,7 +20637,7 @@ _DarkenColor:
 	pop	ix
 	ret
 _DarkenColor_end::
-;carwar.c:992: u8 GrayGradiant(u8 index)
+;carwar.c:997: u8 GrayGradiant(u8 index)
 ;	---------------------------------
 ; Function GrayGradiant
 ; ---------------------------------
@@ -20488,25 +20646,25 @@ _GrayGradiant:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:995: col = index & 0xF; // 0:16
+;carwar.c:1000: col = index & 0xF; // 0:16
 	ld	a,4 (ix)
 	and	a,#0x0F
 	ld	c,a
-;carwar.c:996: col /= 2; // 0:8
+;carwar.c:1001: col /= 2; // 0:8
 	srl	c
-;carwar.c:997: col += 2; // 2:10
+;carwar.c:1002: col += 2; // 2:10
 	inc	c
 	inc	c
-;carwar.c:998: if(col > 5)
+;carwar.c:1003: if(col > 5)
 	ld	a,#0x05
 	sub	a,c
 	jr	NC,00102$
-;carwar.c:999: col = 12 - col; // 2:5 & 6:3
+;carwar.c:1004: col = 12 - col; // 2:5 & 6:3
 	ld	a,#0x0C
 	sub	a,c
 	ld	c,a
 00102$:
-;carwar.c:1000: return (col << 5) + (col << 2) + (col >> 1);
+;carwar.c:1005: return (col << 5) + (col << 2) + (col >> 1);
 	ld	a,c
 	rrca
 	rrca
@@ -20525,7 +20683,7 @@ _GrayGradiant:
 	pop	ix
 	ret
 _GrayGradiant_end::
-;carwar.c:1003: void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
+;carwar.c:1008: void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
 ;	---------------------------------
 ; Function DrawCharacter
 ; ---------------------------------
@@ -20535,7 +20693,7 @@ _DrawCharacter:
 	ld	ix,#0
 	add	ix,sp
 	push	af
-;carwar.c:1007: HMMV(x, y, 8, 8, color);
+;carwar.c:1012: HMMV(x, y, 8, 8, color);
 	ld	hl,#0x0954 + _game
 	ld	a,4 (ix)
 	ld	(hl),a
@@ -20568,7 +20726,7 @@ _DrawCharacter:
 	push	hl
 	call	_VPDCommand36
 	pop	af
-;carwar.c:1008: for(j=0; j<8; j++)
+;carwar.c:1013: for(j=0; j<8; j++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00101$:
@@ -20577,7 +20735,7 @@ _DrawCharacter:
 	ld	a,-1 (ix)
 	sbc	a,#0x00
 	jp	NC,00105$
-;carwar.c:1010: LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[charTable[chr * 8 + j] * 8], VDP_OP_AND);
+;carwar.c:1015: LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[charTable[chr * 8 + j] * 8], VDP_OP_AND);
 	ld	hl,#0x0954 + _game
 	ld	a,4 (ix)
 	ld	(hl),a
@@ -20658,7 +20816,7 @@ _DrawCharacter:
 	push	hl
 	call	_VPDCommandLoop
 	pop	af
-;carwar.c:1008: for(j=0; j<8; j++)
+;carwar.c:1013: for(j=0; j<8; j++)
 	inc	-2 (ix)
 	jp	NZ,00101$
 	inc	-1 (ix)
@@ -20668,7 +20826,7 @@ _DrawCharacter:
 	pop	ix
 	ret
 _DrawCharacter_end::
-;carwar.c:1014: void DrawText(u16 x, u16 y, const char* text, u8 color)
+;carwar.c:1019: void DrawText(u16 x, u16 y, const char* text, u8 color)
 ;	---------------------------------
 ; Function DrawText
 ; ---------------------------------
@@ -20679,15 +20837,15 @@ _DrawText:
 	add	ix,sp
 	push	af
 	push	af
-;carwar.c:1017: u16 curX = x;
+;carwar.c:1022: u16 curX = x;
 	ld	a,4 (ix)
 	ld	-4 (ix),a
 	ld	a,5 (ix)
 	ld	-3 (ix),a
-;carwar.c:1018: u16 curY = y;
+;carwar.c:1023: u16 curY = y;
 	ld	l,6 (ix)
 	ld	h,7 (ix)
-;carwar.c:1019: while(text[textIdx] != 0)
+;carwar.c:1024: while(text[textIdx] != 0)
 	ld	-2 (ix),#0x00
 	ex	de,hl
 	ld	-1 (ix),#0x00
@@ -20699,25 +20857,25 @@ _DrawText:
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-;carwar.c:1021: if(text[textIdx] == '\n')
+;carwar.c:1026: if(text[textIdx] == '\n')
 	ld	c,a
 	or	a,a
 	jr	Z,00109$
 	sub	a,#0x0A
 	jr	NZ,00104$
-;carwar.c:1023: curX = x;
+;carwar.c:1028: curX = x;
 	ld	a,4 (ix)
 	ld	-4 (ix),a
 	ld	a,5 (ix)
 	ld	-3 (ix),a
-;carwar.c:1024: curY += LINE_SPACE;
+;carwar.c:1029: curY += LINE_SPACE;
 	ld	hl,#0x000A
 	add	hl,de
 	ex	de,hl
 	jr	00105$
 00104$:
-;carwar.c:1028: if(text[textIdx] != ' ')
-;carwar.c:1030: DrawCharacter(curX, curY, text[textIdx] - '0', color);
+;carwar.c:1033: if(text[textIdx] != ' ')
+;carwar.c:1035: DrawCharacter(curX, curY, text[textIdx] - '0', color);
 	ld	a,c
 	cp	a,#0x20
 	jr	Z,00102$
@@ -20735,10 +20893,10 @@ _DrawText:
 	pop	af
 	pop	af
 	pop	de
-;carwar.c:1031: sprtIdx++;
+;carwar.c:1036: sprtIdx++;
 	inc	-2 (ix)
 00102$:
-;carwar.c:1033: curX += 8;
+;carwar.c:1038: curX += 8;
 	ld	a,-4 (ix)
 	add	a,#0x08
 	ld	-4 (ix),a
@@ -20746,7 +20904,7 @@ _DrawText:
 	adc	a,#0x00
 	ld	-3 (ix),a
 00105$:
-;carwar.c:1035: textIdx++;
+;carwar.c:1040: textIdx++;
 	inc	-1 (ix)
 	jr	00106$
 00109$:
@@ -20754,7 +20912,7 @@ _DrawText:
 	pop	ix
 	ret
 _DrawText_end::
-;carwar.c:1039: void DebugPrintInt(i16 i, u8 x, u8 y)
+;carwar.c:1044: void DebugPrintInt(i16 i, u8 x, u8 y)
 ;	---------------------------------
 ; Function DebugPrintInt
 ; ---------------------------------
@@ -20763,7 +20921,7 @@ _DebugPrintInt:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1041: SetSpriteUniColor(0, x + 0 * 8, y, (i / 100000) % 10, 0x0F);
+;carwar.c:1046: SetSpriteUniColor(0, x + 0 * 8, y, (i / 100000) % 10, 0x0F);
 	ld	c,4 (ix)
 	ld	b,5 (ix)
 	ld	a,5 (ix)
@@ -20806,7 +20964,7 @@ _DebugPrintInt:
 	push	de
 	call	_SetSpriteUniColor
 	pop	af
-;carwar.c:1042: SetSpriteUniColor(1, x + 1 * 8, y, (i / 10000) % 10, 0x0F);
+;carwar.c:1047: SetSpriteUniColor(1, x + 1 * 8, y, (i / 10000) % 10, 0x0F);
 	inc	sp
 	ld	hl,#0x2710
 	ex	(sp),hl
@@ -20844,7 +21002,7 @@ _DebugPrintInt:
 	inc	sp
 	call	_SetSpriteUniColor
 	pop	af
-;carwar.c:1043: SetSpriteUniColor(2, x + 2 * 8, y, (i / 1000) % 10, 0x0F);
+;carwar.c:1048: SetSpriteUniColor(2, x + 2 * 8, y, (i / 1000) % 10, 0x0F);
 	inc	sp
 	ld	hl,#0x03E8
 	ex	(sp),hl
@@ -20882,7 +21040,7 @@ _DebugPrintInt:
 	inc	sp
 	call	_SetSpriteUniColor
 	pop	af
-;carwar.c:1044: SetSpriteUniColor(3, x + 3 * 8, y, (i / 100) % 10, 0x0F);
+;carwar.c:1049: SetSpriteUniColor(3, x + 3 * 8, y, (i / 100) % 10, 0x0F);
 	inc	sp
 	ld	hl,#0x0064
 	ex	(sp),hl
@@ -20920,7 +21078,7 @@ _DebugPrintInt:
 	inc	sp
 	call	_SetSpriteUniColor
 	pop	af
-;carwar.c:1045: SetSpriteUniColor(4, x + 4 * 8, y, (i / 10) % 10, 0x0F);
+;carwar.c:1050: SetSpriteUniColor(4, x + 4 * 8, y, (i / 10) % 10, 0x0F);
 	inc	sp
 	ld	hl,#0x000A
 	ex	(sp),hl
@@ -20958,7 +21116,7 @@ _DebugPrintInt:
 	inc	sp
 	call	_SetSpriteUniColor
 	pop	af
-;carwar.c:1046: SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
+;carwar.c:1051: SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
 	inc	sp
 	ld	hl,#0x000A
 	ex	(sp),hl
@@ -20990,7 +21148,7 @@ _DebugPrintInt:
 	pop	af
 	pop	af
 	inc	sp
-;carwar.c:1047: SetSpriteUniColor(6, 0, 216, 0, 0);
+;carwar.c:1052: SetSpriteUniColor(6, 0, 216, 0, 0);
 	ld	hl,#0x0000
 	push	hl
 	ld	h, #0xD8
