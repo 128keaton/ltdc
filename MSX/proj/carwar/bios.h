@@ -1,3 +1,4 @@
+#pragma once
 #include "keyboard.h"
 
 char Joystick(char n);

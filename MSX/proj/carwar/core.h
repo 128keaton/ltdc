@@ -1,3 +1,4 @@
+#pragma once
 #pragma disable_warning 59 // remove "function must return value" warning
 
 #define TRUE  1

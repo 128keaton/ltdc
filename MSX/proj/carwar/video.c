@@ -420,28 +420,33 @@ void WriteVRAM(u8 page, u16 addr, u8 value)
 }
 
 /** Read a byte in the VRAM */
-u8 ReadVRAM(u16 addr)
+u8 ReadVRAM(u8 page, u16 addr)
 {
-	addr;
+	page; addr;
 
 	WaitForVDP();
 	
 	__asm
 		;// Set 0 to register 14 (we don't use address bits 14-16)
-		ld		a,5(ix)     ;// Bits 14-15
+		ld		a,4(ix)     ;// Bits 15
+        rla
+        rla
+		ld		c,a
+		ld		a,6(ix)     ;// Bits 14
 		and		#0xC0		;// Keep only 2 last bits
         rla
         rla
         rla
+		add		a,c
 	di //; on interdit les interruptions
 		out		(VDP_ADDR),a
 		ld		a,VDP_REG(14)
 		out		(VDP_ADDR),a
 		
-		ld		a,4(ix)     ;// Bits 0-7
+		ld		a,5(ix)     ;// Bits 0-7
 		out		(VDP_ADDR),a
 
-		ld		a,5(ix)     ;// Bits 8-13
+		ld		a,6(ix)     ;// Bits 8-13
 		and		#0x3F		;// Set 2 last bits to 0; read access
 		out		(VDP_ADDR),a
 
