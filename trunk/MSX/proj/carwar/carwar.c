@@ -4,6 +4,23 @@
 #include "video.h"
 
 //----------------------------------------
+// M A C R O S
+
+#define PosToPxl(a) (a >> 8)
+#define PosXToSprt(a) (PosToPxl(a) - 6)
+#define PosYToSprt(a) (PosToPxl(a) - 5)
+
+#define HMMC(dx, dy, nx, ny, ram)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMC;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+#define HMMM(sx, sy, dx, dy, nx, ny)  game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; game.vdp32.CLR = 0; game.vdp32.ARG = 0; game.vdp32.CMD = VDP_CMD_HMMM; VPDCommand32((u16)&game.vdp32);
+#define HMMV(dx, dy, nx, ny, col)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMV;                                       VPDCommand36((u16)&game.vdp36);
+#define LMMC(dx, dy, nx, ny, ram, op) game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_LMMC + op;                        VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+
+#define Abs8(i)  (((u8)i & 0x80) ? ~((u8)i - 1) : i)
+#define Abs16(i) (((u16)i & 0x8000) ? ~((u16)i - 1) : i)
+
+#define RGB8(r,g,b) ((g << 5) + (r << 2) + (b))
+
+//----------------------------------------
 // D E F I N E S
 #define CAR_NUM			4
 
@@ -11,15 +28,37 @@
 #define CAR_TURN_LEFT   0x02
 #define CAR_MOVE		0x04
 
-#define COLOR_BLACK     0
-#define COLOR_GREEN		224
-#define COLOR_LIGHTBLUE	75
-#define COLOR_BLUE		3
-#define COLOR_GRAY		146
-#define COLOR_ORANGE	93
-#define COLOR_YELLOW	144
-#define COLOR_WHITE     255
-#define COLOR_SABLE     150
+#define COLOR_KHAKI			RGB8(5,6,0)
+#define COLOR_DARKKAKHI		RGB8(3,4,0)
+#define COLOR_SKIN			RGB8(6,5,2)
+#define COLOR_DARKSKIN		RGB8(4,3,1)
+#define COLOR_PINK			RGB8(7,0,2)
+#define COLOR_DARKPINK		RGB8(5,0,1)
+#define COLOR_SAND			RGB8(6,6,2)
+#define COLOR_LIGHTMAUVE	RGB8(5,5,3)
+#define COLOR_GRAY			RGB8(5,5,2)
+#define COLOR_DARKGRAY		RGB8(3,3,1)
+#define COLOR_BROWN			RGB8(4,2,0)
+#define COLOR_DARKBROWN		RGB8(2,1,0)
+#define COLOR_YELLOW		RGB8(6,6,1)
+#define COLOR_DARKYELLOW	RGB8(4,4,0)
+#define COLOR_GREEN			RGB8(0,5,0)
+#define COLOR_DARKGREEN		RGB8(0,3,0)
+#define COLOR_WHITE			RGB8(7,7,3)
+#define COLOR_LIGHTGRAY		RGB8(6,6,3)
+#define COLOR_CYAN			RGB8(6,7,3)
+#define COLOR_LIGHTBLUE		RGB8(5,6,3)
+#define COLOR_BLUE			RGB8(2,4,3)
+#define COLOR_DARKBLUE		RGB8(1,2,3)
+#define COLOR_NAVYBLUE		RGB8(0,0,2)
+#define COLOR_DARKNAVYBLUE	RGB8(0,0,1)
+#define COLOR_MAUVE			RGB8(6,4,3)
+#define COLOR_DARKMAUVE		RGB8(4,3,2)
+#define COLOR_ORANGE		RGB8(7,4,0)
+#define COLOR_DARKORANGE	RGB8(6,2,0)
+#define COLOR_RED			RGB8(7,1,0)
+#define COLOR_DARKRED		RGB8(5,1,0)
+#define COLOR_BLACK			RGB8(0,0,0)
 
 #define BLOCK_SHADOW	3
 #define ROAD_SHADOW		4
@@ -40,12 +79,12 @@
 enum
 {
 	OP_NONE = 0,
-	OP_WALL,
+	OP_WALL = 0,
 	OP_BLADE,
-	OP_ROCK,
 	OP_BUMPER,
 
-	OP_ROAD = 64,
+	OP_ROAD = 4,
+	OP_ASPHALT = 4,
 	OP_MUD,
 	OP_SAND,
 	OP_GRASS,
@@ -53,10 +92,10 @@ enum
 	OP_ICE,
 	OP_WATER,
 	OP_SEA,
-	OP_JUMPER,
 	OP_SPEEDER,
-	OP_HOLE,
+	OP_JUMPER,
 	OP_MAGMA,
+	OP_HOLE,
 };
 
 // 
@@ -97,7 +136,7 @@ typedef struct tagVectorI16
 typedef struct tagCar
 {
 	u8 rotSpeed;
-	u8 maxSpeed;
+	u8 maxSpeed[3];
 	u8 accel;
 } Car;
 
@@ -131,6 +170,15 @@ typedef struct tagMenu
 	u8 itemNum;
 } Menu;
 
+typedef struct Background
+{
+	u8 MaxSpeed;
+	u8 Friction;
+	u8 Grip; // Adherence
+	u8 ColorLight;
+	u8 ColorDark;
+} Background;
+
 typedef struct tagPlayer
 {
 	u16 posX;  // position X
@@ -159,22 +207,6 @@ typedef struct
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
 } GameData;
-
-
-//----------------------------------------
-// M A C R O S
-
-#define PosToPxl(a) (a >> 8)
-#define PosXToSprt(a) (PosToPxl(a) - 6)
-#define PosYToSprt(a) (PosToPxl(a) - 5)
-
-#define HMMC(dx, dy, nx, ny, ram)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMC;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-#define HMMM(sx, sy, dx, dy, nx, ny)  game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; game.vdp32.CLR = 0; game.vdp32.ARG = 0; game.vdp32.CMD = VDP_CMD_HMMM; VPDCommand32((u16)&game.vdp32);
-#define HMMV(dx, dy, nx, ny, col)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMV;                                       VPDCommand36((u16)&game.vdp36);
-#define LMMC(dx, dy, nx, ny, ram, op) game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_LMMC + op;                        VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-
-#define Abs8(i)  (((u8)i & 0x80) ? ~((u8)i - 1) : i)
-#define Abs16(i) (((u16)i & 0x8000) ? ~((u16)i - 1) : i)
 
 //----------------------------------------
 // P R O T O T Y P E S
@@ -232,69 +264,106 @@ void StartGame();
 
 const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 
-// rotSpeed, maxSpeed, accel
+/** rotSpeed, maxSpeed (63), accel */
 const Car cars[CAR_NUM] = 
 {
 	// Cop
-	{ 5, 40, 8 },
+	{ 5, { 20, 35, 40 }, 6 },
 	//
-	{ 4, 60, 8 },
+	{ 4, { 15, 40, 60 }, 8 },
 	// Ferrari
-	{ 4, 55, 8 },
+	{ 4, { 20, 35, 55 }, 7 },
 	// Turtule
-	{ 6, 30, 8 },
+	{ 6, { 25, 30, 30 }, 6 },
+};
+
+/** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
+const Background bg[] = 
+{
+	// OP_WALL
+	{ 0, 0, 0, COLOR_KHAKI, COLOR_DARKKAKHI },
+	// OP_BLADE
+	{ 0, 0, 0, COLOR_SKIN, COLOR_DARKSKIN },
+	// OP_BUMPER
+	{ 0, 0, 0, COLOR_PINK, COLOR_DARKPINK },
+	//
+	{ 0, 0, 0, 0, 0 },
+	// OP_ASPHALT
+	{ 2, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
+	// OP_MUD
+	{ 1, 8, 4, COLOR_BROWN, COLOR_DARKBROWN },
+	// OP_SAND
+	{ 0, 8, 4, COLOR_YELLOW, COLOR_DARKYELLOW },
+	// OP_GRASS
+	{ 1, 4, 4, COLOR_GREEN, COLOR_DARKGREEN },
+	// OP_SNOW
+	{ 0, 8, 8, COLOR_WHITE, COLOR_LIGHTGRAY },
+	// OP_ICE
+	{ 2, 2, 0, COLOR_CYAN, COLOR_LIGHTBLUE },
+	// OP_WATER
+	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
+	// OP_SEA
+	{ 0, 0, 0, COLOR_NAVYBLUE, COLOR_DARKNAVYBLUE },
+	// OP_SPEEDER
+	{ 2, 2, 4, COLOR_MAUVE, COLOR_DARKMAUVE },
+	// OP_JUMPER
+	{ 2, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
+	// OP_MAGMA
+	{ 0, 4, 8, COLOR_RED, COLOR_DARKRED },
+	// OP_HOLE
+	{ 0, 0, 0, COLOR_BLACK, COLOR_BLACK },
 };
 
 const TrackTile trackTiles01[] = 
 {
 	// line 0
-	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_KHAKI, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_KHAKI, COLOR_GRAY },
 	// line 1
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 1 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 0 + ROT_270, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 0 + ROT_180, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 1 + ROT_90, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 1 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 0 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
+	{ 1 + ROT_90, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
 	// line 2
 	{ 3 + ROT_0, COLOR_WHITE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 9 + ROT_90, COLOR_YELLOW, COLOR_GRAY },
 	// line 3
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 1 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
 	// line 4
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 11 + ROT_270, COLOR_ORANGE, COLOR_YELLOW },
-	{ 4 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
+	{ 4 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
 	// line 5
-	{ 0 + ROT_270, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_GRAY },
-	{ 1 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_LIGHTBLUE },
-	{ 1 + ROT_90, COLOR_YELLOW, COLOR_LIGHTBLUE },
-	{ 2 + ROT_0, COLOR_LIGHTBLUE, COLOR_YELLOW },
-	{ 0 + ROT_180, COLOR_LIGHTBLUE, COLOR_YELLOW },
+	{ 0 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 1 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 1 + ROT_90, COLOR_YELLOW, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
 };
 
 const Track track01 = { 7, 6, trackTiles01, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } };
@@ -402,18 +471,38 @@ void StateInitialize()
 	// Init color table
 	for(x=0; x<256; x++)
 		game.colorCode[x] = OP_NONE;
-	game.colorCode[COLOR_BLACK]     = OP_HOLE;
-	game.colorCode[COLOR_LIGHTBLUE] = OP_WALL;
-	game.colorCode[COLOR_GRAY]      = OP_ROAD;
-	game.colorCode[COLOR_ORANGE]    = OP_JUMPER;
-	game.colorCode[COLOR_YELLOW]    = OP_SAND;
-	game.colorCode[COLOR_WHITE]     = OP_ROAD;
-	game.colorCode[DarkenColor(COLOR_BLACK, SHADOW_POWER)]     = OP_HOLE;
-	game.colorCode[DarkenColor(COLOR_LIGHTBLUE, SHADOW_POWER)] = OP_WALL;
-	game.colorCode[DarkenColor(COLOR_GRAY, SHADOW_POWER)]      = OP_ROAD;
-	game.colorCode[DarkenColor(COLOR_ORANGE, SHADOW_POWER)]    = OP_JUMPER;
-	game.colorCode[DarkenColor(COLOR_YELLOW, SHADOW_POWER)]    = OP_SAND;
-	game.colorCode[DarkenColor(COLOR_WHITE, SHADOW_POWER)]     = OP_ROAD;
+
+	game.colorCode[COLOR_KHAKI]        = OP_WALL;
+	game.colorCode[COLOR_DARKKAKHI]    = OP_WALL;
+	game.colorCode[COLOR_SKIN]         = OP_BLADE;
+	game.colorCode[COLOR_DARKSKIN]     = OP_BLADE;
+	game.colorCode[COLOR_PINK]         = OP_BUMPER;
+	game.colorCode[COLOR_DARKPINK]     = OP_BUMPER;
+	game.colorCode[COLOR_SAND]         = OP_ASPHALT;
+	game.colorCode[COLOR_LIGHTMAUVE]   = OP_ASPHALT;
+	game.colorCode[COLOR_GRAY]         = OP_ASPHALT;
+	game.colorCode[COLOR_DARKGRAY]     = OP_ASPHALT;
+	game.colorCode[COLOR_BROWN]        = OP_MUD;
+	game.colorCode[COLOR_DARKBROWN]    = OP_MUD;
+	game.colorCode[COLOR_YELLOW]       = OP_SAND;
+	game.colorCode[COLOR_DARKYELLOW]   = OP_SAND;
+	game.colorCode[COLOR_GREEN]        = OP_GRASS;
+	game.colorCode[COLOR_DARKGREEN]    = OP_GRASS;
+	game.colorCode[COLOR_WHITE]        = OP_SNOW;
+	game.colorCode[COLOR_LIGHTGRAY]    = OP_SNOW;
+	game.colorCode[COLOR_CYAN]         = OP_ICE;
+	game.colorCode[COLOR_LIGHTBLUE]    = OP_ICE;
+	game.colorCode[COLOR_BLUE]         = OP_WATER;
+	game.colorCode[COLOR_DARKBLUE]     = OP_WATER;
+	game.colorCode[COLOR_NAVYBLUE]     = OP_SEA;
+	game.colorCode[COLOR_DARKNAVYBLUE] = OP_SEA;
+	game.colorCode[COLOR_MAUVE]        = OP_SPEEDER;
+	game.colorCode[COLOR_DARKMAUVE]    = OP_SPEEDER;
+	game.colorCode[COLOR_ORANGE]       = OP_JUMPER;
+	game.colorCode[COLOR_DARKORANGE]   = OP_JUMPER;
+	game.colorCode[COLOR_RED]          = OP_MAGMA;
+	game.colorCode[COLOR_DARKRED]      = OP_MAGMA;
+	game.colorCode[COLOR_BLACK]        = OP_HOLE;
 
 	// Initialize (ASCII table) sprites
 	for(x=0; x<sizeof(charTable)/8; x++)
@@ -543,7 +632,15 @@ void StateMainMenu()
 void StateStartGame()
 {
 	u8 i;
-	const u8 colors[] = { COLOR_BLACK, COLOR_GREEN, COLOR_LIGHTBLUE, COLOR_BLUE, COLOR_GRAY, COLOR_ORANGE, COLOR_YELLOW, COLOR_WHITE, COLOR_SABLE, 0, 0, 0, 0, 0, 0, 0 };
+	const u8 colors[] = { 
+		COLOR_GRAY, COLOR_GRAY, 
+		COLOR_GRAY, COLOR_GRAY,
+		COLOR_GRAY, COLOR_BROWN, 
+		COLOR_YELLOW, COLOR_GREEN, 
+		COLOR_WHITE, COLOR_CYAN, 
+		COLOR_BLUE, COLOR_NAVYBLUE, 
+		COLOR_MAUVE, COLOR_ORANGE, 
+		COLOR_RED, COLOR_BLACK };
 
 	game.page = 0;
 	SetPage8(game.page);
@@ -553,7 +650,7 @@ void StateStartGame()
 	//StateBuildTrack();
 	//StateShadeTrack();
 	for(i=0; i<16; i++)
-		FillVRAM(64 * (i % 4), 53 * (i / 4), 64, 53, colors[i]);
+		FillVRAM(256 / 4 * (i % 4), 212 / 4 * (i / 4), 256 / 4, 212 / 4, colors[i]);
 
 	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 
@@ -588,9 +685,9 @@ void StateStartGame()
 /** State - Process game */
 void StateUpdateGame()
 {
-	u8 i, keyLine, dir;
+	u8 i, keyLine, dir, ground, op, friction, grip;
 	Player* curPly;
-	u16 x, y, speed, speedSq;
+	u16 x, y, speed, speedSq, maxSpeed;
 
 	SetPage8(game.page);
 	game.page = 1 - game.page;
@@ -674,14 +771,17 @@ void StateUpdateGame()
 	{
 		curPly = &game.players[i];
 
-		// Friction
-#define FRICTION (4)
+		ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
+		op = game.colorCode[ground];
+
+		// Friction: Slow down the speed
+		friction = bg[op].Friction;
 		x = Abs16(curPly->velX);
 		x >>= 8;
 		y = Abs16(curPly->velY);
 		y >>= 8;
 		speedSq = (x * x) + (y * y);
-		if(speedSq <= (FRICTION * FRICTION))
+		if(speedSq <= (friction * friction))
 		{
 			curPly->velX = 0;
 			curPly->velY = 0;
@@ -689,28 +789,28 @@ void StateUpdateGame()
 		else
 		{
 			dir = VectorToAngle256(curPly->velX, curPly->velY);
-			curPly->velX -= FRICTION * g_Cosinus256[dir];
-			curPly->velY -= FRICTION * g_Sinus256[dir];
+			curPly->velX -= friction * g_Cosinus256[dir];
+			curPly->velY -= friction * g_Sinus256[dir];
 		}
 
-		// Transfert some part of velocity to car direction
-#define TRANSFERT (8)
+		// Grip: Transfert some part of velocity to car direction
+		grip = bg[op].Grip;
 		x = Abs16(curPly->velX);
 		x >>= 8;
 		y = Abs16(curPly->velY);
 		y >>= 8;
 		speed = GetVectorLenght(x, y);
-		if(speed <= TRANSFERT)
+		if(speed <= grip)
 		{
 			curPly->velX = 0;
 			curPly->velY = 0;
 		}
 		else
 		{
-			speed = TRANSFERT;
+			speed = grip;
 			dir = VectorToAngle256(curPly->velX, curPly->velY);
-			curPly->velX -= TRANSFERT * g_Cosinus256[dir];
-			curPly->velY -= TRANSFERT * g_Sinus256[dir];
+			curPly->velX -= grip * g_Cosinus256[dir];
+			curPly->velY -= grip * g_Sinus256[dir];
 		}
 
 		// Engine velocity
@@ -722,25 +822,25 @@ void StateUpdateGame()
 		{
 			curPly->rot -= cars[curPly->car].rotSpeed; 
 		}
-		if(curPly->flag & CAR_MOVE)
-		{
-			speed += cars[curPly->car].accel;
-		}
-		curPly->velX += speed * g_Cosinus256[curPly->rot];
-		curPly->velY += speed * g_Sinus256[curPly->rot];
 
 		// Cap max speed
-		x = Abs16(curPly->velX);
-		x >>= 8;
-		y = Abs16(curPly->velY);
-		y >>= 8;
-		speedSq = (x * x) + (y * y);
-		if(speedSq > cars[curPly->car].maxSpeed * cars[curPly->car].maxSpeed)
+		if(curPly->flag & CAR_MOVE)
 		{
-			dir = VectorToAngle256(curPly->velX, curPly->velY);
-			curPly->velX = cars[curPly->car].maxSpeed * g_Cosinus256[dir];
-			curPly->velY = cars[curPly->car].maxSpeed * g_Sinus256[dir];
+			x = Abs16(curPly->velX);
+			x >>= 8;
+			y = Abs16(curPly->velY);
+			y >>= 8;
+			speedSq = (x * x) + (y * y);
+			maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
+			if(speedSq < maxSpeed * maxSpeed)
+			{
+				speed += cars[curPly->car].accel;
+			}
 		}
+		if(op == OP_SPEEDER)
+			speed += 8;
+		curPly->velX += speed * g_Cosinus256[curPly->rot];
+		curPly->velY += speed * g_Sinus256[curPly->rot];
 	}
 
 	// Check collision
@@ -858,6 +958,8 @@ void CheckCollision(u8 idx, u8 car1, u8 car2)
 {
 	i16 x1, y1, x2, y2, dist;
 
+	idx;
+
 	dist = game.players[car2].posX - game.players[car1].posX;
 	x1 = dist >> 8;
 	dist = game.players[car2].posY - game.players[car1].posY;
@@ -894,8 +996,8 @@ void StateBuildTrack()
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
 
-	FillVRAM(0, 0, 128, 212, COLOR_LIGHTBLUE);
-	FillVRAM(128, 0, 128, 212, COLOR_LIGHTBLUE);
+	FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
+	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
 	for(i=0; i<7; i++)
 	{
 		for(j=0; j<6; j++)
@@ -938,18 +1040,18 @@ void StateShadeTrack()
 
 	PrintSprite(64, 64, "SHADE\nTRACK", (u16)&defaultColor);
 
-	cur = ReadVRAM(0);
+	cur = ReadVRAM(0, 0);
 	for(x=0; x<256; x++)
 	{
 		for(y=0; y<211; y++)
 		{
-			cur = ReadVRAM(x + 256 * y);
-			next = ReadVRAM(x + 256 * (y + 1));
+			cur = ReadVRAM(0, x + 256 * y);
+			next = ReadVRAM(0, x + 256 * (y + 1));
 			if(game.colorCode[cur] < OP_ROAD && game.colorCode[next] >= OP_ROAD)
 			{
 				for(i=0; i<BLOCK_SHADOW; i++)
 				{
-					cur = ReadVRAM(x + 256 * (y - i));
+					cur = ReadVRAM(0, x + 256 * (y - i));
 					if((y - i < 212) && (game.colorCode[cur] < OP_ROAD))
 						WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
 					else
@@ -957,7 +1059,7 @@ void StateShadeTrack()
 				}
 				for(i=1; i<=ROAD_SHADOW; i++)
 				{
-					cur = ReadVRAM(x + 256 * (y + i));
+					cur = ReadVRAM(0, x + 256 * (y + i));
 					if((y + i < 212) && (game.colorCode[cur] >= OP_ROAD))
 						WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
 					else
