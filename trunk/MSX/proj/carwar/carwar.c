@@ -214,7 +214,8 @@ typedef struct
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
 void InitializeMenu(u8 menu);
-void CheckCollision(u8 idx, u8 car1, u8 car2);
+void CarToCarCollision(u8 idx, u8 car1, u8 car2);
+void CarToWallCollision(u8 car);
 i8 AngleDifferent64(i8 angleA, i8 angleB);
 //u8 VectorToAngle64(i16 x, i16 y);
 u8 VectorToAngle256(i16 x, i16 y);
@@ -268,13 +269,13 @@ const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 const Car cars[CAR_NUM] = 
 {
 	// Cop
-	{ 5, { 20, 35, 40 }, 6 },
-	//
-	{ 4, { 15, 40, 60 }, 8 },
+	{ 5, { 25, 35, 40 }, 6 },
+	// Camaro (Chevrolet)
+	{ 4, { 20, 35, 60 }, 7 },
 	// Ferrari
-	{ 4, { 20, 35, 55 }, 7 },
+	{ 4, { 20, 40, 55 }, 7 },
 	// Turtule
-	{ 6, { 25, 30, 30 }, 6 },
+	{ 6, { 30, 30, 30 }, 5 },
 };
 
 /** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
@@ -647,10 +648,10 @@ void StateStartGame()
 
 	//----------------------------------------
 	// Build background
-	//StateBuildTrack();
+	StateBuildTrack();
 	//StateShadeTrack();
-	for(i=0; i<16; i++)
-		FillVRAM(256 / 4 * (i % 4), 212 / 4 * (i / 4), 256 / 4, 212 / 4, colors[i]);
+	//for(i=0; i<16; i++)
+	//	FillVRAM(256 / 4 * (i % 4), 212 / 4 * (i / 4), 256 / 4, 212 / 4, colors[i]);
 
 	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 
@@ -781,16 +782,20 @@ void StateUpdateGame()
 		y = Abs16(curPly->velY);
 		y >>= 8;
 		speedSq = (x * x) + (y * y);
-		if(speedSq <= (friction * friction))
+		maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
+		if(!(curPly->flag & CAR_MOVE) || (speedSq > maxSpeed * maxSpeed))
 		{
-			curPly->velX = 0;
-			curPly->velY = 0;
-		}
-		else
-		{
-			dir = VectorToAngle256(curPly->velX, curPly->velY);
-			curPly->velX -= friction * g_Cosinus256[dir];
-			curPly->velY -= friction * g_Sinus256[dir];
+			if(speedSq <= (friction * friction))
+			{
+				curPly->velX = 0;
+				curPly->velY = 0;
+			}
+			else
+			{
+				dir = VectorToAngle256(curPly->velX, curPly->velY);
+				curPly->velX -= friction * g_Cosinus256[dir];
+				curPly->velY -= friction * g_Sinus256[dir];
+			}
 		}
 
 		// Grip: Transfert some part of velocity to car direction
@@ -844,15 +849,20 @@ void StateUpdateGame()
 	}
 
 	// Check collision
+	// 1 player
+	CarToWallCollision(0);
 	// 2 players
-	CheckCollision(0, 0, 1);
+	CarToWallCollision(1);
+	CarToCarCollision(0, 0, 1);
 	// 3 players
-	CheckCollision(1, 0, 2);
-	CheckCollision(2, 1, 2);
+	CarToWallCollision(2);
+	CarToCarCollision(1, 0, 2);
+	CarToCarCollision(2, 1, 2);
 	// 4 players
-	CheckCollision(3, 0, 3);
-	CheckCollision(4, 1, 3);
-	CheckCollision(5, 2, 3);
+	CarToWallCollision(3);
+	CarToCarCollision(3, 0, 3);
+	CarToCarCollision(4, 1, 3);
+	CarToCarCollision(5, 2, 3);
 
 	// Fix position
 	for(i=0; i<CAR_NUM; i++)
@@ -954,7 +964,7 @@ u16 GetVectorLenght(i16 x, i16 y)
 }
 
 /** Check collision */
-void CheckCollision(u8 idx, u8 car1, u8 car2)
+void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 {
 	i16 x1, y1, x2, y2, dist;
 
@@ -986,6 +996,46 @@ void CheckCollision(u8 idx, u8 car1, u8 car2)
 		//game.players[car2].posY = game.players[car2].prevY;
 	}
 }
+
+void CarToWallCollision(u8 car)
+{
+	u8 ground, op;
+	Player* ply;
+	ply = &game.players[car];
+
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) - 4 + 256 * PosToPxl(ply->posY));
+	op = game.colorCode[ground];
+	if(op == OP_WALL)
+	{
+		ply->velX = Abs16(ply->velX);
+		//ply->velY = 0;
+	}
+
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 4 + 256 * PosToPxl(ply->posY));
+	op = game.colorCode[ground];
+	if(op == OP_WALL)
+	{
+		ply->velX = -Abs16(ply->velX);
+		//ply->velY = 0;
+	}
+
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - 4));
+	op = game.colorCode[ground];
+	if(op == OP_WALL)
+	{
+		//ply->velX = 0;
+		ply->velY = -Abs16(ply->velY);
+	}
+
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + 4));
+	op = game.colorCode[ground];
+	if(op == OP_WALL)
+	{
+		//ply->velX = 0;
+		ply->velY = Abs16(ply->velY);
+	}
+}
+
 
 /***/
 void StateBuildTrack()
