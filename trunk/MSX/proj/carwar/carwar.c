@@ -78,24 +78,27 @@
 // Color operator
 enum
 {
+	// Walls
 	OP_NONE = 0,
-	OP_WALL = 0,
-	OP_BLADE,
-	OP_BUMPER,
-
-	OP_ROAD = 4,
-	OP_ASPHALT = 4,
-	OP_MUD,
-	OP_SAND,
-	OP_GRASS,
-	OP_SNOW,
-	OP_ICE,
-	OP_WATER,
-	OP_SEA,
-	OP_SPEEDER,
-	OP_JUMPER,
-	OP_MAGMA,
-	OP_HOLE,
+		OP_WALL = 0,
+		OP_BLADE,
+		OP_BUMPER,
+	// Special
+	OP_SPECIAL = 4,
+		OP_SPEEDER = 4,
+		OP_JUMPER,
+		OP_MAGMA,
+		OP_SEA,
+		OP_HOLE,
+	// Roads
+	OP_ROAD = 10,
+		OP_ASPHALT = 10,
+		OP_MUD,
+		OP_SAND,
+		OP_GRASS,
+		OP_SNOW,
+		OP_ICE,
+		OP_WATER,
 };
 
 // 
@@ -183,16 +186,20 @@ typedef struct tagPlayer
 {
 	u16 posX;  // position X
 	u16 posY;  // position Y
+	u8  posZ;
 	u16 prevX; // previous position X
 	u16 prevY; // previous position Y
-	i16 velX;    // velocity X
-	i16 velY;    // velocity Y
-	u8 car;    // car index
-	u8 flag;   // move flag
-	u8 rot;    // rotation
-	u8 jump;
-	u8 posZ;
-	u8 prevZ;
+	u8  prevZ;
+	i16 velX;  // velocity X
+	i16 velY;  // velocity Y
+	u8  car;   // car index
+	u8  flag;  // move flag
+	u8  rot;   // rotation
+	u8  jump;
+	u16 validX; // last valid position X
+	u16 validY; // last valid position Y
+	u16 nextX;
+	u16 nextY;
 } Player;
 
 typedef struct
@@ -284,40 +291,42 @@ const Car cars[CAR_NUM] =
 /** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
 const Background bg[] = 
 {
-	// OP_WALL
+	// 0. OP_WALL
 	{ 0, 0, 0, COLOR_KHAKI, COLOR_DARKKAKHI },
-	// OP_BLADE
+	// 1. OP_BLADE
 	{ 0, 0, 0, COLOR_SKIN, COLOR_DARKSKIN },
-	// OP_BUMPER
+	// 2. OP_BUMPER
 	{ 0, 0, 0, COLOR_PINK, COLOR_DARKPINK },
-	//
+	// 3. 
 	{ 0, 0, 0, 0, 0 },
-	// OP_ASPHALT
-	{ 2, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
-	// OP_MUD
-	{ 1, 8, 4, COLOR_BROWN, COLOR_DARKBROWN },
-	// OP_SAND
-	{ 0, 8, 4, COLOR_YELLOW, COLOR_DARKYELLOW },
-	// OP_GRASS
-	{ 1, 4, 4, COLOR_GREEN, COLOR_DARKGREEN },
-	// OP_SNOW
-	{ 0, 8, 8, COLOR_WHITE, COLOR_LIGHTGRAY },
-	// OP_ICE
-	{ 2, 2, 0, COLOR_CYAN, COLOR_LIGHTBLUE },
-	// OP_WATER
-	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
-	// OP_SEA
-	{ 0, 0, 0, COLOR_NAVYBLUE, COLOR_DARKNAVYBLUE },
-	// OP_SPEEDER
+	// 4. OP_SPEEDER
 	{ 2, 2, 4, COLOR_MAUVE, COLOR_DARKMAUVE },
-	// OP_JUMPER
+	// 5. OP_JUMPER
 	{ 2, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
-	// OP_MAGMA
+	// 6. OP_MAGMA
 	{ 0, 4, 8, COLOR_RED, COLOR_DARKRED },
-	// OP_HOLE
+	// 7. OP_SEA
+	{ 0, 0, 0, COLOR_NAVYBLUE, COLOR_DARKNAVYBLUE },
+	// 8. OP_HOLE
 	{ 0, 0, 0, COLOR_BLACK, COLOR_BLACK },
+	// 9. 
+	{ 0, 0, 0, 0, 0 },
+	// 10. OP_ASPHALT
+	{ 2, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
+	// 11. OP_MUD
+	{ 1, 8, 4, COLOR_BROWN, COLOR_DARKBROWN },
+	// 12. OP_SAND
+	{ 0, 8, 4, COLOR_YELLOW, COLOR_DARKYELLOW },
+	// 13. OP_GRASS
+	{ 1, 4, 4, COLOR_GREEN, COLOR_DARKGREEN },
+	// 14. OP_SNOW
+	{ 0, 8, 8, COLOR_WHITE, COLOR_LIGHTGRAY },
+	// 15. OP_ICE
+	{ 2, 2, 0, COLOR_CYAN, COLOR_LIGHTBLUE },
+	// 16. OP_WATER
+	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
-
+		
 const TrackTile trackTiles01[] = 
 {
 	// line 0
@@ -417,13 +426,7 @@ const Menu menus[] =
 	{ "PLAYER SELECT", "PRESS SPACE", menuPlayer, numberof(menuPlayer) },
 };
 
-const u8 height[] = 
-{
-	0, 2, 4, 5, 5, 
-	6, 6, 7, 7, 8, 8,
-	8, 7, 7, 6, 6, 
-	5, 5, 4, 2, 0, 
-};
+const u8 height[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
 
 //----------------------------------------
 // R A M   D A T A
@@ -660,7 +663,7 @@ void StateStartGame()
 	//----------------------------------------
 	// Build background
 	StateBuildTrack();
-	StateShadeTrack();
+	//StateShadeTrack();
 	//for(i=0; i<16; i++)
 	//	FillVRAM(256 >> 2 * (i & 0xFFFC), 212 >> 2 * (i >> 2), 256 >> 2, 212 >> 2, colors[i]);
 
@@ -789,6 +792,22 @@ void StateUpdateGame()
 			ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
 			op = game.colorCode[ground];
 
+			if(op >= OP_ROAD) // Backup last valid position
+			{
+				curPly->validX = curPly->posX;
+				curPly->validY = curPly->posY;
+			}
+			else if(op < OP_SPECIAL)
+			{
+				curPly->prevX = curPly->posX;
+				curPly->prevY = curPly->posY;
+				curPly->nextX = curPly->validX;
+				curPly->nextY = curPly->validY;
+				curPly->velX = 0;
+				curPly->velY = 0;
+				break;
+			}
+
 			// Friction: Slow down the speed
 			friction = bg[op].Friction;
 			maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
@@ -872,6 +891,13 @@ void StateUpdateGame()
 		{
 			curPly->jump--;
 		}
+
+		curPly->nextX = (i16)curPly->posX + (curPly->velX >> 4);
+		curPly->nextY = (i16)curPly->posY - (curPly->velY >> 4);
+		if(curPly->nextY < (5 << 8))
+			curPly->nextY = (5 << 8);
+		else if(curPly->nextY > (206 << 8))
+			curPly->nextY = (206 << 8);
 	}
 
 	// Check collision
@@ -896,12 +922,8 @@ void StateUpdateGame()
 		curPly->prevY = curPly->posY;
 		curPly->prevZ = curPly->posZ;
 
-		curPly->posX += curPly->velX >> 4;
-		curPly->posY -= curPly->velY >> 4;
-		if(curPly->posY < (5 << 8))
-			curPly->posY = (5 << 8);
-		else if(curPly->posY > (206 << 8))
-			curPly->posY = (206 << 8);
+		curPly->posX = curPly->nextX;
+		curPly->posY = curPly->nextY;
 		curPly->posZ = height[curPly->jump];
 
 		// Backup
@@ -912,8 +934,9 @@ void StateUpdateGame()
 	// Draw cars
 	for(i=0; i<CAR_NUM; i++)
 	{
-		VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY) + 3, 13, 8);
-		VRAMtoVRAMTrans(13 * (game.players[i].rot >> 4), 256 + 212 + (11 * i), PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY) - game.players[i].posZ, 13, 11);
+		curPly = &game.players[i];
+		VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8);
+		VRAMtoVRAMTrans(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11);
 	}
 		
 	waitRetrace();
@@ -927,6 +950,8 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 	ply->posY = posY << 8; // position Y
 	ply->prevX = ply->posX; // previous position X
 	ply->prevY = ply->posY; // previous position Y
+	ply->validX = ply->posX;
+	ply->validY = ply->posY;
 	ply->rot = 64; // rotation
 	ply->velX = 0; // velocity X
 	ply->velY = 0; // velocity Y
@@ -999,18 +1024,13 @@ void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 
 	idx;
 
-	dist = game.players[car2].posX - game.players[car1].posX;
+	dist = game.players[car2].nextX - game.players[car1].nextX;
 	x1 = dist >> 8;
-	dist = game.players[car2].posY - game.players[car1].posY;
+	dist = game.players[car2].nextY - game.players[car1].nextY;
 	y1 = dist >> 8;
 	dist = (x1 * x1) + (y1 * y1);
 	if(dist < CAR_CHECK_LEN * CAR_CHECK_LEN) // Collision occured
 	{
-		//SetSpriteUniColor(idx, 
-		//	(game.players[car1].posX >> 8) + (x1 >> 1) - 4, 
-		//	(game.players[car1].posY >> 8) + (y1 >> 1) - 4, 
-		//	'X' - '0', 0x0F);
-
 		x1 = game.players[car1].velX;
 		y1 = game.players[car1].velY;
 		x2 = game.players[car2].velX;
@@ -1021,8 +1041,10 @@ void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 		game.players[car2].velX = x1 - x2;
 		game.players[car2].velY = y1 - y2;
 
-		//game.players[car1].posX = game.players[car1].prevX;
-		//game.players[car2].posY = game.players[car2].prevY;
+		game.players[car1].nextX = game.players[car1].posX;
+		game.players[car1].nextY = game.players[car1].posY;
+		game.players[car2].nextX = game.players[car2].posX;
+		game.players[car2].nextY = game.players[car2].posY;
 	}
 }
 
@@ -1033,36 +1055,46 @@ void CarToWallCollision(u8 car)
 	Player* ply;
 	ply = &game.players[car];
 
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
-	op = game.colorCode[ground];
-	if(op == OP_WALL)
+	if((ply->rot > 64) && (ply->rot > 64))
 	{
-		ply->velX = Abs16(ply->velX) >> 1;
-		ply->velY >>= 1;
+		ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
+		op = game.colorCode[ground];
+		if(op == OP_WALL)
+		{
+			ply->velX = Abs16(ply->velX) >> 1;
+			ply->velY >>= 1;
+		}
+	}
+	else
+	{
+		ground = ReadVRAM(game.page, PosToPxl(ply->posX) + WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
+		op = game.colorCode[ground];
+		if(op == OP_WALL)
+		{
+			ply->velX = -(Abs16(ply->velX) >> 1);
+			ply->velY >>= 1;
+		}
 	}
 
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
-	op = game.colorCode[ground];
-	if(op == OP_WALL)
+	if(ply->rot < 128)
 	{
-		ply->velX = -(Abs16(ply->velX) >> 1);
-		ply->velY >>= 1;
+		ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - WALL_CHECK_LEN));
+		op = game.colorCode[ground];
+		if(op == OP_WALL)
+		{
+			ply->velX >>= 1;
+			ply->velY = -(Abs16(ply->velY) >> 1);
+		}
 	}
-
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - WALL_CHECK_LEN));
-	op = game.colorCode[ground];
-	if(op == OP_WALL)
+	else
 	{
-		ply->velX >>= 1;
-		ply->velY = -(Abs16(ply->velY) >> 1);
-	}
-
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + WALL_CHECK_LEN));
-	op = game.colorCode[ground];
-	if(op == OP_WALL)
-	{
-		ply->velX >>= 1;
-		ply->velY = Abs16(ply->velY) >> 1;
+		ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + WALL_CHECK_LEN));
+		op = game.colorCode[ground];
+		if(op == OP_WALL)
+		{
+			ply->velX >>= 1;
+			ply->velY = Abs16(ply->velY) >> 1;
+		}
 	}
 
 	//for(i=2; i<WALL_CHECK_LEN; i++)
@@ -1172,12 +1204,12 @@ void StateShadeTrack()
 		{
 			cur = ReadVRAM(0, x + 256 * y);
 			next = ReadVRAM(0, x + 256 * (y + 1));
-			if(game.colorCode[cur] < OP_ROAD && game.colorCode[next] >= OP_ROAD)
+			if(game.colorCode[cur] < OP_SPECIAL && game.colorCode[next] >= OP_SPECIAL)
 			{
 				for(i=0; i<BLOCK_SHADOW; i++)
 				{
 					cur = ReadVRAM(0, x + 256 * (y - i));
-					if((y - i < 212) && (game.colorCode[cur] < OP_ROAD))
+					if((y - i < 212) && (game.colorCode[cur] < OP_SPECIAL))
 						WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
 					else
 						break;
@@ -1185,7 +1217,7 @@ void StateShadeTrack()
 				for(i=1; i<=ROAD_SHADOW; i++)
 				{
 					cur = ReadVRAM(0, x + 256 * (y + i));
-					if((y + i < 212) && (game.colorCode[cur] >= OP_ROAD))
+					if((y + i < 212) && (game.colorCode[cur] >= OP_SPECIAL))
 						WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
 					else
 						break;
