@@ -190,6 +190,9 @@ typedef struct tagPlayer
 	u8 car;    // car index
 	u8 flag;   // move flag
 	u8 rot;    // rotation
+	u8 jump;
+	u8 posZ;
+	u8 prevZ;
 } Player;
 
 typedef struct
@@ -340,31 +343,31 @@ const TrackTile trackTiles01[] =
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 9 + ROT_90, COLOR_YELLOW, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
 	// line 3
 	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
 	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
 	// line 4
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 11 + ROT_270, COLOR_ORANGE, COLOR_YELLOW },
-	{ 4 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 9 + ROT_90, COLOR_YELLOW, COLOR_GRAY },
+	{ 0 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
 	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 11 + ROT_270, COLOR_ORANGE, COLOR_GRAY },
+	{ 4 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
 	// line 5
-	{ 0 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 1 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 1 + ROT_90, COLOR_YELLOW, COLOR_KHAKI },
+	{ 0 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
 	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
+	{ 1 + ROT_0, COLOR_YELLOW, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
+	{ 1 + ROT_90, COLOR_GRAY, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
 };
 
 const Track track01 = { 7, 6, trackTiles01, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } };
@@ -412,6 +415,14 @@ const Menu menus[] =
 	{ "GAME MODE",     "PRESS SPACE", menuMode,   numberof(menuMode) },
 	{ "TRACK SELECT",  "PRESS SPACE", menuTrack,  numberof(menuTrack) },
 	{ "PLAYER SELECT", "PRESS SPACE", menuPlayer, numberof(menuPlayer) },
+};
+
+const u8 height[] = 
+{
+	0, 2, 4, 5, 5, 
+	6, 6, 7, 7, 8, 8,
+	8, 7, 7, 6, 6, 
+	5, 5, 4, 2, 0, 
 };
 
 //----------------------------------------
@@ -506,7 +517,7 @@ void StateInitialize()
 	game.colorCode[COLOR_BLACK]        = OP_HOLE;
 
 	// Initialize (ASCII table) sprites
-	for(x=0; x<sizeof(charTable)/8; x++)
+	for(x=0; x<sizeof(charTable) / 8; x++)
 	{
 		RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
 	}
@@ -561,7 +572,7 @@ void StateTitle()
 	{
 		for(i=0; i<232; i++)
 		{
-			byte = title[(i / 8) + (j * 232 / 8)];
+			byte = title[(i >> 3) + (j * 232 >> 3)];
 			if(byte & (1 << (7 - (i & 0x07))))
 			{
 				WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
@@ -649,9 +660,9 @@ void StateStartGame()
 	//----------------------------------------
 	// Build background
 	StateBuildTrack();
-	//StateShadeTrack();
+	StateShadeTrack();
 	//for(i=0; i<16; i++)
-	//	FillVRAM(256 / 4 * (i % 4), 212 / 4 * (i / 4), 256 / 4, 212 / 4, colors[i]);
+	//	FillVRAM(256 >> 2 * (i & 0xFFFC), 212 >> 2 * (i >> 2), 256 >> 2, 212 >> 2, colors[i]);
 
 	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 
@@ -665,6 +676,7 @@ void StateStartGame()
 		RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
 		RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
 	}
+	RAMtoVRAM(16 * 13, 256 + 212, 13, 11, (u16)&shadow);
 
 	//----------------------------------------
 	// Initialize background backup
@@ -672,8 +684,8 @@ void StateStartGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
-		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11);
-		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11);
+		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
+		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
 	}
 
 	ClearSprite();
@@ -763,7 +775,7 @@ void StateUpdateGame()
 	// Restore background
 	for(i=0; i<CAR_NUM; i++)
 	{
-		VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY), 13, 11);
+		VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
 	}
 
 	//----------------------------------------
@@ -772,94 +784,104 @@ void StateUpdateGame()
 	{
 		curPly = &game.players[i];
 
-		ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
-		op = game.colorCode[ground];
-
-		// Friction: Slow down the speed
-		friction = bg[op].Friction;
-		x = Abs16(curPly->velX);
-		x >>= 8;
-		y = Abs16(curPly->velY);
-		y >>= 8;
-		speedSq = (x * x) + (y * y);
-		maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
-		if(!(curPly->flag & CAR_MOVE) || (speedSq > maxSpeed * maxSpeed))
+		if(curPly->jump == 0)
 		{
-			if(speedSq <= (friction * friction))
+			ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
+			op = game.colorCode[ground];
+
+			// Friction: Slow down the speed
+			friction = bg[op].Friction;
+			maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
+			x = Abs16(curPly->velX);
+			x >>= 8;
+			y = Abs16(curPly->velY);
+			y >>= 8;
+			speedSq = (x * x) + (y * y);
+			if(!(curPly->flag & CAR_MOVE) || (speedSq > maxSpeed * maxSpeed))
+			{
+				if(speedSq <= (friction * friction))
+				{
+					curPly->velX = 0;
+					curPly->velY = 0;
+				}
+				else
+				{
+					dir = VectorToAngle256(curPly->velX, curPly->velY);
+					curPly->velX -= friction * g_Cosinus256[dir];
+					curPly->velY -= friction * g_Sinus256[dir];
+				}
+			}
+
+			// Grip: Transfert some part of velocity to car direction
+			grip = bg[op].Grip;
+			x = Abs16(curPly->velX);
+			x >>= 8;
+			y = Abs16(curPly->velY);
+			y >>= 8;
+			speed = GetVectorLenght(x, y);
+			if(speed <= grip)
 			{
 				curPly->velX = 0;
 				curPly->velY = 0;
 			}
 			else
 			{
+				speed = grip;
 				dir = VectorToAngle256(curPly->velX, curPly->velY);
-				curPly->velX -= friction * g_Cosinus256[dir];
-				curPly->velY -= friction * g_Sinus256[dir];
+				curPly->velX -= grip * g_Cosinus256[dir];
+				curPly->velY -= grip * g_Sinus256[dir];
 			}
-		}
 
-		// Grip: Transfert some part of velocity to car direction
-		grip = bg[op].Grip;
-		x = Abs16(curPly->velX);
-		x >>= 8;
-		y = Abs16(curPly->velY);
-		y >>= 8;
-		speed = GetVectorLenght(x, y);
-		if(speed <= grip)
-		{
-			curPly->velX = 0;
-			curPly->velY = 0;
+			// Engine velocity
+			if(curPly->flag & CAR_TURN_LEFT)
+			{
+				curPly->rot += cars[curPly->car].rotSpeed; 
+			}
+			if(curPly->flag & CAR_TURN_RIGHT)
+			{
+				curPly->rot -= cars[curPly->car].rotSpeed; 
+			}
+
+			// Cap max speed
+			if(curPly->flag & CAR_MOVE)
+			{
+				x = Abs16(curPly->velX);
+				x >>= 8;
+				y = Abs16(curPly->velY);
+				y >>= 8;
+				speedSq = (x * x) + (y * y);
+				maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
+				if(speedSq < maxSpeed * maxSpeed)
+				{
+					speed += cars[curPly->car].accel;
+				}
+			}
+			if(op == OP_SPEEDER)
+				speed += 8;
+			else if(op == OP_JUMPER)
+			{
+				curPly->jump = 20;
+			}
+
+			curPly->velX += speed * g_Cosinus256[curPly->rot];
+			curPly->velY += speed * g_Sinus256[curPly->rot];
+
+			CarToWallCollision(i);
 		}
 		else
 		{
-			speed = grip;
-			dir = VectorToAngle256(curPly->velX, curPly->velY);
-			curPly->velX -= grip * g_Cosinus256[dir];
-			curPly->velY -= grip * g_Sinus256[dir];
+			curPly->jump--;
 		}
-
-		// Engine velocity
-		if(curPly->flag & CAR_TURN_LEFT)
-		{
-			curPly->rot += cars[curPly->car].rotSpeed; 
-		}
-		if(curPly->flag & CAR_TURN_RIGHT)
-		{
-			curPly->rot -= cars[curPly->car].rotSpeed; 
-		}
-
-		// Cap max speed
-		if(curPly->flag & CAR_MOVE)
-		{
-			x = Abs16(curPly->velX);
-			x >>= 8;
-			y = Abs16(curPly->velY);
-			y >>= 8;
-			speedSq = (x * x) + (y * y);
-			maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
-			if(speedSq < maxSpeed * maxSpeed)
-			{
-				speed += cars[curPly->car].accel;
-			}
-		}
-		if(op == OP_SPEEDER)
-			speed += 8;
-		curPly->velX += speed * g_Cosinus256[curPly->rot];
-		curPly->velY += speed * g_Sinus256[curPly->rot];
 	}
 
 	// Check collision
 	// 1 player
-	CarToWallCollision(0);
 	// 2 players
-	CarToWallCollision(1);
 	CarToCarCollision(0, 0, 1);
 	// 3 players
-	CarToWallCollision(2);
 	CarToCarCollision(1, 0, 2);
 	CarToCarCollision(2, 1, 2);
 	// 4 players
-	CarToWallCollision(3);
 	CarToCarCollision(3, 0, 3);
 	CarToCarCollision(4, 1, 3);
 	CarToCarCollision(5, 2, 3);
@@ -872,23 +894,26 @@ void StateUpdateGame()
 		// Apply velocity
 		curPly->prevX = curPly->posX;
 		curPly->prevY = curPly->posY;
-		curPly->posX += curPly->velX / (8 * 2);
-		curPly->posY -= curPly->velY / (8 * 2);
+		curPly->prevZ = curPly->posZ;
 
+		curPly->posX += curPly->velX >> 4;
+		curPly->posY -= curPly->velY >> 4;
 		if(curPly->posY < (5 << 8))
 			curPly->posY = (5 << 8);
 		else if(curPly->posY > (206 << 8))
 			curPly->posY = (206 << 8);
+		curPly->posZ = height[curPly->jump];
 
 		// Backup
-		VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY), (13 * i) + (52 * game.page), 212, 13, 11);
+		VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
 	}
 
 	//----------------------------------------
 	// Draw cars
 	for(i=0; i<CAR_NUM; i++)
 	{
-		VRAMtoVRAMTrans(13 * (game.players[i].rot / 16), 256 + 212 + (11 * i), PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY), 13, 11);
+		VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY) + 3, 13, 8);
+		VRAMtoVRAMTrans(13 * (game.players[i].rot >> 4), 256 + 212 + (11 * i), PosXToSprt(game.players[i].posX), game.yOffset + PosYToSprt(game.players[i].posY) - game.players[i].posZ, 13, 11);
 	}
 		
 	waitRetrace();
@@ -905,6 +930,9 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 	ply->rot = 64; // rotation
 	ply->velX = 0; // velocity X
 	ply->velY = 0; // velocity Y
+	ply->jump = 0;
+	ply->posZ = 0;
+	ply->prevZ = 0;
 }
 
 /***/
@@ -964,6 +992,7 @@ u16 GetVectorLenght(i16 x, i16 y)
 }
 
 /** Check collision */
+#define CAR_CHECK_LEN 10
 void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 {
 	i16 x1, y1, x2, y2, dist;
@@ -975,7 +1004,7 @@ void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 	dist = game.players[car2].posY - game.players[car1].posY;
 	y1 = dist >> 8;
 	dist = (x1 * x1) + (y1 * y1);
-	if(dist < 11 * 11) // Collision occured
+	if(dist < CAR_CHECK_LEN * CAR_CHECK_LEN) // Collision occured
 	{
 		//SetSpriteUniColor(idx, 
 		//	(game.players[car1].posX >> 8) + (x1 >> 1) - 4, 
@@ -997,43 +1026,89 @@ void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 	}
 }
 
+#define WALL_CHECK_LEN 4
 void CarToWallCollision(u8 car)
 {
-	u8 ground, op;
+	u8 /*i,*/ ground, op;
 	Player* ply;
 	ply = &game.players[car];
 
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) - 4 + 256 * PosToPxl(ply->posY));
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
 	op = game.colorCode[ground];
 	if(op == OP_WALL)
 	{
-		ply->velX = Abs16(ply->velX);
-		//ply->velY = 0;
+		ply->velX = Abs16(ply->velX) >> 1;
+		ply->velY >>= 1;
 	}
 
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 4 + 256 * PosToPxl(ply->posY));
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
 	op = game.colorCode[ground];
 	if(op == OP_WALL)
 	{
-		ply->velX = -Abs16(ply->velX);
-		//ply->velY = 0;
+		ply->velX = -(Abs16(ply->velX) >> 1);
+		ply->velY >>= 1;
 	}
 
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - 4));
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - WALL_CHECK_LEN));
 	op = game.colorCode[ground];
 	if(op == OP_WALL)
 	{
-		//ply->velX = 0;
-		ply->velY = -Abs16(ply->velY);
+		ply->velX >>= 1;
+		ply->velY = -(Abs16(ply->velY) >> 1);
 	}
 
-	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + 4));
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + WALL_CHECK_LEN));
 	op = game.colorCode[ground];
 	if(op == OP_WALL)
 	{
-		//ply->velX = 0;
-		ply->velY = Abs16(ply->velY);
+		ply->velX >>= 1;
+		ply->velY = Abs16(ply->velY) >> 1;
 	}
+
+	//for(i=2; i<WALL_CHECK_LEN; i++)
+	//{
+	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) - i + 256 * PosToPxl(ply->posY));
+	//	op = game.colorCode[ground];
+	//	if(op == OP_WALL)
+	//	{
+	//		ply->velX = Abs16(ply->velX) >> 1;
+	//		ply->velY >>= 1;
+	//		break;
+	//	}
+	//}
+	//for(i=2; i<WALL_CHECK_LEN; i++)
+	//{
+	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + i + 256 * PosToPxl(ply->posY));
+	//	op = game.colorCode[ground];
+	//	if(op == OP_WALL)
+	//	{
+	//		ply->velX = -(Abs16(ply->velX) >> 1);
+	//		ply->velY >>= 1;
+	//		break;
+	//	}
+	//}
+	//for(i=2; i<WALL_CHECK_LEN; i++)
+	//{
+	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - i));
+	//	op = game.colorCode[ground];
+	//	if(op == OP_WALL)
+	//	{
+	//		ply->velX >>= 1;
+	//		ply->velY = -(Abs16(ply->velY) >> 1);
+	//		break;
+	//	}
+	//}
+	//for(i=2; i<WALL_CHECK_LEN; i++)
+	//{
+	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + i));
+	//	op = game.colorCode[ground];
+	//	if(op == OP_WALL)
+	//	{
+	//		ply->velX >>= 1;
+	//		ply->velY = Abs16(ply->velY) >> 1;
+	//		break;
+	//	}
+	//}
 }
 
 
@@ -1069,7 +1144,7 @@ void StateBuildTrack()
 						else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
 						else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
 						else /* SYM_V */                         { lx = 31 - x; ly = y; }
-						byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx / 8) + (ly * 32 / 8)];
+						byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx >> 3) + (ly * 32 >> 3)];
 						if(byte & (1 << (7 - (lx & 0x07))))
 							WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
 						else
@@ -1150,7 +1225,7 @@ u8 GrayGradiant(u8 index)
 {
 	u8 col;
 	col = index & 0xF; // 0:16
-	col /= 2; // 0:8
+	col >>= 1; // 0:8
 	col += 2; // 2:10
 	if(col > 5)
 		col = 12 - col; // 2:5 & 6:3
