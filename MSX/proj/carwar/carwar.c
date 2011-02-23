@@ -426,9 +426,11 @@ const Menu menus[] =
 	{ "PLAYER SELECT", "PRESS SPACE", menuPlayer, numberof(menuPlayer) },
 };
 
-const u8 height[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
+const u8 g_HeightTab[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
 
-const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
+const u8 g_DefaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
+
+const u8 g_AnimIndex[] = { 0, 1, 0, 2 };
 
 //----------------------------------------
 // R A M   D A T A
@@ -673,7 +675,7 @@ void StateStartGame()
 
 	//----------------------------------------
 	// Copy cars to VRAM
-	PrintSprite(64, 64, "INIT\nCARS", (u16)&defaultColor);
+	PrintSprite(64, 64, "INIT\nCARS", (u16)&g_DefaultColor);
 	for(i=0; i<16; i++)
 	{
 		RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
@@ -681,11 +683,15 @@ void StateStartGame()
 		RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
 		RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
 	}
-	RAMtoVRAM(16 * 13, 256 + 212, 13, 11, (u16)&shadow);
+	RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&shadow);
+	for(i = 0; i < 8 * 3; i++)
+	{
+		RAMtoVRAM(208 + (i % 8) * 6, 476 + (i / 8), 6, 8, (u16)&pilote[6 * 8 * i]);
+	}
 
 	//----------------------------------------
 	// Initialize background backup
-	PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&defaultColor);
+	PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&g_DefaultColor);
 	for(i=0; i<CAR_NUM; i++)
 	{
 		InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
@@ -892,6 +898,14 @@ void StateUpdateGame()
 		}
 		else
 		{
+			if(curPly->flag & CAR_TURN_LEFT)
+			{
+				curPly->rot += 2; 
+			}
+			if(curPly->flag & CAR_TURN_RIGHT)
+			{
+				curPly->rot -= 2; 
+			}
 			curPly->jump--;
 		}
 
@@ -927,7 +941,7 @@ void StateUpdateGame()
 
 		curPly->posX = curPly->nextX;
 		curPly->posY = curPly->nextY;
-		curPly->posZ = height[curPly->jump];
+		curPly->posZ = g_HeightTab[curPly->jump];
 
 		// Backup
 		VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
@@ -1172,7 +1186,7 @@ void StateBuildTrack()
 	u16 x, y, lx, ly;
 	const TrackTile* block;
 
-	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&defaultColor);
+	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 
 	FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
 	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
@@ -1216,7 +1230,7 @@ void StateShadeTrack()
 	u8 cur, next;
 	u16 x, y, i;
 
-	PrintSprite(64, 64, "SHADE\nTRACK", (u16)&defaultColor);
+	PrintSprite(64, 64, "SHADE\nTRACK", (u16)&g_DefaultColor);
 
 	cur = ReadVRAM(0, 0);
 	for(x=0; x<256; x++)
