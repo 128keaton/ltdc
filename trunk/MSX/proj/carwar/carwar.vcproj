@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\data\sprt_pilote.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\sprt_shadow.h"
 				>
 			</File>
@@ -277,6 +281,10 @@
 			</File>
 			<File
 				RelativePath=".\sqrt1024.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\sqrt256.inc"
 				>
 			</File>
 			<File
