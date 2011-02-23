@@ -229,7 +229,8 @@ void CarToWallCollision(u8 car);
 i8 AngleDifferent64(i8 angleA, i8 angleB);
 //u8 VectorToAngle64(i16 x, i16 y);
 u8 VectorToAngle256(i16 x, i16 y);
-u16 GetVectorLenght(i16 x, i16 y);
+//u16 GetVectorLenght1024(i16 x, i16 y);
+u16 GetVectorLenght256(i16 x, i16 y);
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -268,12 +269,11 @@ void StartGame();
 #include "data/sprt_alpha.h"
 #include "data/sprt_track.h"
 #include "data/sprt_title.h"
+#include "data/sprt_pilote.h"
 
-#include "trigo256.inc"
+#include "trigo64.inc"
 #include "rot256.inc"
-#include "sqrt1024.inc"
-
-const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
+#include "sqrt256.inc"
 
 /** rotSpeed, maxSpeed (63), accel */
 const Car cars[CAR_NUM] = 
@@ -427,6 +427,8 @@ const Menu menus[] =
 };
 
 const u8 height[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
+
+const u8 defaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 
 //----------------------------------------
 // R A M   D A T A
@@ -825,9 +827,9 @@ void StateUpdateGame()
 				}
 				else
 				{
-					dir = VectorToAngle256(curPly->velX, curPly->velY);
-					curPly->velX -= friction * g_Cosinus256[dir];
-					curPly->velY -= friction * g_Sinus256[dir];
+					dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
+					curPly->velX -= friction * g_Cosinus64[dir];
+					curPly->velY -= friction * g_Sinus64[dir];
 				}
 			}
 
@@ -837,7 +839,7 @@ void StateUpdateGame()
 			x >>= 8;
 			y = Abs16(curPly->velY);
 			y >>= 8;
-			speed = GetVectorLenght(x, y);
+			speed = GetVectorLenght256(x, y);
 			if(speed <= grip)
 			{
 				curPly->velX = 0;
@@ -846,9 +848,9 @@ void StateUpdateGame()
 			else
 			{
 				speed = grip;
-				dir = VectorToAngle256(curPly->velX, curPly->velY);
-				curPly->velX -= grip * g_Cosinus256[dir];
-				curPly->velY -= grip * g_Sinus256[dir];
+				dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
+				curPly->velX -= grip * g_Cosinus64[dir];
+				curPly->velY -= grip * g_Sinus64[dir];
 			}
 
 			// Engine velocity
@@ -882,8 +884,9 @@ void StateUpdateGame()
 				curPly->jump = 20;
 			}
 
-			curPly->velX += speed * g_Cosinus256[curPly->rot];
-			curPly->velY += speed * g_Sinus256[curPly->rot];
+			dir = curPly->rot >> 2;
+			curPly->velX += speed * g_Cosinus64[dir];
+			curPly->velY += speed * g_Sinus64[dir];
 
 			CarToWallCollision(i);
 		}
@@ -999,20 +1002,38 @@ u8 VectorToAngle256(i16 x, i16 y)
 }
 
 /***/
-u16 GetVectorLenght(i16 x, i16 y)
+//u16 GetVectorLenght1024(i16 x, i16 y)
+//{
+//	u16 lenSq, ret;
+//	u8 div;
+//
+//	div = 1;
+//	lenSq = x*x + y*y; // get squared length
+//	while(lenSq >= 1024)
+//	{
+//		lenSq /= 2;
+//		div *= 2;
+//	}
+//	div = g_SquareRoot1024[div] >> 3; // squared-root the div factor
+//	ret = g_SquareRoot1024[lenSq] >> 3; // get square root (.2^3)
+//	return ret * div; // get length
+//}
+
+/***/
+u16 GetVectorLenght256(i16 x, i16 y)
 {
 	u16 lenSq, ret;
 	u8 div;
 
 	div = 1;
 	lenSq = x*x + y*y; // get squared length
-	while(lenSq >= 1024)
+	while(lenSq >= 256)
 	{
 		lenSq /= 2;
 		div *= 2;
 	}
-	div = g_SquareRoot1024[div] >> 3; // squared-root the div factor
-	ret = g_SquareRoot1024[lenSq] >> 3; // get square root (.2^3)
+	div = g_SquareRoot256[div] >> 4; // squared-root the div factor
+	ret = g_SquareRoot256[lenSq] >> 4; // get square root (.2^3)
 	return ret * div; // get length
 }
 
