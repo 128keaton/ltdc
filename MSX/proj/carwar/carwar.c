@@ -204,6 +204,7 @@ typedef struct tagPlayer
 
 typedef struct
 {
+	u8               frame;
 	u8               menu;
 	u8               item;
 	u8               pressed;
@@ -952,11 +953,13 @@ void StateUpdateGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		curPly = &game.players[i];
-		VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8);
-		VRAMtoVRAMTrans(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11);
+		//VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8);
+		//VRAMtoVRAMTrans(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11);
+		VRAMtoVRAMTrans(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8);
 	}
 		
 	waitRetrace();
+	game.frame++;
 }
 
 /** Initialize player data */
