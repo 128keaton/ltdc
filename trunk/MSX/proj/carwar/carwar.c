@@ -215,6 +215,7 @@ typedef struct
 	struct tagPlayer players[4];
 	void            (*state)(void);
 	u8               bitToByte[256 * 8];
+	VectorU8         smoke[12];
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
 } GameData;
@@ -270,7 +271,8 @@ void StartGame();
 #include "data/sprt_alpha.h"
 #include "data/sprt_track.h"
 #include "data/sprt_title.h"
-#include "data/sprt_pilote.h"
+#include "data/sprt_pilots.h"
+#include "data/sprt_smoke.h"
 
 #include "trigo64.inc"
 #include "rot256.inc"
@@ -525,9 +527,9 @@ void StateInitialize()
 	game.colorCode[COLOR_BLACK]        = OP_HOLE;
 
 	// Initialize (ASCII table) sprites
-	for(x=0; x<sizeof(charTable) / 8; x++)
+	for(x=0; x<sizeof(g_CharTable) / 8; x++)
 	{
-		RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&charTable[x * 8]);
+		RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&g_CharTable[x * 8]);
 	}
 
 	// Create default 8 bytes patern from a 8 bits byte
@@ -540,6 +542,12 @@ void StateInitialize()
 			else
 				game.bitToByte[x * 8 + i] = 0x00;
 		}		
+	}
+
+	for(x=0; x<12; x++)
+	{
+		game.smoke[x].x = 20 + 10 * (x % 4);
+		game.smoke[x].y = 20 + 10 * (x / 4);
 	}
 	
 	game.page = 0;
@@ -579,8 +587,8 @@ void StateTitle()
 	for(j=0; j<24; j++)
 	{
 		for(i=0; i<232; i++)
-		{
-			byte = title[(i >> 3) + (j * 232 >> 3)];
+		{      
+			byte = g_Title[(i >> 3) + (j * 232 >> 3)];
 			if(byte & (1 << (7 - (i & 0x07))))
 			{
 				WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
@@ -679,16 +687,17 @@ void StateStartGame()
 	PrintSprite(64, 64, "INIT\nCARS", (u16)&g_DefaultColor);
 	for(i=0; i<16; i++)
 	{
-		RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&car1[13 * 11 * i]);
-		RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&car2[13 * 11 * i]);
-		RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&car3[13 * 11 * i]);
-		RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&car4[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&g_Car1[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&g_Car2[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&g_Car3[13 * 11 * i]);
+		RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&g_Car4[13 * 11 * i]);
 	}
-	RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&shadow);
+	RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
 	for(i = 0; i < 8 * 3; i++)
 	{
-		RAMtoVRAM(208 + (i % 8) * 6, 476 + (i / 8), 6, 8, (u16)&pilote[6 * 8 * i]);
+		RAMtoVRAM(208 + (i % 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
 	}
+	RAMtoVRAM(221, 468, 30, 5, (u16)&g_Smoke); // 5x5 par 6x1
 
 	//----------------------------------------
 	// Initialize background backup
@@ -698,6 +707,12 @@ void StateStartGame()
 		InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
 		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
 		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
+	}
+
+	for(i=0; i<12; i++) // Backup smoke
+	{
+		VRAMtoVRAM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 212, 5, 5);
+		VRAMtoVRAM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 217, 5, 5);
 	}
 
 	ClearSprite();
@@ -788,6 +803,10 @@ void StateUpdateGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
+	}
+	for(i=0; i<12; i++)
+	{
+		VRAMtoVRAM(104 + (5 * i), 212 + (game.page * 5), game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5);
 	}
 
 	//----------------------------------------
@@ -953,9 +972,13 @@ void StateUpdateGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		curPly = &game.players[i];
-		//VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8);
-		//VRAMtoVRAMTrans(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11);
-		VRAMtoVRAMTrans(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8);
+		VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8);
+		VRAMtoVRAMTrans(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11);
+		//VRAMtoVRAMTrans(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8);
+	}
+	for(i=0; i<12; i++)
+	{
+		VRAMtoVRAMTrans(221 + 5 * (game.frame % 6), 468, game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5);
 	}
 		
 	waitRetrace();
@@ -1214,7 +1237,7 @@ void StateBuildTrack()
 						else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
 						else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
 						else /* SYM_V */                         { lx = 31 - x; ly = y; }
-						byte = trackTiles[32 * 4 * (block->tile & 0x0F) + (lx >> 3) + (ly * 32 >> 3)];
+						byte = g_TrackTiles[32 * 4 * (block->tile & 0x0F) + (lx >> 3) + (ly * 32 >> 3)];
 						if(byte & (1 << (7 - (lx & 0x07))))
 							WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
 						else
@@ -1309,7 +1332,7 @@ void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
 	HMMV(x, y, 8, 8, color);
 	for(j=0; j<8; j++)
 	{
-		LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[charTable[chr * 8 + j] * 8], VDP_OP_AND);
+		LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[g_CharTable[chr * 8 + j] * 8], VDP_OP_AND);
 	}
 }
 

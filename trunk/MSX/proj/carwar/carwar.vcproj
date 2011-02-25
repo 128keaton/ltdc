@@ -184,11 +184,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\data\sprt_pilote.h"
+				RelativePath=".\data\sprt_pilots.h"
 				>
 			</File>
 			<File
 				RelativePath=".\data\sprt_shadow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\sprt_smoke.h"
 				>
 			</File>
 			<File
