@@ -145,7 +145,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 						else if(colorNum == 16)
 						{
 						}
-						else if(colorNum == 2)
+						else if(colorNum == 1)
 						{
 							bit = pixel & 0x7;
 							if((argb & 0xFFFFFF) != transColor)
@@ -258,7 +258,7 @@ int main(int argc, const char* argv[])
 		printf("   -name  <name>    Name of the structure to export\n");
 	}
 
-	for(i=0; i<argc; i++)
+	for(i=1; i<argc; i++)
 	{
 		if(_stricmp(argv[i], "-in") == 0)
 		{
