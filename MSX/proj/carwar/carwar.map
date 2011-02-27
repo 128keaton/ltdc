@@ -15,7 +15,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
             0000  l__HOME                          
             0000  l__OVERLAY                       
             4010  s__CODE                          
-            7CE6  l__CODE                          
+            7DB3  l__CODE                          
             C000  _game                            
             C000  s__CABS                          
             C000  s__DATA                          
@@ -28,7 +28,7 @@ Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   7CE6 =  31974. bytes (REL,CON)
+_CODE                              4010   7DB3 =  32179. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
@@ -45,295 +45,304 @@ _CODE                              4010   7CE6 =  31974. bytes (REL,CON)
             6DD2  _g_Title                         
             708A  _g_Pilots                        
             750A  _g_Smoke                         
-            7B61  _cars                            
-            7B75  _bg                              
-            7BCA  _trackTiles01                    
-            7C48  _track01                         
-            7C54  _menuMain                        
-            7C68  _menuMode                        
-            7C81  _menuTrack                       
-            7C90  _menuPlayer                      
-            7CA4  _menus                           
-            7CC0  _g_HeightTab                     
-            7CD5  _g_DefaultColor                  
-            7CDD  _g_AnimIndex                     
-            7DA2  _MainLoop                        
-            7DA2  _MainLoop_start                  
-            7DBB  _MainLoop_end                    
-            7DBB  _StateInitialize                 
-            7DBB  _StateInitialize_start           
-            8057  _InitializeMenu                  
-            8057  _InitializeMenu_start            
-            8057  _StateInitialize_end             
-            81EF  _InitializeMenu_end              
-            81EF  _StateTitle                      
-            81EF  _StateTitle_start                
-            833C  _StartGame                       
-            833C  _StartGame_start                 
-            833C  _StateTitle_end                  
-            8345  _StartGame_end                   
-            8345  _StateMainMenu                   
-            8345  _StateMainMenu_start             
-            85A7  _StateMainMenu_end               
-            85A9  _StateStartGame                  
-            85A9  _StateStartGame_start            
-            89F9  _StateStartGame_end              
-            8A15  _StateUpdateGame                 
-            8A15  _StateUpdateGame_start           
-            99F1  _InitializePlayer                
-            99F1  _InitializePlayer_start          
+            7B61  _g_Cars                          
+            7B7A  _g_BG                            
+            7BCF  _g_TrackTiles01                  
+            7C4D  _g_TrackTiles02                  
+            7CCB  _g_TrackTiles03                  
+            7D49  _g_Tracks                        
+            7D7C  _g_MenuMain                      
+            7D94  _g_MenuMode                      
+            7DB2  _g_MenuTrack                     
+            7DC4  _g_MenuPlayer                    
+            7DDC  _g_MenuTrackList                 
+            7DF4  _g_Menus                         
+            7E17  _g_HeightTab                     
+            7E2C  _g_DefaultColor                  
+            7E34  _g_AnimIndex                     
+            7F21  _MainLoop                        
+            7F21  _MainLoop_start                  
+            7F3A  _MainLoop_end                    
+            7F3A  _StateInitialize                 
+            7F3A  _StateInitialize_start           
+            817B  _InitializeMenu                  
+            817B  _InitializeMenu_start            
+            817B  _StateInitialize_end             
+            830D  _InitializeMenu_end              
+            830D  _StateTitle                      
+            830D  _StateTitle_start                
+            8479  _StateMainMenu                   
+            8479  _StateMainMenu_start             
+            8479  _StateTitle_end                  
+            872F  _StateMainMenu_end               
+            8731  _StateStartGame                  
+            8731  _StateStartGame_start            
+            8B12  _StateStartGame_end              
+            8B2E  _StateUpdateGame                 
+            8B2E  _StateUpdateGame_start           
+            9A0A  _InitializePlayer                
+            9A0A  _InitializePlayer_start          
 ASxxxx Linker V02.00 + NoICE + sdld,  page 3.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   7CE6 =  31974. bytes (REL,CON)
+_CODE                              4010   7DB3 =  32179. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            99F1  _StateUpdateGame_end             
-            9AC9  _AngleDifferent64                
-            9AC9  _AngleDifferent64_start          
-            9AC9  _InitializePlayer_end            
-            9AF9  _AngleDifferent64_end            
-            9AF9  _VectorToAngle256                
-            9AF9  _VectorToAngle256_start          
-            9BB6  _GetVectorLenght256              
-            9BB6  _GetVectorLenght256_start        
-            9BB6  _VectorToAngle256_end            
-            9C37  _CarToCarCollision               
-            9C37  _CarToCarCollision_start         
-            9C37  _GetVectorLenght256_end          
-            9ECC  _CarToCarCollision_end           
-            9ECC  _CarToWallCollision              
-            9ECC  _CarToWallCollision_start        
-            A183  _CarToWallCollision_end          
-            A183  _StateBuildTrack                 
-            A183  _StateBuildTrack_start           
-            A515  _StateBuildTrack_end             
-            A521  _StateShadeTrack                 
-            A521  _StateShadeTrack_start           
-            A70F  _StateShadeTrack_end             
-            A71B  _DarkenColor                     
-            A71B  _DarkenColor_start               
-            A912  _DarkenColor_end                 
-            A912  _GrayGradiant                    
-            A912  _GrayGradiant_start              
-            A941  _DrawCharacter                   
-            A941  _DrawCharacter_start             
-            A941  _GrayGradiant_end                
-            AA27  _DrawCharacter_end               
-            AA27  _DrawText                        
-            AA27  _DrawText_start                  
-            AAAE  _DebugPrintInt                   
-            AAAE  _DebugPrintInt_start             
-            AAAE  _DrawText_end                    
-            AC26  _DebugPrintInt_end               
-            AC26  _Joystick                        
-            AC26  _Joystick_start                  
-            AC38  _Joystick_end                    
-            AC38  _Joytrig                         
-            AC38  _Joytrig_start                   
-            AC4C  _GetKeyMatrixLine                
-            AC4C  _GetKeyMatrixLine_start          
-            AC4C  _Joytrig_end                     
-            AC5E  _GetKeyMatrixLine_end            
-            AC5E  _SetScreen8                      
-            AC5E  _SetScreen8_start                
-            ACB0  _SetScreen8_end                  
-            ACB0  _SetSpriteMode                   
+            9A0A  _StateUpdateGame_end             
+            9AE3  _AngleDifferent64                
+            9AE3  _AngleDifferent64_start          
+            9AE3  _InitializePlayer_end            
+            9B13  _AngleDifferent64_end            
+            9B13  _VectorToAngle256                
+            9B13  _VectorToAngle256_start          
+            9BD0  _GetVectorLenght256              
+            9BD0  _GetVectorLenght256_start        
+            9BD0  _VectorToAngle256_end            
+            9C51  _CarToCarCollision               
+            9C51  _CarToCarCollision_start         
+            9C51  _GetVectorLenght256_end          
+            9EE6  _CarToCarCollision_end           
+            9EE6  _CarToWallCollision              
+            9EE6  _CarToWallCollision_start        
+            A19D  _CarToWallCollision_end          
+            A19D  _StateBuildTrack                 
+            A19D  _StateBuildTrack_start           
+            A5AB  _StateBuildTrack_end             
+            A5B7  _StateShadeTrack                 
+            A5B7  _StateShadeTrack_start           
+            A7A5  _StateShadeTrack_end             
+            A7B1  _DarkenColor                     
+            A7B1  _DarkenColor_start               
+            A9A8  _DarkenColor_end                 
+            A9A8  _GrayGradiant                    
+            A9A8  _GrayGradiant_start              
+            A9D7  _DrawCharacter                   
+            A9D7  _DrawCharacter_start             
+            A9D7  _GrayGradiant_end                
+            AAB9  _DrawCharacter_end               
+            AAB9  _DrawText                        
+            AAB9  _DrawText_start                  
+            AB40  _DebugPrintInt                   
+            AB40  _DebugPrintInt_start             
+            AB40  _DrawText_end                    
+            ACB8  _DebugPrintInt_end               
+            ACB8  _StartGame                       
+            ACB8  _StartGame_start                 
+            ACD1  _SelectPlayer                    
+            ACD1  _SelectPlayer_start              
+            ACD1  _StartGame_end                   
+            ACE2  _SelectPlayer_end                
+            ACE2  _SelectRule                      
+            ACE2  _SelectRule_start                
+            ACF3  _Joystick                        
+            ACF3  _Joystick_start                  
+            ACF3  _SelectRule_end                  
+            AD05  _Joystick_end                    
+            AD05  _Joytrig                         
 ASxxxx Linker V02.00 + NoICE + sdld,  page 4.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   7CE6 =  31974. bytes (REL,CON)
+_CODE                              4010   7DB3 =  32179. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            ACB0  _SetSpriteMode_start             
-            ACFD  _SetFreq                         
-            ACFD  _SetFreq_start                   
-            ACFD  _SetSpriteMode_end               
-            AD1E  _SetFreq_end                     
-            AD1E  _SetPage8                        
-            AD1E  _SetPage8_start                  
-            AD3C  _DrawPoint8                      
-            AD3C  _DrawPoint8_start                
-            AD3C  _SetPage8_end                    
-            ADA7  _DrawLine8                       
-            ADA7  _DrawLine8_start                 
-            ADA7  _DrawPoint8_end                  
-            ADB5  _DrawLine8_end                   
-            ADB5  _waitRetrace                     
-            ADB5  _waitRetrace_start               
-            ADC0  _WaitForVDP                      
-            ADC0  _WaitForVDP_start                
-            ADC0  _waitRetrace_end                 
-            ADD8  _WaitForVDP_end                  
-            ADD8  _WriteVRAM                       
-            ADD8  _WriteVRAM_start                 
-            AE10  _ReadVRAM                        
-            AE10  _ReadVRAM_start                  
-            AE10  _WriteVRAM_end                   
-            AE44  _ReadVRAM_end                    
-            AE44  _VPDCommandLoop                  
-            AE44  _VPDCommandLoop_start            
-            AE7C  _RAMtoVRAM                       
-            AE7C  _RAMtoVRAM_start                 
-            AE7C  _VPDCommandLoop_end              
-            AEF2  _RAMtoVRAMTrans                  
-            AEF2  _RAMtoVRAMTrans_start            
-            AEF2  _RAMtoVRAM_end                   
-            AF68  _FillVRAM                        
-            AF68  _FillVRAM_start                  
-            AF68  _RAMtoVRAMTrans_end              
-            AFCF  _FillVRAM_end                    
-            AFCF  _VRAMtoVRAM                      
-            AFCF  _VRAMtoVRAM_start                
-            B04F  _VRAMtoVRAMTrans                 
-            B04F  _VRAMtoVRAMTrans_start           
-            B04F  _VRAMtoVRAM_end                  
-            B0CF  _VPDCommand32                    
-            B0CF  _VPDCommand32_start              
-            B0CF  _VRAMtoVRAMTrans_end             
-            B10D  _VPDCommand32_end                
-            B10D  _VPDCommand36                    
-            B10D  _VPDCommand36_start              
-            B143  _PrintSprite                     
-            B143  _PrintSprite_start               
+            AD05  _Joytrig_start                   
+            AD19  _GetKeyMatrixLine                
+            AD19  _GetKeyMatrixLine_start          
+            AD19  _Joytrig_end                     
+            AD2B  _GetKeyMatrixLine_end            
+            AD2B  _SetScreen8                      
+            AD2B  _SetScreen8_start                
+            AD7D  _SetScreen8_end                  
+            AD7D  _SetSpriteMode                   
+            AD7D  _SetSpriteMode_start             
+            ADCA  _SetFreq                         
+            ADCA  _SetFreq_start                   
+            ADCA  _SetSpriteMode_end               
+            ADEB  _SetFreq_end                     
+            ADEB  _SetPage8                        
+            ADEB  _SetPage8_start                  
+            AE09  _DrawPoint8                      
+            AE09  _DrawPoint8_start                
+            AE09  _SetPage8_end                    
+            AE74  _DrawLine8                       
+            AE74  _DrawLine8_start                 
+            AE74  _DrawPoint8_end                  
+            AE82  _DrawLine8_end                   
+            AE82  _waitRetrace                     
+            AE82  _waitRetrace_start               
+            AE8D  _WaitForVDP                      
+            AE8D  _WaitForVDP_start                
+            AE8D  _waitRetrace_end                 
+            AEA5  _WaitForVDP_end                  
+            AEA5  _WriteVRAM                       
+            AEA5  _WriteVRAM_start                 
+            AEDD  _ReadVRAM                        
+            AEDD  _ReadVRAM_start                  
+            AEDD  _WriteVRAM_end                   
+            AF11  _ReadVRAM_end                    
+            AF11  _VPDCommandLoop                  
+            AF11  _VPDCommandLoop_start            
+            AF49  _RAMtoVRAM                       
+            AF49  _RAMtoVRAM_start                 
+            AF49  _VPDCommandLoop_end              
+            AFBF  _RAMtoVRAMTrans                  
+            AFBF  _RAMtoVRAMTrans_start            
+            AFBF  _RAMtoVRAM_end                   
+            B035  _FillVRAM                        
+            B035  _FillVRAM_start                  
+            B035  _RAMtoVRAMTrans_end              
+            B09C  _FillVRAM_end                    
+            B09C  _VRAMtoVRAM                      
+            B09C  _VRAMtoVRAM_start                
+            B11C  _VRAMtoVRAMTrans                 
+            B11C  _VRAMtoVRAMTrans_start           
 ASxxxx Linker V02.00 + NoICE + sdld,  page 5.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   7CE6 =  31974. bytes (REL,CON)
+_CODE                              4010   7DB3 =  32179. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            B143  _VPDCommand36_end                
-            B1C1  _ClearSprite                     
-            B1C1  _ClearSprite_start               
-            B1C1  _PrintSprite_end                 
-            B1D3  _ClearSprite_end                 
-            B1D3  _SetSpriteMultiColor             
-            B1D3  _SetSpriteMultiColor_start       
-            B2A6  _SetSpriteMultiColor_end         
-            B2A6  _SetSpriteUniColor               
-            B2A6  _SetSpriteUniColor_start         
-            B377  _SetSpriteUniColor_end           
-            B377  _last_error                      
-            B378  _open                            
-            B39F  _creat                           
-            B3C9  _close                           
-            B3E0  _dup                             
-            B401  _read                            
-            B42C  _write                           
-            B457  _lseek                           
-            B485  _exit                            
-            B498  __modschar_rrx_s                 
-            B49F  __modschar_rrx_hds               
-            B4A5  __modsint_rrx_s                  
-            B4AB  __modsint_rrx_hds                
-            B4B1  __divsint_rrx_s                  
-            B4BA  __divschar_rrx_s                 
-            B4C1  __div8                           
-            B4C1  __divschar_rrx_hds               
-            B4C5  __div_signexte                   
-            B4C9  __div16                          
-            B4C9  __divsint_rrx_hds                
-            B4EF  __get_remainder                  
-            B4F9  __divuint_rrx_s                  
-            B501  __divuchar_rrx_s                 
-            B508  __divu8                          
-            B508  __divuchar_rrx_hds               
-            B50B  __divu16                         
-            B50B  __divuint_rrx_hds                
-            B53D  __moduchar_rrx_s                 
-            B544  __moduchar_rrx_hds               
-            B549  __moduint_rrx_s                  
-            B54F  __moduint_rrx_hds                
-            B554  __mulint_rrx_s                   
-            B55A  __mulint_rrx_hds                 
-            B55A  __muluchar_rrx_hds               
-            B55C  __mul16                          
-            B570  __mullong_rrf_s                  
-            B570  __mullong_rrx_s                  
-            B573  __modslong_rrf_s                 
-            B573  __modslong_rrx_s                 
-            B576  __modulong_rrf_s                 
+            B11C  _VRAMtoVRAM_end                  
+            B19C  _VPDCommand32                    
+            B19C  _VPDCommand32_start              
+            B19C  _VRAMtoVRAMTrans_end             
+            B1DA  _VPDCommand32_end                
+            B1DA  _VPDCommand36                    
+            B1DA  _VPDCommand36_start              
+            B210  _PrintSprite                     
+            B210  _PrintSprite_start               
+            B210  _VPDCommand36_end                
+            B28E  _ClearSprite                     
+            B28E  _ClearSprite_start               
+            B28E  _PrintSprite_end                 
+            B2A0  _ClearSprite_end                 
+            B2A0  _SetSpriteMultiColor             
+            B2A0  _SetSpriteMultiColor_start       
+            B373  _SetSpriteMultiColor_end         
+            B373  _SetSpriteUniColor               
+            B373  _SetSpriteUniColor_start         
+            B444  _SetSpriteUniColor_end           
+            B444  _last_error                      
+            B445  _open                            
+            B46C  _creat                           
+            B496  _close                           
+            B4AD  _dup                             
+            B4CE  _read                            
+            B4F9  _write                           
+            B524  _lseek                           
+            B552  _exit                            
+            B565  __modschar_rrx_s                 
+            B56C  __modschar_rrx_hds               
+            B572  __modsint_rrx_s                  
+            B578  __modsint_rrx_hds                
+            B57E  __divsint_rrx_s                  
+            B587  __divschar_rrx_s                 
+            B58E  __div8                           
+            B58E  __divschar_rrx_hds               
+            B592  __div_signexte                   
+            B596  __div16                          
+            B596  __divsint_rrx_hds                
+            B5BC  __get_remainder                  
+            B5C6  __divuint_rrx_s                  
+            B5CE  __divuchar_rrx_s                 
+            B5D5  __divu8                          
+            B5D5  __divuchar_rrx_hds               
+            B5D8  __divu16                         
+            B5D8  __divuint_rrx_hds                
+            B60A  __mulint_rrx_s                   
+            B610  __mulint_rrx_hds                 
+            B610  __muluchar_rrx_hds               
+            B612  __mul16                          
 ASxxxx Linker V02.00 + NoICE + sdld,  page 6.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   7CE6 =  31974. bytes (REL,CON)
+_CODE                              4010   7DB3 =  32179. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            B576  __modulong_rrx_s                 
-            B579  __divslong_rrf_s                 
-            B579  __divslong_rrx_s                 
-            B57C  __divulong_rrf_s                 
-            B57C  __divulong_rrx_s                 
-            B57F  __mulint_rrf_s                   
-            B585  __divsint_rrf_s                  
-            B58B  __divuint_rrf_s                  
-            B591  __mulschar_rrf_s                 
-            B597  __divschar_rrf_s                 
-            B59D  __modschar_rrf_s                 
-            B5A3  __muluchar_rrf_s                 
-            B5A9  __divuchar_rrf_s                 
-            B5AF  __moduchar_rrf_s                 
-            B5B5  __mulsuchar_rrf_s                
-            B5BB  __divsuchar_rrf_s                
-            B5C1  __modsuchar_rrf_s                
-            B5C7  __muluschar_rrf_s                
-            B5CD  __divuschar_rrf_s                
-            B5D3  __moduschar_rrf_s                
-            B5D9  __modsint_rrf_s                  
-            B5DF  __moduint_rrf_s                  
-            B5E5  __rrulong_rrf_s                  
-            B5EB  __rrslong_rrf_s                  
-            B5F1  __rlulong_rrf_s                  
-            B5F7  __rlslong_rrf_s                  
-            B5FD  __mullong                        
-            B5FD  __mullong_start                  
-            B8A5  __mullong_end                    
-            B8A5  __rrulong_rrx_s                  
-            B8BF  __rrslong_rrx_s                  
-            B8D9  __rlslong_rrx_s                  
-            B8D9  __rlulong_rrx_s                  
-            B8F0  __modsuchar_rrx_s                
-            B8FF  __moduschar_rrx_s                
-            B911  __divsuchar_rrx_s                
-            B91D  __divuschar_rrx_s                
-            B92C  __muluchar_rrx_s                 
-            B93E  __mulsuchar_rrx_s                
-            B948  __muluschar_rrx_s                
-            B952  __mulschar_rrx_s                 
-            B959  __mulschar_rrx_hds               
-            B965  __modslong                       
-            B965  __modslong_start                 
-            BA3A  __modslong_end                   
-            BA3A  __modulong                       
-            BA3A  __modulong_start                 
-            BB41  __divslong                       
-            BB41  __divslong_start                 
-            BB41  __modulong_end                   
-            BC23  __divslong_end                   
+            B626  __mullong_rrf_s                  
+            B626  __mullong_rrx_s                  
+            B629  __modslong_rrf_s                 
+            B629  __modslong_rrx_s                 
+            B62C  __modulong_rrf_s                 
+            B62C  __modulong_rrx_s                 
+            B62F  __divslong_rrf_s                 
+            B62F  __divslong_rrx_s                 
+            B632  __divulong_rrf_s                 
+            B632  __divulong_rrx_s                 
+            B635  __mulint_rrf_s                   
+            B63B  __divsint_rrf_s                  
+            B641  __divuint_rrf_s                  
+            B647  __mulschar_rrf_s                 
+            B64D  __divschar_rrf_s                 
+            B653  __modschar_rrf_s                 
+            B659  __muluchar_rrf_s                 
+            B65F  __divuchar_rrf_s                 
+            B665  __moduchar_rrf_s                 
+            B66B  __mulsuchar_rrf_s                
+            B671  __divsuchar_rrf_s                
+            B677  __modsuchar_rrf_s                
+            B67D  __muluschar_rrf_s                
+            B683  __divuschar_rrf_s                
+            B689  __moduschar_rrf_s                
+            B68F  __modsint_rrf_s                  
+            B695  __moduint_rrf_s                  
+            B69B  __rrulong_rrf_s                  
+            B6A1  __rrslong_rrf_s                  
+            B6A7  __rlulong_rrf_s                  
+            B6AD  __rlslong_rrf_s                  
+            B6B3  __mullong                        
+            B6B3  __mullong_start                  
+            B95B  __moduchar_rrx_s                 
+            B95B  __mullong_end                    
+            B962  __moduchar_rrx_hds               
+            B967  __moduint_rrx_s                  
+            B96D  __moduint_rrx_hds                
+            B972  __rrulong_rrx_s                  
+            B98C  __rrslong_rrx_s                  
+            B9A6  __rlslong_rrx_s                  
+            B9A6  __rlulong_rrx_s                  
+            B9BD  __modsuchar_rrx_s                
+            B9CC  __moduschar_rrx_s                
+            B9DE  __divsuchar_rrx_s                
+            B9EA  __divuschar_rrx_s                
+            B9F9  __muluchar_rrx_s                 
+            BA0B  __mulsuchar_rrx_s                
+            BA15  __muluschar_rrx_s                
+            BA1F  __mulschar_rrx_s                 
+            BA26  __mulschar_rrx_hds               
 ASxxxx Linker V02.00 + NoICE + sdld,  page 7.
 Hexadecimal
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-_CODE                              4010   7CE6 =  31974. bytes (REL,CON)
+_CODE                              4010   7DB3 =  32179. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  ---------------------------------   ------------------------
-            BC23  __divulong                       
-            BC23  __divulong_start                 
-            BCF6  __divulong_end                   
+            BA32  __modslong                       
+            BA32  __modslong_start                 
+            BB07  __modslong_end                   
+            BB07  __modulong                       
+            BB07  __modulong_start                 
+            BC0E  __divslong                       
+            BC0E  __divslong_start                 
+            BC0E  __modulong_end                   
+            BCF0  __divslong_end                   
+            BCF0  __divulong                       
+            BCF0  __divulong_start                 
+            BDC3  __divulong_end                   
 
 ASxxxx Linker V02.00 + NoICE + sdld,  page 8.
 Hexadecimal
@@ -401,21 +410,21 @@ files.rel                                 [  ]
 
 Libraries Linked                          [ object file ]
 
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divunsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modunsigned.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ mul.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ stubs.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _mullong.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ shift.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ modmixed.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ divmixed.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ mulchar.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _modslong.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _modulong.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _divslong.rel ]
-E:\dev\Private\MSX\tools\SDCC\bin\..\lib  [ _divulong.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ modsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divunsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ mul.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ stubs.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ _mullong.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ modunsigned.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ shift.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ modmixed.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ divmixed.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ mulchar.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ _modslong.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ _modulong.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ _divslong.rel ]
+C:\Dev\program\msx\tools\SDCC\bin\..\lib  [ _divulong.rel ]
 
 ASxxxx Linker V02.00 + NoICE + sdld,  page 15.
 
