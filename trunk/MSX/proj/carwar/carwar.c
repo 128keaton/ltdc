@@ -10,10 +10,11 @@
 #define PosXToSprt(a) (PosToPxl(a) - 6)
 #define PosYToSprt(a) (PosToPxl(a) - 5)
 
-#define HMMC(dx, dy, nx, ny, ram)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMC;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-#define HMMM(sx, sy, dx, dy, nx, ny)  game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; game.vdp32.CLR = 0; game.vdp32.ARG = 0; game.vdp32.CMD = VDP_CMD_HMMM; VPDCommand32((u16)&game.vdp32);
-#define HMMV(dx, dy, nx, ny, col)     game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_HMMV;                                       VPDCommand36((u16)&game.vdp36);
-#define LMMC(dx, dy, nx, ny, ram, op) game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; game.vdp36.ARG = 0; game.vdp36.CMD = VDP_CMD_LMMC + op;                        VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+#define HMMC(dx, dy, nx, ny, ram)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMC;                                  VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+#define LMMC(dx, dy, nx, ny, ram, op)    game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_LMMC + op;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+#define HMMM(sx, sy, dx, dy, nx, ny)     game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&game.vdp32);
+#define LMMM(sx, sy, dx, dy, nx, ny, op) game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&game.vdp32);
+#define HMMV(dx, dy, nx, ny, col)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMV;                                            VPDCommand36((u16)&game.vdp36);
 
 #define Abs8(i)  (((u8)i & 0x80) ? ~((u8)i - 1) : i)
 #define Abs16(i) (((u16)i & 0x8000) ? ~((u16)i - 1) : i)
@@ -152,9 +153,12 @@ typedef struct tagTrackTile
 
 typedef struct tagTrack
 {
+	const u8* name;
 	u8 width;
 	u8 height;
 	TrackTile* tiles;
+	struct tagVectorU8 offset;
+	u8 rotation;
 	struct tagVectorU8 startPos[4];
 } Track;
 
@@ -162,7 +166,8 @@ typedef struct tagMenuEntry
 {
 	const char* text;
 	u8 nextIdx;
-	void (*action)(void);
+	void (*action)(i8);
+	i8 value;
 } MenuEntry;
 
 typedef struct tagMenu
@@ -210,21 +215,24 @@ typedef struct
 	u8               pressed;
 	u8               rule;
 	u8               page;
+	u8               track;
 	u16              yOffset;
 	u8               colorCode[256];
+	u8               playerNum;
 	struct tagPlayer players[4];
 	void            (*state)(void);
 	u8               bitToByte[256 * 8];
 	VectorU8         smoke[12];
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
+	u8               blockGen[32*32];
 } GameData;
 
 //----------------------------------------
 // P R O T O T Y P E S
 
 void MainLoop();
-void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY);
+void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot);
 void InitializeMenu(u8 menu);
 void CarToCarCollision(u8 idx, u8 car1, u8 car2);
 void CarToWallCollision(u8 car);
@@ -253,7 +261,9 @@ void StateStartGame();
 void StateUpdateGame();
 
 // Menu callback
-void StartGame();
+void StartGame(i8 value);
+void SelectPlayer(i8 value);
+void SelectRule(i8 value);
 
 //----------------------------------------
 // R O M   D A T A
@@ -278,21 +288,24 @@ void StartGame();
 #include "rot256.inc"
 #include "sqrt256.inc"
 
+//----------------------------------------
 /** rotSpeed, maxSpeed (63), accel */
-const Car cars[CAR_NUM] = 
+const Car g_Cars[5] = 
 {
-	// Cop
+	// 0. Cop
 	{ 5, { 25, 35, 40 }, 6 },
-	// Camaro (Chevrolet)
+	// 1. Camaro (Chevrolet)
 	{ 4, { 20, 35, 60 }, 7 },
-	// Ferrari
+	// 2. Ferrari
 	{ 4, { 20, 40, 55 }, 7 },
-	// Turtule
+	// 3. Turtule
 	{ 6, { 30, 30, 30 }, 5 },
+	// 4. Pilot
+	{ 8, { 15, 15, 15 }, 5 },
 };
 
 /** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
-const Background bg[] = 
+const Background g_BG[] = 
 {
 	// 0. OP_WALL
 	{ 0, 0, 0, COLOR_KHAKI, COLOR_DARKKAKHI },
@@ -330,7 +343,7 @@ const Background bg[] =
 	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
 		
-const TrackTile trackTiles01[] = 
+const TrackTile g_TrackTiles01[] = 
 {
 	// line 0
 	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
@@ -382,51 +395,170 @@ const TrackTile trackTiles01[] =
 	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
 };
 
-const Track track01 = { 7, 6, trackTiles01, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } };
+const TrackTile g_TrackTiles02[] = 
+{
+	// line 0
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 5 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	// line 1
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	{ 11 + ROT_90, COLOR_ORANGE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_BLACK, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	// line 2
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 11 + ROT_0, COLOR_ORANGE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	// line 3
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
+	{ 1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW },
+	// line 4
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
+	// line 5
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	{ 3 + ROT_90, COLOR_WHITE, COLOR_GRAY },
+	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+};
 
+const TrackTile g_TrackTiles03[] = 
+{
+	// line 0
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	// line 1
+	{ 0 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	{ 11 + ROT_270, COLOR_ORANGE, COLOR_CYAN },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	// line 2
+	{ 9 + ROT_90, COLOR_BROWN, COLOR_CYAN },
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 9 + ROT_90, COLOR_WHITE, COLOR_CYAN },
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	// line 3
+	{ 2 + ROT_0, COLOR_BROWN, COLOR_BROWN },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_WHITE },
+	{ 9 + ROT_0, COLOR_CYAN, COLOR_WHITE },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	// line 4
+	{ 9 + ROT_90, COLOR_GRAY, COLOR_BROWN },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 0 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+	{ 0 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	// line 5
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 11 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+	{ 9 + ROT_0, COLOR_BLUE, COLOR_GRAY },
+	{ 9 + ROT_0, COLOR_YELLOW, COLOR_BLUE },
+	{ 9 + ROT_0, COLOR_CYAN, COLOR_YELLOW },
+	{ 3 + ROT_90, COLOR_WHITE, COLOR_CYAN },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+};
+
+const Track g_Tracks[] = 
+{
+	{ "AOI1", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
+	{ "NOE1", 7, 6, g_TrackTiles02, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE2", 7, 6, g_TrackTiles03, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+};
+
+//----------------------------------------
 // Menu 0
-const MenuEntry menuMain[] =
+const MenuEntry g_MenuMain[] =
 {
 	{ "PLAY",     3, 0 },
-	{ "EDITOR",   ITEM_INVALID, 0 },
-	{ "OPTIONS",  ITEM_INVALID, 0 },
-	{ "CREDITS",  ITEM_INVALID, 0 },
+	{ "EDITOR",   ITEM_INVALID, 0, 0 },
+	{ "OPTIONS",  ITEM_INVALID, 0, 0 },
+	{ "CREDITS",  ITEM_INVALID, 0, 0 },
 };
 
 // Menu 1
-const MenuEntry menuMode[] =
+const MenuEntry g_MenuMode[] =
 {
-
-	{ "RACE",     2, 0 },
-	{ "SURVIVOR", 2, 0 },
-	{ "TAG",      2, 0 },
-	{ "SOCCER",   2, 0 },
-	{ "BACK",     3, 0 },
+	{ "RACE",     2, SelectRule, RULE_RACE },
+	{ "SURVIVOR", ITEM_INVALID, SelectRule, RULE_SURVIVOR },
+	{ "TAG",      ITEM_INVALID, SelectRule, RULE_TAG },
+	{ "SOCCER",   ITEM_INVALID, SelectRule, RULE_SOCCER },
+	{ "BACK",     3, 0, 0 },
 };
 
 // Menu 2
-const MenuEntry menuTrack[] =
+const MenuEntry g_MenuTrack[] =
 {
-	{ "FROM ROM",  ITEM_ACTION, StartGame },
-	{ "FROM DISK", ITEM_INVALID, 0 },
-	{ "BACK",      1, 0 },
+	{ "FROM ROM",  4, 0, 0 },
+	{ "FROM DISK", ITEM_INVALID, 0, 0 },
+	{ "BACK",      1, 0, 0 },
 };
 
 // Menu 3
-const MenuEntry menuPlayer[] =
+const MenuEntry g_MenuPlayer[] =
 {
-	{ "2 PLAYERS", 1, 0 },
-	{ "3 PLAYERS", 1, 0 },
-	{ "4 PLAYERS", 1, 0 },
-	{ "BACK",      0, 0 },
+	{ "2 PLAYERS", 1, SelectPlayer, 2 },
+	{ "3 PLAYERS", 1, SelectPlayer, 3 },
+	{ "4 PLAYERS", 1, SelectPlayer, 4 },
+	{ "BACK",      0, 0, 0 },
 };
 
-const Menu menus[] =
+// Menu 4
+const MenuEntry g_MenuTrackList[] =
 {
-	{ "",              "PRESS SPACE", menuMain,   numberof(menuMain) },
-	{ "GAME MODE",     "PRESS SPACE", menuMode,   numberof(menuMode) },
-	{ "TRACK SELECT",  "PRESS SPACE", menuTrack,  numberof(menuTrack) },
-	{ "PLAYER SELECT", "PRESS SPACE", menuPlayer, numberof(menuPlayer) },
+	{ "AOI1", ITEM_ACTION, StartGame, 0 },
+	{ "NOE1", ITEM_ACTION, StartGame, 1 },
+	{ "NOE2", ITEM_ACTION, StartGame, 2 },
+	{ "BACK",           2, 0, 0 },
+};
+
+const Menu g_Menus[] =
+{
+	{ "",              "PRESS SPACE", g_MenuMain,      numberof(g_MenuMain) },
+	{ "GAME MODE",     "PRESS SPACE", g_MenuMode,      numberof(g_MenuMode) },
+	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrack,     numberof(g_MenuTrack) },
+	{ "PLAYER SELECT", "PRESS SPACE", g_MenuPlayer,    numberof(g_MenuPlayer) },
+	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrackList, numberof(g_MenuTrackList) },
 };
 
 const u8 g_HeightTab[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
@@ -480,6 +612,9 @@ void MainLoop()
 void StateInitialize()
 {
 	u16 x, i;
+
+	game.vdp36.ARG = 0; 
+	game.vdp32.ARG = 0; 
 
 	// Init
 	SetFreq(FREQ_60);
@@ -544,15 +679,16 @@ void StateInitialize()
 		}		
 	}
 
-	for(x=0; x<12; x++)
-	{
-		game.smoke[x].x = 20 + 10 * (x % 4);
-		game.smoke[x].y = 20 + 10 * (x / 4);
-	}
+	//for(x=0; x<12; x++)
+	//{
+	//	game.smoke[x].x = 20 + 10 * (x % 4);
+	//	game.smoke[x].y = 20 + 10 * (x / 4);
+	//}
 	
+	game.track = 0;
 	game.page = 0;
-	//game.state = StateTitle;
-	game.state = StateStartGame;
+	game.state = StateTitle;
+	//game.state = StateStartGame;
 }
 
 /** Initialize a given menu */
@@ -567,10 +703,10 @@ void InitializeMenu(u8 menu)
 
 	HMMV(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
 	
-	DrawText(MENU_X, MENU_Y, menus[game.menu].title, COLOR_WHITE);
-	for(item = 0; item < menus[game.menu].itemNum; item++)
+	DrawText(MENU_X, MENU_Y, g_Menus[game.menu].title, COLOR_WHITE);
+	for(item = 0; item < g_Menus[game.menu].itemNum; item++)
 	{
-		DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, menus[game.menu].items[item].text, menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
+		DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].text, g_Menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
 	}
 
 	HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
@@ -595,19 +731,13 @@ void StateTitle()
 			}
 		}
 		// Copy title to both screen
-		VRAMtoVRAM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
+		HMMM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
 	}
 
 	InitializeMenu(0);
 	game.pressed = 0;
 	game.page = 0;
 	game.state = StateMainMenu;
-}
-
-/** Menu callback - Start game */
-void StartGame()
-{
-	game.state = StateStartGame;
 }
 
 /** State - Process main menu */
@@ -625,10 +755,10 @@ void StateMainMenu()
 	|| Joytrig(1) != 0
 	|| Joytrig(2) != 0)
 	{
-		if(menus[game.menu].items[game.item].action != 0)
-			menus[game.menu].items[game.item].action();
-		if((menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
-			InitializeMenu(menus[game.menu].items[game.item].nextIdx);
+		if(g_Menus[game.menu].items[game.item].action != 0)
+			g_Menus[game.menu].items[game.item].action(g_Menus[game.menu].items[game.item].value);
+		if((g_Menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
+			InitializeMenu(g_Menus[game.menu].items[game.item].nextIdx);
 		return;
 	}
 
@@ -641,7 +771,7 @@ void StateMainMenu()
 			game.item--;
 		game.pressed++;
 	}
-	else if(((keyLine & KEY_DOWN) == 0) && (game.item < menus[game.menu].itemNum - 1))
+	else if(((keyLine & KEY_DOWN) == 0) && (game.item < g_Menus[game.menu].itemNum - 1))
 	{
 		if(game.pressed == 0)
 			game.item++;
@@ -651,7 +781,7 @@ void StateMainMenu()
 		game.pressed = 0;
 
 	// Render
-	HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * menus[game.menu].itemNum, COLOR_BLACK);
+	HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * g_Menus[game.menu].itemNum, COLOR_BLACK);
 	DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
 	waitRetrace();
 }
@@ -680,7 +810,7 @@ void StateStartGame()
 	//for(i=0; i<16; i++)
 	//	FillVRAM(256 >> 2 * (i & 0xFFFC), 212 >> 2 * (i >> 2), 256 >> 2, 212 >> 2, colors[i]);
 
-	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
+	HMMM(0, 0, 0, 256, 256, 212);
 
 	//----------------------------------------
 	// Copy cars to VRAM
@@ -697,23 +827,26 @@ void StateStartGame()
 	{
 		RAMtoVRAM(208 + (i % 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
 	}
-	RAMtoVRAM(221, 468, 30, 5, (u16)&g_Smoke); // 5x5 par 6x1
+	//for(i = 0; i < 6; i++)
+	//{
+	//	RAMtoVRAM(221 + (i * 5), 468, 5, 5, (u16)&g_Smoke[5 * 5 * i]); // 5x5 par 6x1
+	//}
 
 	//----------------------------------------
 	// Initialize background backup
 	PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&g_DefaultColor);
 	for(i=0; i<CAR_NUM; i++)
 	{
-		InitializePlayer(&game.players[i], i, track01.startPos[i].x, track01.startPos[i].y);
-		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
-		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
+		InitializePlayer(&game.players[i], i, g_Tracks[game.track].startPos[i].x, g_Tracks[game.track].startPos[i].y, g_Tracks[game.track].rotation);
+		HMMM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
+		HMMM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
 	}
 
-	for(i=0; i<12; i++) // Backup smoke
-	{
-		VRAMtoVRAM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 212, 5, 5);
-		VRAMtoVRAM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 217, 5, 5);
-	}
+	//for(i=0; i<12; i++) // Backup smoke
+	//{
+	//	HMMM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 212, 5, 5);
+	//	HMMM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 217, 5, 5);
+	//}
 
 	ClearSprite();
 	for(i=0; i<32; i++)
@@ -802,12 +935,12 @@ void StateUpdateGame()
 	// Restore background
 	for(i=0; i<CAR_NUM; i++)
 	{
-		VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
+		HMMM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
 	}
-	for(i=0; i<12; i++)
-	{
-		VRAMtoVRAM(104 + (5 * i), 212 + (game.page * 5), game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5);
-	}
+	//for(i=0; i<12; i++)
+	//{
+	//	HMMM(104 + (5 * i), 212 + (game.page * 5), game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5);
+	//}
 
 	//----------------------------------------
 	// Update physic
@@ -837,8 +970,8 @@ void StateUpdateGame()
 			}
 
 			// Friction: Slow down the speed
-			friction = bg[op].Friction;
-			maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
+			friction = g_BG[op].Friction;
+			maxSpeed = g_Cars[curPly->car].maxSpeed[g_BG[op].MaxSpeed];
 			x = Abs16(curPly->velX);
 			x >>= 8;
 			y = Abs16(curPly->velY);
@@ -860,7 +993,7 @@ void StateUpdateGame()
 			}
 
 			// Grip: Transfert some part of velocity to car direction
-			grip = bg[op].Grip;
+			grip = g_BG[op].Grip;
 			x = Abs16(curPly->velX);
 			x >>= 8;
 			y = Abs16(curPly->velY);
@@ -882,11 +1015,11 @@ void StateUpdateGame()
 			// Engine velocity
 			if(curPly->flag & CAR_TURN_LEFT)
 			{
-				curPly->rot += cars[curPly->car].rotSpeed; 
+				curPly->rot += g_Cars[curPly->car].rotSpeed; 
 			}
 			if(curPly->flag & CAR_TURN_RIGHT)
 			{
-				curPly->rot -= cars[curPly->car].rotSpeed; 
+				curPly->rot -= g_Cars[curPly->car].rotSpeed; 
 			}
 
 			// Cap max speed
@@ -897,10 +1030,10 @@ void StateUpdateGame()
 				y = Abs16(curPly->velY);
 				y >>= 8;
 				speedSq = (x * x) + (y * y);
-				maxSpeed = cars[curPly->car].maxSpeed[bg[op].MaxSpeed];
+				maxSpeed = g_Cars[curPly->car].maxSpeed[g_BG[op].MaxSpeed];
 				if(speedSq < maxSpeed * maxSpeed)
 				{
-					speed += cars[curPly->car].accel;
+					speed += g_Cars[curPly->car].accel;
 				}
 			}
 			if(op == OP_SPEEDER)
@@ -964,7 +1097,7 @@ void StateUpdateGame()
 		curPly->posZ = g_HeightTab[curPly->jump];
 
 		// Backup
-		VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
+		HMMM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
 	}
 
 	//----------------------------------------
@@ -972,21 +1105,21 @@ void StateUpdateGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		curPly = &game.players[i];
-		VRAMtoVRAMTrans(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8);
-		VRAMtoVRAMTrans(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11);
-		//VRAMtoVRAMTrans(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8);
+		LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8, VDP_OP_TIMP);
+		LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
+		//LMMM(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8, VDP_OP_TIMP);
 	}
-	for(i=0; i<12; i++)
-	{
-		VRAMtoVRAMTrans(221 + 5 * (game.frame % 6), 468, game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5);
-	}
+	//for(i=0; i<12; i++)
+	//{
+	//	LMMM(221 + 5 * (game.frame % 6), 468, game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5, VDP_OP_TIMP);
+	//}
 		
 	waitRetrace();
 	game.frame++;
 }
 
 /** Initialize player data */
-void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
+void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
 {
 	ply->car = car; // car index
 	ply->posX = posX << 8; // position X
@@ -995,7 +1128,7 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY)
 	ply->prevY = ply->posY; // previous position Y
 	ply->validX = ply->posX;
 	ply->validY = ply->posY;
-	ply->rot = 64; // rotation
+	ply->rot = rot; // rotation
 	ply->velX = 0; // velocity X
 	ply->velY = 0; // velocity Y
 	ply->jump = 0;
@@ -1220,10 +1353,10 @@ void StateBuildTrack()
 	{
 		for(j=0; j<6; j++)
 		{
-			block = &track01.tiles[i + j * 7];
+			block = &g_Tracks[game.track].tiles[i + j * 7];
 			if((block->tile & 0x0F) == 2) // Plein block
 			{
-				FillVRAM(16 + (32 * i), 8 + (32 * j), 32, 32, block->color1);
+				FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, block->color1);
 			}
 			else
 			{
@@ -1237,13 +1370,14 @@ void StateBuildTrack()
 						else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
 						else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
 						else /* SYM_V */                         { lx = 31 - x; ly = y; }
-						byte = g_TrackTiles[32 * 4 * (block->tile & 0x0F) + (lx >> 3) + (ly * 32 >> 3)];
+						byte = g_TrackTiles[((block->tile & 0x0F) << 7) + (lx >> 3) + (ly << 2)];
 						if(byte & (1 << (7 - (lx & 0x07))))
-							WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color1);
+							game.blockGen[x + (y << 5)] = block->color1;
 						else
-							WriteVRAM(0, (16 + 32 * i + x) + 256 * (8 + 32 * j + y), block->color0);
+							game.blockGen[x + (y << 5)] = block->color0;
 					}
 				}
+				HMMC(g_Tracks[game.track].offset.x + (i << 5), g_Tracks[game.track].offset.y + (j << 5), 32, 32, (u16)&game.blockGen);
 			}
 		}
 	}
@@ -1371,3 +1505,27 @@ void DebugPrintInt(i16 i, u8 x, u8 y)
 	SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
 	SetSpriteUniColor(6, 0, 216, 0, 0);
 }
+
+//----------------------------------------
+// MENU CALLBACKS
+
+/** Menu callback - Start game */
+void StartGame(i8 value)
+{
+	game.track = value;
+	game.state = StateStartGame;
+}
+
+/** Menu callback - Select player number */
+void SelectPlayer(i8 value)
+{
+	game.playerNum = value;
+}
+
+/** Menu callback - Select game mode */
+void SelectRule(i8 value)
+{
+	game.rule = value;
+}
+
+
