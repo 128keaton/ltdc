@@ -6,7 +6,7 @@
 //----------------------------------------
 // M A C R O S
 
-#define PosToPxl(a) (a >> 8)
+#define PosToPxl(a) ((a) >> 8)
 #define PosXToSprt(a) (PosToPxl(a) - 6)
 #define PosYToSprt(a) (PosToPxl(a) - 5)
 
@@ -16,10 +16,11 @@
 #define LMMM(sx, sy, dx, dy, nx, ny, op) game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&game.vdp32);
 #define HMMV(dx, dy, nx, ny, col)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMV;                                            VPDCommand36((u16)&game.vdp36);
 
-#define Abs8(i)  (((u8)i & 0x80) ? ~((u8)i - 1) : i)
-#define Abs16(i) (((u16)i & 0x8000) ? ~((u16)i - 1) : i)
+#define Abs8(i)  (((u8)(i) & 0x80) ? ~((u8)(i) - 1) : (i))
+#define Abs16(i) (((u16)(i) & 0x8000) ? ~((u16)(i) - 1) : (i))
 
-#define RGB8(r,g,b) ((g << 5) + (r << 2) + (b))
+#define RGB8(r,g,b) (((g) << 5) + ((r) << 2) + (b))
+#define Modulo2(a,b) ((a) & ~((b) - 1))
 
 //----------------------------------------
 // D E F I N E S
@@ -211,9 +212,11 @@ typedef struct tagPlayer
 	u16 validY; // last valid position Y
 	u16 nextX;
 	u16 nextY;
+	u8  life;
+	u8  smokeSprt;
 } Player;
 
-typedef struct
+typedef struct tagGameData
 {
 	u8               frame;
 	u8               menu;
@@ -251,7 +254,7 @@ u16 GetVectorLenght256(i16 x, i16 y);
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
 
-void DebugPrintInt(i16 i, u8 x, u8 y);
+//void DebugPrintInt(i16 i, u8 x, u8 y);
 
 // Color process
 u8 DarkenColor(u8 color, u8 power);
@@ -401,115 +404,115 @@ const TrackTile g_TrackTiles01[] =
 	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
 };
 
-const TrackTile g_TrackTiles02[] = 
-{
-	// line 0
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 5 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-	// line 1
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-	{ 11 + ROT_90, COLOR_ORANGE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_BLACK, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-	// line 2
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 11 + ROT_0, COLOR_ORANGE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-	// line 3
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
-	{ 1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW },
-	// line 4
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
-	// line 5
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-	{ 3 + ROT_90, COLOR_WHITE, COLOR_GRAY },
-	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-};
-
-const TrackTile g_TrackTiles03[] = 
-{
-	// line 0
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
-	// line 1
-	{ 0 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-	{ 11 + ROT_270, COLOR_ORANGE, COLOR_CYAN },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-	// line 2
-	{ 9 + ROT_90, COLOR_BROWN, COLOR_CYAN },
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 9 + ROT_90, COLOR_WHITE, COLOR_CYAN },
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
-	// line 3
-	{ 2 + ROT_0, COLOR_BROWN, COLOR_BROWN },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_WHITE },
-	{ 9 + ROT_0, COLOR_CYAN, COLOR_WHITE },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-	// line 4
-	{ 9 + ROT_90, COLOR_GRAY, COLOR_BROWN },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 0 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-	{ 0 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
-	// line 5
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 11 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-	{ 9 + ROT_0, COLOR_BLUE, COLOR_GRAY },
-	{ 9 + ROT_0, COLOR_YELLOW, COLOR_BLUE },
-	{ 9 + ROT_0, COLOR_CYAN, COLOR_YELLOW },
-	{ 3 + ROT_90, COLOR_WHITE, COLOR_CYAN },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-};
+//const TrackTile g_TrackTiles02[] = 
+//{
+//	// line 0
+//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+//	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+//	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+//	{ 5 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+//	// line 1
+//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+//	{ 11 + ROT_90, COLOR_ORANGE, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+//	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+//	{ 0 + ROT_90, COLOR_BLACK, COLOR_YELLOW },
+//	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+//	// line 2
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 11 + ROT_0, COLOR_ORANGE, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
+//	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+//	// line 3
+//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+//	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
+//	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
+//	{ 1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW },
+//	// line 4
+//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
+//	// line 5
+//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+//	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
+//	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+//	{ 3 + ROT_90, COLOR_WHITE, COLOR_GRAY },
+//	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+//	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//};
+//
+//const TrackTile g_TrackTiles03[] = 
+//{
+//	// line 0
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
+//	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+//	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
+//	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+//	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+//	// line 1
+//	{ 0 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
+//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+//	{ 11 + ROT_270, COLOR_ORANGE, COLOR_CYAN },
+//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+//	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
+//	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+//	// line 2
+//	{ 9 + ROT_90, COLOR_BROWN, COLOR_CYAN },
+//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 9 + ROT_90, COLOR_WHITE, COLOR_CYAN },
+//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+//	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+//	// line 3
+//	{ 2 + ROT_0, COLOR_BROWN, COLOR_BROWN },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_WHITE },
+//	{ 9 + ROT_0, COLOR_CYAN, COLOR_WHITE },
+//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+//	// line 4
+//	{ 9 + ROT_90, COLOR_GRAY, COLOR_BROWN },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+//	{ 0 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+//	{ 0 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+//	// line 5
+//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+//	{ 11 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+//	{ 9 + ROT_0, COLOR_BLUE, COLOR_GRAY },
+//	{ 9 + ROT_0, COLOR_YELLOW, COLOR_BLUE },
+//	{ 9 + ROT_0, COLOR_CYAN, COLOR_YELLOW },
+//	{ 3 + ROT_90, COLOR_WHITE, COLOR_CYAN },
+//	{ 0 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+//};
 
 const Track g_Tracks[] = 
 {
 	{ "AOI1", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "NOE1", 7, 6, g_TrackTiles02, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "NOE2", 7, 6, g_TrackTiles03, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE1", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE2", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
 //----------------------------------------
@@ -573,6 +576,10 @@ const u8 g_DefaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
 
 const u8 g_AnimIndex[] = { 0, 1, 0, 2 };
 
+//                        0   32  64  96  128 160 192 224
+//                        000 001 010 011 100 101 110 111
+const u8 g_SmokeFrq[] = { 2,  2,  4,  8,  16, 32, 64, 255 };
+ 
 //----------------------------------------
 // R A M   D A T A
 
@@ -1094,34 +1101,43 @@ void StateUpdateGame()
 	{
 		curPly = &game.players[i];
 
-		// Apply velocity
+		// Backup previous position
 		curPly->prevX = curPly->posX;
 		curPly->prevY = curPly->posY;
 		curPly->prevZ = curPly->posZ;
 
+		// Set new position
 		curPly->posX = curPly->nextX;
 		curPly->posY = curPly->nextY;
 		curPly->posZ = g_HeightTab[curPly->jump];
 
-		// Backup
+		// Backup background at new position
 		HMMM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
 	}
 
 	//----------------------------------------
-	// Draw cars
+	// Draw game element
 	for(i=0; i<CAR_NUM; i++)
 	{
 		curPly = &game.players[i];
-		LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8, VDP_OP_TIMP);
-		LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
-		//LMMM(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8, VDP_OP_TIMP);
-		
-		if(game.frame % 4 == 0)
+		if(curPly->life != 0) // Draw car
 		{
-			j = (i * 3) + (game.frame / (3 * 4)) % 3;
+			LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
+			LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
+		}
+		else // Draw pilot
+		{
+			LMMM(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8, VDP_OP_TIMP);
+		}
+		if((game.frame % g_SmokeFrq[curPly->life >> 5]) == 0) // Spawn smoke
+		{
+			j = (i * 3) + curPly->smokeSprt;
+			curPly->smokeSprt++;
+			if(curPly->smokeSprt > 2)
+				curPly->smokeSprt = 0;
 			game.smokes[j].step = 0;
 			game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4;
-			game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4;
+			game.smokes[j].pos.y = PosToPxl(curPly->posY) - curPly->posZ - 4;
 		}
 	}
 	for(i=0; i<12; i++)
@@ -1135,7 +1151,7 @@ void StateUpdateGame()
 				game.smokes[i].step = 0xFF;
 		}
 		else
-			SetSpriteUniColor(i, 0, 216, 0, 0);
+			SetSpriteUniColor(i, 0, 212, 0, 0);
 	}
 		
 	waitRetrace();
@@ -1158,6 +1174,8 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
 	ply->jump = 0;
 	ply->posZ = 0;
 	ply->prevZ = 0;
+	ply->life = 0xFF;
+	ply->smokeSprt = 0;
 }
 
 /***/
@@ -1190,8 +1208,8 @@ u8 VectorToAngle256(i16 x, i16 y)
 {
 	while(Abs16(x) > 15 || Abs16(y) > 15)
 	{
-		x /= 2;
-		y /= 2;
+		x >>= 2;
+		y >>= 2;
 	}
 	x += 15; // x E [0;30]
 	y += 15; // x E [0;30]
@@ -1263,6 +1281,9 @@ void CarToCarCollision(u8 idx, u8 car1, u8 car2)
 		game.players[car1].nextY = game.players[car1].posY;
 		game.players[car2].nextX = game.players[car2].posX;
 		game.players[car2].nextY = game.players[car2].posY;
+
+		game.players[car1].life -= 5;
+		game.players[car2].life -= 5;
 	}
 }
 
@@ -1281,6 +1302,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX = Abs16(ply->velX) >> 1;
 			ply->velY >>= 1;
+			ply->life -= 5;
 		}
 	}
 	else
@@ -1291,6 +1313,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX = -(Abs16(ply->velX) >> 1);
 			ply->velY >>= 1;
+			ply->life -= 5;
 		}
 	}
 
@@ -1302,6 +1325,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX >>= 1;
 			ply->velY = -(Abs16(ply->velY) >> 1);
+			ply->life -= 5;
 		}
 	}
 	else
@@ -1312,6 +1336,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX >>= 1;
 			ply->velY = Abs16(ply->velY) >> 1;
+			ply->life -= 5;
 		}
 	}
 
@@ -1519,16 +1544,16 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 	}
 }
 
-void DebugPrintInt(i16 i, u8 x, u8 y)
-{
-	SetSpriteUniColor(0, x + 0 * 8, y, (i / 100000) % 10, 0x0F);
-	SetSpriteUniColor(1, x + 1 * 8, y, (i / 10000) % 10, 0x0F);
-	SetSpriteUniColor(2, x + 2 * 8, y, (i / 1000) % 10, 0x0F);
-	SetSpriteUniColor(3, x + 3 * 8, y, (i / 100) % 10, 0x0F);
-	SetSpriteUniColor(4, x + 4 * 8, y, (i / 10) % 10, 0x0F);
-	SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
-	SetSpriteUniColor(6, 0, 216, 0, 0);
-}
+//void DebugPrintInt(i16 i, u8 x, u8 y)
+//{
+//	SetSpriteUniColor(0, x + 0 * 8, y, (i / 100000) % 10, 0x0F);
+//	SetSpriteUniColor(1, x + 1 * 8, y, (i / 10000) % 10, 0x0F);
+//	SetSpriteUniColor(2, x + 2 * 8, y, (i / 1000) % 10, 0x0F);
+//	SetSpriteUniColor(3, x + 3 * 8, y, (i / 100) % 10, 0x0F);
+//	SetSpriteUniColor(4, x + 4 * 8, y, (i / 10) % 10, 0x0F);
+//	SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
+//	SetSpriteUniColor(6, 0, 216, 0, 0);
+//}
 
 //----------------------------------------
 // MENU CALLBACKS
