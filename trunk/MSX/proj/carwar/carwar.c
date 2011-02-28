@@ -178,7 +178,7 @@ typedef struct tagMenu
 	u8 itemNum;
 } Menu;
 
-typedef struct Background
+typedef struct tagBackground
 {
 	u8 MaxSpeed;
 	u8 Friction;
@@ -186,6 +186,12 @@ typedef struct Background
 	u8 ColorLight;
 	u8 ColorDark;
 } Background;
+
+typedef struct tagSmoke
+{
+	u8 step;
+	VectorU8 pos;
+} Smoke;
 
 typedef struct tagPlayer
 {
@@ -222,7 +228,7 @@ typedef struct
 	struct tagPlayer players[4];
 	void            (*state)(void);
 	u8               bitToByte[256 * 8];
-	VectorU8         smoke[12];
+	Smoke            smokes[12];
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
 	u8               blockGen[32*32];
@@ -282,7 +288,7 @@ void SelectRule(i8 value);
 #include "data/sprt_track.h"
 #include "data/sprt_title.h"
 #include "data/sprt_pilots.h"
-#include "data/sprt_smoke.h"
+//#include "data/sprt_smoke.h"
 
 #include "trigo64.inc"
 #include "rot256.inc"
@@ -679,11 +685,12 @@ void StateInitialize()
 		}		
 	}
 
-	//for(x=0; x<12; x++)
-	//{
-	//	game.smoke[x].x = 20 + 10 * (x % 4);
-	//	game.smoke[x].y = 20 + 10 * (x / 4);
-	//}
+	for(x=0; x<12; x++)
+	{
+		game.smokes[x].step = 0xFF;
+		//game.smokes[x].pos.x = 20 + 10 * (x % 4);
+		//game.smokes[x].pos.y = 20 + 10 * (x / 4);
+	}
 	
 	game.track = 0;
 	game.page = 0;
@@ -844,8 +851,8 @@ void StateStartGame()
 
 	//for(i=0; i<12; i++) // Backup smoke
 	//{
-	//	HMMM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 212, 5, 5);
-	//	HMMM(game.smoke[i].x, game.smoke[i].y, 104 + (5 * i), 217, 5, 5);
+	//	HMMM(game.smokes[i].x, game.smokes[i].y, 104 + (5 * i), 212, 5, 5);
+	//	HMMM(game.smokes[i].x, game.smokes[i].y, 104 + (5 * i), 217, 5, 5);
 	//}
 
 	ClearSprite();
@@ -858,7 +865,7 @@ void StateStartGame()
 /** State - Process game */
 void StateUpdateGame()
 {
-	u8 i, keyLine, dir, ground, op, friction, grip;
+	u8 i, j, keyLine, dir, ground, op, friction, grip;
 	Player* curPly;
 	u16 x, y, speed, speedSq, maxSpeed;
 
@@ -939,7 +946,7 @@ void StateUpdateGame()
 	}
 	//for(i=0; i<12; i++)
 	//{
-	//	HMMM(104 + (5 * i), 212 + (game.page * 5), game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5);
+	//	HMMM(104 + (5 * i), 212 + (game.page * 5), game.smokes[i].x, game.yOffset + game.smokes[i].y, 5, 5);
 	//}
 
 	//----------------------------------------
@@ -1108,11 +1115,28 @@ void StateUpdateGame()
 		LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 3, 13, 8, VDP_OP_TIMP);
 		LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
 		//LMMM(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8, VDP_OP_TIMP);
+		
+		if(game.frame % 4 == 0)
+		{
+			j = (i * 3) + (game.frame / (3 * 4)) % 3;
+			game.smokes[j].step = 0;
+			game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4;
+			game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4;
+		}
 	}
-	//for(i=0; i<12; i++)
-	//{
-	//	LMMM(221 + 5 * (game.frame % 6), 468, game.smoke[i].x, game.yOffset + game.smoke[i].y, 5, 5, VDP_OP_TIMP);
-	//}
+	for(i=0; i<12; i++)
+	{
+		//LMMM(221 + 5 * (game.frame % 6), 468, game.smokes[i].x, game.yOffset + game.smokes[i].y, 5, 5, VDP_OP_TIMP);
+		if(game.smokes[i].step != 0xFF)
+		{
+			SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
+			game.smokes[i].step++;
+			if(game.smokes[i].step >= 8)
+				game.smokes[i].step = 0xFF;
+		}
+		else
+			SetSpriteUniColor(i, 0, 216, 0, 0);
+	}
 		
 	waitRetrace();
 	game.frame++;
