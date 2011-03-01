@@ -20,7 +20,7 @@
 #define Abs16(i) (((u16)(i) & 0x8000) ? ~((u16)(i) - 1) : (i))
 
 #define RGB8(r,g,b) (((g) << 5) + ((r) << 2) + (b))
-#define Modulo2(a,b) ((a) & ~((b) - 1))
+#define Modulo2(a,b) ((a) & ((b) - 1))
 
 //----------------------------------------
 // D E F I N E S
@@ -213,7 +213,7 @@ typedef struct tagPlayer
 	u16 nextX;
 	u16 nextY;
 	u8  life;
-	u8  smokeSprt;
+	u8  sprt;
 } Player;
 
 typedef struct tagGameData
@@ -243,8 +243,10 @@ typedef struct tagGameData
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot);
 void InitializeMenu(u8 menu);
-void CarToCarCollision(u8 idx, u8 car1, u8 car2);
-void CarToWallCollision(u8 car);
+void CheckJoy(Player* ply, u8 joy);
+void CarToCarCollision(Player* ply1, Player* ply2);
+void CarToWallCollision(Player* ply);
+void DamageCar(Player* ply, u8 hit);
 i8 AngleDifferent64(i8 angleA, i8 angleB);
 //u8 VectorToAngle64(i16 x, i16 y);
 u8 VectorToAngle256(i16 x, i16 y);
@@ -291,7 +293,6 @@ void SelectRule(i8 value);
 #include "data/sprt_track.h"
 #include "data/sprt_title.h"
 #include "data/sprt_pilots.h"
-//#include "data/sprt_smoke.h"
 
 #include "trigo64.inc"
 #include "rot256.inc"
@@ -404,115 +405,115 @@ const TrackTile g_TrackTiles01[] =
 	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
 };
 
-//const TrackTile g_TrackTiles02[] = 
-//{
-//	// line 0
-//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-//	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-//	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-//	{ 5 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-//	// line 1
-//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-//	{ 11 + ROT_90, COLOR_ORANGE, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-//	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-//	{ 0 + ROT_90, COLOR_BLACK, COLOR_YELLOW },
-//	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-//	// line 2
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 11 + ROT_0, COLOR_ORANGE, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
-//	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-//	// line 3
-//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-//	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
-//	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
-//	{ 1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW },
-//	// line 4
-//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
-//	// line 5
-//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-//	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
-//	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-//	{ 3 + ROT_90, COLOR_WHITE, COLOR_GRAY },
-//	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-//	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//};
-//
-//const TrackTile g_TrackTiles03[] = 
-//{
-//	// line 0
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 1 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
-//	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-//	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
-//	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-//	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
-//	// line 1
-//	{ 0 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
-//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-//	{ 11 + ROT_270, COLOR_ORANGE, COLOR_CYAN },
-//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-//	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
-//	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-//	// line 2
-//	{ 9 + ROT_90, COLOR_BROWN, COLOR_CYAN },
-//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-//	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 9 + ROT_90, COLOR_WHITE, COLOR_CYAN },
-//	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-//	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
-//	// line 3
-//	{ 2 + ROT_0, COLOR_BROWN, COLOR_BROWN },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_WHITE },
-//	{ 9 + ROT_0, COLOR_CYAN, COLOR_WHITE },
-//	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-//	// line 4
-//	{ 9 + ROT_90, COLOR_GRAY, COLOR_BROWN },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-//	{ 0 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-//	{ 0 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
-//	// line 5
-//	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-//	{ 11 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-//	{ 9 + ROT_0, COLOR_BLUE, COLOR_GRAY },
-//	{ 9 + ROT_0, COLOR_YELLOW, COLOR_BLUE },
-//	{ 9 + ROT_0, COLOR_CYAN, COLOR_YELLOW },
-//	{ 3 + ROT_90, COLOR_WHITE, COLOR_CYAN },
-//	{ 0 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-//};
+const TrackTile g_TrackTiles02[] = 
+{
+	// line 0
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 5 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	// line 1
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	{ 11 + ROT_90, COLOR_ORANGE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+	{ 0 + ROT_90, COLOR_BLACK, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	// line 2
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 11 + ROT_0, COLOR_ORANGE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	// line 3
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
+	{ 1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW },
+	// line 4
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
+	// line 5
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
+	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
+	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	{ 3 + ROT_90, COLOR_WHITE, COLOR_GRAY },
+	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+};
+
+const TrackTile g_TrackTiles03[] = 
+{
+	// line 0
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 1 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	// line 1
+	{ 0 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	{ 11 + ROT_270, COLOR_ORANGE, COLOR_CYAN },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
+	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	// line 2
+	{ 9 + ROT_90, COLOR_BROWN, COLOR_CYAN },
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 9 + ROT_90, COLOR_WHITE, COLOR_CYAN },
+	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	// line 3
+	{ 2 + ROT_0, COLOR_BROWN, COLOR_BROWN },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_WHITE },
+	{ 9 + ROT_0, COLOR_CYAN, COLOR_WHITE },
+	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	// line 4
+	{ 9 + ROT_90, COLOR_GRAY, COLOR_BROWN },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	{ 0 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
+	{ 0 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	// line 5
+	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	{ 11 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
+	{ 9 + ROT_0, COLOR_BLUE, COLOR_GRAY },
+	{ 9 + ROT_0, COLOR_YELLOW, COLOR_BLUE },
+	{ 9 + ROT_0, COLOR_CYAN, COLOR_YELLOW },
+	{ 3 + ROT_90, COLOR_WHITE, COLOR_CYAN },
+	{ 0 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+};
 
 const Track g_Tracks[] = 
 {
 	{ "AOI1", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "NOE1", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "NOE2", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE1", 7, 6, g_TrackTiles02, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE2", 7, 6, g_TrackTiles03, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
 //----------------------------------------
@@ -578,7 +579,7 @@ const u8 g_AnimIndex[] = { 0, 1, 0, 2 };
 
 //                        0   32  64  96  128 160 192 224
 //                        000 001 010 011 100 101 110 111
-const u8 g_SmokeFrq[] = { 2,  2,  4,  8,  16, 32, 64, 255 };
+const u8 g_SmokeFrq[] = { 4,  4,  8,  16, 32, 64, 128, 255 };
  
 //----------------------------------------
 // R A M   D A T A
@@ -677,7 +678,7 @@ void StateInitialize()
 	// Initialize (ASCII table) sprites
 	for(x=0; x<sizeof(g_CharTable) / 8; x++)
 	{
-		RAMtoVRAM((x * 8) % 256, 248 + (x / 32), 8, 1, (u16)&g_CharTable[x * 8]);
+		RAMtoVRAM(Modulo2(x * 8, 256), 248 + (x / 32), 8, 1, (u16)&g_CharTable[x * 8]);
 	}
 
 	// Create default 8 bytes patern from a 8 bits byte
@@ -692,12 +693,9 @@ void StateInitialize()
 		}		
 	}
 
+	// Init smoke
 	for(x=0; x<12; x++)
-	{
 		game.smokes[x].step = 0xFF;
-		//game.smokes[x].pos.x = 20 + 10 * (x % 4);
-		//game.smokes[x].pos.y = 20 + 10 * (x / 4);
-	}
 	
 	game.track = 0;
 	game.page = 0;
@@ -839,12 +837,8 @@ void StateStartGame()
 	RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
 	for(i = 0; i < 8 * 3; i++)
 	{
-		RAMtoVRAM(208 + (i % 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
+		RAMtoVRAM(208 + Modulo2(i, 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
 	}
-	//for(i = 0; i < 6; i++)
-	//{
-	//	RAMtoVRAM(221 + (i * 5), 468, 5, 5, (u16)&g_Smoke[5 * 5 * i]); // 5x5 par 6x1
-	//}
 
 	//----------------------------------------
 	// Initialize background backup
@@ -856,12 +850,6 @@ void StateStartGame()
 		HMMM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
 	}
 
-	//for(i=0; i<12; i++) // Backup smoke
-	//{
-	//	HMMM(game.smokes[i].x, game.smokes[i].y, 104 + (5 * i), 212, 5, 5);
-	//	HMMM(game.smokes[i].x, game.smokes[i].y, 104 + (5 * i), 217, 5, 5);
-	//}
-
 	ClearSprite();
 	for(i=0; i<32; i++)
 		SetSpriteUniColor(i, 0, 248, 0, 0);
@@ -872,7 +860,7 @@ void StateStartGame()
 /** State - Process game */
 void StateUpdateGame()
 {
-	u8 i, j, keyLine, dir, ground, op, friction, grip;
+	u8 i, j, keyLine, dir, ground, op, friction, grip, car;
 	Player* curPly;
 	u16 x, y, speed, speedSq, maxSpeed;
 
@@ -909,41 +897,11 @@ void StateUpdateGame()
 
 	//----------------------------------------
 	// Player 3 gameplay
-	curPly = &game.players[2];
-	switch (Joystick(1)) // Joy 1 direction
-	{
-	case 2: // up-right
-	case 3: // right
-	case 4: // down-right
-		curPly->flag |= CAR_TURN_RIGHT;
-		break;
-	case 6: // down-left
-	case 7: // left
-	case 8:// up-left
-		curPly->flag |= CAR_TURN_LEFT;
-		break;
-	}
-	if(Joytrig(1) != 0) // Joy 1 Button A
-		curPly->flag |= CAR_MOVE;
+	CheckJoy(&game.players[2], 1);
 
 	//----------------------------------------
 	// Player 4 gameplay
-	curPly = &game.players[3];
-	switch (Joystick(2)) // Joy 2 direction
-	{
-	case 2: // up-right
-	case 3: // right
-	case 4: // down-right
-		curPly->flag |= CAR_TURN_RIGHT;
-		break;
-	case 6: // down-left
-	case 7: // left
-	case 8:// up-left
-		curPly->flag |= CAR_TURN_LEFT;
-		break;
-	}
-	if(Joytrig(2) != 0) // Joy 2 Button A
-		curPly->flag |= CAR_MOVE;
+	CheckJoy(&game.players[3], 2);
 
 	//----------------------------------------
 	// Restore background
@@ -951,16 +909,14 @@ void StateUpdateGame()
 	{
 		HMMM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
 	}
-	//for(i=0; i<12; i++)
-	//{
-	//	HMMM(104 + (5 * i), 212 + (game.page * 5), game.smokes[i].x, game.yOffset + game.smokes[i].y, 5, 5);
-	//}
 
 	//----------------------------------------
 	// Update physic
 	for(i=0; i<CAR_NUM; i++)
 	{
 		curPly = &game.players[i];
+
+		car = (curPly->life == 0) ? 4 : curPly->car;
 
 		if(curPly->jump == 0)
 		{
@@ -980,12 +936,13 @@ void StateUpdateGame()
 				curPly->nextY = curPly->validY;
 				curPly->velX = 0;
 				curPly->velY = 0;
+				//curPly->life = 0;
 				break;
 			}
 
 			// Friction: Slow down the speed
 			friction = g_BG[op].Friction;
-			maxSpeed = g_Cars[curPly->car].maxSpeed[g_BG[op].MaxSpeed];
+			maxSpeed = g_Cars[car].maxSpeed[g_BG[op].MaxSpeed];
 			x = Abs16(curPly->velX);
 			x >>= 8;
 			y = Abs16(curPly->velY);
@@ -1029,11 +986,11 @@ void StateUpdateGame()
 			// Engine velocity
 			if(curPly->flag & CAR_TURN_LEFT)
 			{
-				curPly->rot += g_Cars[curPly->car].rotSpeed; 
+				curPly->rot += g_Cars[car].rotSpeed; 
 			}
 			if(curPly->flag & CAR_TURN_RIGHT)
 			{
-				curPly->rot -= g_Cars[curPly->car].rotSpeed; 
+				curPly->rot -= g_Cars[car].rotSpeed; 
 			}
 
 			// Cap max speed
@@ -1044,10 +1001,10 @@ void StateUpdateGame()
 				y = Abs16(curPly->velY);
 				y >>= 8;
 				speedSq = (x * x) + (y * y);
-				maxSpeed = g_Cars[curPly->car].maxSpeed[g_BG[op].MaxSpeed];
+				maxSpeed = g_Cars[car].maxSpeed[g_BG[op].MaxSpeed];
 				if(speedSq < maxSpeed * maxSpeed)
 				{
-					speed += g_Cars[curPly->car].accel;
+					speed += g_Cars[car].accel;
 				}
 			}
 			if(op == OP_SPEEDER)
@@ -1061,7 +1018,7 @@ void StateUpdateGame()
 			curPly->velX += speed * g_Cosinus64[dir];
 			curPly->velY += speed * g_Sinus64[dir];
 
-			CarToWallCollision(i);
+			CarToWallCollision(curPly);
 		}
 		else
 		{
@@ -1087,14 +1044,14 @@ void StateUpdateGame()
 	// Check collision
 	// 1 player
 	// 2 players
-	CarToCarCollision(0, 0, 1);
+	CarToCarCollision(&game.players[0], &game.players[1]);
 	// 3 players
-	CarToCarCollision(1, 0, 2);
-	CarToCarCollision(2, 1, 2);
+	CarToCarCollision(&game.players[0], &game.players[2]);
+	CarToCarCollision(&game.players[1], &game.players[2]);
 	// 4 players
-	CarToCarCollision(3, 0, 3);
-	CarToCarCollision(4, 1, 3);
-	CarToCarCollision(5, 2, 3);
+	CarToCarCollision(&game.players[0], &game.players[3]);
+	CarToCarCollision(&game.players[1], &game.players[3]);
+	CarToCarCollision(&game.players[2], &game.players[3]);
 
 	// Fix position
 	for(i=0; i<CAR_NUM; i++)
@@ -1120,29 +1077,36 @@ void StateUpdateGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		curPly = &game.players[i];
-		if(curPly->life != 0) // Draw car
+		if(curPly->life != 0) 
 		{
+			// Draw car
 			LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
 			LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
+			
+			// Spawn smoke
+			j = g_SmokeFrq[curPly->life >> 5];
+			if((j != 255) && Modulo2(game.frame, j) == 0)
+			{
+				j = (i * 3) + curPly->sprt;
+				curPly->sprt++;
+				if(curPly->sprt > 2)
+					curPly->sprt = 0;
+				game.smokes[j].step = 0;
+				game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4;
+				game.smokes[j].pos.y = PosToPxl(curPly->posY) - curPly->posZ - 4;
+			}
 		}
 		else // Draw pilot
 		{
-			LMMM(208 + 6 * (curPly->rot >> 5), 476, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 /*- curPly->posZ*/, 6, 8, VDP_OP_TIMP);
+			curPly->sprt = Modulo2(++curPly->sprt, 4);
+			LMMM(208 + 6 * (curPly->rot >> 5), 476 + 8 * g_AnimIndex[curPly->sprt], PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 - curPly->posZ, 6, 8, VDP_OP_TIMP);
 		}
-		if((game.frame % g_SmokeFrq[curPly->life >> 5]) == 0) // Spawn smoke
-		{
-			j = (i * 3) + curPly->smokeSprt;
-			curPly->smokeSprt++;
-			if(curPly->smokeSprt > 2)
-				curPly->smokeSprt = 0;
-			game.smokes[j].step = 0;
-			game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4;
-			game.smokes[j].pos.y = PosToPxl(curPly->posY) - curPly->posZ - 4;
-		}
+
+		//FillVRAM(0, game.yOffset + 198 + 3 * i, curPly->life, 2, COLOR_GREEN);
+		//FillVRAM(curPly->life, game.yOffset + 198 + 3 * i, curPly->life - 255, 2, COLOR_RED);
 	}
 	for(i=0; i<12; i++)
 	{
-		//LMMM(221 + 5 * (game.frame % 6), 468, game.smokes[i].x, game.yOffset + game.smokes[i].y, 5, 5, VDP_OP_TIMP);
 		if(game.smokes[i].step != 0xFF)
 		{
 			SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
@@ -1175,7 +1139,36 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
 	ply->posZ = 0;
 	ply->prevZ = 0;
 	ply->life = 0xFF;
-	ply->smokeSprt = 0;
+	ply->sprt = 0;
+}
+
+/***/
+void CheckJoy(Player* ply, u8 joy)
+{
+	switch (Joystick(joy)) // Joy 1 direction
+	{
+	case 2: // up-right
+	case 3: // right
+	case 4: // down-right
+		ply->flag |= CAR_TURN_RIGHT;
+		break;
+	case 6: // down-left
+	case 7: // left
+	case 8:// up-left
+		ply->flag |= CAR_TURN_LEFT;
+		break;
+	}
+	if(Joytrig(joy) != 0) // Joy 1 Button A
+		ply->flag |= CAR_MOVE;
+}
+
+/***/
+void DamageCar(Player* ply, u8 hit)
+{
+	if(ply->life > hit)
+		ply->life -= hit;
+	else
+		ply->life = 0;
 }
 
 /***/
@@ -1254,45 +1247,41 @@ u16 GetVectorLenght256(i16 x, i16 y)
 
 /** Check collision */
 #define CAR_CHECK_LEN 10
-void CarToCarCollision(u8 idx, u8 car1, u8 car2)
+void CarToCarCollision(Player* ply1, Player* ply2)
 {
 	i16 x1, y1, x2, y2, dist;
 
-	idx;
-
-	dist = game.players[car2].nextX - game.players[car1].nextX;
+	dist = ply2->nextX - ply1->nextX;
 	x1 = dist >> 8;
-	dist = game.players[car2].nextY - game.players[car1].nextY;
+	dist = ply2->nextY - ply1->nextY;
 	y1 = dist >> 8;
 	dist = (x1 * x1) + (y1 * y1);
 	if(dist < CAR_CHECK_LEN * CAR_CHECK_LEN) // Collision occured
 	{
-		x1 = game.players[car1].velX;
-		y1 = game.players[car1].velY;
-		x2 = game.players[car2].velX;
-		y2 = game.players[car2].velY;
+		x1 = ply1->velX;
+		y1 = ply1->velY;
+		x2 = ply2->velX;
+		y2 = ply2->velY;
 
-		game.players[car1].velX = x2 - x1;
-		game.players[car1].velY = y2 - y1;
-		game.players[car2].velX = x1 - x2;
-		game.players[car2].velY = y1 - y2;
+		ply1->velX = x2 - x1;
+		ply1->velY = y2 - y1;
+		ply2->velX = x1 - x2;
+		ply2->velY = y1 - y2;
 
-		game.players[car1].nextX = game.players[car1].posX;
-		game.players[car1].nextY = game.players[car1].posY;
-		game.players[car2].nextX = game.players[car2].posX;
-		game.players[car2].nextY = game.players[car2].posY;
+		ply1->nextX = ply1->posX;
+		ply1->nextY = ply1->posY;
+		ply2->nextX = ply2->posX;
+		ply2->nextY = ply2->posY;
 
-		game.players[car1].life -= 5;
-		game.players[car2].life -= 5;
+		DamageCar(ply1, 4);
+		DamageCar(ply2, 4);
 	}
 }
 
 #define WALL_CHECK_LEN 4
-void CarToWallCollision(u8 car)
+void CarToWallCollision(Player* ply)
 {
-	u8 /*i,*/ ground, op;
-	Player* ply;
-	ply = &game.players[car];
+	u8 ground, op;
 
 	if((ply->rot > 64) && (ply->rot > 64))
 	{
@@ -1302,7 +1291,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX = Abs16(ply->velX) >> 1;
 			ply->velY >>= 1;
-			ply->life -= 5;
+			DamageCar(ply, 5);
 		}
 	}
 	else
@@ -1313,7 +1302,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX = -(Abs16(ply->velX) >> 1);
 			ply->velY >>= 1;
-			ply->life -= 5;
+			DamageCar(ply, 5);
 		}
 	}
 
@@ -1325,7 +1314,7 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX >>= 1;
 			ply->velY = -(Abs16(ply->velY) >> 1);
-			ply->life -= 5;
+			DamageCar(ply, 5);
 		}
 	}
 	else
@@ -1336,54 +1325,9 @@ void CarToWallCollision(u8 car)
 		{
 			ply->velX >>= 1;
 			ply->velY = Abs16(ply->velY) >> 1;
-			ply->life -= 5;
+			DamageCar(ply, 5);
 		}
 	}
-
-	//for(i=2; i<WALL_CHECK_LEN; i++)
-	//{
-	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) - i + 256 * PosToPxl(ply->posY));
-	//	op = game.colorCode[ground];
-	//	if(op == OP_WALL)
-	//	{
-	//		ply->velX = Abs16(ply->velX) >> 1;
-	//		ply->velY >>= 1;
-	//		break;
-	//	}
-	//}
-	//for(i=2; i<WALL_CHECK_LEN; i++)
-	//{
-	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + i + 256 * PosToPxl(ply->posY));
-	//	op = game.colorCode[ground];
-	//	if(op == OP_WALL)
-	//	{
-	//		ply->velX = -(Abs16(ply->velX) >> 1);
-	//		ply->velY >>= 1;
-	//		break;
-	//	}
-	//}
-	//for(i=2; i<WALL_CHECK_LEN; i++)
-	//{
-	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - i));
-	//	op = game.colorCode[ground];
-	//	if(op == OP_WALL)
-	//	{
-	//		ply->velX >>= 1;
-	//		ply->velY = -(Abs16(ply->velY) >> 1);
-	//		break;
-	//	}
-	//}
-	//for(i=2; i<WALL_CHECK_LEN; i++)
-	//{
-	//	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + i));
-	//	op = game.colorCode[ground];
-	//	if(op == OP_WALL)
-	//	{
-	//		ply->velX >>= 1;
-	//		ply->velY = Abs16(ply->velY) >> 1;
-	//		break;
-	//	}
-	//}
 }
 
 
