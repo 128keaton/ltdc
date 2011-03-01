@@ -1092,8 +1092,9 @@ void StateUpdateGame()
 				if(curPly->sprt > 2)
 					curPly->sprt = 0;
 				game.smokes[j].step = 0;
-				game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4;
-				game.smokes[j].pos.y = PosToPxl(curPly->posY) - curPly->posZ - 4;
+				dir = curPly->rot >> 2;
+				game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4 - (g_Cosinus64[dir] >> 5);
+				game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4 + (g_Sinus64[dir] >> 5) - curPly->posZ;
 			}
 		}
 		else // Draw pilot
