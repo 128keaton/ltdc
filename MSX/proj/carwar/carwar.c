@@ -119,6 +119,7 @@ enum
 #define ROT_270	0x30	// 270°
 #define SYM_H	0x40	// Horizontal symmetry
 #define SYM_V	0x50	// Vertical symmetry
+#define MARKER	0x80	// Ground marker include
 
 //----------------------------------------
 // T Y P E S
@@ -145,19 +146,12 @@ typedef struct tagCar
 	u8 accel;
 } Car;
 
-typedef struct tagTrackTile
-{
-	u8 tile; // Tile index + rotation flag
-	u8 color0;
-	u8 color1;
-} TrackTile;
-
 typedef struct tagTrack
 {
 	const u8* name;
 	u8 width;
 	u8 height;
-	TrackTile* tiles;
+	const u8* tiles;
 	struct tagVectorU8 offset;
 	u8 rotation;
 	struct tagVectorU8 startPos[4];
@@ -311,7 +305,7 @@ const Car g_Cars[5] =
 	// 3. Turtule
 	{ 6, { 30, 30, 30 }, 5 },
 	// 4. Pilot
-	{ 8, { 15, 15, 15 }, 5 },
+	{ 10, { 15, 15, 15 }, 5 },
 };
 
 /** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
@@ -353,160 +347,160 @@ const Background g_BG[] =
 	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
 		
-const TrackTile g_TrackTiles01[] = 
+const u8 g_TrackTiles01[] = 
 {
 	// line 0
-	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_KHAKI, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_KHAKI, COLOR_GRAY },
+	2 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	2 + ROT_90, COLOR_KHAKI, COLOR_GRAY,
+	2 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	2 + ROT_90, COLOR_KHAKI, COLOR_GRAY,
 	// line 1
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 1 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 0 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
-	{ 1 + ROT_90, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	0 + ROT_0, COLOR_GRAY,
+	1 + ROT_0, COLOR_GRAY, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	2 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
+	2 + ROT_180, COLOR_KHAKI, COLOR_GRAY,
+	1 + ROT_90, COLOR_GRAY, COLOR_KHAKI,
+	0 + ROT_0, COLOR_GRAY,
 	// line 2
-	{ 3 + ROT_0, COLOR_WHITE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
+	3 + ROT_0, COLOR_WHITE, COLOR_GRAY,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_GRAY,
 	// line 3
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	0 + ROT_0, COLOR_GRAY,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	1 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
 	// line 4
-	{ 9 + ROT_90, COLOR_YELLOW, COLOR_GRAY },
-	{ 0 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 11 + ROT_270, COLOR_ORANGE, COLOR_GRAY },
-	{ 4 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
+	9 + ROT_90, COLOR_YELLOW, COLOR_GRAY,
+	2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW,
+	0 + ROT_0, COLOR_YELLOW,
+	0 + ROT_0, COLOR_KHAKI,
+	11 + ROT_270, COLOR_ORANGE, COLOR_GRAY,
+	4 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
 	// line 5
-	{ 0 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 1 + ROT_0, COLOR_YELLOW, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_KHAKI },
-	{ 1 + ROT_90, COLOR_GRAY, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
+	2 + ROT_270, COLOR_KHAKI, COLOR_YELLOW,
+	0 + ROT_0, COLOR_YELLOW,
+	1 + ROT_0, COLOR_YELLOW, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	1 + ROT_90, COLOR_GRAY, COLOR_KHAKI,
+	0 + ROT_0, COLOR_GRAY,
+	2 + ROT_180, COLOR_KHAKI, COLOR_GRAY,
 };
 
-const TrackTile g_TrackTiles02[] = 
+const u8 g_TrackTiles02[] = 
 {
 	// line 0
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 5 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 5 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_BLACK },
+	1 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
+	5 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
+	5 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	5 + ROT_0, COLOR_KHAKI, COLOR_BLACK,
+	0 + ROT_0, COLOR_BLACK,
+	0 + ROT_0, COLOR_BLACK,
 	// line 1
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-	{ 11 + ROT_90, COLOR_ORANGE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
-	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-	{ 0 + ROT_90, COLOR_BLACK, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	1 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	11 + ROT_90, COLOR_ORANGE, COLOR_GRAY,
+	0 + ROT_0, COLOR_BLACK,
+	9 + ROT_0, COLOR_YELLOW, COLOR_GRAY,
+	2 + ROT_90, COLOR_BLACK, COLOR_YELLOW,
+	0 + ROT_0, COLOR_BLACK,
 	// line 2
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 11 + ROT_0, COLOR_ORANGE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_BLACK, COLOR_BLACK },
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	11 + ROT_0, COLOR_ORANGE, COLOR_GRAY,
+	0 + ROT_0, COLOR_KHAKI,
+	4 + ROT_0, COLOR_BLACK, COLOR_YELLOW,
+	0 + ROT_0, COLOR_BLACK,
 	// line 3
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW },
-	{ 1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW },
+	1 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	10 + ROT_0, COLOR_CYAN, COLOR_GRAY,
+	2 + ROT_180, COLOR_KHAKI, COLOR_GRAY,
+	0 + ROT_0, COLOR_KHAKI,
+	1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW,
+	1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW,
 	// line 4
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW },
+	10 + ROT_0, COLOR_MAUVE, COLOR_GRAY,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW,
+	1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW,
 	// line 5
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_GRAY },
-	{ 10 + ROT_0, COLOR_CYAN, COLOR_GRAY },
-	{ 2 + ROT_0, COLOR_GRAY, COLOR_GRAY },
-	{ 3 + ROT_90, COLOR_WHITE, COLOR_GRAY },
-	{ 9 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-	{ 4 + ROT_0, COLOR_BLACK, COLOR_YELLOW },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
+	1 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
+	10 + ROT_0, COLOR_CYAN, COLOR_GRAY,
+	0 + ROT_0, COLOR_GRAY,
+	3 + ROT_90, COLOR_WHITE, COLOR_GRAY,
+	9 + ROT_0, COLOR_YELLOW, COLOR_GRAY,
+	4 + ROT_0, COLOR_BLACK, COLOR_YELLOW,
+	0 + ROT_0, COLOR_KHAKI,
 };
 
-const TrackTile g_TrackTiles03[] = 
+const u8 g_TrackTiles03[] = 
 {
 	// line 0
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 1 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	0 + ROT_0, COLOR_KHAKI,
+	1 + ROT_0, COLOR_KHAKI, COLOR_CYAN,
+	10 + ROT_0, COLOR_BLUE, COLOR_CYAN,
+	0 + ROT_0, COLOR_CYAN,
+	10 + ROT_0, COLOR_BLUE, COLOR_CYAN,
+	10 + ROT_0, COLOR_MAUVE, COLOR_CYAN,
+	1 + ROT_90, COLOR_KHAKI, COLOR_CYAN,
 	// line 1
-	{ 0 + ROT_0, COLOR_KHAKI, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
-	{ 11 + ROT_270, COLOR_ORANGE, COLOR_CYAN },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-	{ 2 + ROT_0, COLOR_CYAN, COLOR_CYAN },
-	{ 10 + ROT_0, COLOR_BLUE, COLOR_CYAN },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	2 + ROT_0, COLOR_KHAKI, COLOR_CYAN,
+	10 + ROT_0, COLOR_MAUVE, COLOR_CYAN,
+	11 + ROT_270, COLOR_ORANGE, COLOR_CYAN,
+	1 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
+	0 + ROT_0, COLOR_CYAN,
+	10 + ROT_0, COLOR_BLUE, COLOR_CYAN,
+	1 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
 	// line 2
-	{ 9 + ROT_90, COLOR_BROWN, COLOR_CYAN },
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-	{ 1 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 9 + ROT_90, COLOR_WHITE, COLOR_CYAN },
-	{ 1 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-	{ 1 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	9 + ROT_90, COLOR_BROWN, COLOR_CYAN,
+	1 + ROT_270, COLOR_KHAKI, COLOR_CYAN,
+	1 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
+	0 + ROT_0, COLOR_KHAKI,
+	9 + ROT_90, COLOR_WHITE, COLOR_CYAN,
+	1 + ROT_270, COLOR_KHAKI, COLOR_CYAN,
+	1 + ROT_90, COLOR_KHAKI, COLOR_CYAN,
 	// line 3
-	{ 2 + ROT_0, COLOR_BROWN, COLOR_BROWN },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_WHITE },
-	{ 9 + ROT_0, COLOR_CYAN, COLOR_WHITE },
-	{ 10 + ROT_0, COLOR_MAUVE, COLOR_CYAN },
+	0 + ROT_0, COLOR_BROWN,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	10 + ROT_0, COLOR_MAUVE, COLOR_WHITE,
+	9 + ROT_0, COLOR_CYAN, COLOR_WHITE,
+	10 + ROT_0, COLOR_MAUVE, COLOR_CYAN,
 	// line 4
-	{ 9 + ROT_90, COLOR_GRAY, COLOR_BROWN },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_KHAKI },
-	{ 0 + ROT_270, COLOR_KHAKI, COLOR_CYAN },
-	{ 0 + ROT_90, COLOR_KHAKI, COLOR_CYAN },
+	9 + ROT_90, COLOR_GRAY, COLOR_BROWN,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	0 + ROT_0, COLOR_KHAKI,
+	2 + ROT_270, COLOR_KHAKI, COLOR_CYAN,
+	2 + ROT_90, COLOR_KHAKI, COLOR_CYAN,
 	// line 5
-	{ 2 + ROT_0, COLOR_KHAKI, COLOR_GRAY },
-	{ 11 + ROT_0, COLOR_YELLOW, COLOR_GRAY },
-	{ 9 + ROT_0, COLOR_BLUE, COLOR_GRAY },
-	{ 9 + ROT_0, COLOR_YELLOW, COLOR_BLUE },
-	{ 9 + ROT_0, COLOR_CYAN, COLOR_YELLOW },
-	{ 3 + ROT_90, COLOR_WHITE, COLOR_CYAN },
-	{ 0 + ROT_180, COLOR_KHAKI, COLOR_CYAN },
+	0 + ROT_0, COLOR_GRAY,
+	11 + ROT_0, COLOR_YELLOW, COLOR_GRAY,
+	9 + ROT_0, COLOR_BLUE, COLOR_GRAY,
+	9 + ROT_0, COLOR_YELLOW, COLOR_BLUE,
+	9 + ROT_0, COLOR_CYAN, COLOR_YELLOW,
+	3 + ROT_90, COLOR_WHITE, COLOR_CYAN,
+	2 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
 };
 
 const Track g_Tracks[] = 
@@ -1121,7 +1115,12 @@ void StateUpdateGame()
 		else
 			SetSpriteUniColor(i, 0, 212, 0, 0);
 	}
-		
+
+	// restart
+	keyLine = GetKeyMatrixLine(7);
+	if((keyLine & KEY_F5) == 0)
+		game.state = StateStartGame;
+
 	waitRetrace();
 	game.frame++;
 }
@@ -1342,40 +1341,43 @@ void CarToWallCollision(Player* ply)
 /***/
 void StateBuildTrack()
 {
-	u8 i, j, byte;
+	u8 i, j, byte, tile, color0, color1;
 	u16 x, y, lx, ly;
-	const TrackTile* block;
+	const u8* block;
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 
 	FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
 	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
-	for(i=0; i<7; i++)
+	block = g_Tracks[game.track].tiles;
+	for(j=0; j<6; j++)
 	{
-		for(j=0; j<6; j++)
+		for(i=0; i<7; i++)
 		{
-			block = &g_Tracks[game.track].tiles[i + j * 7];
-			if((block->tile & 0x0F) == 2) // Plein block
+			tile = *block++;
+			color1 = *block++;
+			if((tile & 0x0F) == 0) // Plein block
 			{
-				FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, block->color1);
+				FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, color1);
 			}
 			else
 			{
+				color0 = *block++;
 				for(x=0; x<32; x++)
 				{
 					for(y=0; y<32; y++)
 					{
-						if((block->tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
-						else if((block->tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
-						else if((block->tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
-						else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
-						else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
+						if((tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
+						else if((tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
+						else if((tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
+						else if((tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
+						else if((tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
 						else /* SYM_V */                         { lx = 31 - x; ly = y; }
-						byte = g_TrackTiles[((block->tile & 0x0F) << 7) + (lx >> 3) + (ly << 2)];
+						byte = g_TrackTiles[((tile & 0x0F) << 7) + (lx >> 3) + (ly << 2)];
 						if(byte & (1 << (7 - (lx & 0x07))))
-							game.blockGen[x + (y << 5)] = block->color1;
+							game.blockGen[x + (y << 5)] = color1;
 						else
-							game.blockGen[x + (y << 5)] = block->color0;
+							game.blockGen[x + (y << 5)] = color0;
 					}
 				}
 				HMMC(g_Tracks[game.track].offset.x + (i << 5), g_Tracks[game.track].offset.y + (j << 5), 32, 32, (u16)&game.blockGen);
