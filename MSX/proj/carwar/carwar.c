@@ -1099,7 +1099,10 @@ void StateUpdateGame()
 		}
 		else // Draw pilot
 		{
-			curPly->sprt = Modulo2(++curPly->sprt, 4);
+			if(curPly->flag & CAR_MOVE)
+				curPly->sprt = Modulo2(++curPly->sprt, 4);
+			else
+				curPly->sprt = 0;
 			LMMM(208 + 6 * (curPly->rot >> 5), 476 + 8 * g_AnimIndex[curPly->sprt], PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 - curPly->posZ, 6, 8, VDP_OP_TIMP);
 		}
 
@@ -1284,7 +1287,7 @@ void CarToWallCollision(Player* ply)
 {
 	u8 ground, op;
 
-	if((ply->rot > 64) && (ply->rot > 64))
+	if((ply->rot > 64) && (ply->rot < 192))
 	{
 		ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
 		op = game.colorCode[ground];
@@ -1292,7 +1295,8 @@ void CarToWallCollision(Player* ply)
 		{
 			ply->velX = Abs16(ply->velX) >> 1;
 			ply->velY >>= 1;
-			DamageCar(ply, 5);
+			if(ply->flag & CAR_MOVE)
+				DamageCar(ply, 5);
 		}
 	}
 	else
@@ -1303,7 +1307,8 @@ void CarToWallCollision(Player* ply)
 		{
 			ply->velX = -(Abs16(ply->velX) >> 1);
 			ply->velY >>= 1;
-			DamageCar(ply, 5);
+			if(ply->flag & CAR_MOVE)
+				DamageCar(ply, 5);
 		}
 	}
 
@@ -1315,7 +1320,8 @@ void CarToWallCollision(Player* ply)
 		{
 			ply->velX >>= 1;
 			ply->velY = -(Abs16(ply->velY) >> 1);
-			DamageCar(ply, 5);
+			if(ply->flag & CAR_MOVE)
+				DamageCar(ply, 5);
 		}
 	}
 	else
@@ -1326,7 +1332,8 @@ void CarToWallCollision(Player* ply)
 		{
 			ply->velX >>= 1;
 			ply->velY = Abs16(ply->velY) >> 1;
-			DamageCar(ply, 5);
+			if(ply->flag & CAR_MOVE)
+				DamageCar(ply, 5);
 		}
 	}
 }
