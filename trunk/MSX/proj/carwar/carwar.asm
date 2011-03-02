@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.0.0 #6037 (Oct 31 2010) (MINGW32)
-; This file was generated Wed Mar 02 13:33:46 2011
+; This file was generated Wed Mar 02 23:49:51 2011
 ;--------------------------------------------------------
 	.module carwar
 	.optsdcc -mz80
@@ -92,19 +92,19 @@ _game	=	0xc000
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;carwar.c:598: void main(void)
+;carwar.c:592: void main(void)
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main_start::
 _main:
-;carwar.c:604: __endasm;
+;carwar.c:598: __endasm;
 	
 		 di
 		 ld sp, (#0xFC4A)
 		 ei
 		
-;carwar.c:606: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+;carwar.c:600: g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
 	in	a,(_g_slotPort)
 	and	a,#0xCF
 	ld	c,a
@@ -116,7 +116,7 @@ _main:
 	ld	a,c
 	or	a,b
 	out	(_g_slotPort),a
-;carwar.c:608: MainLoop();
+;carwar.c:602: MainLoop();
 	call	_MainLoop
 	ret
 _main_end::
@@ -9898,1855 +9898,2026 @@ _g_TrackTiles:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x01	; 1
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x03	; 3
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x07	; 7
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x0F	; 15
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x1F	; 31
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x3F	; 63
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x7F	; 127
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
 	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x03	; 3
 	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x07	; 7
+	.db #0xFE	; 254
 	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x0F	; 15
 	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x1F	; 31
 	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0x33	; 51
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xCC	; 204
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
+	.db #0xFC	; 252
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xF8	; 248
-	.db #0x3F	; 63
+	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xF0	; 240
-	.db #0x1F	; 31
+	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xE0	; 224
-	.db #0x0F	; 15
 	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x07	; 7
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x1F	; 31
-	.db #0xF8	; 248
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x03	; 3
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xC0	; 192
-	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x00	; 0
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xE0	; 224
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0x1F	; 31
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFC	; 252
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFC	; 252
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFC	; 252
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFC	; 252
-	.db #0x3F	; 63
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFC	; 252
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xBF	; 191
-	.db #0x6E	; 110	n
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xBF	; 191
-	.db #0x78	; 120	x
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFB	; 251
-	.db #0xF0	; 240
 	.db #0x00	; 0
 	.db #0xFF	; 255
 	.db #0xFF	; 255
-	.db #0xBC	; 188
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC6	; 198
+	.db #0xC0	; 192
 	.db #0x00	; 0
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0x80	; 128
 	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0xBD	; 189
-	.db #0xB8	; 184
-	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0xF4	; 244
-	.db #0x88	; 136
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xFF	; 255
 	.db #0xFE	; 254
-	.db #0x3E	; 62
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xFF	; 255
 	.db #0xFF	; 255
-	.db #0x3E	; 62
+	.db #0xFF	; 255
 	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0xCC	; 204
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x33	; 51
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xF0	; 240
 	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0xE7	; 231
-	.db #0xFE	; 254
+	.db #0xFC	; 252
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0xC3	; 195
 	.db #0xC0	; 192
 	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x38	; 56
 	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x72	; 114	r
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0xFE	; 254
-	.db #0x1E	; 30
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xE0	; 224
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xF8	; 248
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
 	.db #0xE0	; 224
 	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xE0	; 224
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xC0	; 192
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
 	.db #0xFF	; 255
-	.db #0xD7	; 215
-	.db #0xF8	; 248
-	.db #0x00	; 0
 	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x5C	; 92
 	.db #0x00	; 0
+	.db #0x40	; 64
+	.db #0x91	; 145
 	.db #0xFF	; 255
-	.db #0x79	; 121	y
-	.db #0xFC	; 252
 	.db #0x00	; 0
+	.db #0x40	; 64
+	.db #0x87	; 135
 	.db #0xFF	; 255
-	.db #0xF5	; 245
-	.db #0xF2	; 242
 	.db #0x00	; 0
+	.db #0x04	; 4
+	.db #0x0F	; 15
 	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0xF8	; 248
 	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x43	; 67	C
 	.db #0xFF	; 255
-	.db #0xFC	; 252
 	.db #0x00	; 0
 	.db #0x00	; 0
+	.db #0x39	; 57
 	.db #0xFF	; 255
-	.db #0xEF	; 239
-	.db #0x82	; 130
 	.db #0x00	; 0
-	.db #0xFD	; 253
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x42	; 66	B
+	.db #0x47	; 71	G
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x0B	; 11
+	.db #0x77	; 119	w
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xC1	; 193
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC1	; 193
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x18	; 24
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x3C	; 60
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xC7	; 199
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x8D	; 141
+	.db #0xFF	; 255
+	.db #0x01	; 1
 	.db #0xE1	; 225
-	.db #0xC0	; 192
+	.db #0x1F	; 31
+	.db #0xFF	; 255
 	.db #0x00	; 0
+	.db #0x28	; 40
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xA3	; 163
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x86	; 134
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x0A	; 10
+	.db #0x0D	; 13
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x07	; 7
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x10	; 16
+	.db #0x7D	; 125
+	.db #0xFF	; 255
+	.db #0x02	; 2
+	.db #0x1E	; 30
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0xB7	; 183
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x5B	; 91
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x11	; 17
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0x89	; 137
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x40	; 64
+	.db #0xF7	; 247
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x8F	; 143
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3D	; 61
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x03	; 3
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xC0	; 192
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x80	; 128
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFE	; 254
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0xF0	; 240
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xFC	; 252
-	.db #0x48	; 72	H
-	.db #0x00	; 0
+	.db #0x7F	; 127
 	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xA4	; 164
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xEE	; 238
-	.db #0x00	; 0
-	.db #0x00	; 0
 	.db #0xFF	; 255
 	.db #0xFE	; 254
-	.db #0x76	; 118	v
-	.db #0x00	; 0
+	.db #0x7F	; 127
 	.db #0xFF	; 255
-	.db #0xBF	; 191
-	.db #0x08	; 8
-	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFE	; 254
+	.db #0x3F	; 63
+	.db #0xFF	; 255
 	.db #0xFF	; 255
 	.db #0xFC	; 252
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x01	; 1
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x7F	; 127
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x3F	; 63
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1F	; 31
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x03	; 3
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0F	; 15
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x70	; 112	p
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC2	; 194
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
+	.db #0x1C	; 28
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFE	; 254
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x7F	; 127
-	.db #0xFE	; 254
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x7F	; 127
 	.db #0xFC	; 252
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x3F	; 63
+	.db #0x7F	; 127
 	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFC	; 252
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x3F	; 63
-	.db #0xFE	; 254
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x7F	; 127
-	.db #0xFE	; 254
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x7F	; 127
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x01	; 1
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0x0F	; 15
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x03	; 3
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x01	; 1
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFE	; 254
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xC0	; 192
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xE0	; 224
-	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
 	.db #0xFC	; 252
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF8	; 248
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xF0	; 240
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x70	; 112	p
+	.db #0x1C	; 28
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
@@ -11759,190 +11930,19 @@ _g_TrackTiles:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x80	; 128
-	.db #0x03	; 3
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0x8F	; 143
-	.db #0xE3	; 227
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
-	.db #0xFF	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 _g_Title:
 	.db #0x00	; 0
 	.db #0x1F	; 31
@@ -15163,7 +15163,7 @@ _g_Cars:
 	.db #0x1E	; 30
 	.db #0x1E	; 30
 	.db #0x05	; 5
-	.db #0x08	; 8
+	.db #0x0A	; 10
 	.db #0x0F	; 15
 	.db #0x0F	; 15
 	.db #0x0F	; 15
@@ -15255,101 +15255,81 @@ _g_BG:
 	.db #0x8B	; 139
 	.db #0x47	; 71	G
 _g_TrackTiles01:
-	.db #0x00	; 0
-	.db #0xD4	; 212
-	.db #0xB6	; 182
 	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xB6	; 182
-	.db #0x10	; 16
 	.db #0xD4	; 212
 	.db #0xB6	; 182
 	.db #0x00	; 0
+	.db #0xB6	; 182
+	.db #0x00	; 0
+	.db #0xB6	; 182
+	.db #0x12	; 18
 	.db #0xD4	; 212
 	.db #0xB6	; 182
 	.db #0x02	; 2
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x10	; 16
+	.db #0x00	; 0
+	.db #0xB6	; 182
+	.db #0x12	; 18
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x01	; 1
 	.db #0xB6	; 182
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x30	; 48
+	.db #0x32	; 50
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x20	; 32
+	.db #0x22	; 34
 	.db #0xD4	; 212
 	.db #0xB6	; 182
 	.db #0x11	; 17
 	.db #0xB6	; 182
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x03	; 3
 	.db #0xFF	; 255
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xB6	; 182
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
-	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x01	; 1
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x19	; 25
 	.db #0xD9	; 217
 	.db #0xB6	; 182
+	.db #0x02	; 2
+	.db #0xD4	; 212
+	.db #0xD9	; 217
 	.db #0x00	; 0
-	.db #0xD4	; 212
 	.db #0xD9	; 217
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xD9	; 217
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x3B	; 59
 	.db #0x9C	; 156
@@ -15357,28 +15337,24 @@ _g_TrackTiles01:
 	.db #0x04	; 4
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
-	.db #0x30	; 48
+	.db #0x32	; 50
 	.db #0xD4	; 212
 	.db #0xD9	; 217
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD9	; 217
 	.db #0x01	; 1
 	.db #0xD9	; 217
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x11	; 17
 	.db #0xB6	; 182
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
-	.db #0x20	; 32
+	.db #0x22	; 34
 	.db #0xD4	; 212
 	.db #0xB6	; 182
 _g_TrackTiles02:
@@ -15391,74 +15367,61 @@ _g_TrackTiles02:
 	.db #0x35	; 53
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x05	; 5
 	.db #0xD4	; 212
 	.db #0x00	; 0
-	.db #0x02	; 2
-	.db #0xD4	; 212
 	.db #0x00	; 0
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x31	; 49
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x1B	; 27
 	.db #0x9C	; 156
 	.db #0xB6	; 182
-	.db #0x02	; 2
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x09	; 9
 	.db #0xD9	; 217
 	.db #0xB6	; 182
-	.db #0x10	; 16
+	.db #0x12	; 18
 	.db #0x00	; 0
 	.db #0xD9	; 217
-	.db #0x02	; 2
 	.db #0x00	; 0
 	.db #0x00	; 0
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x0B	; 11
 	.db #0x9C	; 156
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x04	; 4
 	.db #0x00	; 0
 	.db #0xD9	; 217
-	.db #0x02	; 2
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x01	; 1
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x0A	; 10
 	.db #0xFB	; 251
 	.db #0xB6	; 182
-	.db #0x20	; 32
+	.db #0x22	; 34
 	.db #0xD4	; 212
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x31	; 49
 	.db #0xD4	; 212
@@ -15469,17 +15432,13 @@ _g_TrackTiles02:
 	.db #0x0A	; 10
 	.db #0x9B	; 155
 	.db #0xB6	; 182
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x01	; 1
 	.db #0xD4	; 212
@@ -15493,8 +15452,7 @@ _g_TrackTiles02:
 	.db #0x0A	; 10
 	.db #0xFB	; 251
 	.db #0xB6	; 182
-	.db #0x02	; 2
-	.db #0xB6	; 182
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x13	; 19
 	.db #0xFF	; 255
@@ -15505,12 +15463,10 @@ _g_TrackTiles02:
 	.db #0x04	; 4
 	.db #0x00	; 0
 	.db #0xD9	; 217
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 _g_TrackTiles03:
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x01	; 1
 	.db #0xD4	; 212
@@ -15518,8 +15474,7 @@ _g_TrackTiles03:
 	.db #0x0A	; 10
 	.db #0x8B	; 139
 	.db #0xFB	; 251
-	.db #0x02	; 2
-	.db #0xFB	; 251
+	.db #0x00	; 0
 	.db #0xFB	; 251
 	.db #0x0A	; 10
 	.db #0x8B	; 139
@@ -15530,7 +15485,7 @@ _g_TrackTiles03:
 	.db #0x11	; 17
 	.db #0xD4	; 212
 	.db #0xFB	; 251
-	.db #0x00	; 0
+	.db #0x02	; 2
 	.db #0xD4	; 212
 	.db #0xFB	; 251
 	.db #0x0A	; 10
@@ -15542,8 +15497,7 @@ _g_TrackTiles03:
 	.db #0x21	; 33
 	.db #0xD4	; 212
 	.db #0xFB	; 251
-	.db #0x02	; 2
-	.db #0xFB	; 251
+	.db #0x00	; 0
 	.db #0xFB	; 251
 	.db #0x0A	; 10
 	.db #0x8B	; 139
@@ -15560,8 +15514,7 @@ _g_TrackTiles03:
 	.db #0x21	; 33
 	.db #0xD4	; 212
 	.db #0xFB	; 251
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x19	; 25
 	.db #0xFF	; 255
@@ -15572,17 +15525,13 @@ _g_TrackTiles03:
 	.db #0x11	; 17
 	.db #0xD4	; 212
 	.db #0xFB	; 251
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0x50	; 80	P
-	.db #0x50	; 80	P
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
 	.db #0x0A	; 10
 	.db #0x9B	; 155
@@ -15596,26 +15545,21 @@ _g_TrackTiles03:
 	.db #0x19	; 25
 	.db #0xB6	; 182
 	.db #0x50	; 80	P
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
+	.db #0x00	; 0
 	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xD4	; 212
-	.db #0x02	; 2
-	.db #0xD4	; 212
-	.db #0xD4	; 212
-	.db #0x30	; 48
+	.db #0x32	; 50
 	.db #0xD4	; 212
 	.db #0xFB	; 251
-	.db #0x10	; 16
+	.db #0x12	; 18
 	.db #0xD4	; 212
 	.db #0xFB	; 251
-	.db #0x02	; 2
-	.db #0xD4	; 212
+	.db #0x00	; 0
 	.db #0xB6	; 182
 	.db #0x0B	; 11
 	.db #0xD9	; 217
@@ -15632,7 +15576,7 @@ _g_TrackTiles03:
 	.db #0x13	; 19
 	.db #0xFF	; 255
 	.db #0xFB	; 251
-	.db #0x20	; 32
+	.db #0x22	; 34
 	.db #0xD4	; 212
 	.db #0xFB	; 251
 _g_Tracks:
@@ -15912,20 +15856,20 @@ _str_25:
 _str_26:
 	.ascii "PRESS SPACE"
 	.db 0x00
-;carwar.c:613: void MainLoop()
+;carwar.c:607: void MainLoop()
 ;	---------------------------------
 ; Function MainLoop
 ; ---------------------------------
 _MainLoop_start::
 _MainLoop:
-;carwar.c:616: game.state = StateInitialize;
+;carwar.c:610: game.state = StateInitialize;
 	ld	hl,#0x017a + _game
 	ld	(hl),#<(_StateInitialize)
 	inc	hl
 	ld	(hl),#>(_StateInitialize)
-;carwar.c:618: while(1)
+;carwar.c:612: while(1)
 00102$:
-;carwar.c:621: game.state();
+;carwar.c:615: game.state();
 	ld	hl,#0x017a + _game
 	ld	c,(hl)
 	inc	hl
@@ -15940,7 +15884,7 @@ _MainLoop:
 	pop	bc
 	jr	00102$
 _MainLoop_end::
-;carwar.c:626: void StateInitialize()
+;carwar.c:620: void StateInitialize()
 ;	---------------------------------
 ; Function StateInitialize
 ; ---------------------------------
@@ -15952,25 +15896,25 @@ _StateInitialize:
 	ld	hl,#-6
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:630: game.vdp36.ARG = 0; 
+;carwar.c:624: game.vdp36.ARG = 0; 
 	ld	hl,#0x0009 + 0x09af + _game
 	ld	(hl),#0x00
-;carwar.c:631: game.vdp32.ARG = 0; 
+;carwar.c:625: game.vdp32.ARG = 0; 
 	ld	hl,#0x000d + 0x09a0 + _game
 	ld	(hl),#0x00
-;carwar.c:634: SetFreq(FREQ_60);
+;carwar.c:628: SetFreq(FREQ_60);
 	ld	a,#0x00
 	push	af
 	inc	sp
 	call	_SetFreq
 	inc	sp
-;carwar.c:635: SetScreen8(LINES_212);
+;carwar.c:629: SetScreen8(LINES_212);
 	ld	a,#0x80
 	push	af
 	inc	sp
 	call	_SetScreen8
 	inc	sp
-;carwar.c:636: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
+;carwar.c:630: SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 	ld	hl,#0x01EE
 	push	hl
 	ld	hl,#0x001F
@@ -15980,7 +15924,7 @@ _StateInitialize:
 	call	_SetSpriteMode
 	pop	af
 	pop	af
-;carwar.c:639: FillVRAM(0, 0,   256, 256, 0);
+;carwar.c:633: FillVRAM(0, 0,   256, 256, 0);
 	ld	h,#0x00
 	ex	(sp),hl
 	inc	sp
@@ -15996,7 +15940,7 @@ _StateInitialize:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:640: FillVRAM(0, 256, 256, 256, 0);
+;carwar.c:634: FillVRAM(0, 256, 256, 256, 0);
 	ld	a,#0x00
 	push	af
 	inc	sp
@@ -16012,116 +15956,116 @@ _StateInitialize:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:643: for(x=0; x<256; x++)
+;carwar.c:637: for(x=0; x<256; x++)
 	ld	bc,#0x0000
 00104$:
 	ld	a,b
 	sub	a,#0x01
 	jr	NC,00107$
-;carwar.c:644: game.colorCode[x] = OP_NONE;
+;carwar.c:638: game.colorCode[x] = OP_NONE;
 	ld	hl,#0x0009 + _game
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:643: for(x=0; x<256; x++)
+;carwar.c:637: for(x=0; x<256; x++)
 	inc	bc
 	jr	00104$
 00107$:
-;carwar.c:646: game.colorCode[COLOR_KHAKI]        = OP_WALL;
+;carwar.c:640: game.colorCode[COLOR_KHAKI]        = OP_WALL;
 	ld	hl,#0x00d4 + 0x0009 + _game
 	ld	(hl),#0x00
-;carwar.c:647: game.colorCode[COLOR_DARKKAKHI]    = OP_WALL;
+;carwar.c:641: game.colorCode[COLOR_DARKKAKHI]    = OP_WALL;
 	ld	hl,#0x008c + 0x0009 + _game
 	ld	(hl),#0x00
-;carwar.c:648: game.colorCode[COLOR_SKIN]         = OP_BLADE;
+;carwar.c:642: game.colorCode[COLOR_SKIN]         = OP_BLADE;
 	ld	hl,#0x00ba + 0x0009 + _game
 	ld	(hl),#0x01
-;carwar.c:649: game.colorCode[COLOR_DARKSKIN]     = OP_BLADE;
+;carwar.c:643: game.colorCode[COLOR_DARKSKIN]     = OP_BLADE;
 	ld	hl,#0x0071 + 0x0009 + _game
 	ld	(hl),#0x01
-;carwar.c:650: game.colorCode[COLOR_PINK]         = OP_BUMPER;
+;carwar.c:644: game.colorCode[COLOR_PINK]         = OP_BUMPER;
 	ld	hl,#0x001e + 0x0009 + _game
 	ld	(hl),#0x02
-;carwar.c:651: game.colorCode[COLOR_DARKPINK]     = OP_BUMPER;
+;carwar.c:645: game.colorCode[COLOR_DARKPINK]     = OP_BUMPER;
 	ld	hl,#0x0015 + 0x0009 + _game
 	ld	(hl),#0x02
-;carwar.c:652: game.colorCode[COLOR_SAND]         = OP_ASPHALT;
+;carwar.c:646: game.colorCode[COLOR_SAND]         = OP_ASPHALT;
 	ld	hl,#0x00da + 0x0009 + _game
 	ld	(hl),#0x0A
-;carwar.c:653: game.colorCode[COLOR_LIGHTMAUVE]   = OP_ASPHALT;
+;carwar.c:647: game.colorCode[COLOR_LIGHTMAUVE]   = OP_ASPHALT;
 	ld	hl,#0x00b7 + 0x0009 + _game
 	ld	(hl),#0x0A
-;carwar.c:654: game.colorCode[COLOR_GRAY]         = OP_ASPHALT;
+;carwar.c:648: game.colorCode[COLOR_GRAY]         = OP_ASPHALT;
 	dec	hl
 	ld	(hl),#0x0A
-;carwar.c:655: game.colorCode[COLOR_DARKGRAY]     = OP_ASPHALT;
+;carwar.c:649: game.colorCode[COLOR_DARKGRAY]     = OP_ASPHALT;
 	ld	hl,#0x006d + 0x0009 + _game
 	ld	(hl),#0x0A
-;carwar.c:656: game.colorCode[COLOR_BROWN]        = OP_MUD;
+;carwar.c:650: game.colorCode[COLOR_BROWN]        = OP_MUD;
 	ld	hl,#0x0050 + 0x0009 + _game
 	ld	(hl),#0x0B
-;carwar.c:657: game.colorCode[COLOR_DARKBROWN]    = OP_MUD;
+;carwar.c:651: game.colorCode[COLOR_DARKBROWN]    = OP_MUD;
 	ld	hl,#0x0028 + 0x0009 + _game
 	ld	(hl),#0x0B
-;carwar.c:658: game.colorCode[COLOR_YELLOW]       = OP_SAND;
+;carwar.c:652: game.colorCode[COLOR_YELLOW]       = OP_SAND;
 	ld	hl,#0x00d9 + 0x0009 + _game
 	ld	(hl),#0x0C
-;carwar.c:659: game.colorCode[COLOR_DARKYELLOW]   = OP_SAND;
+;carwar.c:653: game.colorCode[COLOR_DARKYELLOW]   = OP_SAND;
 	ld	hl,#0x0090 + 0x0009 + _game
 	ld	(hl),#0x0C
-;carwar.c:660: game.colorCode[COLOR_GREEN]        = OP_GRASS;
+;carwar.c:654: game.colorCode[COLOR_GREEN]        = OP_GRASS;
 	ld	hl,#0x00a0 + 0x0009 + _game
 	ld	(hl),#0x0D
-;carwar.c:661: game.colorCode[COLOR_DARKGREEN]    = OP_GRASS;
+;carwar.c:655: game.colorCode[COLOR_DARKGREEN]    = OP_GRASS;
 	ld	hl,#0x0060 + 0x0009 + _game
 	ld	(hl),#0x0D
-;carwar.c:662: game.colorCode[COLOR_WHITE]        = OP_SNOW;
+;carwar.c:656: game.colorCode[COLOR_WHITE]        = OP_SNOW;
 	ld	hl,#0x00ff + 0x0009 + _game
 	ld	(hl),#0x0E
-;carwar.c:663: game.colorCode[COLOR_LIGHTGRAY]    = OP_SNOW;
+;carwar.c:657: game.colorCode[COLOR_LIGHTGRAY]    = OP_SNOW;
 	ld	hl,#0x00db + 0x0009 + _game
 	ld	(hl),#0x0E
-;carwar.c:664: game.colorCode[COLOR_CYAN]         = OP_ICE;
+;carwar.c:658: game.colorCode[COLOR_CYAN]         = OP_ICE;
 	ld	hl,#0x00fb + 0x0009 + _game
 	ld	(hl),#0x0F
-;carwar.c:665: game.colorCode[COLOR_LIGHTBLUE]    = OP_ICE;
+;carwar.c:659: game.colorCode[COLOR_LIGHTBLUE]    = OP_ICE;
 	ld	hl,#0x00d7 + 0x0009 + _game
 	ld	(hl),#0x0F
-;carwar.c:666: game.colorCode[COLOR_BLUE]         = OP_WATER;
+;carwar.c:660: game.colorCode[COLOR_BLUE]         = OP_WATER;
 	ld	hl,#0x008b + 0x0009 + _game
 	ld	(hl),#0x10
-;carwar.c:667: game.colorCode[COLOR_DARKBLUE]     = OP_WATER;
+;carwar.c:661: game.colorCode[COLOR_DARKBLUE]     = OP_WATER;
 	ld	hl,#0x0047 + 0x0009 + _game
 	ld	(hl),#0x10
-;carwar.c:668: game.colorCode[COLOR_NAVYBLUE]     = OP_SEA;
+;carwar.c:662: game.colorCode[COLOR_NAVYBLUE]     = OP_SEA;
 	ld	hl,#0x0002 + 0x0009 + _game
 	ld	(hl),#0x07
-;carwar.c:669: game.colorCode[COLOR_DARKNAVYBLUE] = OP_SEA;
+;carwar.c:663: game.colorCode[COLOR_DARKNAVYBLUE] = OP_SEA;
 	dec	hl
 	ld	(hl),#0x07
-;carwar.c:670: game.colorCode[COLOR_MAUVE]        = OP_SPEEDER;
+;carwar.c:664: game.colorCode[COLOR_MAUVE]        = OP_SPEEDER;
 	ld	hl,#0x009b + 0x0009 + _game
 	ld	(hl),#0x04
-;carwar.c:671: game.colorCode[COLOR_DARKMAUVE]    = OP_SPEEDER;
+;carwar.c:665: game.colorCode[COLOR_DARKMAUVE]    = OP_SPEEDER;
 	ld	hl,#0x0072 + 0x0009 + _game
 	ld	(hl),#0x04
-;carwar.c:672: game.colorCode[COLOR_ORANGE]       = OP_JUMPER;
+;carwar.c:666: game.colorCode[COLOR_ORANGE]       = OP_JUMPER;
 	ld	hl,#0x009c + 0x0009 + _game
 	ld	(hl),#0x05
-;carwar.c:673: game.colorCode[COLOR_DARKORANGE]   = OP_JUMPER;
+;carwar.c:667: game.colorCode[COLOR_DARKORANGE]   = OP_JUMPER;
 	ld	hl,#0x0058 + 0x0009 + _game
 	ld	(hl),#0x05
-;carwar.c:674: game.colorCode[COLOR_RED]          = OP_MAGMA;
+;carwar.c:668: game.colorCode[COLOR_RED]          = OP_MAGMA;
 	ld	hl,#0x003c + 0x0009 + _game
 	ld	(hl),#0x06
-;carwar.c:675: game.colorCode[COLOR_DARKRED]      = OP_MAGMA;
+;carwar.c:669: game.colorCode[COLOR_DARKRED]      = OP_MAGMA;
 	ld	hl,#0x0034 + 0x0009 + _game
 	ld	(hl),#0x06
-;carwar.c:676: game.colorCode[COLOR_BLACK]        = OP_HOLE;
+;carwar.c:670: game.colorCode[COLOR_BLACK]        = OP_HOLE;
 	ld	hl,#0x0009 + _game
 	ld	(hl),#0x08
-;carwar.c:679: for(x=0; x<sizeof(g_CharTable) / 8; x++)
+;carwar.c:673: for(x=0; x<sizeof(g_CharTable) / 8; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00108$:
@@ -16130,7 +16074,7 @@ _StateInitialize:
 	ld	a,-1 (ix)
 	sbc	a,#0x00
 	jr	NC,00111$
-;carwar.c:681: RAMtoVRAM(Modulo2(x * 8, 256), 248 + (x / 32), 8, 1, (u16)&g_CharTable[x * 8]);
+;carwar.c:675: RAMtoVRAM(Modulo2(x * 8, 256), 248 + (x / 32), 8, 1, (u16)&g_CharTable[x * 8]);
 	ld	e,-2 (ix)
 	ld	d,-1 (ix)
 	sla	e
@@ -16173,20 +16117,20 @@ _StateInitialize:
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:679: for(x=0; x<sizeof(g_CharTable) / 8; x++)
+;carwar.c:673: for(x=0; x<sizeof(g_CharTable) / 8; x++)
 	inc	-2 (ix)
 	jr	NZ,00108$
 	inc	-1 (ix)
 	jr	00108$
 00111$:
-;carwar.c:685: for(x=0; x<256; x++)
+;carwar.c:679: for(x=0; x<256; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00116$:
 	ld	a,-1 (ix)
 	sub	a,#0x01
 	jp	NC,00119$
-;carwar.c:687: for(i=0; i<8; i++)
+;carwar.c:681: for(i=0; i<8; i++)
 	ld	e,-2 (ix)
 	ld	d,-1 (ix)
 	sla	e
@@ -16205,7 +16149,7 @@ _StateInitialize:
 	ld	a,-3 (ix)
 	sbc	a,#0x00
 	jr	NC,00118$
-;carwar.c:689: if(x & (1 << (7 - (i & 0x07))))
+;carwar.c:683: if(x & (1 << (7 - (i & 0x07))))
 	ld	a,-4 (ix)
 	and	a,#0x07
 	ld	l,a
@@ -16236,7 +16180,7 @@ _StateInitialize:
 	ld	a,l
 	or	a,h
 	jr	Z,00102$
-;carwar.c:690: game.bitToByte[x * 8 + i] = 0xFF;
+;carwar.c:684: game.bitToByte[x * 8 + i] = 0xFF;
 	ld	a,-6 (ix)
 	add	a,-4 (ix)
 	ld	c,a
@@ -16248,7 +16192,7 @@ _StateInitialize:
 	ld	(hl),#0xFF
 	jr	00114$
 00102$:
-;carwar.c:692: game.bitToByte[x * 8 + i] = 0x00;
+;carwar.c:686: game.bitToByte[x * 8 + i] = 0x00;
 	ld	a,e
 	add	a,-4 (ix)
 	ld	c,a
@@ -16259,19 +16203,19 @@ _StateInitialize:
 	add	hl,bc
 	ld	(hl),#0x00
 00114$:
-;carwar.c:687: for(i=0; i<8; i++)
+;carwar.c:681: for(i=0; i<8; i++)
 	inc	-4 (ix)
 	jr	NZ,00112$
 	inc	-3 (ix)
 	jr	00112$
 00118$:
-;carwar.c:685: for(x=0; x<256; x++)
+;carwar.c:679: for(x=0; x<256; x++)
 	inc	-2 (ix)
 	jp	NZ,00116$
 	inc	-1 (ix)
 	jp	00116$
 00119$:
-;carwar.c:697: for(x=0; x<12; x++)
+;carwar.c:691: for(x=0; x<12; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
@@ -16281,11 +16225,11 @@ _StateInitialize:
 	ld	a,-1 (ix)
 	sbc	a,#0x00
 	jr	NC,00123$
-;carwar.c:698: game.smokes[x].step = 0xFF;
+;carwar.c:692: game.smokes[x].step = 0xFF;
 	ld	hl,#0x097c + _game
 	add	hl,de
 	ld	(hl),#0xFF
-;carwar.c:697: for(x=0; x<12; x++)
+;carwar.c:691: for(x=0; x<12; x++)
 	inc	de
 	inc	de
 	inc	de
@@ -16294,13 +16238,13 @@ _StateInitialize:
 	inc	-1 (ix)
 	jr	00120$
 00123$:
-;carwar.c:700: game.track = 0;
+;carwar.c:694: game.track = 0;
 	ld	hl,#0x0006 + _game
 	ld	(hl),#0x00
-;carwar.c:701: game.page = 0;
+;carwar.c:695: game.page = 0;
 	dec	hl
 	ld	(hl),#0x00
-;carwar.c:702: game.state = StateTitle;
+;carwar.c:696: game.state = StateTitle;
 	ld	hl,#0x017a + _game
 	ld	(hl),#<(_StateTitle)
 	inc	hl
@@ -16309,7 +16253,7 @@ _StateInitialize:
 	pop	ix
 	ret
 _StateInitialize_end::
-;carwar.c:707: void InitializeMenu(u8 menu)
+;carwar.c:701: void InitializeMenu(u8 menu)
 ;	---------------------------------
 ; Function InitializeMenu
 ; ---------------------------------
@@ -16321,23 +16265,23 @@ _InitializeMenu:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:710: game.menu = menu;
+;carwar.c:704: game.menu = menu;
 	ld	hl,#0x0001 + _game
 	ld	a,4 (ix)
 	ld	(hl),a
-;carwar.c:711: game.item = 0;
+;carwar.c:705: game.item = 0;
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:713: game.page = 1;
+;carwar.c:707: game.page = 1;
 	ld	hl,#0x0005 + _game
 	ld	(hl),#0x01
-;carwar.c:714: SetPage8(game.page);
+;carwar.c:708: SetPage8(game.page);
 	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:716: HMMV(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
+;carwar.c:710: HMMV(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
 	ld	hl,#0x09af + _game
 	ld	(hl),#0x54
 	inc	hl
@@ -16364,7 +16308,7 @@ _InitializeMenu:
 	push	hl
 	call	_VPDCommand36
 	pop	af
-;carwar.c:718: DrawText(MENU_X, MENU_Y, g_Menus[game.menu].title, COLOR_WHITE);
+;carwar.c:712: DrawText(MENU_X, MENU_Y, g_Menus[game.menu].title, COLOR_WHITE);
 	ld	a,(#0x0001 + _game)
 	ld	e,a
 	add	a,a
@@ -16392,7 +16336,7 @@ _InitializeMenu:
 	pop	af
 	pop	af
 	inc	sp
-;carwar.c:719: for(item = 0; item < g_Menus[game.menu].itemNum; item++)
+;carwar.c:713: for(item = 0; item < g_Menus[game.menu].itemNum; item++)
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
 	ld	-3 (ix),#0x00
@@ -16420,7 +16364,7 @@ _InitializeMenu:
 	ld	a,-1 (ix)
 	sub	a,(hl)
 	jp	NC,00104$
-;carwar.c:721: DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].text, g_Menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
+;carwar.c:715: DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].text, g_Menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
 	ld	hl,#0x0001 + _game
 	ld	l,(hl)
 	push	de
@@ -16510,7 +16454,7 @@ _InitializeMenu:
 	pop	af
 	inc	sp
 	pop	de
-;carwar.c:719: for(item = 0; item < g_Menus[game.menu].itemNum; item++)
+;carwar.c:713: for(item = 0; item < g_Menus[game.menu].itemNum; item++)
 	ld	hl,#0x0006
 	add	hl,de
 	ex	de,hl
@@ -16529,7 +16473,7 @@ _InitializeMenu:
 	inc	-1 (ix)
 	jp	00101$
 00104$:
-;carwar.c:724: HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
+;carwar.c:718: HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
 	ld	hl,#0x09a0 + _game
 	ld	(hl),#0x54
 	inc	hl
@@ -16564,7 +16508,7 @@ _InitializeMenu:
 	pop	ix
 	ret
 _InitializeMenu_end::
-;carwar.c:728: void StateTitle()
+;carwar.c:722: void StateTitle()
 ;	---------------------------------
 ; Function StateTitle
 ; ---------------------------------
@@ -16576,23 +16520,23 @@ _StateTitle:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:732: game.page = 1;
+;carwar.c:726: game.page = 1;
 	ld	hl,#0x0005 + _game
 	ld	(hl),#0x01
-;carwar.c:733: SetPage8(game.page);
+;carwar.c:727: SetPage8(game.page);
 	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:735: for(j=0; j<24; j++)
+;carwar.c:729: for(j=0; j<24; j++)
 	ld	-2 (ix),#0x00
 	ld	de,#0x0000
 00107$:
 	ld	a,-2 (ix)
 	sub	a,#0x18
 	jp	NC,00110$
-;carwar.c:737: for(i=0; i<232; i++)
+;carwar.c:731: for(i=0; i<232; i++)
 	ld	-5 (ix),e
 	ld	-4 (ix),d
 	sra	-4 (ix)
@@ -16606,7 +16550,7 @@ _StateTitle:
 	ld	a,-1 (ix)
 	sub	a,#0xE8
 	jp	NC,00106$
-;carwar.c:739: byte = g_Title[(i >> 3) + (j * 232 >> 3)];
+;carwar.c:733: byte = g_Title[(i >> 3) + (j * 232 >> 3)];
 	ld	a,-1 (ix)
 	srl	a
 	srl	a
@@ -16621,7 +16565,7 @@ _StateTitle:
 	add	hl,bc
 	ld	a,(hl)
 	ld	-3 (ix),a
-;carwar.c:740: if(byte & (1 << (7 - (i & 0x07))))
+;carwar.c:734: if(byte & (1 << (7 - (i & 0x07))))
 	ld	a,-1 (ix)
 	and	a,#0x07
 	ld	l,a
@@ -16653,7 +16597,7 @@ _StateTitle:
 	ld	a,l
 	or	a,h
 	jr	Z,00105$
-;carwar.c:742: WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
+;carwar.c:736: WriteVRAM(0, TITLE_X + i + 256 * (TITLE_Y + j), GrayGradiant(i + j));
 	ld	a,-1 (ix)
 	add	a,-2 (ix)
 	ld	l,a
@@ -16699,11 +16643,11 @@ _StateTitle:
 	pop	af
 	pop	de
 00105$:
-;carwar.c:737: for(i=0; i<232; i++)
+;carwar.c:731: for(i=0; i<232; i++)
 	inc	-1 (ix)
 	jp	00103$
 00106$:
-;carwar.c:746: HMMM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
+;carwar.c:740: HMMM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
 	ld	hl,#0x09a0 + _game
 	ld	(hl),#0x10
 	inc	hl
@@ -16752,27 +16696,27 @@ _StateTitle:
 	call	_VPDCommand32
 	pop	af
 	pop	de
-;carwar.c:735: for(j=0; j<24; j++)
+;carwar.c:729: for(j=0; j<24; j++)
 	ld	hl,#0x00E8
 	add	hl,de
 	ex	de,hl
 	inc	-2 (ix)
 	jp	00107$
 00110$:
-;carwar.c:749: InitializeMenu(0);
+;carwar.c:743: InitializeMenu(0);
 	ld	a,#0x00
 	push	af
 	inc	sp
 	call	_InitializeMenu
 	inc	sp
-;carwar.c:750: game.pressed = 0;
+;carwar.c:744: game.pressed = 0;
 	ld	hl,#0x0003 + _game
 	ld	(hl),#0x00
-;carwar.c:751: game.page = 0;
+;carwar.c:745: game.page = 0;
 	inc	hl
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:752: game.state = StateMainMenu;
+;carwar.c:746: game.state = StateMainMenu;
 	ld	hl,#0x017a + _game
 	ld	(hl),#<(_StateMainMenu)
 	inc	hl
@@ -16781,7 +16725,7 @@ _StateTitle:
 	pop	ix
 	ret
 _StateTitle_end::
-;carwar.c:756: void StateMainMenu()
+;carwar.c:750: void StateMainMenu()
 ;	---------------------------------
 ; Function StateMainMenu
 ; ---------------------------------
@@ -16791,38 +16735,38 @@ _StateMainMenu:
 	ld	ix,#0
 	add	ix,sp
 	push	af
-;carwar.c:760: SetPage8(game.page);
+;carwar.c:754: SetPage8(game.page);
 	ld	a,(#0x0005 + _game)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:761: game.page = 1 - game.page;
+;carwar.c:755: game.page = 1 - game.page;
 	ld	hl,#0x0005 + _game
 	ld	l,(hl)
 	ld	a,#0x01
 	sub	a,l
 	ld	hl,#0x0005 + _game
 	ld	(hl),a
-;carwar.c:762: game.yOffset = 256 * game.page;
+;carwar.c:756: game.yOffset = 256 * game.page;
 	ld	b, (hl)
 	ld	c,#0x00
 	ld	hl,#0x0007 + _game
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:765: keyLine = GetKeyMatrixLine(8);
+;carwar.c:759: keyLine = GetKeyMatrixLine(8);
 	ld	a,#0x08
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
 	ld	c,l
-;carwar.c:766: if((keyLine & KEY_SPACE) == 0
+;carwar.c:760: if((keyLine & KEY_SPACE) == 0
 	ld	a,c
 	and	a,#0x01
 	jr	Z,00105$
-;carwar.c:767: || Joytrig(1) != 0
+;carwar.c:761: || Joytrig(1) != 0
 	push	bc
 	ld	a,#0x01
 	push	af
@@ -16833,7 +16777,7 @@ _StateMainMenu:
 	xor	a,a
 	or	a,l
 	jr	NZ,00105$
-;carwar.c:768: || Joytrig(2) != 0)
+;carwar.c:762: || Joytrig(2) != 0)
 	push	bc
 	ld	a,#0x02
 	push	af
@@ -16845,7 +16789,7 @@ _StateMainMenu:
 	or	a,l
 	jp	Z,00106$
 00105$:
-;carwar.c:770: if(g_Menus[game.menu].items[game.item].action != 0)
+;carwar.c:764: if(g_Menus[game.menu].items[game.item].action != 0)
 	ld	a,(#0x0001 + _game)
 	ld	e,a
 	add	a,a
@@ -16897,7 +16841,7 @@ _StateMainMenu:
 	inc	hl
 	or	a,(hl)
 	jp	Z,00102$
-;carwar.c:771: g_Menus[game.menu].items[game.item].action(g_Menus[game.menu].items[game.item].value);
+;carwar.c:765: g_Menus[game.menu].items[game.item].action(g_Menus[game.menu].items[game.item].value);
 	ld	a,(#0x0001 + _game)
 	ld	e,a
 	add	a,a
@@ -17009,7 +16953,7 @@ _StateMainMenu:
 00137$:
 	inc	sp
 00102$:
-;carwar.c:772: if((g_Menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
+;carwar.c:766: if((g_Menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
 	ld	a,(#0x0001 + _game)
 	ld	e,a
 	add	a,a
@@ -17060,7 +17004,7 @@ _StateMainMenu:
 	ld	a,(hl)
 	and	a,#0x80
 	jp	NZ,00123$
-;carwar.c:773: InitializeMenu(g_Menus[game.menu].items[game.item].nextIdx);
+;carwar.c:767: InitializeMenu(g_Menus[game.menu].items[game.item].nextIdx);
 	ld	a,(#0x0001 + _game)
 	ld	e,a
 	add	a,a
@@ -17113,20 +17057,20 @@ _StateMainMenu:
 	inc	sp
 	call	_InitializeMenu
 	inc	sp
-;carwar.c:774: return;
+;carwar.c:768: return;
 	jp	00123$
 00106$:
-;carwar.c:778: if(game.pressed > 16)
+;carwar.c:772: if(game.pressed > 16)
 	ld	hl,#0x0003 + _game
 	ld	l,(hl)
 	ld	a,#0x10
 	sub	a,l
 	jr	NC,00110$
-;carwar.c:779: game.pressed = 0;
+;carwar.c:773: game.pressed = 0;
 	ld	hl,#0x0003 + _game
 	ld	(hl),#0x00
 00110$:
-;carwar.c:780: if(((keyLine & KEY_UP) == 0) && (game.item > 0))
+;carwar.c:774: if(((keyLine & KEY_UP) == 0) && (game.item > 0))
 	ld	a,c
 	and	a,#0x20
 	jr	NZ,00120$
@@ -17134,24 +17078,24 @@ _StateMainMenu:
 	ld	a,(hl)
 	or	a,a
 	jr	Z,00120$
-;carwar.c:782: if(game.pressed == 0)
+;carwar.c:776: if(game.pressed == 0)
 	inc	hl
 	ld	a,(hl)
 	or	a,a
 	jr	NZ,00112$
-;carwar.c:783: game.item--;
+;carwar.c:777: game.item--;
 	dec	hl
 	ld	a, (hl)
 	dec	a
 	ld	(#0x0002 + _game),a
 00112$:
-;carwar.c:784: game.pressed++;
+;carwar.c:778: game.pressed++;
 	ld	a,(#0x0003 + _game)
 	inc	a
 	ld	(#0x0003 + _game),a
 	jr	00121$
 00120$:
-;carwar.c:786: else if(((keyLine & KEY_DOWN) == 0) && (game.item < g_Menus[game.menu].itemNum - 1))
+;carwar.c:780: else if(((keyLine & KEY_DOWN) == 0) && (game.item < g_Menus[game.menu].itemNum - 1))
 	ld	a,c
 	and	a,#0x40
 	jr	NZ,00116$
@@ -17188,28 +17132,28 @@ _StateMainMenu:
 	xor	a,#0x80
 00144$:
 	jp	P,00116$
-;carwar.c:788: if(game.pressed == 0)
+;carwar.c:782: if(game.pressed == 0)
 	ld	hl,#0x0003 + _game
 	ld	a,(hl)
 	or	a,a
 	jr	NZ,00114$
-;carwar.c:789: game.item++;
+;carwar.c:783: game.item++;
 	dec	hl
 	ld	a, (hl)
 	inc	a
 	ld	(#0x0002 + _game),a
 00114$:
-;carwar.c:790: game.pressed++;
+;carwar.c:784: game.pressed++;
 	ld	a,(#0x0003 + _game)
 	inc	a
 	ld	(#0x0003 + _game),a
 	jr	00121$
 00116$:
-;carwar.c:793: game.pressed = 0;
+;carwar.c:787: game.pressed = 0;
 	ld	hl,#0x0003 + _game
 	ld	(hl),#0x00
 00121$:
-;carwar.c:796: HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * g_Menus[game.menu].itemNum, COLOR_BLACK);
+;carwar.c:790: HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * g_Menus[game.menu].itemNum, COLOR_BLACK);
 	ld	hl,#0x09af + _game
 	ld	(hl),#0x54
 	inc	hl
@@ -17269,7 +17213,7 @@ _StateMainMenu:
 	push	hl
 	call	_VPDCommand36
 	pop	af
-;carwar.c:797: DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
+;carwar.c:791: DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
 	ld	hl,#0x0007 + _game
 	ld	a,(hl)
 	inc	hl
@@ -17308,7 +17252,7 @@ _StateMainMenu:
 	pop	af
 	pop	af
 	inc	sp
-;carwar.c:798: waitRetrace();
+;carwar.c:792: waitRetrace();
 	call	_waitRetrace
 00123$:
 	ld	sp,ix
@@ -17318,7 +17262,7 @@ _StateMainMenu_end::
 __str_27:
 	.ascii "@"
 	.db 0x00
-;carwar.c:802: void StateStartGame()
+;carwar.c:796: void StateStartGame()
 ;	---------------------------------
 ; Function StateStartGame
 ; ---------------------------------
@@ -17330,7 +17274,7 @@ _StateStartGame:
 	ld	hl,#-22
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:805: const u8 colors[] = { 
+;carwar.c:799: const u8 colors[] = { 
 	ld	hl,#0x0005
 	add	hl,sp
 	ld	c,l
@@ -17410,18 +17354,18 @@ _StateStartGame:
 	ld	hl,#0x000F
 	add	hl,bc
 	ld	(hl),#0x00
-;carwar.c:815: game.page = 0;
+;carwar.c:809: game.page = 0;
 	ld	hl,#0x0005 + _game
 	ld	(hl),#0x00
-;carwar.c:816: SetPage8(game.page);
+;carwar.c:810: SetPage8(game.page);
 	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:820: StateBuildTrack();
+;carwar.c:814: StateBuildTrack();
 	call	_StateBuildTrack
-;carwar.c:825: HMMM(0, 0, 0, 256, 256, 212);
+;carwar.c:819: HMMM(0, 0, 0, 256, 256, 212);
 	ld	hl,#0x09a0 + _game
 	ld	(hl),#0x00
 	inc	hl
@@ -17453,7 +17397,7 @@ _StateStartGame:
 	push	hl
 	call	_VPDCommand32
 	pop	af
-;carwar.c:829: PrintSprite(64, 64, "INIT\nCARS", (u16)&g_DefaultColor);
+;carwar.c:823: PrintSprite(64, 64, "INIT\nCARS", (u16)&g_DefaultColor);
 	ld	c,#<(_g_DefaultColor)
 	ld	b,#>(_g_DefaultColor)
 	push	bc
@@ -17465,7 +17409,7 @@ _StateStartGame:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:830: for(i=0; i<16; i++)
+;carwar.c:824: for(i=0; i<16; i++)
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
 	ld	-19 (ix),#0x00
@@ -17474,7 +17418,7 @@ _StateStartGame:
 	ld	a,-1 (ix)
 	sub	a,#0x10
 	jp	NC,00104$
-;carwar.c:832: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&g_Car1[13 * 11 * i]);
+;carwar.c:826: RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&g_Car1[13 * 11 * i]);
 	ld	hl,#_g_Car1
 	add	hl,de
 	push	de
@@ -17493,7 +17437,7 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:833: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&g_Car2[13 * 11 * i]);
+;carwar.c:827: RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&g_Car2[13 * 11 * i]);
 	ld	hl,#_g_Car2
 	add	hl,de
 	push	de
@@ -17512,7 +17456,7 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:834: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&g_Car3[13 * 11 * i]);
+;carwar.c:828: RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&g_Car3[13 * 11 * i]);
 	ld	hl,#_g_Car3
 	add	hl,de
 	push	de
@@ -17531,7 +17475,7 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:835: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&g_Car4[13 * 11 * i]);
+;carwar.c:829: RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&g_Car4[13 * 11 * i]);
 	ld	hl,#_g_Car4
 	add	hl,de
 	push	de
@@ -17550,7 +17494,7 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:830: for(i=0; i<16; i++)
+;carwar.c:824: for(i=0; i<16; i++)
 	ld	hl,#0x008F
 	add	hl,de
 	ex	de,hl
@@ -17563,7 +17507,7 @@ _StateStartGame:
 	inc	-1 (ix)
 	jp	00101$
 00104$:
-;carwar.c:837: RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
+;carwar.c:831: RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
 	ld	l,#<(_g_Shadow)
 	ld	h,#>(_g_Shadow)
 	push	hl
@@ -17579,14 +17523,14 @@ _StateStartGame:
 	ld	hl,#0x000A
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:838: for(i = 0; i < 8 * 3; i++)
+;carwar.c:832: for(i = 0; i < 8 * 3; i++)
 	ld	-1 (ix),#0x00
 	ld	de,#0x0000
 00105$:
 	ld	a,-1 (ix)
 	sub	a,#0x18
 	jr	NC,00108$
-;carwar.c:840: RAMtoVRAM(208 + Modulo2(i, 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
+;carwar.c:834: RAMtoVRAM(208 + Modulo2(i, 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
 	ld	hl,#_g_Pilots
 	add	hl,de
 	ld	-19 (ix), l
@@ -17639,14 +17583,14 @@ _StateStartGame:
 	add	hl,sp
 	ld	sp,hl
 	pop	de
-;carwar.c:838: for(i = 0; i < 8 * 3; i++)
+;carwar.c:832: for(i = 0; i < 8 * 3; i++)
 	ld	hl,#0x0030
 	add	hl,de
 	ex	de,hl
 	inc	-1 (ix)
 	jr	00105$
 00108$:
-;carwar.c:845: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&g_DefaultColor);
+;carwar.c:839: PrintSprite(64, 64, "INIT\nTRACK\nBACKUP", (u16)&g_DefaultColor);
 	ld	c,#<(_g_DefaultColor)
 	ld	b,#>(_g_DefaultColor)
 	push	bc
@@ -17658,7 +17602,7 @@ _StateStartGame:
 	pop	af
 	pop	af
 	pop	af
-;carwar.c:846: for(i=0; i<CAR_NUM; i++)
+;carwar.c:840: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	b,#0x00
 	ld	-21 (ix),#0x00
@@ -17667,7 +17611,7 @@ _StateStartGame:
 	ld	a,-1 (ix)
 	sub	a,#0x04
 	jp	NC,00112$
-;carwar.c:848: InitializePlayer(&game.players[i], i, g_Tracks[game.track].startPos[i].x, g_Tracks[game.track].startPos[i].y, g_Tracks[game.track].rotation);
+;carwar.c:842: InitializePlayer(&game.players[i], i, g_Tracks[game.track].startPos[i].x, g_Tracks[game.track].startPos[i].y, g_Tracks[game.track].rotation);
 	ld	a,(#0x0006 + _game)
 	ld	e,a
 	add	a,a
@@ -17759,7 +17703,7 @@ _StateStartGame:
 	pop	af
 	pop	af
 	pop	bc
-;carwar.c:849: HMMM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
+;carwar.c:843: HMMM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
 	ld	a,#<(0x010a + _game)
 	add	a,b
 	ld	l, a
@@ -17825,7 +17769,7 @@ _StateStartGame:
 	call	_VPDCommand32
 	pop	af
 	pop	bc
-;carwar.c:850: HMMM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
+;carwar.c:844: HMMM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
 	ld	a,#<(0x010a + _game)
 	add	a,b
 	ld	l, a
@@ -17895,7 +17839,7 @@ _StateStartGame:
 	call	_VPDCommand32
 	pop	af
 	pop	bc
-;carwar.c:846: for(i=0; i<CAR_NUM; i++)
+;carwar.c:840: for(i=0; i<CAR_NUM; i++)
 	ld	a,b
 	add	a,#0x1C
 	ld	b,a
@@ -17908,15 +17852,15 @@ _StateStartGame:
 	inc	-1 (ix)
 	jp	00109$
 00112$:
-;carwar.c:853: ClearSprite();
+;carwar.c:847: ClearSprite();
 	call	_ClearSprite
-;carwar.c:854: for(i=0; i<32; i++)
+;carwar.c:848: for(i=0; i<32; i++)
 	ld	c,#0x00
 00113$:
 	ld	a,c
 	sub	a,#0x20
 	jr	NC,00116$
-;carwar.c:855: SetSpriteUniColor(i, 0, 248, 0, 0);
+;carwar.c:849: SetSpriteUniColor(i, 0, 248, 0, 0);
 	push	bc
 	ld	hl,#0x0000
 	push	hl
@@ -17930,11 +17874,11 @@ _StateStartGame:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:854: for(i=0; i<32; i++)
+;carwar.c:848: for(i=0; i<32; i++)
 	inc	c
 	jr	00113$
 00116$:
-;carwar.c:857: game.state = StateUpdateGame;
+;carwar.c:851: game.state = StateUpdateGame;
 	ld	hl,#0x017a + _game
 	ld	(hl),#<(_StateUpdateGame)
 	inc	hl
@@ -17955,7 +17899,7 @@ __str_29:
 	.db 0x0A
 	.ascii "BACKUP"
 	.db 0x00
-;carwar.c:861: void StateUpdateGame()
+;carwar.c:855: void StateUpdateGame()
 ;	---------------------------------
 ; Function StateUpdateGame
 ; ---------------------------------
@@ -17967,33 +17911,33 @@ _StateUpdateGame:
 	ld	hl,#-33
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:867: SetPage8(game.page);
+;carwar.c:861: SetPage8(game.page);
 	ld	a,(#0x0005 + _game)
 	push	af
 	inc	sp
 	call	_SetPage8
 	inc	sp
-;carwar.c:868: game.page = 1 - game.page;
+;carwar.c:862: game.page = 1 - game.page;
 	ld	hl,#0x0005 + _game
 	ld	l,(hl)
 	ld	a,#0x01
 	sub	a,l
 	ld	hl,#0x0005 + _game
 	ld	(hl),a
-;carwar.c:869: game.yOffset = 256 * game.page;
+;carwar.c:863: game.yOffset = 256 * game.page;
 	ld	b, (hl)
 	ld	c,#0x00
 	ld	hl,#0x0007 + _game
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:871: for(i=0; i<CAR_NUM; i++)
+;carwar.c:865: for(i=0; i<CAR_NUM; i++)
 	ld	bc,#0x0000
-00172$:
+00174$:
 	ld	a,c
 	sub	a,#0x04
-	jr	NC,00175$
-;carwar.c:872: game.players[i].flag = 0;
+	jr	NC,00177$
+;carwar.c:866: game.players[i].flag = 0;
 	ld	a,#<(0x010a + _game)
 	add	a,b
 	ld	e,a
@@ -18005,29 +17949,29 @@ _StateUpdateGame:
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:871: for(i=0; i<CAR_NUM; i++)
+;carwar.c:865: for(i=0; i<CAR_NUM; i++)
 	ld	a,b
 	add	a,#0x1C
 	ld	b,a
 	inc	c
-	jr	00172$
-00175$:
-;carwar.c:876: curPly = &game.players[0];
+	jr	00174$
+00177$:
+;carwar.c:870: curPly = &game.players[0];
 	ld	hl,#_game + 266
 	ld	-7 (ix),l
 	ld	-6 (ix),h
-;carwar.c:877: keyLine = GetKeyMatrixLine(8);
+;carwar.c:871: keyLine = GetKeyMatrixLine(8);
 	ld	a,#0x08
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
 	ld	c,l
-;carwar.c:878: if((keyLine & KEY_LEFT) == 0)
+;carwar.c:872: if((keyLine & KEY_LEFT) == 0)
 	ld	a,c
 	and	a,#0x10
 	jr	NZ,00102$
-;carwar.c:879: curPly->flag |= CAR_TURN_LEFT;
+;carwar.c:873: curPly->flag |= CAR_TURN_LEFT;
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -18038,11 +17982,11 @@ _StateUpdateGame:
 	or	a,#0x02
 	ld	(de),a
 00102$:
-;carwar.c:880: if((keyLine & KEY_RIGHT) == 0)
+;carwar.c:874: if((keyLine & KEY_RIGHT) == 0)
 	ld	a,c
 	and	a,#0x80
 	jr	NZ,00104$
-;carwar.c:881: curPly->flag |= CAR_TURN_RIGHT;
+;carwar.c:875: curPly->flag |= CAR_TURN_RIGHT;
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -18053,11 +17997,11 @@ _StateUpdateGame:
 	or	a,#0x01
 	ld	(de),a
 00104$:
-;carwar.c:882: if((keyLine & KEY_UP) == 0)
+;carwar.c:876: if((keyLine & KEY_UP) == 0)
 	ld	a,c
 	and	a,#0x20
 	jr	NZ,00106$
-;carwar.c:883: curPly->flag |= CAR_MOVE;
+;carwar.c:877: curPly->flag |= CAR_MOVE;
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -18068,21 +18012,21 @@ _StateUpdateGame:
 	or	a,#0x04
 	ld	(de),a
 00106$:
-;carwar.c:887: curPly = &game.players[1];
+;carwar.c:881: curPly = &game.players[1];
 	ld	hl,#0x010a + _game + 28
 	ld	-7 (ix),l
 	ld	-6 (ix),h
-;carwar.c:888: keyLine = GetKeyMatrixLine(5);
+;carwar.c:882: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:889: if((keyLine & KEY_Z) == 0)
+;carwar.c:883: if((keyLine & KEY_Z) == 0)
 	ld	a, l
 	and	a,#0x80
 	jr	NZ,00108$
-;carwar.c:890: curPly->flag |= CAR_TURN_LEFT;
+;carwar.c:884: curPly->flag |= CAR_TURN_LEFT;
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -18093,17 +18037,17 @@ _StateUpdateGame:
 	or	a,#0x02
 	ld	(de),a
 00108$:
-;carwar.c:891: keyLine = GetKeyMatrixLine(3);
+;carwar.c:885: keyLine = GetKeyMatrixLine(3);
 	ld	a,#0x03
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:892: if((keyLine & KEY_C) == 0)
+;carwar.c:886: if((keyLine & KEY_C) == 0)
 	ld	a, l
 	and	a,#0x01
 	jr	NZ,00110$
-;carwar.c:893: curPly->flag |= CAR_TURN_RIGHT;
+;carwar.c:887: curPly->flag |= CAR_TURN_RIGHT;
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -18114,17 +18058,17 @@ _StateUpdateGame:
 	or	a,#0x01
 	ld	(de),a
 00110$:
-;carwar.c:894: keyLine = GetKeyMatrixLine(5);
+;carwar.c:888: keyLine = GetKeyMatrixLine(5);
 	ld	a,#0x05
 	push	af
 	inc	sp
 	call	_GetKeyMatrixLine
 	inc	sp
-;carwar.c:895: if((keyLine & KEY_X) == 0)
+;carwar.c:889: if((keyLine & KEY_X) == 0)
 	ld	a, l
 	and	a,#0x20
 	jr	NZ,00112$
-;carwar.c:896: curPly->flag |= CAR_MOVE;
+;carwar.c:890: curPly->flag |= CAR_MOVE;
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	e,a
@@ -18135,7 +18079,7 @@ _StateUpdateGame:
 	or	a,#0x04
 	ld	(de),a
 00112$:
-;carwar.c:900: CheckJoy(&game.players[2], 1);
+;carwar.c:894: CheckJoy(&game.players[2], 1);
 	ld	a,#0x01
 	push	af
 	inc	sp
@@ -18144,7 +18088,7 @@ _StateUpdateGame:
 	call	_CheckJoy
 	pop	af
 	inc	sp
-;carwar.c:904: CheckJoy(&game.players[3], 2);
+;carwar.c:898: CheckJoy(&game.players[3], 2);
 	ld	a,#0x02
 	push	af
 	inc	sp
@@ -18153,15 +18097,15 @@ _StateUpdateGame:
 	call	_CheckJoy
 	pop	af
 	inc	sp
-;carwar.c:908: for(i=0; i<CAR_NUM; i++)
+;carwar.c:902: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	bc,#0x0000
 	ld	-18 (ix),#0x00
-00176$:
+00178$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	NC,00179$
-;carwar.c:910: HMMM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
+	jp	NC,00181$
+;carwar.c:904: HMMM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
 	ld	hl,#0x0005 + _game
 	ld	e, (hl)
 	ld	d,#0x00
@@ -18291,7 +18235,7 @@ _StateUpdateGame:
 	call	_VPDCommand32
 	pop	af
 	pop	bc
-;carwar.c:908: for(i=0; i<CAR_NUM; i++)
+;carwar.c:902: for(i=0; i<CAR_NUM; i++)
 	ld	hl,#0x000D
 	add	hl,bc
 	ld	c,l
@@ -18300,16 +18244,16 @@ _StateUpdateGame:
 	add	a,#0x1C
 	ld	-18 (ix),a
 	inc	-1 (ix)
-	jp	00176$
-00179$:
-;carwar.c:915: for(i=0; i<CAR_NUM; i++)
+	jp	00178$
+00181$:
+;carwar.c:909: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	-22 (ix),#0x00
 00152$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
 	jp	NC,00155$
-;carwar.c:917: curPly = &game.players[i];
+;carwar.c:911: curPly = &game.players[i];
 	ld	a,#<(0x010a + _game)
 	add	a,-22 (ix)
 	ld	e,a
@@ -18317,7 +18261,7 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-7 (ix), e
 	ld	-6 (ix), a
-;carwar.c:919: car = (curPly->life == 0) ? 4 : curPly->car;
+;carwar.c:913: car = (curPly->life == 0) ? 4 : curPly->car;
 	ld	a,-7 (ix)
 	add	a,#0x1A
 	ld	e,a
@@ -18329,10 +18273,10 @@ _StateUpdateGame:
 	ld	a,#0x00
 	rla
 	or	a,a
-	jr	Z,00194$
+	jr	Z,00196$
 	ld	e,#0x04
-	jr	00195$
-00194$:
+	jr	00197$
+00196$:
 	ld	a,-7 (ix)
 	add	a,#0x0E
 	ld	l, a
@@ -18340,9 +18284,9 @@ _StateUpdateGame:
 	adc	a, #0x00
 	ld	h, a
 	ld	e,(hl)
-00195$:
+00197$:
 	ld	-5 (ix),e
-;carwar.c:921: if(curPly->jump == 0)
+;carwar.c:915: if(curPly->jump == 0)
 	ld	a,-7 (ix)
 	add	a,#0x11
 	ld	e,a
@@ -18352,7 +18296,7 @@ _StateUpdateGame:
 	ld	a,(de)
 	or	a,a
 	jp	NZ,00145$
-;carwar.c:923: ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
+;carwar.c:917: ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
 	ld	l,-7 (ix)
 	ld	h,-6 (ix)
 	inc	hl
@@ -18385,7 +18329,7 @@ _StateUpdateGame:
 	pop	af
 	inc	sp
 	pop	de
-;carwar.c:924: op = game.colorCode[ground];
+;carwar.c:918: op = game.colorCode[ground];
 	ld	h,#0x00
 	ld	a,#<(0x0009 + _game)
 	add	a,l
@@ -18394,11 +18338,11 @@ _StateUpdateGame:
 	adc	a,h
 	ld	b,a
 	ld	a,(bc)
-;carwar.c:926: if(op >= OP_ROAD) // Backup last valid position
+;carwar.c:920: if(op >= OP_ROAD) // Backup last valid position
 	ld	-2 (ix), a
 	sub	a,#0x0A
 	jr	C,00116$
-;carwar.c:928: curPly->validX = curPly->posX;
+;carwar.c:922: curPly->validX = curPly->posX;
 	ld	a,-7 (ix)
 	add	a,#0x12
 	ld	-24 (ix),a
@@ -18415,7 +18359,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:929: curPly->validY = curPly->posY;
+;carwar.c:923: curPly->validY = curPly->posY;
 	ld	a,-7 (ix)
 	add	a,#0x14
 	ld	-24 (ix),a
@@ -18434,11 +18378,11 @@ _StateUpdateGame:
 	ld	(hl),b
 	jp	00117$
 00116$:
-;carwar.c:931: else if(op < OP_SPECIAL)
+;carwar.c:925: else if(op < OP_SPECIAL)
 	ld	a,-2 (ix)
 	sub	a,#0x04
 	jp	NC,00117$
-;carwar.c:933: curPly->prevX = curPly->posX;
+;carwar.c:927: curPly->prevX = curPly->posX;
 	ld	a,-7 (ix)
 	add	a,#0x05
 	ld	e,a
@@ -18454,7 +18398,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:934: curPly->prevY = curPly->posY;
+;carwar.c:928: curPly->prevY = curPly->posY;
 	ld	a,-7 (ix)
 	add	a,#0x07
 	ld	e,a
@@ -18470,7 +18414,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:935: curPly->nextX = curPly->validX;
+;carwar.c:929: curPly->nextX = curPly->validX;
 	ld	a,-7 (ix)
 	add	a,#0x16
 	ld	e,a
@@ -18490,7 +18434,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:936: curPly->nextY = curPly->validY;
+;carwar.c:930: curPly->nextY = curPly->validY;
 	ld	a,-7 (ix)
 	add	a,#0x18
 	ld	e,a
@@ -18510,7 +18454,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:937: curPly->velX = 0;
+;carwar.c:931: curPly->velX = 0;
 	ld	a,-7 (ix)
 	add	a,#0x0A
 	ld	l, a
@@ -18520,7 +18464,7 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:938: curPly->velY = 0;
+;carwar.c:932: curPly->velY = 0;
 	ld	a,-7 (ix)
 	add	a,#0x0C
 	ld	l, a
@@ -18530,10 +18474,10 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:940: break;
+;carwar.c:934: break;
 	jp	00155$
 00117$:
-;carwar.c:944: friction = g_BG[op].Friction;
+;carwar.c:938: friction = g_BG[op].Friction;
 	push	de
 	ld	a,-2 (ix)
 	ld	e,a
@@ -18552,7 +18496,7 @@ _StateUpdateGame:
 	inc	bc
 	ld	a,(bc)
 	ld	-3 (ix),a
-;carwar.c:945: maxSpeed = g_Cars[car].maxSpeed[g_BG[op].MaxSpeed];
+;carwar.c:939: maxSpeed = g_Cars[car].maxSpeed[g_BG[op].MaxSpeed];
 	push	de
 	ld	a,-5 (ix)
 	ld	e,a
@@ -18579,7 +18523,7 @@ _StateUpdateGame:
 	ld	a,(bc)
 	ld	-17 (ix), a
 	ld	-16 (ix),#0x00
-;carwar.c:946: x = Abs16(curPly->velX);
+;carwar.c:940: x = Abs16(curPly->velX);
 	ld	a,-7 (ix)
 	add	a,#0x0A
 	ld	-20 (ix),a
@@ -18594,7 +18538,7 @@ _StateUpdateGame:
 	ld	a,(hl)
 	ld	-25 (ix), a
 	and	a,#0x80
-	jr	Z,00196$
+	jr	Z,00198$
 	ld	c,-26 (ix)
 	ld	b,-25 (ix)
 	dec	bc
@@ -18604,17 +18548,17 @@ _StateUpdateGame:
 	ld	a,b
 	cpl
 	ld	b,a
-	jr	00197$
-00196$:
+	jr	00199$
+00198$:
 	ld	c,-26 (ix)
 	ld	b,-25 (ix)
-00197$:
+00199$:
 	ld	-9 (ix),c
-;carwar.c:947: x >>= 8;
+;carwar.c:941: x >>= 8;
 	ld	-8 (ix), b
 	ld	-9 (ix), b
 	ld	-8 (ix),#0x00
-;carwar.c:948: y = Abs16(curPly->velY);
+;carwar.c:942: y = Abs16(curPly->velY);
 	ld	a,-7 (ix)
 	add	a,#0x0C
 	ld	-26 (ix),a
@@ -18629,7 +18573,7 @@ _StateUpdateGame:
 	ld	a,(hl)
 	ld	-27 (ix), a
 	and	a,#0x80
-	jr	Z,00198$
+	jr	Z,00200$
 	ld	c,-28 (ix)
 	ld	b,-27 (ix)
 	dec	bc
@@ -18639,17 +18583,17 @@ _StateUpdateGame:
 	ld	a,b
 	cpl
 	ld	b,a
-	jr	00199$
-00198$:
+	jr	00201$
+00200$:
 	ld	c,-28 (ix)
 	ld	b,-27 (ix)
-00199$:
+00201$:
 	ld	-11 (ix),c
-;carwar.c:949: y >>= 8;
+;carwar.c:943: y >>= 8;
 	ld	-10 (ix), b
 	ld	-11 (ix), b
 	ld	-10 (ix),#0x00
-;carwar.c:950: speedSq = (x * x) + (y * y);
+;carwar.c:944: speedSq = (x * x) + (y * y);
 	push	de
 	ld	l,-9 (ix)
 	ld	h,-8 (ix)
@@ -18681,7 +18625,7 @@ _StateUpdateGame:
 	adc	a,b
 	ld	-15 (ix), c
 	ld	-14 (ix), a
-;carwar.c:951: if(!(curPly->flag & CAR_MOVE) || (speedSq > maxSpeed * maxSpeed))
+;carwar.c:945: if(!(curPly->flag & CAR_MOVE) || (speedSq > maxSpeed * maxSpeed))
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	-28 (ix),a
@@ -18712,19 +18656,19 @@ _StateUpdateGame:
 	sbc	a,-14 (ix)
 	jp	NC,00122$
 00121$:
-;carwar.c:953: if(speedSq <= (friction * friction))
+;carwar.c:947: if(speedSq <= (friction * friction))
 	push	de
 	ld	e,-3 (ix)
 	ld	h,-3 (ix)
 	ld	l,#0x00
 	ld	d,l
 	ld	b,#0x08
-00276$:
+00279$:
 	add	hl,hl
-	jr	NC,00277$
+	jr	NC,00280$
 	add	hl,de
-00277$:
-	djnz	00276$
+00280$:
+	djnz	00279$
 	pop	de
 	ld	a, l
 	ld	b, h
@@ -18732,13 +18676,13 @@ _StateUpdateGame:
 	ld	a,b
 	sbc	a,-14 (ix)
 	jr	C,00119$
-;carwar.c:955: curPly->velX = 0;
+;carwar.c:949: curPly->velX = 0;
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:956: curPly->velY = 0;
+;carwar.c:950: curPly->velY = 0;
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	(hl),#0x00
@@ -18746,7 +18690,7 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	jp	00122$
 00119$:
-;carwar.c:960: dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
+;carwar.c:954: dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	a,(hl)
@@ -18771,7 +18715,7 @@ _StateUpdateGame:
 	ld	b,l
 	srl	b
 	srl	b
-;carwar.c:961: curPly->velX -= friction * g_Cosinus64[dir];
+;carwar.c:955: curPly->velX -= friction * g_Cosinus64[dir];
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
 	ld	a,(hl)
@@ -18816,7 +18760,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:962: curPly->velY -= friction * g_Sinus64[dir];
+;carwar.c:956: curPly->velY -= friction * g_Sinus64[dir];
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	a,(hl)
@@ -18857,7 +18801,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	(hl),b
 00122$:
-;carwar.c:967: grip = g_BG[op].Grip;
+;carwar.c:961: grip = g_BG[op].Grip;
 	ld	a,#<(_g_BG)
 	add	a,-24 (ix)
 	ld	c,a
@@ -18868,38 +18812,9 @@ _StateUpdateGame:
 	inc	bc
 	ld	a,(bc)
 	ld	-4 (ix),a
-;carwar.c:968: x = Abs16(curPly->velX);
+;carwar.c:962: x = Abs16(curPly->velX);
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
-	ld	a,(hl)
-	ld	-33 (ix),a
-	inc	hl
-	ld	a,(hl)
-	ld	-32 (ix), a
-	and	a,#0x80
-	jr	Z,00200$
-	ld	c,-33 (ix)
-	ld	b,-32 (ix)
-	dec	bc
-	ld	a,c
-	cpl
-	ld	c,a
-	ld	a,b
-	cpl
-	ld	b,a
-	jr	00201$
-00200$:
-	ld	c,-33 (ix)
-	ld	b,-32 (ix)
-00201$:
-	ld	-9 (ix),c
-;carwar.c:969: x >>= 8;
-	ld	-8 (ix), b
-	ld	-9 (ix), b
-	ld	-8 (ix),#0x00
-;carwar.c:970: y = Abs16(curPly->velY);
-	ld	l,-26 (ix)
-	ld	h,-25 (ix)
 	ld	a,(hl)
 	ld	-33 (ix),a
 	inc	hl
@@ -18921,12 +18836,41 @@ _StateUpdateGame:
 	ld	c,-33 (ix)
 	ld	b,-32 (ix)
 00203$:
+	ld	-9 (ix),c
+;carwar.c:963: x >>= 8;
+	ld	-8 (ix), b
+	ld	-9 (ix), b
+	ld	-8 (ix),#0x00
+;carwar.c:964: y = Abs16(curPly->velY);
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
+	ld	a,(hl)
+	ld	-33 (ix),a
+	inc	hl
+	ld	a,(hl)
+	ld	-32 (ix), a
+	and	a,#0x80
+	jr	Z,00204$
+	ld	c,-33 (ix)
+	ld	b,-32 (ix)
+	dec	bc
+	ld	a,c
+	cpl
+	ld	c,a
+	ld	a,b
+	cpl
+	ld	b,a
+	jr	00205$
+00204$:
+	ld	c,-33 (ix)
+	ld	b,-32 (ix)
+00205$:
 	ld	-11 (ix),c
-;carwar.c:971: y >>= 8;
+;carwar.c:965: y >>= 8;
 	ld	-10 (ix), b
 	ld	-11 (ix), b
 	ld	-10 (ix),#0x00
-;carwar.c:972: speed = GetVectorLenght256(x, y);
+;carwar.c:966: speed = GetVectorLenght256(x, y);
 	push	de
 	ld	l,-11 (ix)
 	ld	h,-10 (ix)
@@ -18940,7 +18884,7 @@ _StateUpdateGame:
 	pop	de
 	ld	-13 (ix),l
 	ld	-12 (ix),h
-;carwar.c:973: if(speed <= grip)
+;carwar.c:967: if(speed <= grip)
 	ld	c,-4 (ix)
 	ld	b,#0x00
 	ld	a,c
@@ -18948,13 +18892,13 @@ _StateUpdateGame:
 	ld	a,b
 	sbc	a,-12 (ix)
 	jr	C,00125$
-;carwar.c:975: curPly->velX = 0;
+;carwar.c:969: curPly->velX = 0;
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:976: curPly->velY = 0;
+;carwar.c:970: curPly->velY = 0;
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	(hl),#0x00
@@ -18962,10 +18906,10 @@ _StateUpdateGame:
 	ld	(hl),#0x00
 	jp	00126$
 00125$:
-;carwar.c:980: speed = grip;
+;carwar.c:974: speed = grip;
 	ld	-13 (ix), c
 	ld	-12 (ix), b
-;carwar.c:981: dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
+;carwar.c:975: dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	a,(hl)
@@ -18990,7 +18934,7 @@ _StateUpdateGame:
 	ld	b,l
 	srl	b
 	srl	b
-;carwar.c:982: curPly->velX -= grip * g_Cosinus64[dir];
+;carwar.c:976: curPly->velX -= grip * g_Cosinus64[dir];
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
 	ld	a,(hl)
@@ -19035,7 +18979,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:983: curPly->velY -= grip * g_Sinus64[dir];
+;carwar.c:977: curPly->velY -= grip * g_Sinus64[dir];
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	a,(hl)
@@ -19076,13 +19020,13 @@ _StateUpdateGame:
 	inc	hl
 	ld	(hl),b
 00126$:
-;carwar.c:987: if(curPly->flag & CAR_TURN_LEFT)
+;carwar.c:981: if(curPly->flag & CAR_TURN_LEFT)
 	ld	l,-28 (ix)
 	ld	h,-27 (ix)
 	ld	a,(hl)
 	and	a,#0x02
 	jr	Z,00128$
-;carwar.c:989: curPly->rot += g_Cars[car].rotSpeed; 
+;carwar.c:983: curPly->rot += g_Cars[car].rotSpeed; 
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	-33 (ix),a
@@ -19107,13 +19051,13 @@ _StateUpdateGame:
 	ld	h,-32 (ix)
 	ld	(hl),a
 00128$:
-;carwar.c:991: if(curPly->flag & CAR_TURN_RIGHT)
+;carwar.c:985: if(curPly->flag & CAR_TURN_RIGHT)
 	ld	l,-28 (ix)
 	ld	h,-27 (ix)
 	ld	a,(hl)
 	and	a,#0x01
 	jr	Z,00130$
-;carwar.c:993: curPly->rot -= g_Cars[car].rotSpeed; 
+;carwar.c:987: curPly->rot -= g_Cars[car].rotSpeed; 
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	-33 (ix),a
@@ -19138,44 +19082,15 @@ _StateUpdateGame:
 	ld	h,-32 (ix)
 	ld	(hl),a
 00130$:
-;carwar.c:997: if(curPly->flag & CAR_MOVE)
+;carwar.c:991: if(curPly->flag & CAR_MOVE)
 	ld	l,-28 (ix)
 	ld	h,-27 (ix)
 	ld	a,(hl)
 	and	a,#0x04
 	jp	Z,00134$
-;carwar.c:999: x = Abs16(curPly->velX);
+;carwar.c:993: x = Abs16(curPly->velX);
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
-	ld	a,(hl)
-	ld	-33 (ix),a
-	inc	hl
-	ld	a,(hl)
-	ld	-32 (ix), a
-	and	a,#0x80
-	jr	Z,00204$
-	ld	c,-33 (ix)
-	ld	b,-32 (ix)
-	dec	bc
-	ld	a,c
-	cpl
-	ld	c,a
-	ld	a,b
-	cpl
-	ld	b,a
-	jr	00205$
-00204$:
-	ld	c,-33 (ix)
-	ld	b,-32 (ix)
-00205$:
-	ld	-9 (ix),c
-;carwar.c:1000: x >>= 8;
-	ld	-8 (ix), b
-	ld	-9 (ix), b
-	ld	-8 (ix),#0x00
-;carwar.c:1001: y = Abs16(curPly->velY);
-	ld	l,-26 (ix)
-	ld	h,-25 (ix)
 	ld	a,(hl)
 	ld	-33 (ix),a
 	inc	hl
@@ -19197,12 +19112,41 @@ _StateUpdateGame:
 	ld	c,-33 (ix)
 	ld	b,-32 (ix)
 00207$:
+	ld	-9 (ix),c
+;carwar.c:994: x >>= 8;
+	ld	-8 (ix), b
+	ld	-9 (ix), b
+	ld	-8 (ix),#0x00
+;carwar.c:995: y = Abs16(curPly->velY);
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
+	ld	a,(hl)
+	ld	-33 (ix),a
+	inc	hl
+	ld	a,(hl)
+	ld	-32 (ix), a
+	and	a,#0x80
+	jr	Z,00208$
+	ld	c,-33 (ix)
+	ld	b,-32 (ix)
+	dec	bc
+	ld	a,c
+	cpl
+	ld	c,a
+	ld	a,b
+	cpl
+	ld	b,a
+	jr	00209$
+00208$:
+	ld	c,-33 (ix)
+	ld	b,-32 (ix)
+00209$:
 	ld	-11 (ix),c
-;carwar.c:1002: y >>= 8;
+;carwar.c:996: y >>= 8;
 	ld	-10 (ix), b
 	ld	-11 (ix), b
 	ld	-10 (ix),#0x00
-;carwar.c:1003: speedSq = (x * x) + (y * y);
+;carwar.c:997: speedSq = (x * x) + (y * y);
 	push	de
 	ld	l,-9 (ix)
 	ld	h,-8 (ix)
@@ -19234,7 +19178,7 @@ _StateUpdateGame:
 	adc	a,b
 	ld	-15 (ix), c
 	ld	-14 (ix), a
-;carwar.c:1004: maxSpeed = g_Cars[car].maxSpeed[g_BG[op].MaxSpeed];
+;carwar.c:998: maxSpeed = g_Cars[car].maxSpeed[g_BG[op].MaxSpeed];
 	ld	a,#<(_g_Cars)
 	add	a,-18 (ix)
 	ld	-33 (ix),a
@@ -19264,7 +19208,7 @@ _StateUpdateGame:
 	ld	a,(bc)
 	ld	-17 (ix), a
 	ld	-16 (ix),#0x00
-;carwar.c:1005: if(speedSq < maxSpeed * maxSpeed)
+;carwar.c:999: if(speedSq < maxSpeed * maxSpeed)
 	push	de
 	ld	l,-17 (ix)
 	ld	h,-16 (ix)
@@ -19283,7 +19227,7 @@ _StateUpdateGame:
 	ld	a,-14 (ix)
 	sbc	a,b
 	jr	NC,00134$
-;carwar.c:1007: speed += g_Cars[car].accel;
+;carwar.c:1001: speed += g_Cars[car].accel;
 	ld	a,-33 (ix)
 	add	a,#0x04
 	ld	c,a
@@ -19300,11 +19244,11 @@ _StateUpdateGame:
 	adc	a,h
 	ld	-12 (ix),a
 00134$:
-;carwar.c:1010: if(op == OP_SPEEDER)
+;carwar.c:1004: if(op == OP_SPEEDER)
 	ld	a,-2 (ix)
 	sub	a,#0x04
 	jr	NZ,00138$
-;carwar.c:1011: speed += 8;
+;carwar.c:1005: speed += 8;
 	ld	a,-13 (ix)
 	add	a,#0x08
 	ld	-13 (ix),a
@@ -19313,15 +19257,15 @@ _StateUpdateGame:
 	ld	-12 (ix),a
 	jr	00139$
 00138$:
-;carwar.c:1012: else if(op == OP_JUMPER)
+;carwar.c:1006: else if(op == OP_JUMPER)
 	ld	a,-2 (ix)
 	sub	a,#0x05
 	jr	NZ,00139$
-;carwar.c:1014: curPly->jump = 20;
+;carwar.c:1008: curPly->jump = 20;
 	ld	a,#0x14
 	ld	(de),a
 00139$:
-;carwar.c:1017: dir = curPly->rot >> 2;
+;carwar.c:1011: dir = curPly->rot >> 2;
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	c,a
@@ -19332,7 +19276,7 @@ _StateUpdateGame:
 	ld	b,a
 	srl	b
 	srl	b
-;carwar.c:1018: curPly->velX += speed * g_Cosinus64[dir];
+;carwar.c:1012: curPly->velX += speed * g_Cosinus64[dir];
 	ld	l,-20 (ix)
 	ld	h,-19 (ix)
 	ld	e,(hl)
@@ -19372,7 +19316,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:1019: curPly->velY += speed * g_Sinus64[dir];
+;carwar.c:1013: curPly->velY += speed * g_Sinus64[dir];
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	e,(hl)
@@ -19410,7 +19354,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:1021: CarToWallCollision(curPly);
+;carwar.c:1015: CarToWallCollision(curPly);
 	ld	l,-7 (ix)
 	ld	h,-6 (ix)
 	push	hl
@@ -19418,7 +19362,7 @@ _StateUpdateGame:
 	pop	af
 	jr	00146$
 00145$:
-;carwar.c:1025: if(curPly->flag & CAR_TURN_LEFT)
+;carwar.c:1019: if(curPly->flag & CAR_TURN_LEFT)
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -19429,7 +19373,7 @@ _StateUpdateGame:
 	ld	-33 (ix), a
 	and	a,#0x02
 	jr	Z,00141$
-;carwar.c:1027: curPly->rot += 2; 
+;carwar.c:1021: curPly->rot += 2; 
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	c,a
@@ -19440,11 +19384,11 @@ _StateUpdateGame:
 	add	a,#0x02
 	ld	(bc),a
 00141$:
-;carwar.c:1029: if(curPly->flag & CAR_TURN_RIGHT)
+;carwar.c:1023: if(curPly->flag & CAR_TURN_RIGHT)
 	ld	a,-33 (ix)
 	and	a,#0x01
 	jr	Z,00143$
-;carwar.c:1031: curPly->rot -= 2; 
+;carwar.c:1025: curPly->rot -= 2; 
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	c,a
@@ -19455,12 +19399,12 @@ _StateUpdateGame:
 	add	a,#0xFE
 	ld	(bc),a
 00143$:
-;carwar.c:1033: curPly->jump--;
+;carwar.c:1027: curPly->jump--;
 	ld	a,(de)
 	dec	a
 	ld	(de),a
 00146$:
-;carwar.c:1036: curPly->nextX = (i16)curPly->posX + (curPly->velX >> 4);
+;carwar.c:1030: curPly->nextX = (i16)curPly->posX + (curPly->velX >> 4);
 	ld	a,-7 (ix)
 	add	a,#0x16
 	ld	c,a
@@ -19503,7 +19447,7 @@ _StateUpdateGame:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1037: curPly->nextY = (i16)curPly->posY - (curPly->velY >> 4);
+;carwar.c:1031: curPly->nextY = (i16)curPly->posY - (curPly->velY >> 4);
 	ld	a,-7 (ix)
 	add	a,#0x18
 	ld	c,a
@@ -19548,14 +19492,14 @@ _StateUpdateGame:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1038: if(curPly->nextY < (5 << 8))
+;carwar.c:1032: if(curPly->nextY < (5 << 8))
 	ld	l,c
 	ld	h,b
 	inc	hl
 	ld	a, (hl)
 	sub	a,#0x05
 	jr	NC,00150$
-;carwar.c:1039: curPly->nextY = (5 << 8);
+;carwar.c:1033: curPly->nextY = (5 << 8);
 	ld	l,c
 	ld	h,b
 	ld	(hl),#0x00
@@ -19563,7 +19507,7 @@ _StateUpdateGame:
 	ld	(hl),#0x05
 	jr	00154$
 00150$:
-;carwar.c:1040: else if(curPly->nextY > (206 << 8))
+;carwar.c:1034: else if(curPly->nextY > (206 << 8))
 	ld	l,c
 	ld	h,b
 	ld	a,(hl)
@@ -19575,21 +19519,21 @@ _StateUpdateGame:
 	ld	a,#0xCE
 	sbc	a,h
 	jr	NC,00154$
-;carwar.c:1041: curPly->nextY = (206 << 8);
+;carwar.c:1035: curPly->nextY = (206 << 8);
 	ld	l,c
 	ld	h,b
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0xCE
 00154$:
-;carwar.c:915: for(i=0; i<CAR_NUM; i++)
+;carwar.c:909: for(i=0; i<CAR_NUM; i++)
 	ld	a,-22 (ix)
 	add	a,#0x1C
 	ld	-22 (ix),a
 	inc	-1 (ix)
 	jp	00152$
 00155$:
-;carwar.c:1047: CarToCarCollision(&game.players[0], &game.players[1]);
+;carwar.c:1041: CarToCarCollision(&game.players[0], &game.players[1]);
 	ld	hl,#0x001c + 0x010a + _game
 	push	hl
 	ld	hl,#0x010a + _game
@@ -19597,7 +19541,7 @@ _StateUpdateGame:
 	call	_CarToCarCollision
 	pop	af
 	pop	af
-;carwar.c:1049: CarToCarCollision(&game.players[0], &game.players[2]);
+;carwar.c:1043: CarToCarCollision(&game.players[0], &game.players[2]);
 	ld	hl,#0x0038 + 0x010a + _game
 	push	hl
 	ld	hl,#0x010a + _game
@@ -19605,7 +19549,7 @@ _StateUpdateGame:
 	call	_CarToCarCollision
 	pop	af
 	pop	af
-;carwar.c:1050: CarToCarCollision(&game.players[1], &game.players[2]);
+;carwar.c:1044: CarToCarCollision(&game.players[1], &game.players[2]);
 	ld	hl,#0x0038 + 0x010a + _game
 	push	hl
 	ld	hl,#0x001c + 0x010a + _game
@@ -19613,7 +19557,7 @@ _StateUpdateGame:
 	call	_CarToCarCollision
 	pop	af
 	pop	af
-;carwar.c:1052: CarToCarCollision(&game.players[0], &game.players[3]);
+;carwar.c:1046: CarToCarCollision(&game.players[0], &game.players[3]);
 	ld	hl,#0x0054 + 0x010a + _game
 	push	hl
 	ld	hl,#0x010a + _game
@@ -19621,7 +19565,7 @@ _StateUpdateGame:
 	call	_CarToCarCollision
 	pop	af
 	pop	af
-;carwar.c:1053: CarToCarCollision(&game.players[1], &game.players[3]);
+;carwar.c:1047: CarToCarCollision(&game.players[1], &game.players[3]);
 	ld	hl,#0x0054 + 0x010a + _game
 	push	hl
 	ld	hl,#0x001c + 0x010a + _game
@@ -19629,7 +19573,7 @@ _StateUpdateGame:
 	call	_CarToCarCollision
 	pop	af
 	pop	af
-;carwar.c:1054: CarToCarCollision(&game.players[2], &game.players[3]);
+;carwar.c:1048: CarToCarCollision(&game.players[2], &game.players[3]);
 	ld	hl,#0x0054 + 0x010a + _game
 	push	hl
 	ld	hl,#0x0038 + 0x010a + _game
@@ -19637,16 +19581,16 @@ _StateUpdateGame:
 	call	_CarToCarCollision
 	pop	af
 	pop	af
-;carwar.c:1057: for(i=0; i<CAR_NUM; i++)
+;carwar.c:1051: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	b,#0x00
 	ld	-33 (ix),#0x00
 	ld	-32 (ix),#0x00
-00180$:
+00182$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	NC,00183$
-;carwar.c:1059: curPly = &game.players[i];
+	jp	NC,00185$
+;carwar.c:1053: curPly = &game.players[i];
 	ld	a,#<(0x010a + _game)
 	add	a,b
 	ld	c,a
@@ -19654,7 +19598,7 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-7 (ix), c
 	ld	-6 (ix), a
-;carwar.c:1062: curPly->prevX = curPly->posX;
+;carwar.c:1056: curPly->prevX = curPly->posX;
 	ld	a,-7 (ix)
 	add	a,#0x05
 	ld	-30 (ix),a
@@ -19671,7 +19615,7 @@ _StateUpdateGame:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),e
-;carwar.c:1063: curPly->prevY = curPly->posY;
+;carwar.c:1057: curPly->prevY = curPly->posY;
 	ld	a,-7 (ix)
 	add	a,#0x07
 	ld	-30 (ix),a
@@ -19694,7 +19638,7 @@ _StateUpdateGame:
 	ld	(hl),d
 	inc	hl
 	ld	(hl),c
-;carwar.c:1064: curPly->prevZ = curPly->posZ;
+;carwar.c:1058: curPly->prevZ = curPly->posZ;
 	ld	a,-7 (ix)
 	add	a,#0x09
 	ld	c,a
@@ -19713,7 +19657,7 @@ _StateUpdateGame:
 	ld	l,c
 	ld	h,e
 	ld	(hl),a
-;carwar.c:1067: curPly->posX = curPly->nextX;
+;carwar.c:1061: curPly->posX = curPly->nextX;
 	ld	a,-7 (ix)
 	add	a,#0x16
 	ld	l, a
@@ -19732,7 +19676,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	a,-29 (ix)
 	ld	(hl),a
-;carwar.c:1068: curPly->posY = curPly->nextY;
+;carwar.c:1062: curPly->posY = curPly->nextY;
 	ld	a,-7 (ix)
 	add	a,#0x18
 	ld	l, a
@@ -19751,7 +19695,7 @@ _StateUpdateGame:
 	inc	hl
 	ld	a,-23 (ix)
 	ld	(hl),a
-;carwar.c:1069: curPly->posZ = g_HeightTab[curPly->jump];
+;carwar.c:1063: curPly->posZ = g_HeightTab[curPly->jump];
 	ld	a,-7 (ix)
 	add	a,#0x11
 	ld	l, a
@@ -19770,7 +19714,7 @@ _StateUpdateGame:
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	(hl),c
-;carwar.c:1072: HMMM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
+;carwar.c:1066: HMMM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
 	ld	a, -29 (ix)
 	ld	h, #0x00
 	add	a,#0xFA
@@ -19869,7 +19813,7 @@ _StateUpdateGame:
 	call	_VPDCommand32
 	pop	af
 	pop	bc
-;carwar.c:1057: for(i=0; i<CAR_NUM; i++)
+;carwar.c:1051: for(i=0; i<CAR_NUM; i++)
 	ld	a,b
 	add	a,#0x1C
 	ld	b,a
@@ -19880,19 +19824,19 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-32 (ix),a
 	inc	-1 (ix)
-	jp	00180$
-00183$:
-;carwar.c:1077: for(i=0; i<CAR_NUM; i++)
+	jp	00182$
+00185$:
+;carwar.c:1071: for(i=0; i<CAR_NUM; i++)
 	ld	-1 (ix),#0x00
 	ld	-31 (ix),#0x00
 	ld	-30 (ix),#0x00
 	ld	-33 (ix),#0x00
 	ld	-32 (ix),#0x00
-00184$:
+00186$:
 	ld	a,-1 (ix)
 	sub	a,#0x04
-	jp	NC,00187$
-;carwar.c:1079: curPly = &game.players[i];
+	jp	NC,00189$
+;carwar.c:1073: curPly = &game.players[i];
 	ld	a,#<(0x010a + _game)
 	add	a,-30 (ix)
 	ld	d,a
@@ -19900,7 +19844,7 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-7 (ix), d
 	ld	-6 (ix), a
-;carwar.c:1080: if(curPly->life != 0) 
+;carwar.c:1074: if(curPly->life != 0) 
 	ld	a,-7 (ix)
 	add	a,#0x1A
 	ld	c,a
@@ -19912,7 +19856,7 @@ _StateUpdateGame:
 	ld	a,(hl)
 	or	a,a
 	jp	Z,00165$
-;carwar.c:1083: LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
+;carwar.c:1077: LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
 	ld	hl,#0x09a0 + _game
 	ld	(hl),#0xD0
 	inc	hl
@@ -19984,7 +19928,7 @@ _StateUpdateGame:
 	pop	af
 	pop	de
 	pop	bc
-;carwar.c:1084: LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
+;carwar.c:1078: LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	-26 (ix),a
@@ -20099,7 +20043,7 @@ _StateUpdateGame:
 	pop	af
 	pop	de
 	pop	bc
-;carwar.c:1087: j = g_SmokeFrq[curPly->life >> 5];
+;carwar.c:1081: j = g_SmokeFrq[curPly->life >> 5];
 	ld	l,c
 	ld	h,d
 	ld	a,(hl)
@@ -20114,10 +20058,10 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-;carwar.c:1088: if((j != 255) && Modulo2(game.frame, j) == 0)
+;carwar.c:1082: if((j != 255) && Modulo2(game.frame, j) == 0)
 	ld	c,a
 	inc	a
-	jp	Z,00186$
+	jp	Z,00188$
 	ld	hl,#_game
 	ld	l,(hl)
 	ld	e,c
@@ -20132,8 +20076,8 @@ _StateUpdateGame:
 	ld	h,a
 	ld	a,l
 	or	a,h
-	jp	NZ,00186$
-;carwar.c:1090: j = (i * 3) + curPly->sprt;
+	jp	NZ,00188$
+;carwar.c:1084: j = (i * 3) + curPly->sprt;
 	ld	a,-7 (ix)
 	add	a,#0x1B
 	ld	e,a
@@ -20145,20 +20089,20 @@ _StateUpdateGame:
 	ld	a,-31 (ix)
 	add	a,l
 	ld	c,a
-;carwar.c:1091: curPly->sprt++;
+;carwar.c:1085: curPly->sprt++;
 	ld	b,l
 	inc	b
 	ld	a,b
 	ld	(de),a
-;carwar.c:1092: if(curPly->sprt > 2)
+;carwar.c:1086: if(curPly->sprt > 2)
 	ld	a,#0x02
 	sub	a,b
 	jr	NC,00157$
-;carwar.c:1093: curPly->sprt = 0;
+;carwar.c:1087: curPly->sprt = 0;
 	ld	a,#0x00
 	ld	(de),a
 00157$:
-;carwar.c:1094: game.smokes[j].step = 0;
+;carwar.c:1088: game.smokes[j].step = 0;
 	ld	a,c
 	ld	e,a
 	add	a,a
@@ -20171,13 +20115,13 @@ _StateUpdateGame:
 	ld	d,a
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1095: dir = curPly->rot >> 2;
+;carwar.c:1089: dir = curPly->rot >> 2;
 	ld	l,-26 (ix)
 	ld	h,-25 (ix)
 	ld	b, (hl)
 	srl	b
 	srl	b
-;carwar.c:1096: game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4 - (g_Cosinus64[dir] >> 5);
+;carwar.c:1090: game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4 - (g_Cosinus64[dir] >> 5);
 	ld	a,#<(0x097c + _game)
 	add	a,c
 	ld	e,a
@@ -20220,7 +20164,7 @@ _StateUpdateGame:
 	ld	l,-22 (ix)
 	ld	h,-21 (ix)
 	ld	(hl),a
-;carwar.c:1097: game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4 + (g_Sinus64[dir] >> 5) - curPly->posZ;
+;carwar.c:1091: game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4 + (g_Sinus64[dir] >> 5) - curPly->posZ;
 	ld	a,#<(0x097c + _game)
 	add	a,c
 	ld	c,a
@@ -20270,9 +20214,9 @@ _StateUpdateGame:
 	ld	l,c
 	ld	h,e
 	ld	(hl),a
-	jp	00186$
+	jp	00188$
 00165$:
-;carwar.c:1102: if(curPly->flag & CAR_MOVE)
+;carwar.c:1096: if(curPly->flag & CAR_MOVE)
 	ld	a,-7 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -20282,7 +20226,7 @@ _StateUpdateGame:
 	ld	a,(bc)
 	and	a,#0x04
 	jr	Z,00162$
-;carwar.c:1103: curPly->sprt = Modulo2(++curPly->sprt, 4);
+;carwar.c:1097: curPly->sprt = Modulo2(++curPly->sprt, 4);
 	ld	a,-7 (ix)
 	add	a,#0x1B
 	ld	c,a
@@ -20296,7 +20240,7 @@ _StateUpdateGame:
 	ld	(bc),a
 	jr	00163$
 00162$:
-;carwar.c:1105: curPly->sprt = 0;
+;carwar.c:1099: curPly->sprt = 0;
 	ld	a,-7 (ix)
 	add	a,#0x1B
 	ld	c,a
@@ -20306,7 +20250,7 @@ _StateUpdateGame:
 	ld	a,#0x00
 	ld	(bc),a
 00163$:
-;carwar.c:1106: LMMM(208 + 6 * (curPly->rot >> 5), 476 + 8 * g_AnimIndex[curPly->sprt], PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 - curPly->posZ, 6, 8, VDP_OP_TIMP);
+;carwar.c:1100: LMMM(208 + 6 * (curPly->rot >> 5), 476 + 8 * g_AnimIndex[curPly->sprt], PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 - curPly->posZ, 6, 8, VDP_OP_TIMP);
 	ld	a,-7 (ix)
 	add	a,#0x10
 	ld	c,a
@@ -20427,8 +20371,8 @@ _StateUpdateGame:
 	push	hl
 	call	_VPDCommand32
 	pop	af
-00186$:
-;carwar.c:1077: for(i=0; i<CAR_NUM; i++)
+00188$:
+;carwar.c:1071: for(i=0; i<CAR_NUM; i++)
 	inc	-31 (ix)
 	inc	-31 (ix)
 	inc	-31 (ix)
@@ -20442,16 +20386,16 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	-32 (ix),a
 	inc	-1 (ix)
-	jp	00184$
-00187$:
-;carwar.c:1112: for(i=0; i<12; i++)
+	jp	00186$
+00189$:
+;carwar.c:1106: for(i=0; i<12; i++)
 	ld	-1 (ix),#0x00
 	ld	b,#0x00
-00188$:
+00190$:
 	ld	a,-1 (ix)
 	sub	a,#0x0C
-	jp	NC,00191$
-;carwar.c:1114: if(game.smokes[i].step != 0xFF)
+	jp	NC,00193$
+;carwar.c:1108: if(game.smokes[i].step != 0xFF)
 	ld	a,#<(0x097c + _game)
 	add	a,b
 	ld	e,a
@@ -20461,7 +20405,7 @@ _StateUpdateGame:
 	ld	a,(de)
 	inc	a
 	jr	Z,00170$
-;carwar.c:1116: SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
+;carwar.c:1110: SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
 	ld	a,#<(0x097c + _game)
 	add	a,b
 	ld	e,a
@@ -20493,9 +20437,9 @@ _StateUpdateGame:
 	adc	a,#0x00
 	ld	d,a
 	inc	c
-	jr	NZ,00298$
+	jr	NZ,00301$
 	inc	d
-00298$:
+00301$:
 	ld	l,c
 	ld	h,d
 	ld	c,(hl)
@@ -20512,7 +20456,7 @@ _StateUpdateGame:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:1117: game.smokes[i].step++;
+;carwar.c:1111: game.smokes[i].step++;
 	ld	a,#<(0x097c + _game)
 	add	a,b
 	ld	e,a
@@ -20522,7 +20466,7 @@ _StateUpdateGame:
 	ld	a,(de)
 	inc	a
 	ld	(de),a
-;carwar.c:1118: if(game.smokes[i].step >= 8)
+;carwar.c:1112: if(game.smokes[i].step >= 8)
 	ld	a,#<(0x097c + _game)
 	add	a,b
 	ld	e,a
@@ -20531,8 +20475,8 @@ _StateUpdateGame:
 	ld	d,a
 	ld	a,(de)
 	sub	a,#0x08
-	jr	C,00190$
-;carwar.c:1119: game.smokes[i].step = 0xFF;
+	jr	C,00192$
+;carwar.c:1113: game.smokes[i].step = 0xFF;
 	ld	a,#<(0x097c + _game)
 	add	a,b
 	ld	e,a
@@ -20541,9 +20485,9 @@ _StateUpdateGame:
 	ld	d,a
 	ld	a,#0xFF
 	ld	(de),a
-	jr	00190$
+	jr	00192$
 00170$:
-;carwar.c:1122: SetSpriteUniColor(i, 0, 212, 0, 0);
+;carwar.c:1116: SetSpriteUniColor(i, 0, 212, 0, 0);
 	push	bc
 	ld	hl,#0x0000
 	push	hl
@@ -20557,17 +20501,33 @@ _StateUpdateGame:
 	pop	af
 	inc	sp
 	pop	bc
-00190$:
-;carwar.c:1112: for(i=0; i<12; i++)
+00192$:
+;carwar.c:1106: for(i=0; i<12; i++)
 	inc	b
 	inc	b
 	inc	b
 	inc	-1 (ix)
-	jp	00188$
-00191$:
-;carwar.c:1125: waitRetrace();
+	jp	00190$
+00193$:
+;carwar.c:1120: keyLine = GetKeyMatrixLine(7);
+	ld	a,#0x07
+	push	af
+	inc	sp
+	call	_GetKeyMatrixLine
+	inc	sp
+;carwar.c:1121: if((keyLine & KEY_F5) == 0)
+	ld	a, l
+	and	a,#0x02
+	jr	NZ,00173$
+;carwar.c:1122: game.state = StateStartGame;
+	ld	hl,#0x017a + _game
+	ld	(hl),#<(_StateStartGame)
+	inc	hl
+	ld	(hl),#>(_StateStartGame)
+00173$:
+;carwar.c:1124: waitRetrace();
 	call	_waitRetrace
-;carwar.c:1126: game.frame++;
+;carwar.c:1125: game.frame++;
 	ld	a,(#_game)
 	inc	a
 	ld	(#_game),a
@@ -20575,7 +20535,7 @@ _StateUpdateGame:
 	pop	ix
 	ret
 _StateUpdateGame_end::
-;carwar.c:1130: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
+;carwar.c:1129: void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
 ;	---------------------------------
 ; Function InitializePlayer
 ; ---------------------------------
@@ -20586,7 +20546,7 @@ _InitializePlayer:
 	add	ix,sp
 	push	af
 	push	af
-;carwar.c:1132: ply->car = car; // car index
+;carwar.c:1131: ply->car = car; // car index
 	ld	c,4 (ix)
 	ld	b,5 (ix)
 	ld	hl,#0x000E
@@ -20594,7 +20554,7 @@ _InitializePlayer:
 	ex	de,hl
 	ld	a,6 (ix)
 	ld	(de),a
-;carwar.c:1133: ply->posX = posX << 8; // position X
+;carwar.c:1132: ply->posX = posX << 8; // position X
 	ld	d, 7 (ix)
 	ld	e,#0x00
 	ld	l,c
@@ -20602,7 +20562,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1134: ply->posY = posY << 8; // position Y
+;carwar.c:1133: ply->posY = posY << 8; // position Y
 	ld	hl,#0x0002
 	add	hl,bc
 	ld	-2 (ix),l
@@ -20614,7 +20574,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1135: ply->prevX = ply->posX; // previous position X
+;carwar.c:1134: ply->prevX = ply->posX; // previous position X
 	ld	hl,#0x0005
 	add	hl,bc
 	ld	-4 (ix),l
@@ -20629,7 +20589,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1136: ply->prevY = ply->posY; // previous position Y
+;carwar.c:1135: ply->prevY = ply->posY; // previous position Y
 	ld	hl,#0x0007
 	add	hl,bc
 	ld	-4 (ix),l
@@ -20644,7 +20604,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1137: ply->validX = ply->posX;
+;carwar.c:1136: ply->validX = ply->posX;
 	ld	hl,#0x0012
 	add	hl,bc
 	ld	-4 (ix),l
@@ -20659,7 +20619,7 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1138: ply->validY = ply->posY;
+;carwar.c:1137: ply->validY = ply->posY;
 	ld	hl,#0x0014
 	add	hl,bc
 	ld	-4 (ix),l
@@ -20674,49 +20634,49 @@ _InitializePlayer:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1139: ply->rot = rot; // rotation
+;carwar.c:1138: ply->rot = rot; // rotation
 	ld	hl,#0x0010
 	add	hl,bc
 	ex	de,hl
 	ld	a,9 (ix)
 	ld	(de),a
-;carwar.c:1140: ply->velX = 0; // velocity X
+;carwar.c:1139: ply->velX = 0; // velocity X
 	ld	hl,#0x000A
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:1141: ply->velY = 0; // velocity Y
+;carwar.c:1140: ply->velY = 0; // velocity Y
 	ld	hl,#0x000C
 	add	hl,bc
 	ld	(hl),#0x00
 	inc	hl
 	ld	(hl),#0x00
-;carwar.c:1142: ply->jump = 0;
+;carwar.c:1141: ply->jump = 0;
 	ld	hl,#0x0011
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1143: ply->posZ = 0;
+;carwar.c:1142: ply->posZ = 0;
 	ld	hl,#0x0004
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1144: ply->prevZ = 0;
+;carwar.c:1143: ply->prevZ = 0;
 	ld	hl,#0x0009
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0x00
 	ld	(de),a
-;carwar.c:1145: ply->life = 0xFF;
+;carwar.c:1144: ply->life = 0xFF;
 	ld	hl,#0x001A
 	add	hl,bc
 	ex	de,hl
 	ld	a,#0xFF
 	ld	(de),a
-;carwar.c:1146: ply->sprt = 0;
+;carwar.c:1145: ply->sprt = 0;
 	ld	hl,#0x001B
 	add	hl,bc
 	ld	(hl),#0x00
@@ -20724,7 +20684,7 @@ _InitializePlayer:
 	pop	ix
 	ret
 _InitializePlayer_end::
-;carwar.c:1150: void CheckJoy(Player* ply, u8 joy)
+;carwar.c:1149: void CheckJoy(Player* ply, u8 joy)
 ;	---------------------------------
 ; Function CheckJoy
 ; ---------------------------------
@@ -20733,7 +20693,7 @@ _CheckJoy:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1152: switch (Joystick(joy)) // Joy 1 direction
+;carwar.c:1151: switch (Joystick(joy)) // Joy 1 direction
 	ld	c,6 (ix)
 	push	bc
 	ld	a,c
@@ -20763,7 +20723,7 @@ _CheckJoy:
 	ld	hl,#00117$
 	add	hl,de
 	add	hl,de
-;carwar.c:1154: case 2: // up-right
+;carwar.c:1153: case 2: // up-right
 	pop	de
 	jp	(hl)
 00117$:
@@ -20775,11 +20735,11 @@ _CheckJoy:
 	jr	00105$
 	jr	00106$
 00101$:
-;carwar.c:1155: case 3: // right
+;carwar.c:1154: case 3: // right
 00102$:
-;carwar.c:1156: case 4: // down-right
+;carwar.c:1155: case 4: // down-right
 00103$:
-;carwar.c:1157: ply->flag |= CAR_TURN_RIGHT;
+;carwar.c:1156: ply->flag |= CAR_TURN_RIGHT;
 	ld	a, 4 (ix)
 	ld	h, 5 (ix)
 	add	a,#0x0F
@@ -20790,15 +20750,15 @@ _CheckJoy:
 	ld	a,(de)
 	or	a,#0x01
 	ld	(de),a
-;carwar.c:1158: break;
+;carwar.c:1157: break;
 	jr	00107$
-;carwar.c:1159: case 6: // down-left
+;carwar.c:1158: case 6: // down-left
 00104$:
-;carwar.c:1160: case 7: // left
+;carwar.c:1159: case 7: // left
 00105$:
-;carwar.c:1161: case 8:// up-left
+;carwar.c:1160: case 8:// up-left
 00106$:
-;carwar.c:1162: ply->flag |= CAR_TURN_LEFT;
+;carwar.c:1161: ply->flag |= CAR_TURN_LEFT;
 	ld	a, 4 (ix)
 	ld	h, 5 (ix)
 	add	a,#0x0F
@@ -20809,9 +20769,9 @@ _CheckJoy:
 	ld	a,(de)
 	or	a,#0x02
 	ld	(de),a
-;carwar.c:1164: }
+;carwar.c:1163: }
 00107$:
-;carwar.c:1165: if(Joytrig(joy) != 0) // Joy 1 Button A
+;carwar.c:1164: if(Joytrig(joy) != 0) // Joy 1 Button A
 	ld	a, c
 	push	af
 	inc	sp
@@ -20820,7 +20780,7 @@ _CheckJoy:
 	xor	a,a
 	or	a,l
 	jr	Z,00110$
-;carwar.c:1166: ply->flag |= CAR_MOVE;
+;carwar.c:1165: ply->flag |= CAR_MOVE;
 	ld	a, 4 (ix)
 	ld	h, 5 (ix)
 	add	a,#0x0F
@@ -20835,7 +20795,7 @@ _CheckJoy:
 	pop	ix
 	ret
 _CheckJoy_end::
-;carwar.c:1170: void DamageCar(Player* ply, u8 hit)
+;carwar.c:1169: void DamageCar(Player* ply, u8 hit)
 ;	---------------------------------
 ; Function DamageCar
 ; ---------------------------------
@@ -20844,7 +20804,7 @@ _DamageCar:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1172: if(ply->life > hit)
+;carwar.c:1171: if(ply->life > hit)
 	ld	a, 4 (ix)
 	ld	h, 5 (ix)
 	add	a,#0x1A
@@ -20857,20 +20817,20 @@ _DamageCar:
 	ld	a,6 (ix)
 	sub	a,l
 	jr	NC,00102$
-;carwar.c:1173: ply->life -= hit;
+;carwar.c:1172: ply->life -= hit;
 	ld	a,l
 	sub	a,6 (ix)
 	ld	(bc),a
 	jr	00104$
 00102$:
-;carwar.c:1175: ply->life = 0;
+;carwar.c:1174: ply->life = 0;
 	ld	a,#0x00
 	ld	(bc),a
 00104$:
 	pop	ix
 	ret
 _DamageCar_end::
-;carwar.c:1179: i8 AngleDifferent64(i8 angleA, i8 angleB)
+;carwar.c:1178: i8 AngleDifferent64(i8 angleA, i8 angleB)
 ;	---------------------------------
 ; Function AngleDifferent64
 ; ---------------------------------
@@ -20879,39 +20839,39 @@ _AngleDifferent64:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1182: diff = angleB - angleA;
+;carwar.c:1181: diff = angleB - angleA;
 	ld	a,5 (ix)
 	sub	a,4 (ix)
-;carwar.c:1183: if(diff < -32)
+;carwar.c:1182: if(diff < -32)
 	ld	c,a
 	sub	a,#0xE0
 	jp	PO,00109$
 	xor	a,#0x80
 00109$:
 	jp	P,00102$
-;carwar.c:1184: diff += 64;
+;carwar.c:1183: diff += 64;
 	ld	a,c
 	add	a,#0x40
 	ld	c,a
 00102$:
-;carwar.c:1185: if(diff > 32)
+;carwar.c:1184: if(diff > 32)
 	ld	a,#0x20
 	sub	a,c
 	jp	PO,00110$
 	xor	a,#0x80
 00110$:
 	jp	P,00104$
-;carwar.c:1186: diff -= 64;
+;carwar.c:1185: diff -= 64;
 	ld	a,c
 	add	a,#0xC0
 	ld	c,a
 00104$:
-;carwar.c:1187: return diff;
+;carwar.c:1186: return diff;
 	ld	l,c
 	pop	ix
 	ret
 _AngleDifferent64_end::
-;carwar.c:1204: u8 VectorToAngle256(i16 x, i16 y)
+;carwar.c:1203: u8 VectorToAngle256(i16 x, i16 y)
 ;	---------------------------------
 ; Function VectorToAngle256
 ; ---------------------------------
@@ -20920,7 +20880,7 @@ _VectorToAngle256:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1206: while(Abs16(x) > 15 || Abs16(y) > 15)
+;carwar.c:1205: while(Abs16(x) > 15 || Abs16(y) > 15)
 00102$:
 	ld	c,4 (ix)
 	ld	b,5 (ix)
@@ -20975,33 +20935,33 @@ _VectorToAngle256:
 	sbc	a,d
 	jr	NC,00104$
 00103$:
-;carwar.c:1208: x >>= 2;
+;carwar.c:1207: x >>= 2;
 	sra	5 (ix)
 	rr	4 (ix)
 	sra	5 (ix)
 	rr	4 (ix)
-;carwar.c:1209: y >>= 2;
+;carwar.c:1208: y >>= 2;
 	sra	7 (ix)
 	rr	6 (ix)
 	sra	7 (ix)
 	rr	6 (ix)
 	jr	00102$
 00104$:
-;carwar.c:1211: x += 15; // x E [0;30]
+;carwar.c:1210: x += 15; // x E [0;30]
 	ld	a,4 (ix)
 	add	a,#0x0F
 	ld	4 (ix),a
 	ld	a,5 (ix)
 	adc	a,#0x00
 	ld	5 (ix),a
-;carwar.c:1212: y += 15; // x E [0;30]
+;carwar.c:1211: y += 15; // x E [0;30]
 	ld	a,6 (ix)
 	add	a,#0x0F
 	ld	6 (ix),a
 	ld	a,7 (ix)
 	adc	a,#0x00
 	ld	7 (ix),a
-;carwar.c:1213: return g_Rotation16[(x * 31) + y];
+;carwar.c:1212: return g_Rotation16[(x * 31) + y];
 	ld	e,4 (ix)
 	ld	d,5 (ix)
 	ld	l,e
@@ -21027,7 +20987,7 @@ _VectorToAngle256:
 	pop	ix
 	ret
 _VectorToAngle256_end::
-;carwar.c:1235: u16 GetVectorLenght256(i16 x, i16 y)
+;carwar.c:1234: u16 GetVectorLenght256(i16 x, i16 y)
 ;	---------------------------------
 ; Function GetVectorLenght256
 ; ---------------------------------
@@ -21037,9 +20997,9 @@ _GetVectorLenght256:
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;carwar.c:1240: div = 1;
+;carwar.c:1239: div = 1;
 	ld	-1 (ix),#0x01
-;carwar.c:1241: lenSq = x*x + y*y; // get squared length
+;carwar.c:1240: lenSq = x*x + y*y; // get squared length
 	ld	l,4 (ix)
 	ld	h,5 (ix)
 	push	hl
@@ -21067,19 +21027,19 @@ _GetVectorLenght256:
 	ld	a,d
 	adc	a,b
 	ld	b,a
-;carwar.c:1242: while(lenSq >= 256)
+;carwar.c:1241: while(lenSq >= 256)
 00101$:
 	ld	a,b
 	sub	a,#0x01
 	jr	C,00103$
-;carwar.c:1244: lenSq /= 2;
+;carwar.c:1243: lenSq /= 2;
 	srl	b
 	rr	c
-;carwar.c:1245: div *= 2;
+;carwar.c:1244: div *= 2;
 	sla	-1 (ix)
 	jr	00101$
 00103$:
-;carwar.c:1247: div = g_SquareRoot256[div] >> 4; // squared-root the div factor
+;carwar.c:1246: div = g_SquareRoot256[div] >> 4; // squared-root the div factor
 	ld	a,#<(_g_SquareRoot256)
 	add	a,-1 (ix)
 	ld	e,a
@@ -21092,7 +21052,7 @@ _GetVectorLenght256:
 	srl	a
 	srl	a
 	ld	-1 (ix),a
-;carwar.c:1248: ret = g_SquareRoot256[lenSq] >> 4; // get square root (.2^3)
+;carwar.c:1247: ret = g_SquareRoot256[lenSq] >> 4; // get square root (.2^3)
 	ld	hl,#_g_SquareRoot256
 	add	hl,bc
 	ld	a,(hl)
@@ -21102,7 +21062,7 @@ _GetVectorLenght256:
 	srl	a
 	ld	c, a
 	ld	b,#0x00
-;carwar.c:1249: return ret * div; // get length
+;carwar.c:1248: return ret * div; // get length
 	ld	l,-1 (ix)
 	ld	h,#0x00
 	push	hl
@@ -21112,7 +21072,7 @@ _GetVectorLenght256:
 	pop	ix
 	ret
 _GetVectorLenght256_end::
-;carwar.c:1254: void CarToCarCollision(Player* ply1, Player* ply2)
+;carwar.c:1253: void CarToCarCollision(Player* ply1, Player* ply2)
 ;	---------------------------------
 ; Function CarToCarCollision
 ; ---------------------------------
@@ -21124,7 +21084,7 @@ _CarToCarCollision:
 	ld	hl,#-28
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1258: dist = ply2->nextX - ply1->nextX;
+;carwar.c:1257: dist = ply2->nextX - ply1->nextX;
 	ld	c,6 (ix)
 	ld	b,7 (ix)
 	ld	hl,#0x0016
@@ -21156,13 +21116,13 @@ _CarToCarCollision:
 	ld	a,d
 	sbc	a,h
 	ld	-10 (ix), l
-;carwar.c:1259: x1 = dist >> 8;
+;carwar.c:1258: x1 = dist >> 8;
 	ld	-9 (ix), a
 	ld	-2 (ix), a
 	rlc	a
 	sbc	a,a
 	ld	-1 (ix),a
-;carwar.c:1260: dist = ply2->nextY - ply1->nextY;
+;carwar.c:1259: dist = ply2->nextY - ply1->nextY;
 	ld	hl,#0x0018
 	add	hl,bc
 	ld	-18 (ix),l
@@ -21188,13 +21148,13 @@ _CarToCarCollision:
 	ld	a,d
 	sbc	a,h
 	ld	-10 (ix), l
-;carwar.c:1261: y1 = dist >> 8;
+;carwar.c:1260: y1 = dist >> 8;
 	ld	-9 (ix), a
 	ld	-4 (ix), a
 	rlc	a
 	sbc	a,a
 	ld	-3 (ix),a
-;carwar.c:1262: dist = (x1 * x1) + (y1 * y1);
+;carwar.c:1261: dist = (x1 * x1) + (y1 * y1);
 	push	bc
 	ld	l,-2 (ix)
 	ld	h,-1 (ix)
@@ -21225,7 +21185,7 @@ _CarToCarCollision:
 	adc	a,d
 	ld	-10 (ix), e
 	ld	-9 (ix), a
-;carwar.c:1263: if(dist < CAR_CHECK_LEN * CAR_CHECK_LEN) // Collision occured
+;carwar.c:1262: if(dist < CAR_CHECK_LEN * CAR_CHECK_LEN) // Collision occured
 	ld	a,-10 (ix)
 	sub	a,#0x64
 	ld	a,-9 (ix)
@@ -21234,7 +21194,7 @@ _CarToCarCollision:
 	xor	a,#0x80
 00106$:
 	jp	P,00103$
-;carwar.c:1265: x1 = ply1->velX;
+;carwar.c:1264: x1 = ply1->velX;
 	ld	a,-14 (ix)
 	add	a,#0x0A
 	ld	-22 (ix),a
@@ -21248,7 +21208,7 @@ _CarToCarCollision:
 	ld	h,(hl)
 	ld	-2 (ix), a
 	ld	-1 (ix),h
-;carwar.c:1266: y1 = ply1->velY;
+;carwar.c:1265: y1 = ply1->velY;
 	ld	a,-14 (ix)
 	add	a,#0x0C
 	ld	-24 (ix),a
@@ -21262,7 +21222,7 @@ _CarToCarCollision:
 	ld	h,(hl)
 	ld	-4 (ix), a
 	ld	-3 (ix),h
-;carwar.c:1267: x2 = ply2->velX;
+;carwar.c:1266: x2 = ply2->velX;
 	ld	hl,#0x000A
 	add	hl,bc
 	ld	-26 (ix),l
@@ -21272,7 +21232,7 @@ _CarToCarCollision:
 	ld	h,(hl)
 	ld	-6 (ix), a
 	ld	-5 (ix),h
-;carwar.c:1268: y2 = ply2->velY;
+;carwar.c:1267: y2 = ply2->velY;
 	ld	hl,#0x000C
 	add	hl,bc
 	ld	-28 (ix),l
@@ -21282,7 +21242,7 @@ _CarToCarCollision:
 	ld	h,(hl)
 	ld	-8 (ix), a
 	ld	-7 (ix),h
-;carwar.c:1270: ply1->velX = x2 - x1;
+;carwar.c:1269: ply1->velX = x2 - x1;
 	ld	a,-6 (ix)
 	sub	a,-2 (ix)
 	ld	e,a
@@ -21294,7 +21254,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1271: ply1->velY = y2 - y1;
+;carwar.c:1270: ply1->velY = y2 - y1;
 	ld	a,-8 (ix)
 	sub	a,-4 (ix)
 	ld	e,a
@@ -21306,7 +21266,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1272: ply2->velX = x1 - x2;
+;carwar.c:1271: ply2->velX = x1 - x2;
 	ld	a,-2 (ix)
 	sub	a,-6 (ix)
 	ld	e,a
@@ -21318,7 +21278,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1273: ply2->velY = y1 - y2;
+;carwar.c:1272: ply2->velY = y1 - y2;
 	ld	a,-4 (ix)
 	sub	a,-8 (ix)
 	ld	e,a
@@ -21330,7 +21290,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1275: ply1->nextX = ply1->posX;
+;carwar.c:1274: ply1->nextX = ply1->posX;
 	ld	l,-14 (ix)
 	ld	h,-13 (ix)
 	ld	e,(hl)
@@ -21341,7 +21301,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1276: ply1->nextY = ply1->posY;
+;carwar.c:1275: ply1->nextY = ply1->posY;
 	ld	l, -14 (ix)
 	ld	h, -13 (ix)
 	inc	hl
@@ -21354,7 +21314,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1277: ply2->nextX = ply2->posX;
+;carwar.c:1276: ply2->nextX = ply2->posX;
 	ld	l,c
 	ld	h,b
 	ld	e,(hl)
@@ -21365,7 +21325,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1278: ply2->nextY = ply2->posY;
+;carwar.c:1277: ply2->nextY = ply2->posY;
 	ld	l, c
 	ld	h, b
 	inc	hl
@@ -21378,7 +21338,7 @@ _CarToCarCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1280: DamageCar(ply1, 4);
+;carwar.c:1279: DamageCar(ply1, 4);
 	push	bc
 	ld	a,#0x04
 	push	af
@@ -21390,7 +21350,7 @@ _CarToCarCollision:
 	pop	af
 	inc	sp
 	pop	bc
-;carwar.c:1281: DamageCar(ply2, 4);
+;carwar.c:1280: DamageCar(ply2, 4);
 	ld	a,#0x04
 	push	af
 	inc	sp
@@ -21403,7 +21363,7 @@ _CarToCarCollision:
 	pop	ix
 	ret
 _CarToCarCollision_end::
-;carwar.c:1286: void CarToWallCollision(Player* ply)
+;carwar.c:1285: void CarToWallCollision(Player* ply)
 ;	---------------------------------
 ; Function CarToWallCollision
 ; ---------------------------------
@@ -21415,7 +21375,7 @@ _CarToWallCollision:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1290: if((ply->rot > 64) && (ply->rot < 192))
+;carwar.c:1289: if((ply->rot > 64) && (ply->rot < 192))
 	ld	a,4 (ix)
 	ld	-6 (ix),a
 	ld	a,5 (ix)
@@ -21435,7 +21395,7 @@ _CarToWallCollision:
 	ld	a,l
 	sub	a,#0xC0
 	jp	NC,00110$
-;carwar.c:1292: ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
+;carwar.c:1291: ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
 	inc	hl
@@ -21465,7 +21425,7 @@ _CarToWallCollision:
 	call	_ReadVRAM
 	pop	af
 	inc	sp
-;carwar.c:1293: op = game.colorCode[ground];
+;carwar.c:1292: op = game.colorCode[ground];
 	ld	h,#0x00
 	ld	a,#<(0x0009 + _game)
 	add	a,l
@@ -21475,11 +21435,11 @@ _CarToWallCollision:
 	ld	h, a
 	ld	l, d
 	ld	c, (hl)
-;carwar.c:1294: if(op == OP_WALL)
+;carwar.c:1293: if(op == OP_WALL)
 	xor	a,a
 	or	a,c
 	jp	NZ,00111$
-;carwar.c:1296: ply->velX = Abs16(ply->velX) >> 1;
+;carwar.c:1295: ply->velX = Abs16(ply->velX) >> 1;
 	ld	a,-6 (ix)
 	add	a,#0x0A
 	ld	c,a
@@ -21519,7 +21479,7 @@ _CarToWallCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),d
-;carwar.c:1297: ply->velY >>= 1;
+;carwar.c:1296: ply->velY >>= 1;
 	ld	a,-6 (ix)
 	add	a,#0x0C
 	ld	c,a
@@ -21539,7 +21499,7 @@ _CarToWallCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),d
-;carwar.c:1298: if(ply->flag & CAR_MOVE)
+;carwar.c:1297: if(ply->flag & CAR_MOVE)
 	ld	a,-6 (ix)
 	add	a,#0x0F
 	ld	l, a
@@ -21549,7 +21509,7 @@ _CarToWallCollision:
 	ld	a,(hl)
 	and	a,#0x04
 	jp	Z,00111$
-;carwar.c:1299: DamageCar(ply, 5);
+;carwar.c:1298: DamageCar(ply, 5);
 	ld	a,#0x05
 	push	af
 	inc	sp
@@ -21561,7 +21521,7 @@ _CarToWallCollision:
 	inc	sp
 	jp	00111$
 00110$:
-;carwar.c:1304: ground = ReadVRAM(game.page, PosToPxl(ply->posX) + WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
+;carwar.c:1303: ground = ReadVRAM(game.page, PosToPxl(ply->posX) + WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
 	inc	hl
@@ -21597,7 +21557,7 @@ _CarToWallCollision:
 	call	_ReadVRAM
 	pop	af
 	inc	sp
-;carwar.c:1305: op = game.colorCode[ground];
+;carwar.c:1304: op = game.colorCode[ground];
 	ld	h,#0x00
 	ld	a,#<(0x0009 + _game)
 	add	a,l
@@ -21607,11 +21567,11 @@ _CarToWallCollision:
 	ld	h, a
 	ld	l, b
 	ld	c, (hl)
-;carwar.c:1306: if(op == OP_WALL)
+;carwar.c:1305: if(op == OP_WALL)
 	xor	a,a
 	or	a,c
 	jp	NZ,00111$
-;carwar.c:1308: ply->velX = -(Abs16(ply->velX) >> 1);
+;carwar.c:1307: ply->velX = -(Abs16(ply->velX) >> 1);
 	ld	a,-6 (ix)
 	add	a,#0x0A
 	ld	c,a
@@ -21659,7 +21619,7 @@ _CarToWallCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),d
-;carwar.c:1309: ply->velY >>= 1;
+;carwar.c:1308: ply->velY >>= 1;
 	ld	a,-6 (ix)
 	add	a,#0x0C
 	ld	c,a
@@ -21679,7 +21639,7 @@ _CarToWallCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),d
-;carwar.c:1310: if(ply->flag & CAR_MOVE)
+;carwar.c:1309: if(ply->flag & CAR_MOVE)
 	ld	a,-6 (ix)
 	add	a,#0x0F
 	ld	l, a
@@ -21689,7 +21649,7 @@ _CarToWallCollision:
 	ld	a,(hl)
 	and	a,#0x04
 	jr	Z,00111$
-;carwar.c:1311: DamageCar(ply, 5);
+;carwar.c:1310: DamageCar(ply, 5);
 	ld	a,#0x05
 	push	af
 	inc	sp
@@ -21700,13 +21660,13 @@ _CarToWallCollision:
 	pop	af
 	inc	sp
 00111$:
-;carwar.c:1315: if(ply->rot < 128)
+;carwar.c:1314: if(ply->rot < 128)
 	ld	l,-2 (ix)
 	ld	h,-1 (ix)
 	ld	a, (hl)
 	sub	a,#0x80
 	jp	NC,00122$
-;carwar.c:1317: ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - WALL_CHECK_LEN));
+;carwar.c:1316: ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - WALL_CHECK_LEN));
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
 	inc	hl
@@ -21743,7 +21703,7 @@ _CarToWallCollision:
 	call	_ReadVRAM
 	pop	af
 	inc	sp
-;carwar.c:1318: op = game.colorCode[ground];
+;carwar.c:1317: op = game.colorCode[ground];
 	ld	h,#0x00
 	ld	a,#<(0x0009 + _game)
 	add	a,l
@@ -21753,11 +21713,11 @@ _CarToWallCollision:
 	ld	h, a
 	ld	l, b
 	ld	c, (hl)
-;carwar.c:1319: if(op == OP_WALL)
+;carwar.c:1318: if(op == OP_WALL)
 	xor	a,a
 	or	a,c
 	jp	NZ,00124$
-;carwar.c:1321: ply->velX >>= 1;
+;carwar.c:1320: ply->velX >>= 1;
 	ld	a,-6 (ix)
 	add	a,#0x0A
 	ld	c,a
@@ -21777,7 +21737,7 @@ _CarToWallCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),d
-;carwar.c:1322: ply->velY = -(Abs16(ply->velY) >> 1);
+;carwar.c:1321: ply->velY = -(Abs16(ply->velY) >> 1);
 	ld	a,-6 (ix)
 	add	a,#0x0C
 	ld	c,a
@@ -21825,7 +21785,7 @@ _CarToWallCollision:
 	ld	(hl),b
 	inc	hl
 	ld	(hl),d
-;carwar.c:1323: if(ply->flag & CAR_MOVE)
+;carwar.c:1322: if(ply->flag & CAR_MOVE)
 	ld	a,-6 (ix)
 	add	a,#0x0F
 	ld	l, a
@@ -21835,7 +21795,7 @@ _CarToWallCollision:
 	ld	a,(hl)
 	and	a,#0x04
 	jp	Z,00124$
-;carwar.c:1324: DamageCar(ply, 5);
+;carwar.c:1323: DamageCar(ply, 5);
 	ld	a,#0x05
 	push	af
 	inc	sp
@@ -21847,7 +21807,7 @@ _CarToWallCollision:
 	inc	sp
 	jp	00124$
 00122$:
-;carwar.c:1329: ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + WALL_CHECK_LEN));
+;carwar.c:1328: ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + WALL_CHECK_LEN));
 	ld	l,-6 (ix)
 	ld	h,-5 (ix)
 	inc	hl
@@ -21884,7 +21844,7 @@ _CarToWallCollision:
 	call	_ReadVRAM
 	pop	af
 	inc	sp
-;carwar.c:1330: op = game.colorCode[ground];
+;carwar.c:1329: op = game.colorCode[ground];
 	ld	h,#0x00
 	ld	a,#<(0x0009 + _game)
 	add	a,l
@@ -21893,10 +21853,10 @@ _CarToWallCollision:
 	adc	a,h
 	ld	d,a
 	ld	a,(de)
-;carwar.c:1331: if(op == OP_WALL)
+;carwar.c:1330: if(op == OP_WALL)
 	or	a,a
 	jr	NZ,00124$
-;carwar.c:1333: ply->velX >>= 1;
+;carwar.c:1332: ply->velX >>= 1;
 	ld	a,-6 (ix)
 	add	a,#0x0A
 	ld	c,a
@@ -21916,7 +21876,7 @@ _CarToWallCollision:
 	ld	(hl),e
 	inc	hl
 	ld	(hl),d
-;carwar.c:1334: ply->velY = Abs16(ply->velY) >> 1;
+;carwar.c:1333: ply->velY = Abs16(ply->velY) >> 1;
 	ld	a,-6 (ix)
 	add	a,#0x0C
 	ld	-8 (ix),a
@@ -21952,7 +21912,7 @@ _CarToWallCollision:
 	ld	(hl),c
 	inc	hl
 	ld	(hl),b
-;carwar.c:1335: if(ply->flag & CAR_MOVE)
+;carwar.c:1334: if(ply->flag & CAR_MOVE)
 	ld	a,-6 (ix)
 	add	a,#0x0F
 	ld	c,a
@@ -21962,7 +21922,7 @@ _CarToWallCollision:
 	ld	a,(bc)
 	and	a,#0x04
 	jr	Z,00124$
-;carwar.c:1336: DamageCar(ply, 5);
+;carwar.c:1335: DamageCar(ply, 5);
 	ld	a,#0x05
 	push	af
 	inc	sp
@@ -21977,7 +21937,7 @@ _CarToWallCollision:
 	pop	ix
 	ret
 _CarToWallCollision_end::
-;carwar.c:1343: void StateBuildTrack()
+;carwar.c:1342: void StateBuildTrack()
 ;	---------------------------------
 ; Function StateBuildTrack
 ; ---------------------------------
@@ -21986,10 +21946,10 @@ _StateBuildTrack:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	ld	hl,#-25
+	ld	hl,#-26
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1349: PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
+;carwar.c:1348: PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 	ld	c,#<(_g_DefaultColor)
 	ld	b,#>(_g_DefaultColor)
 	push	bc
@@ -22000,7 +21960,7 @@ _StateBuildTrack:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:1351: FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
+;carwar.c:1350: FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
 	ld	h,#0xD4
 	ex	(sp),hl
 	inc	sp
@@ -22016,7 +21976,7 @@ _StateBuildTrack:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1352: FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
+;carwar.c:1351: FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
 	ld	a,#0xD4
 	push	af
 	inc	sp
@@ -22032,21 +21992,7 @@ _StateBuildTrack:
 	ld	hl,#0x0009
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1353: for(i=0; i<7; i++)
-	ld	-1 (ix),#0x00
-00134$:
-	ld	a,-1 (ix)
-	sub	a,#0x07
-	jp	NC,00137$
-;carwar.c:1355: for(j=0; j<6; j++)
-	ld	-2 (ix),#0x00
-	ld	-17 (ix),#0x00
-	ld	-16 (ix),#0x00
-00130$:
-	ld	a,-2 (ix)
-	sub	a,#0x06
-	jp	NC,00136$
-;carwar.c:1357: block = &g_Tracks[game.track].tiles[i + j * 7];
+;carwar.c:1352: block = g_Tracks[game.track].tiles;
 	ld	a,(#0x0006 + _game)
 	ld	e,a
 	add	a,a
@@ -22063,68 +22009,68 @@ _StateBuildTrack:
 	inc	hl
 	inc	hl
 	inc	hl
-	ld	e,(hl)
-	inc	hl
-	ld	d,(hl)
-	ld	a,-1 (ix)
-	ld	-11 (ix),a
-	ld	-10 (ix),#0x00
-	ld	a,-11 (ix)
-	add	a,-17 (ix)
-	ld	c,a
-	ld	a,-10 (ix)
-	adc	a,-16 (ix)
-	ld	b,a
-	push	de
-	ld	e,c
-	ld	d,b
-	ld	l,e
-	ld	h,d
-	add	hl,hl
-	add	hl,de
-	pop	de
-	ld	c,l
-	ld	b,h
-	ld	a,e
-	add	a,c
-	ld	c,a
-	ld	a,d
-	adc	a,b
-	ld	-9 (ix), c
-	ld	-8 (ix), a
-;carwar.c:1358: if((block->tile & 0x0F) == 2) // Plein block
-	ld	l,-9 (ix)
-	ld	h,-8 (ix)
 	ld	a,(hl)
+	inc	hl
+	ld	h,(hl)
+	ld	-11 (ix), a
+	ld	-10 (ix),h
+;carwar.c:1353: for(j=0; j<6; j++)
+	ld	-2 (ix),#0x00
+00134$:
+	ld	a,-2 (ix)
+	sub	a,#0x06
+	jp	NC,00137$
+;carwar.c:1355: for(i=0; i<7; i++)
+	ld	-1 (ix),#0x00
+00130$:
+	ld	a,-1 (ix)
+	sub	a,#0x07
+	jp	NC,00136$
+;carwar.c:1357: tile = *block++;
+	ld	l,-11 (ix)
+	ld	h,-10 (ix)
+	ld	a,(hl)
+	inc	-11 (ix)
+	jr	NZ,00159$
+	inc	-10 (ix)
+00159$:
+	ld	c,a
+;carwar.c:1358: color1 = *block++;
+	ld	l,-11 (ix)
+	ld	h,-10 (ix)
+	ld	a,(hl)
+	inc	-11 (ix)
+	jr	NZ,00160$
+	inc	-10 (ix)
+00160$:
+	ld	-5 (ix),a
+;carwar.c:1359: if((tile & 0x0F) == 0) // Plein block
+	ld	a,c
 	and	a,#0x0F
-	sub	a,#0x02
-	jp	NZ,00152$
-;carwar.c:1360: FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, block->color1);
-	ld	c,-9 (ix)
-	ld	b,-8 (ix)
-	inc	bc
-	inc	bc
-	ld	a,(bc)
-	ld	e,a
-	ld	hl,#0x0006 + _game
-	ld	l,(hl)
-	push	de
-	ld	a,l
+	ld	d,a
+	or	a,a
+	jp	NZ,00120$
+;carwar.c:1361: FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, color1);
+	ld	a,(#0x0006 + _game)
 	ld	e,a
 	add	a,a
 	add	a,a
 	add	a,a
 	add	a,a
 	add	a,e
-	pop	de
 	add	a,#<(_g_Tracks)
-	ld	c,a
+	ld	e,a
 	ld	a,#>(_g_Tracks)
 	adc	a,#0x00
-	ld	b,a
-	ld	hl,#0x0007
-	add	hl,bc
-	ld	l, (hl)
+	ld	c,a
+	ld	a,e
+	add	a,#0x07
+	ld	e,a
+	ld	a,c
+	adc	a,#0x00
+	ld	h, a
+	ld	l, e
+	ld	l,(hl)
 	ld	h,#0x00
 	ld	c,-2 (ix)
 	ld	b,#0x00
@@ -22139,30 +22085,31 @@ _StateBuildTrack:
 	sla	c
 	rl	b
 	add	hl,bc
-	ld	-15 (ix),l
-	ld	-14 (ix),h
-	ld	hl,#0x0006 + _game
-	ld	l,(hl)
-	push	de
-	ld	a,l
+	ld	-13 (ix),l
+	ld	-12 (ix),h
+	ld	a,(#0x0006 + _game)
 	ld	e,a
 	add	a,a
 	add	a,a
 	add	a,a
 	add	a,a
 	add	a,e
-	pop	de
 	add	a,#<(_g_Tracks)
-	ld	c,a
+	ld	e,a
 	ld	a,#>(_g_Tracks)
 	adc	a,#0x00
-	ld	b,a
-	ld	hl,#0x0006
-	add	hl,bc
-	ld	l, (hl)
+	ld	c,a
+	ld	a,e
+	add	a,#0x06
+	ld	e,a
+	ld	a,c
+	adc	a,#0x00
+	ld	h, a
+	ld	l, e
+	ld	l,(hl)
 	ld	h,#0x00
-	ld	c,-11 (ix)
-	ld	b,-10 (ix)
+	ld	c,-1 (ix)
+	ld	b,#0x00
 	sla	c
 	rl	b
 	sla	c
@@ -22176,15 +22123,15 @@ _StateBuildTrack:
 	add	hl,bc
 	ld	c,l
 	ld	b,h
-	ld	a,e
+	ld	a,-5 (ix)
 	push	af
 	inc	sp
 	ld	hl,#0x0020
 	push	hl
 	ld	l, #0x20
 	push	hl
-	ld	l,-15 (ix)
-	ld	h,-14 (ix)
+	ld	l,-13 (ix)
+	ld	h,-12 (ix)
 	push	hl
 	push	bc
 	call	_FillVRAM
@@ -22192,143 +22139,174 @@ _StateBuildTrack:
 	add	hl,sp
 	ld	sp,hl
 	jp	00132$
-;carwar.c:1364: for(x=0; x<32; x++)
-00152$:
-	ld	c,-9 (ix)
-	ld	b,-8 (ix)
-	inc	bc
-	ld	a,-9 (ix)
-	add	a,#0x02
-	ld	-15 (ix),a
-	ld	a,-8 (ix)
-	adc	a,#0x00
-	ld	-14 (ix),a
-	ld	-5 (ix),#0x00
-	ld	-4 (ix),#0x00
-00126$:
-	ld	a,-5 (ix)
+00120$:
+;carwar.c:1365: color0 = *block++;
+	ld	l,-11 (ix)
+	ld	h,-10 (ix)
+	ld	a,(hl)
+	inc	-11 (ix)
+	jr	NZ,00165$
+	inc	-10 (ix)
+00165$:
+	ld	-4 (ix),a
+;carwar.c:1366: for(x=0; x<32; x++)
+	ld	a,c
+	and	a,#0xF0
+	ld	b,a
+	sub	a,#0x10
+	jr	NZ,00166$
+	ld	a,#0x01
+	jr	00167$
+00166$:
+	xor	a,a
+00167$:
+	ld	-16 (ix),a
+	ld	a,b
 	sub	a,#0x20
-	ld	a,-4 (ix)
-	sbc	a,#0x00
-	jp	NC,00129$
-;carwar.c:1366: for(y=0; y<32; y++)
-	ld	a,#0x1F
-	sub	a,-5 (ix)
+	jr	NZ,00168$
+	ld	a,#0x01
+	jr	00169$
+00168$:
+	xor	a,a
+00169$:
 	ld	-13 (ix),a
-	ld	a,#0x00
-	sbc	a,-4 (ix)
-	ld	-12 (ix),a
-	ld	a,-13 (ix)
-	ld	-19 (ix),a
-	ld	a,-12 (ix)
-	ld	-18 (ix),a
-	ld	a,-13 (ix)
-	ld	-21 (ix),a
-	ld	a,-12 (ix)
-	ld	-20 (ix),a
+	ld	a,b
+	sub	a,#0x30
+	jr	NZ,00170$
+	ld	a,#0x01
+	jr	00171$
+00170$:
+	xor	a,a
+00171$:
+	ld	-14 (ix),a
+	ld	a,b
+	sub	a,#0x40
+	jr	NZ,00172$
+	ld	a,#0x01
+	jr	00173$
+00172$:
+	xor	a,a
+00173$:
+	ld	-15 (ix),a
 	ld	-7 (ix),#0x00
 	ld	-6 (ix),#0x00
-00122$:
+00126$:
 	ld	a,-7 (ix)
 	sub	a,#0x20
 	ld	a,-6 (ix)
 	sbc	a,#0x00
-	jp	NC,00128$
-;carwar.c:1368: if((block->tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
-	ld	l,-9 (ix)
-	ld	h,-8 (ix)
-	ld	l,(hl)
-	ld	a,l
-	and	a,#0xF0
-	ld	e,a
-	or	a,a
-	jr	NZ,00114$
-	ld	a,-5 (ix)
-	ld	-23 (ix),a
-	ld	a,-4 (ix)
-	ld	-22 (ix),a
-	ld	a,-7 (ix)
-	ld	-25 (ix),a
-	ld	a,-6 (ix)
-	ld	-24 (ix),a
-	jp	00115$
-00114$:
-;carwar.c:1369: else if((block->tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
-	ld	a,e
-	sub	a,#0x10
-	jr	NZ,00111$
-	ld	a,-7 (ix)
-	ld	-23 (ix),a
-	ld	a,-6 (ix)
-	ld	-22 (ix),a
-	ld	a,-21 (ix)
-	ld	-25 (ix),a
-	ld	a,-20 (ix)
-	ld	-24 (ix),a
-	jp	00115$
-00111$:
-;carwar.c:1370: else if((block->tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
-	ld	a,e
-	sub	a,#0x20
-	jr	NZ,00108$
-	ld	a,-19 (ix)
-	ld	-23 (ix),a
+	jp	NC,00129$
+;carwar.c:1368: for(y=0; y<32; y++)
+	ld	a,#0x1F
+	sub	a,-7 (ix)
+	ld	-18 (ix),a
+	ld	a,#0x00
+	sbc	a,-6 (ix)
+	ld	-17 (ix),a
+	ld	a,-18 (ix)
+	ld	-20 (ix),a
+	ld	a,-17 (ix)
+	ld	-19 (ix),a
 	ld	a,-18 (ix)
 	ld	-22 (ix),a
-	ld	a,#0x1F
-	sub	a,-7 (ix)
-	ld	-25 (ix),a
-	ld	a,#0x00
-	sbc	a,-6 (ix)
+	ld	a,-17 (ix)
+	ld	-21 (ix),a
+	ld	-9 (ix),#0x00
+	ld	-8 (ix),#0x00
+00122$:
+	ld	a,-9 (ix)
+	sub	a,#0x20
+	ld	a,-8 (ix)
+	sbc	a,#0x00
+	jp	NC,00128$
+;carwar.c:1370: if((tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
+	xor	a,a
+	or	a,b
+	jr	NZ,00114$
+	ld	a,-7 (ix)
 	ld	-24 (ix),a
+	ld	a,-6 (ix)
+	ld	-23 (ix),a
+	ld	a,-9 (ix)
+	ld	-26 (ix),a
+	ld	a,-8 (ix)
+	ld	-25 (ix),a
+	jp	00115$
+00114$:
+;carwar.c:1371: else if((tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
+	xor	a,a
+	or	a,-16 (ix)
+	jr	Z,00111$
+	ld	a,-9 (ix)
+	ld	-24 (ix),a
+	ld	a,-8 (ix)
+	ld	-23 (ix),a
+	ld	a,-22 (ix)
+	ld	-26 (ix),a
+	ld	a,-21 (ix)
+	ld	-25 (ix),a
+	jp	00115$
+00111$:
+;carwar.c:1372: else if((tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
+	xor	a,a
+	or	a,-13 (ix)
+	jr	Z,00108$
+	ld	a,-20 (ix)
+	ld	-24 (ix),a
+	ld	a,-19 (ix)
+	ld	-23 (ix),a
+	ld	a,#0x1F
+	sub	a,-9 (ix)
+	ld	-26 (ix),a
+	ld	a,#0x00
+	sbc	a,-8 (ix)
+	ld	-25 (ix),a
 	jr	00115$
 00108$:
-;carwar.c:1371: else if((block->tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
-	ld	a,e
-	sub	a,#0x30
-	jr	NZ,00105$
+;carwar.c:1373: else if((tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
+	xor	a,a
+	or	a,-14 (ix)
+	jr	Z,00105$
 	ld	a,#0x1F
-	sub	a,-7 (ix)
-	ld	-23 (ix),a
-	ld	a,#0x00
-	sbc	a,-6 (ix)
-	ld	-22 (ix),a
-	ld	a,-5 (ix)
-	ld	-25 (ix),a
-	ld	a,-4 (ix)
+	sub	a,-9 (ix)
 	ld	-24 (ix),a
+	ld	a,#0x00
+	sbc	a,-8 (ix)
+	ld	-23 (ix),a
+	ld	a,-7 (ix)
+	ld	-26 (ix),a
+	ld	a,-6 (ix)
+	ld	-25 (ix),a
 	jr	00115$
 00105$:
-;carwar.c:1372: else if((block->tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
-	ld	a,e
-	sub	a,#0x40
-	jr	NZ,00102$
-	ld	a,-5 (ix)
-	ld	-23 (ix),a
-	ld	a,-4 (ix)
-	ld	-22 (ix),a
-	ld	a,#0x1F
-	sub	a,-7 (ix)
-	ld	-25 (ix),a
-	ld	a,#0x00
-	sbc	a,-6 (ix)
+;carwar.c:1374: else if((tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
+	xor	a,a
+	or	a,-15 (ix)
+	jr	Z,00102$
+	ld	a,-7 (ix)
 	ld	-24 (ix),a
+	ld	a,-6 (ix)
+	ld	-23 (ix),a
+	ld	a,#0x1F
+	sub	a,-9 (ix)
+	ld	-26 (ix),a
+	ld	a,#0x00
+	sbc	a,-8 (ix)
+	ld	-25 (ix),a
 	jr	00115$
 00102$:
-;carwar.c:1373: else /* SYM_V */                         { lx = 31 - x; ly = y; }
-	ld	a,-13 (ix)
-	ld	-23 (ix),a
-	ld	a,-12 (ix)
-	ld	-22 (ix),a
-	ld	a,-7 (ix)
-	ld	-25 (ix),a
-	ld	a,-6 (ix)
+;carwar.c:1375: else /* SYM_V */                         { lx = 31 - x; ly = y; }
+	ld	a,-18 (ix)
 	ld	-24 (ix),a
+	ld	a,-17 (ix)
+	ld	-23 (ix),a
+	ld	a,-9 (ix)
+	ld	-26 (ix),a
+	ld	a,-8 (ix)
+	ld	-25 (ix),a
 00115$:
-;carwar.c:1374: byte = g_TrackTiles[((block->tile & 0x0F) << 7) + (lx >> 3) + (ly << 2)];
-	ld	a,l
-	and	a,#0x0F
-	ld	l,a
+;carwar.c:1376: byte = g_TrackTiles[((tile & 0x0F) << 7) + (lx >> 3) + (ly << 2)];
+	ld	l,d
 	ld	h,#0x00
 	add	hl,hl
 	add	hl,hl
@@ -22337,27 +22315,41 @@ _StateBuildTrack:
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
+	ld	c,-24 (ix)
 	ld	e,-23 (ix)
-	ld	d,-22 (ix)
-	srl	d
-	rr	e
-	srl	d
-	rr	e
-	srl	d
-	rr	e
-	add	hl,de
-	ex	de,hl
-	ld	l,-25 (ix)
-	ld	h,-24 (ix)
+	srl	e
+	rr	c
+	srl	e
+	rr	c
+	srl	e
+	rr	c
+	ld	a,l
+	add	a,c
+	ld	c,a
+	ld	a,h
+	adc	a,e
+	ld	e,a
+	ld	l,-26 (ix)
+	ld	h,-25 (ix)
 	add	hl,hl
 	add	hl,hl
-	add	hl,de
-	ld	de, #_g_TrackTiles
-	add	hl, de
+	ld	a,c
+	add	a,l
+	ld	c,a
+	ld	a,e
+	adc	a,h
+	ld	e,a
+	ld	a,#<(_g_TrackTiles)
+	add	a,c
+	ld	c,a
+	ld	a,#>(_g_TrackTiles)
+	adc	a,e
+	ld	h, a
+	ld	l, c
 	ld	a,(hl)
 	ld	-3 (ix),a
-;carwar.c:1375: if(byte & (1 << (7 - (lx & 0x07))))
-	ld	a,-23 (ix)
+;carwar.c:1377: if(byte & (1 << (7 - (lx & 0x07))))
+	ld	a,-24 (ix)
 	and	a,#0x07
 	ld	l,a
 	ld	h,#0x00
@@ -22369,81 +22361,88 @@ _StateBuildTrack:
 	ld	a,e
 	inc	a
 	push	af
-	ld	de,#0x0001
+	ld	e,#0x01
+	ld	c,#0x00
 	pop	af
-	jr	00175$
-00174$:
-	sla	e
-	rl	d
+	jr	00176$
 00175$:
+	sla	e
+	rl	c
+00176$:
 	dec	a
-	jr	NZ,00174$
+	jr	NZ,00175$
 	ld	a, -3 (ix)
 	ld	h, #0x00
 	and	a,e
 	ld	l,a
 	ld	a,h
-	and	a,d
+	and	a,c
 	ld	h,a
 	ld	a,l
 	or	a,h
 	jr	Z,00117$
-;carwar.c:1376: game.blockGen[x + (y << 5)] = block->color1;
-	ld	l,-7 (ix)
-	ld	h,-6 (ix)
+;carwar.c:1378: game.blockGen[x + (y << 5)] = color1;
+	ld	l,-9 (ix)
+	ld	h,-8 (ix)
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
-	ld	a,-5 (ix)
+	ld	a,-7 (ix)
 	add	a,l
-	ld	e,a
-	ld	a,-4 (ix)
+	ld	c,a
+	ld	a,-6 (ix)
 	adc	a,h
-	ld	d,a
-	ld	hl,#0x09ba + _game
-	add	hl,de
-	ex	de,hl
-	ld	l,-15 (ix)
-	ld	h,-14 (ix)
-	ld	a,(hl)
-	ld	(de),a
+	ld	e,a
+	ld	a,#<(0x09ba + _game)
+	add	a,c
+	ld	c,a
+	ld	a,#>(0x09ba + _game)
+	adc	a,e
+	ld	h, a
+	ld	l, c
+	ld	a,-5 (ix)
+	ld	(hl),a
 	jr	00124$
 00117$:
-;carwar.c:1378: game.blockGen[x + (y << 5)] = block->color0;
-	ld	l,-7 (ix)
-	ld	h,-6 (ix)
+;carwar.c:1380: game.blockGen[x + (y << 5)] = color0;
+	ld	l,-9 (ix)
+	ld	h,-8 (ix)
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
 	add	hl,hl
-	ld	a,-5 (ix)
+	ld	a,-7 (ix)
 	add	a,l
-	ld	e,a
-	ld	a,-4 (ix)
+	ld	c,a
+	ld	a,-6 (ix)
 	adc	a,h
-	ld	d,a
-	ld	hl,#0x09ba + _game
-	add	hl,de
-	ex	de,hl
-	ld	a,(bc)
-	ld	(de),a
+	ld	e,a
+	ld	a,#<(0x09ba + _game)
+	add	a,c
+	ld	c,a
+	ld	a,#>(0x09ba + _game)
+	adc	a,e
+	ld	h, a
+	ld	l, c
+	ld	a,-4 (ix)
+	ld	(hl),a
 00124$:
-;carwar.c:1366: for(y=0; y<32; y++)
-	inc	-7 (ix)
+;carwar.c:1368: for(y=0; y<32; y++)
+	inc	-9 (ix)
 	jp	NZ,00122$
-	inc	-6 (ix)
+	inc	-8 (ix)
 	jp	00122$
 00128$:
-;carwar.c:1364: for(x=0; x<32; x++)
-	inc	-5 (ix)
+;carwar.c:1366: for(x=0; x<32; x++)
+	inc	-7 (ix)
 	jp	NZ,00126$
-	inc	-4 (ix)
+	inc	-6 (ix)
 	jp	00126$
 00129$:
-;carwar.c:1381: HMMC(g_Tracks[game.track].offset.x + (i << 5), g_Tracks[game.track].offset.y + (j << 5), 32, 32, (u16)&game.blockGen);
+;carwar.c:1383: HMMC(g_Tracks[game.track].offset.x + (i << 5), g_Tracks[game.track].offset.y + (j << 5), 32, 32, (u16)&game.blockGen);
 	ld	a,(#0x0006 + _game)
 	ld	e,a
 	add	a,a
@@ -22460,8 +22459,8 @@ _StateBuildTrack:
 	add	hl,bc
 	ld	l, (hl)
 	ld	h,#0x00
-	ld	c,-11 (ix)
-	ld	b,-10 (ix)
+	ld	c,-1 (ix)
+	ld	b,#0x00
 	sla	c
 	rl	b
 	sla	c
@@ -22541,21 +22540,15 @@ _StateBuildTrack:
 	call	_VPDCommandLoop
 	pop	af
 00132$:
-;carwar.c:1355: for(j=0; j<6; j++)
-	ld	a,-17 (ix)
-	add	a,#0x07
-	ld	-17 (ix),a
-	ld	a,-16 (ix)
-	adc	a,#0x00
-	ld	-16 (ix),a
-	inc	-2 (ix)
+;carwar.c:1355: for(i=0; i<7; i++)
+	inc	-1 (ix)
 	jp	00130$
 00136$:
-;carwar.c:1353: for(i=0; i<7; i++)
-	inc	-1 (ix)
+;carwar.c:1353: for(j=0; j<6; j++)
+	inc	-2 (ix)
 	jp	00134$
 00137$:
-;carwar.c:1385: ClearSprite();
+;carwar.c:1387: ClearSprite();
 	call	_ClearSprite
 	ld	sp,ix
 	pop	ix
@@ -22566,7 +22559,7 @@ __str_30:
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x00
-;carwar.c:1389: void StateShadeTrack()
+;carwar.c:1391: void StateShadeTrack()
 ;	---------------------------------
 ; Function StateShadeTrack
 ; ---------------------------------
@@ -22578,7 +22571,7 @@ _StateShadeTrack:
 	ld	hl,#-8
 	add	hl,sp
 	ld	sp,hl
-;carwar.c:1394: PrintSprite(64, 64, "SHADE\nTRACK", (u16)&g_DefaultColor);
+;carwar.c:1396: PrintSprite(64, 64, "SHADE\nTRACK", (u16)&g_DefaultColor);
 	ld	c,#<(_g_DefaultColor)
 	ld	b,#>(_g_DefaultColor)
 	push	bc
@@ -22589,7 +22582,7 @@ _StateShadeTrack:
 	call	_PrintSprite
 	pop	af
 	pop	af
-;carwar.c:1396: cur = ReadVRAM(0, 0);
+;carwar.c:1398: cur = ReadVRAM(0, 0);
 	ld	hl,#0x0000
 	ex	(sp),hl
 	ld	a,#0x00
@@ -22598,14 +22591,14 @@ _StateShadeTrack:
 	call	_ReadVRAM
 	pop	af
 	inc	sp
-;carwar.c:1397: for(x=0; x<256; x++)
+;carwar.c:1399: for(x=0; x<256; x++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00124$:
 	ld	a,-1 (ix)
 	sub	a,#0x01
 	jp	NC,00127$
-;carwar.c:1399: for(y=0; y<211; y++)
+;carwar.c:1401: for(y=0; y<211; y++)
 	ld	-4 (ix),#0x00
 	ld	-3 (ix),#0x00
 00120$:
@@ -22614,7 +22607,7 @@ _StateShadeTrack:
 	ld	a,-3 (ix)
 	sbc	a,#0x00
 	jp	NC,00126$
-;carwar.c:1401: cur = ReadVRAM(0, x + 256 * y);
+;carwar.c:1403: cur = ReadVRAM(0, x + 256 * y);
 	ld	h,-4 (ix)
 	ld	l,#0x00
 	ld	a,-2 (ix)
@@ -22631,7 +22624,7 @@ _StateShadeTrack:
 	pop	af
 	inc	sp
 	ld	c,l
-;carwar.c:1402: next = ReadVRAM(0, x + 256 * (y + 1));
+;carwar.c:1404: next = ReadVRAM(0, x + 256 * (y + 1));
 	ld	a,-4 (ix)
 	add	a,#0x01
 	ld	b,a
@@ -22655,7 +22648,7 @@ _StateShadeTrack:
 	inc	sp
 	pop	bc
 	ld	b,l
-;carwar.c:1403: if(game.colorCode[cur] < OP_SPECIAL && game.colorCode[next] >= OP_SPECIAL)
+;carwar.c:1405: if(game.colorCode[cur] < OP_SPECIAL && game.colorCode[next] >= OP_SPECIAL)
 	ld	l,c
 	ld	h,#0x00
 	ld	a,#<(0x0009 + _game)
@@ -22678,7 +22671,7 @@ _StateShadeTrack:
 	ld	a,(de)
 	sub	a,#0x04
 	jp	C,00122$
-;carwar.c:1405: for(i=0; i<BLOCK_SHADOW; i++)
+;carwar.c:1407: for(i=0; i<BLOCK_SHADOW; i++)
 	ld	-6 (ix),#0x00
 	ld	-5 (ix),#0x00
 00105$:
@@ -22687,7 +22680,7 @@ _StateShadeTrack:
 	ld	a,-5 (ix)
 	sbc	a,#0x00
 	jr	NC,00108$
-;carwar.c:1407: cur = ReadVRAM(0, x + 256 * (y - i));
+;carwar.c:1409: cur = ReadVRAM(0, x + 256 * (y - i));
 	ld	a,-4 (ix)
 	sub	a,-6 (ix)
 	ld	b,a
@@ -22716,7 +22709,7 @@ _StateShadeTrack:
 	pop	de
 	pop	bc
 	ld	c,l
-;carwar.c:1408: if((y - i < 212) && (game.colorCode[cur] < OP_SPECIAL))
+;carwar.c:1410: if((y - i < 212) && (game.colorCode[cur] < OP_SPECIAL))
 	ld	a,b
 	sub	a,#0xD4
 	ld	a,e
@@ -22733,7 +22726,7 @@ _StateShadeTrack:
 	ld	a,(de)
 	sub	a,#0x04
 	jr	NC,00108$
-;carwar.c:1409: WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
+;carwar.c:1411: WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
 	ld	b, #0x02
 	push	bc
 	call	_DarkenColor
@@ -22750,13 +22743,13 @@ _StateShadeTrack:
 	call	_WriteVRAM
 	pop	af
 	pop	af
-;carwar.c:1405: for(i=0; i<BLOCK_SHADOW; i++)
+;carwar.c:1407: for(i=0; i<BLOCK_SHADOW; i++)
 	inc	-6 (ix)
 	jr	NZ,00105$
 	inc	-5 (ix)
 	jp	00105$
 00108$:
-;carwar.c:1413: for(i=1; i<=ROAD_SHADOW; i++)
+;carwar.c:1415: for(i=1; i<=ROAD_SHADOW; i++)
 	ld	-6 (ix),#0x01
 	ld	-5 (ix),#0x00
 00113$:
@@ -22765,7 +22758,7 @@ _StateShadeTrack:
 	ld	a,#0x00
 	sbc	a,-5 (ix)
 	jr	C,00116$
-;carwar.c:1415: cur = ReadVRAM(0, x + 256 * (y + i));
+;carwar.c:1417: cur = ReadVRAM(0, x + 256 * (y + i));
 	ld	a,-4 (ix)
 	add	a,-6 (ix)
 	ld	b,a
@@ -22794,7 +22787,7 @@ _StateShadeTrack:
 	pop	de
 	pop	bc
 	ld	c,l
-;carwar.c:1416: if((y + i < 212) && (game.colorCode[cur] >= OP_SPECIAL))
+;carwar.c:1418: if((y + i < 212) && (game.colorCode[cur] >= OP_SPECIAL))
 	ld	a,b
 	sub	a,#0xD4
 	ld	a,e
@@ -22811,7 +22804,7 @@ _StateShadeTrack:
 	ld	a,(de)
 	sub	a,#0x04
 	jr	C,00116$
-;carwar.c:1417: WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
+;carwar.c:1419: WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
 	ld	b, #0x02
 	push	bc
 	call	_DarkenColor
@@ -22828,13 +22821,13 @@ _StateShadeTrack:
 	call	_WriteVRAM
 	pop	af
 	pop	af
-;carwar.c:1413: for(i=1; i<=ROAD_SHADOW; i++)
+;carwar.c:1415: for(i=1; i<=ROAD_SHADOW; i++)
 	inc	-6 (ix)
 	jr	NZ,00113$
 	inc	-5 (ix)
 	jp	00113$
 00116$:
-;carwar.c:1421: y += i;
+;carwar.c:1423: y += i;
 	ld	a,-4 (ix)
 	add	a,-6 (ix)
 	ld	-4 (ix),a
@@ -22842,19 +22835,19 @@ _StateShadeTrack:
 	adc	a,-5 (ix)
 	ld	-3 (ix),a
 00122$:
-;carwar.c:1399: for(y=0; y<211; y++)
+;carwar.c:1401: for(y=0; y<211; y++)
 	inc	-4 (ix)
 	jp	NZ,00120$
 	inc	-3 (ix)
 	jp	00120$
 00126$:
-;carwar.c:1397: for(x=0; x<256; x++)
+;carwar.c:1399: for(x=0; x<256; x++)
 	inc	-2 (ix)
 	jp	NZ,00124$
 	inc	-1 (ix)
 	jp	00124$
 00127$:
-;carwar.c:1425: ClearSprite();
+;carwar.c:1427: ClearSprite();
 	call	_ClearSprite
 	ld	sp,ix
 	pop	ix
@@ -22865,7 +22858,7 @@ __str_31:
 	.db 0x0A
 	.ascii "TRACK"
 	.db 0x00
-;carwar.c:1431: u8 DarkenColor(u8 color, u8 power)
+;carwar.c:1433: u8 DarkenColor(u8 color, u8 power)
 ;	---------------------------------
 ; Function DarkenColor
 ; ---------------------------------
@@ -22875,7 +22868,7 @@ _DarkenColor:
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-;carwar.c:1434: g = ((color & 0xE0) >> 5);
+;carwar.c:1436: g = ((color & 0xE0) >> 5);
 	ld	a,4 (ix)
 	and	a,#0xE0
 	ld	c,a
@@ -22884,17 +22877,17 @@ _DarkenColor:
 	srl	c
 	srl	c
 	srl	c
-;carwar.c:1435: r = ((color & 0x1C) >> 2);
+;carwar.c:1437: r = ((color & 0x1C) >> 2);
 	ld	a,4 (ix)
 	and	a,#0x1C
 	ld	b,a
 	srl	b
 	srl	b
-;carwar.c:1436: b = (color & 0x03);
+;carwar.c:1438: b = (color & 0x03);
 	ld	a,4 (ix)
 	and	a,#0x03
 	ld	-1 (ix),a
-;carwar.c:1437: switch(power)
+;carwar.c:1439: switch(power)
 	ld	a,#0x07
 	sub	a,5 (ix)
 	jp	C,00109$
@@ -22916,9 +22909,9 @@ _DarkenColor:
 	jp	00106$
 	jp	00107$
 	jp	00108$
-;carwar.c:1439: case 0: break;                       // x1
+;carwar.c:1441: case 0: break;                       // x1
 	jp	00110$
-;carwar.c:1440: case 1: TransformColor(7, 3); break; // x0.875
+;carwar.c:1442: case 1: TransformColor(7, 3); break; // x0.875
 00102$:
 	ld	e,c
 	ld	d,#0x00
@@ -22966,7 +22959,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:1441: case 2: TransformColor(3, 2); break; // x0.75
+;carwar.c:1443: case 2: TransformColor(3, 2); break; // x0.75
 00103$:
 	ld	e,c
 	ld	d,#0x00
@@ -23002,7 +22995,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:1442: case 3: TransformColor(5, 3); break; // x0.625
+;carwar.c:1444: case 3: TransformColor(5, 3); break; // x0.625
 00104$:
 	ld	e,c
 	ld	d,#0x00
@@ -23047,7 +23040,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:1443: case 4: TransformColor(1, 1); break; // x0.5
+;carwar.c:1445: case 4: TransformColor(1, 1); break; // x0.5
 00105$:
 	ld	l,c
 	ld	h,#0x00
@@ -23065,7 +23058,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jp	00110$
-;carwar.c:1444: case 5: TransformColor(3, 3); break; // x0.375
+;carwar.c:1446: case 5: TransformColor(3, 3); break; // x0.375
 00106$:
 	ld	e,c
 	ld	d,#0x00
@@ -23107,7 +23100,7 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jr	00110$
-;carwar.c:1445: case 6: TransformColor(1, 2); break; // x0.25
+;carwar.c:1447: case 6: TransformColor(1, 2); break; // x0.25
 00107$:
 	ld	l,c
 	ld	h,#0x00
@@ -23131,9 +23124,9 @@ _DarkenColor:
 	rr	l
 	ld	-1 (ix),l
 	jr	00110$
-;carwar.c:1446: case 7:                              // x0.125
+;carwar.c:1448: case 7:                              // x0.125
 00108$:
-;carwar.c:1447: default: TransformColor(1, 3); break;
+;carwar.c:1449: default: TransformColor(1, 3); break;
 00109$:
 	ld	l,c
 	ld	h,#0x00
@@ -23162,9 +23155,9 @@ _DarkenColor:
 	sra	h
 	rr	l
 	ld	-1 (ix),l
-;carwar.c:1448: }
+;carwar.c:1450: }
 00110$:
-;carwar.c:1449: return (g << 5) + (r << 2) + b;
+;carwar.c:1451: return (g << 5) + (r << 2) + b;
 	ld	a,c
 	rrca
 	rrca
@@ -23181,7 +23174,7 @@ _DarkenColor:
 	pop	ix
 	ret
 _DarkenColor_end::
-;carwar.c:1452: u8 GrayGradiant(u8 index)
+;carwar.c:1454: u8 GrayGradiant(u8 index)
 ;	---------------------------------
 ; Function GrayGradiant
 ; ---------------------------------
@@ -23190,25 +23183,25 @@ _GrayGradiant:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1455: col = index & 0xF; // 0:16
+;carwar.c:1457: col = index & 0xF; // 0:16
 	ld	a,4 (ix)
 	and	a,#0x0F
 	ld	c,a
-;carwar.c:1456: col >>= 1; // 0:8
+;carwar.c:1458: col >>= 1; // 0:8
 	srl	c
-;carwar.c:1457: col += 2; // 2:10
+;carwar.c:1459: col += 2; // 2:10
 	inc	c
 	inc	c
-;carwar.c:1458: if(col > 5)
+;carwar.c:1460: if(col > 5)
 	ld	a,#0x05
 	sub	a,c
 	jr	NC,00102$
-;carwar.c:1459: col = 12 - col; // 2:5 & 6:3
+;carwar.c:1461: col = 12 - col; // 2:5 & 6:3
 	ld	a,#0x0C
 	sub	a,c
 	ld	c,a
 00102$:
-;carwar.c:1460: return (col << 5) + (col << 2) + (col >> 1);
+;carwar.c:1462: return (col << 5) + (col << 2) + (col >> 1);
 	ld	a,c
 	rrca
 	rrca
@@ -23227,7 +23220,7 @@ _GrayGradiant:
 	pop	ix
 	ret
 _GrayGradiant_end::
-;carwar.c:1463: void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
+;carwar.c:1465: void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
 ;	---------------------------------
 ; Function DrawCharacter
 ; ---------------------------------
@@ -23237,7 +23230,7 @@ _DrawCharacter:
 	ld	ix,#0
 	add	ix,sp
 	push	af
-;carwar.c:1467: HMMV(x, y, 8, 8, color);
+;carwar.c:1469: HMMV(x, y, 8, 8, color);
 	ld	hl,#0x09af + _game
 	ld	a,4 (ix)
 	ld	(hl),a
@@ -23269,7 +23262,7 @@ _DrawCharacter:
 	push	hl
 	call	_VPDCommand36
 	pop	af
-;carwar.c:1468: for(j=0; j<8; j++)
+;carwar.c:1470: for(j=0; j<8; j++)
 	ld	-2 (ix),#0x00
 	ld	-1 (ix),#0x00
 00101$:
@@ -23278,7 +23271,7 @@ _DrawCharacter:
 	ld	a,-1 (ix)
 	sbc	a,#0x00
 	jp	NC,00105$
-;carwar.c:1470: LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[g_CharTable[chr * 8 + j] * 8], VDP_OP_AND);
+;carwar.c:1472: LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[g_CharTable[chr * 8 + j] * 8], VDP_OP_AND);
 	ld	hl,#0x09af + _game
 	ld	a,4 (ix)
 	ld	(hl),a
@@ -23358,7 +23351,7 @@ _DrawCharacter:
 	push	hl
 	call	_VPDCommandLoop
 	pop	af
-;carwar.c:1468: for(j=0; j<8; j++)
+;carwar.c:1470: for(j=0; j<8; j++)
 	inc	-2 (ix)
 	jp	NZ,00101$
 	inc	-1 (ix)
@@ -23368,7 +23361,7 @@ _DrawCharacter:
 	pop	ix
 	ret
 _DrawCharacter_end::
-;carwar.c:1474: void DrawText(u16 x, u16 y, const char* text, u8 color)
+;carwar.c:1476: void DrawText(u16 x, u16 y, const char* text, u8 color)
 ;	---------------------------------
 ; Function DrawText
 ; ---------------------------------
@@ -23379,15 +23372,15 @@ _DrawText:
 	add	ix,sp
 	push	af
 	push	af
-;carwar.c:1477: u16 curX = x;
+;carwar.c:1479: u16 curX = x;
 	ld	a,4 (ix)
 	ld	-4 (ix),a
 	ld	a,5 (ix)
 	ld	-3 (ix),a
-;carwar.c:1478: u16 curY = y;
+;carwar.c:1480: u16 curY = y;
 	ld	l,6 (ix)
 	ld	h,7 (ix)
-;carwar.c:1479: while(text[textIdx] != 0)
+;carwar.c:1481: while(text[textIdx] != 0)
 	ld	-2 (ix),#0x00
 	ex	de,hl
 	ld	-1 (ix),#0x00
@@ -23399,25 +23392,25 @@ _DrawText:
 	adc	a,#0x00
 	ld	b,a
 	ld	a,(bc)
-;carwar.c:1481: if(text[textIdx] == '\n')
+;carwar.c:1483: if(text[textIdx] == '\n')
 	ld	c,a
 	or	a,a
 	jr	Z,00109$
 	sub	a,#0x0A
 	jr	NZ,00104$
-;carwar.c:1483: curX = x;
+;carwar.c:1485: curX = x;
 	ld	a,4 (ix)
 	ld	-4 (ix),a
 	ld	a,5 (ix)
 	ld	-3 (ix),a
-;carwar.c:1484: curY += LINE_SPACE;
+;carwar.c:1486: curY += LINE_SPACE;
 	ld	hl,#0x000A
 	add	hl,de
 	ex	de,hl
 	jr	00105$
 00104$:
-;carwar.c:1488: if(text[textIdx] != ' ')
-;carwar.c:1490: DrawCharacter(curX, curY, text[textIdx] - '0', color);
+;carwar.c:1490: if(text[textIdx] != ' ')
+;carwar.c:1492: DrawCharacter(curX, curY, text[textIdx] - '0', color);
 	ld	a,c
 	cp	a,#0x20
 	jr	Z,00102$
@@ -23435,10 +23428,10 @@ _DrawText:
 	pop	af
 	pop	af
 	pop	de
-;carwar.c:1491: sprtIdx++;
+;carwar.c:1493: sprtIdx++;
 	inc	-2 (ix)
 00102$:
-;carwar.c:1493: curX += 8;
+;carwar.c:1495: curX += 8;
 	ld	a,-4 (ix)
 	add	a,#0x08
 	ld	-4 (ix),a
@@ -23446,7 +23439,7 @@ _DrawText:
 	adc	a,#0x00
 	ld	-3 (ix),a
 00105$:
-;carwar.c:1495: textIdx++;
+;carwar.c:1497: textIdx++;
 	inc	-1 (ix)
 	jr	00106$
 00109$:
@@ -23454,7 +23447,7 @@ _DrawText:
 	pop	ix
 	ret
 _DrawText_end::
-;carwar.c:1514: void StartGame(i8 value)
+;carwar.c:1516: void StartGame(i8 value)
 ;	---------------------------------
 ; Function StartGame
 ; ---------------------------------
@@ -23463,10 +23456,10 @@ _StartGame:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1516: game.track = value;
+;carwar.c:1518: game.track = value;
 	ld	a,4 (ix)
 	ld	(#0x0006 + _game),a
-;carwar.c:1517: game.state = StateStartGame;
+;carwar.c:1519: game.state = StateStartGame;
 	ld	hl,#0x017a + _game
 	ld	(hl),#<(_StateStartGame)
 	inc	hl
@@ -23474,7 +23467,7 @@ _StartGame:
 	pop	ix
 	ret
 _StartGame_end::
-;carwar.c:1521: void SelectPlayer(i8 value)
+;carwar.c:1523: void SelectPlayer(i8 value)
 ;	---------------------------------
 ; Function SelectPlayer
 ; ---------------------------------
@@ -23483,13 +23476,13 @@ _SelectPlayer:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1523: game.playerNum = value;
+;carwar.c:1525: game.playerNum = value;
 	ld	a,4 (ix)
 	ld	(#0x0109 + _game),a
 	pop	ix
 	ret
 _SelectPlayer_end::
-;carwar.c:1527: void SelectRule(i8 value)
+;carwar.c:1529: void SelectRule(i8 value)
 ;	---------------------------------
 ; Function SelectRule
 ; ---------------------------------
@@ -23498,7 +23491,7 @@ _SelectRule:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-;carwar.c:1529: game.rule = value;
+;carwar.c:1531: game.rule = value;
 	ld	a,4 (ix)
 	ld	(#0x0004 + _game),a
 	pop	ix

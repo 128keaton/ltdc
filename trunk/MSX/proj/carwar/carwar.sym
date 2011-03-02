@@ -3,102 +3,102 @@
 Symbol Table
 
     .__.ABS.                                                    =  0000 G
-  0 _AngleDifferent64                                              5DEA GR
-  0 _AngleDifferent64_end                                          5E1A GR
-  0 _AngleDifferent64_start                                        5DEA GR
-  0 _CarToCarCollision                                             5F4C GR
-  0 _CarToCarCollision_end                                         6156 GR
-  0 _CarToCarCollision_start                                       5F4C GR
-  0 _CarToWallCollision                                            6156 GR
-  0 _CarToWallCollision_end                                        64B0 GR
-  0 _CarToWallCollision_start                                      6156 GR
-  0 _CheckJoy                                                      5D36 GR
-  0 _CheckJoy_end                                                  5DC0 GR
-  0 _CheckJoy_start                                                5D36 GR
+  0 _AngleDifferent64                                              5DC7 GR
+  0 _AngleDifferent64_end                                          5DF7 GR
+  0 _AngleDifferent64_start                                        5DC7 GR
+  0 _CarToCarCollision                                             5F29 GR
+  0 _CarToCarCollision_end                                         6133 GR
+  0 _CarToCarCollision_start                                       5F29 GR
+  0 _CarToWallCollision                                            6133 GR
+  0 _CarToWallCollision_end                                        648D GR
+  0 _CarToWallCollision_start                                      6133 GR
+  0 _CheckJoy                                                      5D13 GR
+  0 _CheckJoy_end                                                  5D9D GR
+  0 _CheckJoy_start                                                5D13 GR
     _ClearSprite                                                   **** GX
-  0 _DamageCar                                                     5DC0 GR
-  0 _DamageCar_end                                                 5DEA GR
-  0 _DamageCar_start                                               5DC0 GR
-  0 _DarkenColor                                                   6AC4 GR
-  0 _DarkenColor_end                                               6CBB GR
-  0 _DarkenColor_start                                             6AC4 GR
-  0 _DrawCharacter                                                 6CEA GR
-  0 _DrawCharacter_end                                             6DCC GR
-  0 _DrawCharacter_start                                           6CEA GR
-  0 _DrawText                                                      6DCC GR
-  0 _DrawText_end                                                  6E53 GR
-  0 _DrawText_start                                                6DCC GR
+  0 _DamageCar                                                     5D9D GR
+  0 _DamageCar_end                                                 5DC7 GR
+  0 _DamageCar_start                                               5D9D GR
+  0 _DarkenColor                                                   6AB4 GR
+  0 _DarkenColor_end                                               6CAB GR
+  0 _DarkenColor_start                                             6AB4 GR
+  0 _DrawCharacter                                                 6CDA GR
+  0 _DrawCharacter_end                                             6DBC GR
+  0 _DrawCharacter_start                                           6CDA GR
+  0 _DrawText                                                      6DBC GR
+  0 _DrawText_end                                                  6E43 GR
+  0 _DrawText_start                                                6DBC GR
     _FillVRAM                                                      **** GX
     _GetKeyMatrixLine                                              **** GX
-  0 _GetVectorLenght256                                            5ECB GR
-  0 _GetVectorLenght256_end                                        5F4C GR
-  0 _GetVectorLenght256_start                                      5ECB GR
-  0 _GrayGradiant                                                  6CBB GR
-  0 _GrayGradiant_end                                              6CEA GR
-  0 _GrayGradiant_start                                            6CBB GR
-  0 _InitializeMenu                                                4187 GR
-  0 _InitializeMenu_end                                            4319 GR
-  0 _InitializeMenu_start                                          4187 GR
-  0 _InitializePlayer                                              5C4D GR
-  0 _InitializePlayer_end                                          5D36 GR
-  0 _InitializePlayer_start                                        5C4D GR
+  0 _GetVectorLenght256                                            5EA8 GR
+  0 _GetVectorLenght256_end                                        5F29 GR
+  0 _GetVectorLenght256_start                                      5EA8 GR
+  0 _GrayGradiant                                                  6CAB GR
+  0 _GrayGradiant_end                                              6CDA GR
+  0 _GrayGradiant_start                                            6CAB GR
+  0 _InitializeMenu                                                414F GR
+  0 _InitializeMenu_end                                            42E1 GR
+  0 _InitializeMenu_start                                          414F GR
+  0 _InitializePlayer                                              5C2A GR
+  0 _InitializePlayer_end                                          5D13 GR
+  0 _InitializePlayer_start                                        5C2A GR
     _Joystick                                                      **** GX
     _Joytrig                                                       **** GX
-  0 _MainLoop                                                      3F03 GR
-  0 _MainLoop_end                                                  3F1C GR
-  0 _MainLoop_start                                                3F03 GR
+  0 _MainLoop                                                      3ECB GR
+  0 _MainLoop_end                                                  3EE4 GR
+  0 _MainLoop_start                                                3ECB GR
     _PrintSprite                                                   **** GX
     _RAMtoVRAM                                                     **** GX
     _ReadVRAM                                                      **** GX
-  0 _SelectPlayer                                                  6E6C GR
-  0 _SelectPlayer_end                                              6E7D GR
-  0 _SelectPlayer_start                                            6E6C GR
-  0 _SelectRule                                                    6E7D GR
-  0 _SelectRule_end                                                6E8E GR
-  0 _SelectRule_start                                              6E7D GR
+  0 _SelectPlayer                                                  6E5C GR
+  0 _SelectPlayer_end                                              6E6D GR
+  0 _SelectPlayer_start                                            6E5C GR
+  0 _SelectRule                                                    6E6D GR
+  0 _SelectRule_end                                                6E7E GR
+  0 _SelectRule_start                                              6E6D GR
     _SetFreq                                                       **** GX
     _SetPage8                                                      **** GX
     _SetScreen8                                                    **** GX
     _SetSpriteMode                                                 **** GX
     _SetSpriteUniColor                                             **** GX
-  0 _StartGame                                                     6E53 GR
-  0 _StartGame_end                                                 6E6C GR
-  0 _StartGame_start                                               6E53 GR
-  0 _StateBuildTrack                                               64B0 GR
-  0 _StateBuildTrack_end                                           68BE GR
-  0 _StateBuildTrack_start                                         64B0 GR
-  0 _StateInitialize                                               3F1C GR
-  0 _StateInitialize_end                                           4187 GR
-  0 _StateInitialize_start                                         3F1C GR
-  0 _StateMainMenu                                                 4485 GR
-  0 _StateMainMenu_end                                             473B GR
-  0 _StateMainMenu_start                                           4485 GR
-  0 _StateShadeTrack                                               68CA GR
-  0 _StateShadeTrack_end                                           6AB8 GR
-  0 _StateShadeTrack_start                                         68CA GR
-  0 _StateStartGame                                                473D GR
-  0 _StateStartGame_end                                            4B1E GR
-  0 _StateStartGame_start                                          473D GR
-  0 _StateTitle                                                    4319 GR
-  0 _StateTitle_end                                                4485 GR
-  0 _StateTitle_start                                              4319 GR
-  0 _StateUpdateGame                                               4B3A GR
-  0 _StateUpdateGame_end                                           5C4D GR
-  0 _StateUpdateGame_start                                         4B3A GR
+  0 _StartGame                                                     6E43 GR
+  0 _StartGame_end                                                 6E5C GR
+  0 _StartGame_start                                               6E43 GR
+  0 _StateBuildTrack                                               648D GR
+  0 _StateBuildTrack_end                                           68AE GR
+  0 _StateBuildTrack_start                                         648D GR
+  0 _StateInitialize                                               3EE4 GR
+  0 _StateInitialize_end                                           414F GR
+  0 _StateInitialize_start                                         3EE4 GR
+  0 _StateMainMenu                                                 444D GR
+  0 _StateMainMenu_end                                             4703 GR
+  0 _StateMainMenu_start                                           444D GR
+  0 _StateShadeTrack                                               68BA GR
+  0 _StateShadeTrack_end                                           6AA8 GR
+  0 _StateShadeTrack_start                                         68BA GR
+  0 _StateStartGame                                                4705 GR
+  0 _StateStartGame_end                                            4AE6 GR
+  0 _StateStartGame_start                                          4705 GR
+  0 _StateTitle                                                    42E1 GR
+  0 _StateTitle_end                                                444D GR
+  0 _StateTitle_start                                              42E1 GR
+  0 _StateUpdateGame                                               4B02 GR
+  0 _StateUpdateGame_end                                           5C2A GR
+  0 _StateUpdateGame_start                                         4B02 GR
     _VPDCommand32                                                  **** GX
     _VPDCommand36                                                  **** GX
     _VPDCommandLoop                                                **** GX
-  0 _VectorToAngle256                                              5E1A GR
-  0 _VectorToAngle256_end                                          5ECB GR
-  0 _VectorToAngle256_start                                        5E1A GR
+  0 _VectorToAngle256                                              5DF7 GR
+  0 _VectorToAngle256_end                                          5EA8 GR
+  0 _VectorToAngle256_start                                        5DF7 GR
     _WriteVRAM                                                     **** GX
     __mulint_rrx_s                                                 **** GX
-  0 __str_27                                                       473B R
-  0 __str_28                                                       4B1E R
-  0 __str_29                                                       4B28 R
-  0 __str_30                                                       68BE R
-  0 __str_31                                                       6AB8 R
-  0 _g_AnimIndex                                                   3E0E GR
+  0 __str_27                                                       4703 R
+  0 __str_28                                                       4AE6 R
+  0 __str_29                                                       4AF0 R
+  0 __str_30                                                       68AE R
+  0 __str_31                                                       6AA8 R
+  0 _g_AnimIndex                                                   3DD6 GR
   0 _g_BG                                                          3B54 GR
   0 _g_Car1                                                        001A GR
   0 _g_Car2                                                        090A GR
@@ -107,65 +107,65 @@ Symbol Table
   0 _g_Cars                                                        3B3B GR
   0 _g_CharTable                                                   2442 GR
   0 _g_Cosinus64                                                   35FA R
-  0 _g_DefaultColor                                                3E06 GR
-  0 _g_HeightTab                                                   3DF1 GR
-  0 _g_MenuMain                                                    3D56 GR
-  0 _g_MenuMode                                                    3D6E GR
-  0 _g_MenuPlayer                                                  3D9E GR
-  0 _g_MenuTrack                                                   3D8C GR
-  0 _g_MenuTrackList                                               3DB6 GR
-  0 _g_Menus                                                       3DCE GR
+  0 _g_DefaultColor                                                3DCE GR
+  0 _g_HeightTab                                                   3DB9 GR
+  0 _g_MenuMain                                                    3D1E GR
+  0 _g_MenuMode                                                    3D36 GR
+  0 _g_MenuPlayer                                                  3D66 GR
+  0 _g_MenuTrack                                                   3D54 GR
+  0 _g_MenuTrackList                                               3D7E GR
+  0 _g_Menus                                                       3D96 GR
   0 _g_Pilots                                                      30FA GR
   0 _g_Rotation16                                                  367A R
   0 _g_Shadow                                                      23DA GR
   0 _g_Sinus64                                                     357A R
-  0 _g_SmokeFrq                                                    3E12 GR
+  0 _g_SmokeFrq                                                    3DDA GR
   0 _g_SquareRoot256                                               3A3B R
   0 _g_Title                                                       2E42 GR
   0 _g_TrackTiles                                                  2642 GR
   0 _g_TrackTiles01                                                3BA9 GR
-  0 _g_TrackTiles02                                                3C27 GR
-  0 _g_TrackTiles03                                                3CA5 GR
-  0 _g_Tracks                                                      3D23 GR
+  0 _g_TrackTiles02                                                3C0F GR
+  0 _g_TrackTiles03                                                3C7A GR
+  0 _g_Tracks                                                      3CEB GR
     _g_slotPort                                                 =  00A8 
     _game                                                       =  C000 G
   0 _main                                                          0000 GR
   0 _main_end                                                      001A GR
   0 _main_start                                                    0000 GR
-  0 _str_0                                                         3E1A R
-  0 _str_1                                                         3E1F R
-  0 _str_10                                                        3E57 R
-  0 _str_11                                                        3E5E R
-  0 _str_12                                                        3E63 R
-  0 _str_13                                                        3E6C R
-  0 _str_14                                                        3E76 R
-  0 _str_15                                                        3E80 R
-  0 _str_16                                                        3E8A R
-  0 _str_17                                                        3E94 R
-  0 _str_18                                                        3E95 R
-  0 _str_19                                                        3EA1 R
-  0 _str_2                                                         3E24 R
-  0 _str_20                                                        3EAB R
-  0 _str_21                                                        3EB7 R
-  0 _str_22                                                        3EC4 R
-  0 _str_23                                                        3ED0 R
-  0 _str_24                                                        3EDE R
-  0 _str_25                                                        3EEA R
-  0 _str_26                                                        3EF7 R
-  0 _str_3                                                         3E29 R
-  0 _str_4                                                         3E2E R
-  0 _str_5                                                         3E35 R
-  0 _str_6                                                         3E3D R
-  0 _str_7                                                         3E45 R
-  0 _str_8                                                         3E4A R
-  0 _str_9                                                         3E53 R
+  0 _str_0                                                         3DE2 R
+  0 _str_1                                                         3DE7 R
+  0 _str_10                                                        3E1F R
+  0 _str_11                                                        3E26 R
+  0 _str_12                                                        3E2B R
+  0 _str_13                                                        3E34 R
+  0 _str_14                                                        3E3E R
+  0 _str_15                                                        3E48 R
+  0 _str_16                                                        3E52 R
+  0 _str_17                                                        3E5C R
+  0 _str_18                                                        3E5D R
+  0 _str_19                                                        3E69 R
+  0 _str_2                                                         3DEC R
+  0 _str_20                                                        3E73 R
+  0 _str_21                                                        3E7F R
+  0 _str_22                                                        3E8C R
+  0 _str_23                                                        3E98 R
+  0 _str_24                                                        3EA6 R
+  0 _str_25                                                        3EB2 R
+  0 _str_26                                                        3EBF R
+  0 _str_3                                                         3DF1 R
+  0 _str_4                                                         3DF6 R
+  0 _str_5                                                         3DFD R
+  0 _str_6                                                         3E05 R
+  0 _str_7                                                         3E0D R
+  0 _str_8                                                         3E12 R
+  0 _str_9                                                         3E1B R
     _waitRetrace                                                   **** GX
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods + Flat24  (Zilog Z80 / Hitachi HD64180), page 2.
 
 Area Table
 
-   0 _CODE                                      size 6E8E   flags 0
+   0 _CODE                                      size 6E7E   flags 0
    1 _DATA                                      size    0   flags 0
    2 _OVERLAY                                   size    0   flags 0
    3 _HOME                                      size    0   flags 0
