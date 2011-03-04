@@ -24,11 +24,11 @@
 
 //----------------------------------------
 // D E F I N E S
-#define CAR_NUM			4
+#define CAR_NUM				4
 
-#define CAR_TURN_RIGHT  0x01
-#define CAR_TURN_LEFT   0x02
-#define CAR_MOVE		0x04
+#define CAR_TURN_RIGHT  	0x01
+#define CAR_TURN_LEFT   	0x02
+#define CAR_MOVE			0x04
 
 #define COLOR_KHAKI			RGB8(5,6,0)
 #define COLOR_DARKKAKHI		RGB8(3,4,0)
@@ -61,21 +61,23 @@
 #define COLOR_RED			RGB8(7,1,0)
 #define COLOR_DARKRED		RGB8(5,1,0)
 #define COLOR_BLACK			RGB8(0,0,0)
+#define COLOR_LIME			RGB8(6,7,0)
+#define COLOR_DARKLIME		RGB8(4,5,0)
 
-#define BLOCK_SHADOW	3
-#define ROAD_SHADOW		4
-#define SHADOW_POWER	2
+#define BLOCK_SHADOW		3
+#define ROAD_SHADOW			4
+#define SHADOW_POWER		2
 
 // Menu layout
-#define TITLE_X			16
-#define TITLE_Y			32
-#define MENU_X			84
-#define MENU_Y			100
-#define LINE_SPACE		10
-#define TITLE_SPACE		16
+#define TITLE_X				16
+#define TITLE_Y				32
+#define MENU_X				84
+#define MENU_Y				100
+#define LINE_SPACE			10
+#define TITLE_SPACE			16
 
-#define ITEM_INVALID	(0x80 + 0)
-#define ITEM_ACTION		(0x80 + 1)
+#define ITEM_INVALID		(0x80 + 0)
+#define ITEM_ACTION			(0x80 + 1)
 
 // Color operator
 enum
@@ -85,22 +87,23 @@ enum
 		OP_WALL = 0,
 		OP_BLADE,
 		OP_BUMPER,
+		OP_3____,
 	// Special
 	OP_SPECIAL = 4,
 		OP_SPEEDER = 4,
 		OP_JUMPER,
 		OP_MAGMA,
-		OP_SEA,
+		OP_HEALTH,
 		OP_HOLE,
 	// Roads
-	OP_ROAD = 10,
-		OP_ASPHALT = 10,
+	OP_ROAD = 9,
+		OP_ASPHALT = 9,
 		OP_MUD,
 		OP_SAND,
 		OP_GRASS,
 		OP_SNOW,
 		OP_ICE,
-		OP_WATER,
+		OP_WATER, // 15
 };
 
 // 
@@ -325,25 +328,23 @@ const Background g_BG[] =
 	{ 2, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
 	// 6. OP_MAGMA
 	{ 0, 4, 8, COLOR_RED, COLOR_DARKRED },
-	// 7. OP_SEA
-	{ 0, 0, 0, COLOR_NAVYBLUE, COLOR_DARKNAVYBLUE },
+	// 7. OP_HEALTH
+	{ 0, 0, 0, COLOR_LIME, COLOR_DARKLIME },
 	// 8. OP_HOLE
 	{ 0, 0, 0, COLOR_BLACK, COLOR_BLACK },
-	// 9. 
-	{ 0, 0, 0, 0, 0 },
-	// 10. OP_ASPHALT
+	// 9. OP_ASPHALT
 	{ 2, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
-	// 11. OP_MUD
+	// 10. OP_MUD
 	{ 1, 8, 4, COLOR_BROWN, COLOR_DARKBROWN },
-	// 12. OP_SAND
+	// 11. OP_SAND
 	{ 0, 8, 4, COLOR_YELLOW, COLOR_DARKYELLOW },
-	// 13. OP_GRASS
+	// 12. OP_GRASS
 	{ 1, 4, 4, COLOR_GREEN, COLOR_DARKGREEN },
-	// 14. OP_SNOW
+	// 13. OP_SNOW
 	{ 0, 8, 8, COLOR_WHITE, COLOR_LIGHTGRAY },
-	// 15. OP_ICE
+	// 14. OP_ICE
 	{ 2, 2, 0, COLOR_CYAN, COLOR_LIGHTBLUE },
-	// 16. OP_WATER
+	// 15. OP_WATER
 	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
 		
@@ -659,8 +660,6 @@ void StateInitialize()
 	game.colorCode[COLOR_LIGHTBLUE]    = OP_ICE;
 	game.colorCode[COLOR_BLUE]         = OP_WATER;
 	game.colorCode[COLOR_DARKBLUE]     = OP_WATER;
-	game.colorCode[COLOR_NAVYBLUE]     = OP_SEA;
-	game.colorCode[COLOR_DARKNAVYBLUE] = OP_SEA;
 	game.colorCode[COLOR_MAUVE]        = OP_SPEEDER;
 	game.colorCode[COLOR_DARKMAUVE]    = OP_SPEEDER;
 	game.colorCode[COLOR_ORANGE]       = OP_JUMPER;
@@ -668,6 +667,10 @@ void StateInitialize()
 	game.colorCode[COLOR_RED]          = OP_MAGMA;
 	game.colorCode[COLOR_DARKRED]      = OP_MAGMA;
 	game.colorCode[COLOR_BLACK]        = OP_HOLE;
+	game.colorCode[COLOR_NAVYBLUE]     = OP_HOLE;
+	game.colorCode[COLOR_DARKNAVYBLUE] = OP_HOLE;
+	game.colorCode[COLOR_LIME]         = OP_HEALTH;
+	game.colorCode[COLOR_DARKLIME]     = OP_HEALTH;
 
 	// Initialize (ASCII table) sprites
 	for(x=0; x<sizeof(g_CharTable) / 8; x++)
@@ -930,8 +933,15 @@ void StateUpdateGame()
 				curPly->nextY = curPly->validY;
 				curPly->velX = 0;
 				curPly->velY = 0;
-				//curPly->life = 0;
+				curPly->life = 0;
 				break;
+			}
+			if(op == OP_HEALTH)
+			{
+				if(curPly->life < 255 - 5)
+					curPly->life += 5;
+				else
+					curPly->life = 255;
 			}
 
 			// Friction: Slow down the speed
@@ -1292,7 +1302,7 @@ void CarToWallCollision(Player* ply)
 		op = game.colorCode[ground];
 		if(op == OP_WALL)
 		{
-			ply->velX = Abs16(ply->velX) >> 1;
+			ply->velX = Abs16(ply->velX) /*>> 1*/;
 			ply->velY >>= 1;
 			if(ply->flag & CAR_MOVE)
 				DamageCar(ply, 5);
@@ -1304,7 +1314,7 @@ void CarToWallCollision(Player* ply)
 		op = game.colorCode[ground];
 		if(op == OP_WALL)
 		{
-			ply->velX = -(Abs16(ply->velX) >> 1);
+			ply->velX = -(Abs16(ply->velX) /*>> 1*/);
 			ply->velY >>= 1;
 			if(ply->flag & CAR_MOVE)
 				DamageCar(ply, 5);
@@ -1318,7 +1328,7 @@ void CarToWallCollision(Player* ply)
 		if(op == OP_WALL)
 		{
 			ply->velX >>= 1;
-			ply->velY = -(Abs16(ply->velY) >> 1);
+			ply->velY = -(Abs16(ply->velY) /*>> 1*/);
 			if(ply->flag & CAR_MOVE)
 				DamageCar(ply, 5);
 		}
@@ -1330,7 +1340,7 @@ void CarToWallCollision(Player* ply)
 		if(op == OP_WALL)
 		{
 			ply->velX >>= 1;
-			ply->velY = Abs16(ply->velY) >> 1;
+			ply->velY = Abs16(ply->velY) /*>> 1*/;
 			if(ply->flag & CAR_MOVE)
 				DamageCar(ply, 5);
 		}
