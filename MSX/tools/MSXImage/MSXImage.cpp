@@ -78,7 +78,7 @@ bool SaveImage(FIBITMAP* dib, const char* lpszPathName)
 //-----------------------------------------------------------------------------
 
 /***/
-void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 numX, i32 numY, i32 colorNum, u32 transColor, const char* name)
+void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 numX, i32 numY, i32 colorNum, u32 transColor, const char* name, bool crop)
 {
 	FIBITMAP *dib, *dib32;
 	i32 i, j, nx, ny, bit;
@@ -242,6 +242,7 @@ int main(int argc, const char* argv[])
 
 	const char *inFile = NULL, *outFile = NULL, *name = NULL;
 	i32 i, colorNum = 256, posX = 0, posY = 0, sizeX = 0, sizeY = 0, numX = 1, numY = 1, transColor = 0;
+	bool crop = false;
 
 	if(argc == 1)
 	{
@@ -256,6 +257,7 @@ int main(int argc, const char* argv[])
 		printf("   -color <n>       Number of color (now support 256 and 2)\n");
 		printf("   -trans <col>     Transparency color (in RGB 24 bits format)\n");
 		printf("   -name  <name>    Name of the structure to export\n");
+		printf("   -crop			Crop image to only the necessary erea (only supported on 8bits output)\n");
 	}
 
 	for(i=1; i<argc; i++)
@@ -295,6 +297,10 @@ int main(int argc, const char* argv[])
 		{
 			name = argv[++i];
 		}
+		else if(_stricmp(argv[i], "-crop") == 0)
+		{
+			crop = true;
+		}
 	}
 
 	// Create palette
@@ -312,7 +318,7 @@ int main(int argc, const char* argv[])
 	{
 		if(strstr(outFile, ".h") ||strstr(outFile, ".H"))
 		{
-			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum, transColor, name);
+			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum, transColor, name, crop);
 		}
 		else
 		{
