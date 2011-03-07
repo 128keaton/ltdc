@@ -4,25 +4,6 @@
 #include "video.h"
 
 //----------------------------------------
-// M A C R O S
-
-#define PosToPxl(a) ((a) >> 8)
-#define PosXToSprt(a) (PosToPxl(a) - 6)
-#define PosYToSprt(a) (PosToPxl(a) - 5)
-
-#define HMMC(dx, dy, nx, ny, ram)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMC;                                  VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-#define LMMC(dx, dy, nx, ny, ram, op)    game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_LMMC + op;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-#define HMMM(sx, sy, dx, dy, nx, ny)     game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&game.vdp32);
-#define LMMM(sx, sy, dx, dy, nx, ny, op) game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&game.vdp32);
-#define HMMV(dx, dy, nx, ny, col)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMV;                                            VPDCommand36((u16)&game.vdp36);
-
-#define Abs8(i)  (((u8)(i) & 0x80) ? ~((u8)(i) - 1) : (i))
-#define Abs16(i) (((u16)(i) & 0x8000) ? ~((u16)(i) - 1) : (i))
-
-#define RGB8(r,g,b) (((g) << 5) + ((r) << 2) + (b))
-#define Modulo2(a,b) ((a) & ((b) - 1))
-
-//----------------------------------------
 // D E F I N E S
 #define CAR_NUM				4
 
@@ -273,6 +254,32 @@ void StartGame(i8 value);
 void SelectPlayer(i8 value);
 void SelectRule(i8 value);
 
+
+//----------------------------------------
+// M A C R O S
+
+#define PosToPxl(a) ((a) >> 8)
+#define PosXToSprt(a) (PosToPxl(a) - 6)
+#define PosYToSprt(a) (PosToPxl(a) - 5)
+
+#define HMMC(dx, dy, nx, ny, ram)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMC;                                  VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+#define LMMC(dx, dy, nx, ny, ram, op)    game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_LMMC + op;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
+#define HMMM(sx, sy, dx, dy, nx, ny)     game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&game.vdp32);
+#define LMMM(sx, sy, dx, dy, nx, ny, op) game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&game.vdp32);
+#define HMMV(dx, dy, nx, ny, col)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMV;                                            VPDCommand36((u16)&game.vdp36);
+
+#define Abs8(i)  (((u8)(i) & 0x80) ? ~((u8)(i) - 1) : (i))
+#define Abs16(i) (((u16)(i) & 0x8000) ? ~((u16)(i) - 1) : (i))
+
+#define RGB8(r,g,b) (((g) << 5) + ((r) << 2) + (b))
+#define Modulo2(a,b) ((a) & ((b) - 1))
+
+#define Merge4(a,b) (((a) & 0xF) << 4 | ((b) & 0xF))
+
+#define TILE0(col0) Merge4(0, col0)
+#define TILE1(col0, flag1, tile1, col1) Merge4(1, col0), Merge4(flag1, tile1), Merge4(col1, 0xFF)
+#define TILE2(col0, flag1, tile1, col1, flag2, tile2, col2) Merge4(1, col0), Merge4(flag1, tile1), Merge4(col1, flag2), Merge4(tile2, col2)
+
 //----------------------------------------
 // R O M   D A T A
 
@@ -348,6 +355,17 @@ const Background g_BG[] =
 	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
 		
+const u8 testTrack[] = 
+{
+	TILE1(OP_ASPHALT, ROT_0, 2, OP_WALL),
+	TILE0(OP_ASPHALT),
+	TILE0(OP_ASPHALT),
+	TILE1(OP_ASPHALT, ROT_0, 2, OP_WALL),
+	TILE1(OP_ASPHALT, ROT_90, 2, OP_WALL),
+	TILE0(OP_ASPHALT),
+	TILE1(OP_ASPHALT, ROT_90, 2, OP_WALL),
+};
+
 const u8 g_TrackTiles01[] = 
 {
 	// line 0
