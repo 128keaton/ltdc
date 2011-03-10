@@ -230,6 +230,7 @@ i8 AngleDifferent64(i8 angleA, i8 angleB);
 u8 VectorToAngle256(i16 x, i16 y);
 //u16 GetVectorLenght1024(i16 x, i16 y);
 u16 GetVectorLenght256(i16 x, i16 y);
+void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr);
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -842,18 +843,13 @@ void StateStartGame()
 	//----------------------------------------
 	// Copy cars to VRAM
 	PrintSprite(64, 64, "INIT\nCARS", (u16)&g_DefaultColor);
-	for(i=0; i<16; i++)
-	{
-		RAMtoVRAM(i * 13, 256 + 212 + 0,  13, 11, (u16)&g_Car1[13 * 11 * i]);
-		RAMtoVRAM(i * 13, 256 + 212 + 11, 13, 11, (u16)&g_Car2[13 * 11 * i]);
-		RAMtoVRAM(i * 13, 256 + 212 + 22, 13, 11, (u16)&g_Car3[13 * 11 * i]);
-		RAMtoVRAM(i * 13, 256 + 212 + 33, 13, 11, (u16)&g_Car4[13 * 11 * i]);
-	}
+
+	CopyCropped16(0, 256 + 212 + 0,  13, 11, 16, 0, (u16)&g_Car1);
+	CopyCropped16(0, 256 + 212 + 11, 13, 11, 16, 0, (u16)&g_Car2);
+	CopyCropped16(0, 256 + 212 + 22, 13, 11, 16, 0, (u16)&g_Car3);
+	CopyCropped16(0, 256 + 212 + 33, 13, 11, 16, 0, (u16)&g_Car4);
 	RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
-	for(i = 0; i < 8 * 3; i++)
-	{
-		RAMtoVRAM(208 + Modulo2(i, 8) * 6, 476 + 8 * (i / 8), 6, 8, (u16)&g_Pilots[6 * 8 * i]);
-	}
+	CopyCropped16(208, 476, 6, 8, 8 * 3, 1, (u16)&g_Pilots);
 
 	//----------------------------------------
 	// Initialize background backup
@@ -1536,6 +1532,28 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 //	SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
 //	SetSpriteUniColor(6, 0, 216, 0, 0);
 //}
+
+void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr)
+{
+	u8 i;
+	u8 oX, oY; // offset
+	u8 dX, dY; // bound
+	for(i=0; i<num; i++)
+	{
+		oY = ((u8*)addr)[0];
+		oX = oY >> 4;
+		oY &= 0x0F;
+		dY = ((u8*)addr)[1];
+		dX = dY >> 4;
+		dY &= 0x0F;
+		addr += 2;
+		if(mod8 == 0)
+			RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY, dX, dY, addr);
+		else
+			RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY, dX, dY, addr);
+		addr += dX * dY;
+	}
+}
 
 //----------------------------------------
 // MENU CALLBACKS
