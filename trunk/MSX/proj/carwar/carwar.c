@@ -101,9 +101,14 @@ enum
 #define ROT_90	0x10	// 90°
 #define ROT_180	0x20	// 180°
 #define ROT_270	0x30	// 270°
-#define SYM_H	0x40	// Horizontal symmetry
-#define SYM_V	0x50	// Vertical symmetry
+//#define SYM_H	0x40	// Horizontal symmetry
+//#define SYM_V	0x50	// Vertical symmetry
 #define MARKER	0x80	// Ground marker include
+
+#define SYM_H	0x01	// Horizontal symmetry
+#define SYM_V	0x02	// Vertical symmetry
+#define SYM_D	0x04	// Diagonal symmetry
+#define BANK_2	0x08	// second tile bank
 
 //----------------------------------------
 // T Y P E S
@@ -236,6 +241,10 @@ void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
 
 //void DebugPrintInt(i16 i, u8 x, u8 y);
+void UpackTiles();
+void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0);
+void BuildTrack();
+void ShadeTrack();
 
 // Color process
 u8 DarkenColor(u8 color, u8 power);
@@ -245,8 +254,6 @@ u8 GrayGradiant(u8 index);
 void StateInitialize();
 void StateTitle();
 void StateMainMenu();
-void StateBuildTrack();
-void StateShadeTrack();
 void StateStartGame();
 void StateUpdateGame();
 
@@ -277,9 +284,24 @@ void SelectRule(i8 value);
 
 #define Merge4(a,b) (((a) & 0xF) << 4 | ((b) & 0xF))
 
-#define TILE0(col0) Merge4(0, col0)
-#define TILE1(col0, flag1, tile1, col1) Merge4(1, col0), Merge4(flag1, tile1), Merge4(col1, 0xFF)
-#define TILE2(col0, flag1, tile1, col1, flag2, tile2, col2) Merge4(1, col0), Merge4(flag1, tile1), Merge4(col1, flag2), Merge4(tile2, col2)
+#define TILE0(col0)\
+	Merge4(0, col0),
+#define TILE1(col0, flag1, tile1, col1)\
+	Merge4(1, col0),\
+	Merge4((tile1 & 0xF0) ? flag1 + BANK_2 : flag1, tile1),\
+	Merge4(col1, 0xF),
+#define TILE2(col0, flag1, tile1, col1, flag2, tile2, col2)\
+	Merge4(2, col0),\
+	Merge4((tile1 & 0xF0) ? flag1 + BANK_2 : flag1, tile1),\
+	Merge4(col1, (tile2 & 0xF0) ? flag2 + BANK_2 : flag2),\
+	Merge4(tile2, col2),
+#define TILE3(col0, flag1, tile1, col1, flag2, tile2, col2, flag3, tile3, col3)\
+	Merge4(3, col0),\
+	Merge4((tile1 & 0xF0) ? flag1 + BANK_2 : flag1, tile1),\
+	Merge4(col1, (tile2 & 0xF0) ? flag2 + BANK_2 : flag2),\
+	Merge4(tile2, col2),\
+	Merge4((tile3 & 0xF0) ? flag3 + BANK_2 : flag3, tile3),\
+	Merge4(col3, 0xF),
 
 //----------------------------------------
 // R O M   D A T A
@@ -358,13 +380,54 @@ const Background g_BG[] =
 		
 const u8 testTrack[] = 
 {
-	TILE1(OP_ASPHALT, ROT_0, 2, OP_WALL),
-	TILE0(OP_ASPHALT),
-	TILE0(OP_ASPHALT),
-	TILE1(OP_ASPHALT, ROT_0, 2, OP_WALL),
-	TILE1(OP_ASPHALT, ROT_90, 2, OP_WALL),
-	TILE0(OP_ASPHALT),
-	TILE1(OP_ASPHALT, ROT_90, 2, OP_WALL),
+	// line 0
+	TILE1(OP_ASPHALT, 0, 1, OP_SAND)
+	TILE0(OP_ASPHALT)
+	TILE0(OP_ASPHALT)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_D, 16, OP_ASPHALT)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	// line 1
+	TILE1(OP_ASPHALT, SYM_H, 1, OP_SAND)
+	TILE1(OP_ASPHALT, SYM_D, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V, 10, OP_WALL)
+	TILE0(OP_WALL)
+	TILE1(OP_ASPHALT, 0, 10, OP_WALL)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_H+SYM_V, 1, OP_WALL)
+	// line 2
+	TILE0(OP_WATER)
+	TILE0(OP_WATER)
+	TILE0(OP_WATER)
+	TILE1(OP_WATER, SYM_V, 1, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE2(OP_SAND, 0, 24, OP_ASPHALT, SYM_D, 8, OP_WALL)
+	TILE1(OP_SAND, SYM_D, 8, OP_WALL)
+	// line 3
+	TILE1(OP_SAND, SYM_H, 15, OP_WALL)
+	TILE1(OP_SAND, 0, 27, OP_JUMPER)
+	TILE2(OP_SAND, SYM_V, 1, OP_WATER, SYM_H, 15, OP_WALL)
+	TILE0(OP_WATER)
+	TILE0(OP_WALL)
+	TILE1(OP_SAND, SYM_D, 8, OP_WALL)
+	TILE1(OP_SAND, SYM_H, 15, OP_WALL)
+	// line 4
+	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
+	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
+	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
+	TILE0(OP_WATER)
+	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
+	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
+	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
+	// line 5
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
+	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
 };
 
 const u8 g_TrackTiles01[] = 
@@ -525,9 +588,9 @@ const u8 g_TrackTiles03[] =
 
 const Track g_Tracks[] = 
 {
-	{ "AOI1", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "NOE1", 7, 6, g_TrackTiles02, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "NOE2", 7, 6, g_TrackTiles03, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "AOI1", 7, 6, testTrack/*g_TrackTiles01*/, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
+	{ "NOE1", 7, 6, testTrack/*g_TrackTiles02*/, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE2", 7, 6, testTrack/*g_TrackTiles03*/, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
 //----------------------------------------
@@ -587,7 +650,7 @@ const Menu g_Menus[] =
 
 const u8 g_HeightTab[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
 
-const u8 g_DefaultColor[] = { 0x01, 0x01, 0x09, 0x0d, 0x0d, 0x09, 0x01, 0x01 };
+const u8 g_DefaultColor[] = { 0x02, 0x0A, 0x0A, 0x0E, 0x0E, 0x0A, 0x0A, 0x02 };
 
 const u8 g_AnimIndex[] = { 0, 1, 0, 2 };
 
@@ -715,8 +778,8 @@ void StateInitialize()
 	
 	game.track = 0;
 	game.page = 0;
-	game.state = StateTitle;
-	//game.state = StateStartGame;
+	//game.state = StateTitle;
+	game.state = StateStartGame;
 }
 
 /** Initialize a given menu */
@@ -744,9 +807,11 @@ void InitializeMenu(u8 menu)
 void StateTitle()
 {
 	u8 i, j, byte;
-	// Hide working screen
-	game.page = 1;
-	SetPage8(game.page);
+	// Hide working screen (0)
+	SetPage8(1);
+	FillVRAM(0,   0, 256, 212, 0);
+	FillVRAM(0, 256, 256, 212, 0);
+
 	// Build title
 	for(j=0; j<24; j++)
 	{
@@ -818,25 +883,14 @@ void StateMainMenu()
 void StateStartGame()
 {
 	u8 i;
-	const u8 colors[] = { 
-		COLOR_GRAY, COLOR_GRAY, 
-		COLOR_GRAY, COLOR_GRAY,
-		COLOR_GRAY, COLOR_BROWN, 
-		COLOR_YELLOW, COLOR_GREEN, 
-		COLOR_WHITE, COLOR_CYAN, 
-		COLOR_BLUE, COLOR_NAVYBLUE, 
-		COLOR_MAUVE, COLOR_ORANGE, 
-		COLOR_RED, COLOR_BLACK };
-
 	game.page = 0;
 	SetPage8(game.page);
 
 	//----------------------------------------
 	// Build background
-	StateBuildTrack();
-	//StateShadeTrack();
-	//for(i=0; i<16; i++)
-	//	FillVRAM(256 >> 2 * (i & 0xFFFC), 212 >> 2 * (i >> 2), 256 >> 2, 212 >> 2, colors[i]);
+	UpackTiles();
+	BuildTrack();
+	//ShadeTrack();
 
 	HMMM(0, 0, 0, 256, 256, 212);
 
@@ -1144,6 +1198,8 @@ void StateUpdateGame()
 	keyLine = GetKeyMatrixLine(7);
 	if((keyLine & KEY_F5) == 0)
 		game.state = StateStartGame;
+	if((keyLine & KEY_ESC) == 0)
+		game.state = StateTitle;
 
 	waitRetrace();
 	game.frame++;
@@ -1363,48 +1419,20 @@ void CarToWallCollision(Player* ply)
 
 
 /***/
-void StateBuildTrack()
+void UpackTiles()
 {
-	u8 i, j, byte, tile, color0, color1;
-	u16 x, y, lx, ly;
-	const u8* block;
-
-	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
-
-	FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
-	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
-	block = g_Tracks[game.track].tiles;
-	for(j=0; j<6; j++)
+	u8 i, j, x, y;
+	PrintSprite(64, 64, "UNPACK\nTILES", (u16)&g_DefaultColor);
+	for(j=0; j<4; j++)
 	{
-		for(i=0; i<7; i++)
+		for(i=0; i<8; i++)
 		{
-			tile = *block++;
-			color1 = *block++;
-			if((tile & 0x0F) == 0) // Plein block
+			for(y=0; y<32; y++)
 			{
-				FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, color1);
-			}
-			else
-			{
-				color0 = *block++;
-				for(x=0; x<32; x++)
+				for(x=0; x<32/8; x++)
 				{
-					for(y=0; y<32; y++)
-					{
-						if((tile & 0xF0) == ROT_0)        { lx = x;      ly = y; }
-						else if((tile & 0xF0) == ROT_90)  { lx = y;      ly = 31 - x; }
-						else if((tile & 0xF0) == ROT_180) { lx = 31 - x; ly = 31 - y; }
-						else if((tile & 0xF0) == ROT_270) { lx = 31 - y; ly = x; }
-						else if((tile & 0xF0) == SYM_H)   { lx = x;      ly = 31 - y; }
-						else /* SYM_V */                         { lx = 31 - x; ly = y; }
-						byte = g_TrackTiles[((tile & 0x0F) << 7) + (lx >> 3) + (ly << 2)];
-						if(byte & (1 << (7 - (lx & 0x07))))
-							game.blockGen[x + (y << 5)] = color1;
-						else
-							game.blockGen[x + (y << 5)] = color0;
-					}
+					HMMC(i * 32 + x * 8, 256 + j * 32 + y, 8, 1, (u16)&game.bitToByte[g_TrackTiles[(i + j * 8) * 32 * 4 + y * 4 + x] * 8]);
 				}
-				HMMC(g_Tracks[game.track].offset.x + (i << 5), g_Tracks[game.track].offset.y + (j << 5), 32, 32, (u16)&game.blockGen);
 			}
 		}
 	}
@@ -1412,7 +1440,95 @@ void StateBuildTrack()
 }
 
 /***/
-void StateShadeTrack()
+void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0)
+{
+	u8 byte, color;
+	u16 x, y, lx, ly;
+
+	if(flag & BANK_2)
+		tile += 16;
+
+	if((op0 == OP_WATER) && (op == OP_HOLE))
+		color = COLOR_NAVYBLUE;
+	else if((op0 == OP_ASPHALT) && (op == OP_ASPHALT))
+		color = COLOR_SAND;	
+	else
+		color = g_BG[op].ColorLight;
+
+	for(x=0; x<32; x++)
+	{
+		for(y=0; y<32; y++)
+		{
+			if(flag & SYM_D) { lx = y; ly = x; }
+			else             { lx = x;	ly = y; }
+			if(flag & SYM_H) { ly = 31 - ly; }
+			if(flag & SYM_V) { lx = 31 - lx; }
+			byte = g_TrackTiles[(tile << 7) + (lx >> 3) + (ly << 2)];
+			if(byte & (1 << (7 - (lx & 0x07))))
+				WriteVRAM(0, (px + x) + 256 * (py + y), color);
+		}
+	}
+}
+
+/***/
+void BuildTrack()
+{
+	u8 i, j;
+	u8 set0, op0;
+	u8 flag1, tile1, op1;
+	u8 flag2, tile2, op2;
+	const u8* block;
+
+	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
+
+	FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
+	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
+
+	block = g_Tracks[game.track].tiles;
+	for(j=0; j<6; j++)
+	{
+		for(i=0; i<7; i++)
+		{
+			set0 = *block++;
+			op0 = set0 & 0x0F;
+			set0 >>= 4;
+			
+			FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, g_BG[op0].ColorLight);
+			
+			if(set0 >= 1) // first tile
+			{
+				flag1 = *block++;
+				tile1 = flag1 & 0x0F;
+				flag1 >>= 4;
+
+				flag2 = *block++; 
+				op1 = flag2 >> 4;
+
+				BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag1, tile1, op1, op0);
+
+				if(set0 >= 2) // second tile
+				{
+					flag2 &= 0x0F;
+
+					tile2 = *block++;
+					op2 = tile2 & 0x0F;
+					tile2 >>= 4;
+
+					BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag2, tile2, op2, op0);
+
+					if(set0 >= 3) // third tile
+					{
+					}
+				}
+			}
+		}
+	}
+
+	ClearSprite();
+}
+
+/***/
+void ShadeTrack()
 {
 	u8 cur, next;
 	u16 x, y, i;
