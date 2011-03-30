@@ -34,3 +34,17 @@ u8 GetKeyMatrixLine(u8 n)
 		ld		l,a
 	__endasm;
 }
+
+// Hook
+void SetHook(u16 hook, u16 function)
+{
+	if(function == 0)
+	{
+		*((u8*)hook) = 0xC9;
+	}
+	else
+	{
+		*((u8*)hook) = 0xC3;
+		*((u16*)hook) = function;
+	}
+}
