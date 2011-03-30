@@ -3,7 +3,7 @@
 #include "bios.h"
 #include "video.h"
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // D E F I N E S
 #define CAR_NUM				4
 
@@ -110,7 +110,7 @@ enum
 #define SYM_D	0x04	// Diagonal symmetry
 #define BANK_2	0x08	// second tile bank
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // T Y P E S
 
 typedef struct tagVectorU8
@@ -218,9 +218,10 @@ typedef struct tagGameData
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
 	u8               blockGen[32*32];
+	u8               timer[5];
 } GameData;
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // P R O T O T Y P E S
 
 void MainLoop();
@@ -236,6 +237,7 @@ u8 VectorToAngle256(i16 x, i16 y);
 //u16 GetVectorLenght1024(i16 x, i16 y);
 u16 GetVectorLenght256(i16 x, i16 y);
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr);
+void VBlankInterrupt();
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -263,7 +265,7 @@ void SelectPlayer(i8 value);
 void SelectRule(i8 value);
 
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // M A C R O S
 
 #define PosToPxl(a) ((a) >> 8)
@@ -303,7 +305,7 @@ void SelectRule(i8 value);
 	Merge4((tile3 & 0xF0) ? flag3 + BANK_2 : flag3, tile3),\
 	Merge4(col3, 0xF),
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // R O M   D A T A
 
 // Sprites
@@ -325,7 +327,7 @@ void SelectRule(i8 value);
 #include "rot256.inc"
 #include "sqrt256.inc"
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 /** rotSpeed, maxSpeed (63), accel */
 const Car g_Cars[5] = 
 {
@@ -593,7 +595,7 @@ const Track g_Tracks[] =
 	{ "NOE2", 7, 6, testTrack/*g_TrackTiles03*/, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // Menu 0
 const MenuEntry g_MenuMain[] =
 {
@@ -658,19 +660,19 @@ const u8 g_AnimIndex[] = { 0, 1, 0, 2 };
 //                        000 001 010 011 100 101 110 111
 const u8 g_SmokeFrq[] = { 4,  4,  8,  16, 32, 64, 128, 255 };
  
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // R A M   D A T A
 
 // Game data
 GameData __at(0xC000) game;
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 // P R O G R A M
 
 ///
 __sfr __at(0xA8) g_slotPort;
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 /** Program entry point */
 void main(void)
 {
@@ -685,7 +687,7 @@ void main(void)
 	MainLoop();
 }
 
-//----------------------------------------
+//-----------------------------------------------------------------------------
 /** Main loop */
 void MainLoop()
 {
@@ -708,9 +710,13 @@ void StateInitialize()
 	game.vdp32.ARG = 0; 
 
 	// Init
-	SetFreq(FREQ_60);
+	SetFreq(FREQ_50);
 	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
+
+	for(i=0; i<5; i++)
+		game.timer[i]= 0;
+	SetHook(H_TIMI, (u16)VBlankInterrupt);
 
 	// Clear all VRAM
 	FillVRAM(0, 0,   256, 256, 0);
@@ -878,6 +884,13 @@ void StateMainMenu()
 	DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
 	waitRetrace();
 }
+
+
+//=============================================================================
+//
+//   M A I N   L O O P   -   S T A R T
+//
+//=============================================================================
 
 /** State - Start game */
 void StateStartGame()
@@ -1204,6 +1217,12 @@ void StateUpdateGame()
 	waitRetrace();
 	game.frame++;
 }
+
+//=============================================================================
+//
+//   M A I N   L O O P   -   E N D
+//
+//=============================================================================
 
 /** Initialize player data */
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
@@ -1671,7 +1690,32 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 	}
 }
 
-//----------------------------------------
+void VBlankInterrupt()
+{
+	//game.timer[0]++;
+	//if(game.timer[0] == 60) // frame counter
+	//{
+	//	game.timer[0] = 0;
+	//	game.timer[1]++;
+	//	if(game.timer[1] == 10) // seconde % 10
+	//	{
+	//		game.timer[1] = 0;
+	//		game.timer[2]++;
+	//		if(game.timer[2] == 6) // seconde / 10
+	//		{
+	//			game.timer[2] = 0;
+	//			game.timer[3]++;
+	//			if(game.timer[3] == 10) // frame counter
+	//			{
+	//				game.timer[3] = 0;
+	//				game.timer[4]++;
+	//			}
+	//		}
+	//	}
+	//}
+}
+
+//-----------------------------------------------------------------------------
 // MENU CALLBACKS
 
 /** Menu callback - Start game */
