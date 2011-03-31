@@ -45,6 +45,6 @@ void SetHook(u16 hook, u16 function)
 	else
 	{
 		*((u8*)hook) = 0xC3;
-		*((u16*)hook) = function;
+		*((u16*)++hook) = function;
 	}
 }
