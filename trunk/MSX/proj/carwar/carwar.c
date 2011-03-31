@@ -218,7 +218,10 @@ typedef struct tagGameData
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
 	u8               blockGen[32*32];
-	u8               timer[5];
+	
+	u8               count;
+	u8               second;
+	u8               minute;
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -714,8 +717,9 @@ void StateInitialize()
 	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
-	for(i=0; i<5; i++)
-		game.timer[i]= 0;
+	game.count = 0;
+	game.second = 0;
+	game.minute = 0;
 	SetHook(H_TIMI, (u16)VBlankInterrupt);
 
 	// Clear all VRAM
@@ -1014,7 +1018,7 @@ void StateUpdateGame()
 				curPly->nextY = curPly->validY;
 				curPly->velX = 0;
 				curPly->velY = 0;
-				curPly->life = 0;
+				//curPly->life = 0;
 				break;
 			}
 			if(op == OP_HEALTH)
@@ -1213,6 +1217,9 @@ void StateUpdateGame()
 		game.state = StateStartGame;
 	if((keyLine & KEY_ESC) == 0)
 		game.state = StateTitle;
+
+	SetSpriteUniColor(0, 64,   64, game.second >> 4,   0x0F);
+	SetSpriteUniColor(1, 64+8, 64, game.second & 0x0F, 0x0F);
 
 	waitRetrace();
 	game.frame++;
@@ -1690,25 +1697,27 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 	}
 }
 
-void VBlankInterrupt()
+void VBlankInterrupt() __naked
 {
-	//game.timer[0]++;
-	//if(game.timer[0] == 60) // frame counter
+	__asm
+		ret
+	__endasm;
+	//game.count++;
+	//if(game.count == 60) // frame counter
 	//{
-	//	game.timer[0] = 0;
-	//	game.timer[1]++;
-	//	if(game.timer[1] == 10) // seconde % 10
+	//	game.second++;
+	//	if((game.second & 0x0F) == 0x0A)
 	//	{
-	//		game.timer[1] = 0;
-	//		game.timer[2]++;
-	//		if(game.timer[2] == 6) // seconde / 10
+	//		game.second &= 0xF0;
+	//		game.second += 0x10;
+	//		if(game.second == 0x60)
 	//		{
-	//			game.timer[2] = 0;
-	//			game.timer[3]++;
-	//			if(game.timer[3] == 10) // frame counter
+	//			game.second = 0;
+	//			game.minute++;
+	//			if((game.minute & 0x0F) == 0x0A)
 	//			{
-	//				game.timer[3] = 0;
-	//				game.timer[4]++;
+	//				game.minute &= 0xF0;
+	//				game.minute += 0x10;
 	//			}
 	//		}
 	//	}
