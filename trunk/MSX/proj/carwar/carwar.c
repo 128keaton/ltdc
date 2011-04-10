@@ -59,6 +59,7 @@
 
 #define ITEM_INVALID		(0x80 + 0)
 #define ITEM_ACTION			(0x80 + 1)
+#define ITEM_VARIABLE		(0x80 + 2)
 
 // Color operator
 enum
@@ -131,7 +132,7 @@ typedef struct tagVectorI16
 typedef struct tagCar
 {
 	u8 rotSpeed;
-	u8 maxSpeed[3];
+	u8 maxSpeed[4];
 	u8 accel;
 } Car;
 
@@ -146,11 +147,19 @@ typedef struct tagTrack
 	struct tagVectorU8 startPos[4];
 } Track;
 
+enum ACTION_OP
+{
+	ACTION_SET,
+	ACTION_GET,
+	ACTION_INC,
+	ACTION_DEC,
+};
+
 typedef struct tagMenuEntry
 {
 	const char* text;
 	u8 nextIdx;
-	void (*action)(i8);
+	const char* (*action)(u8, i8);
 	i8 value;
 } MenuEntry;
 
@@ -199,6 +208,7 @@ typedef struct tagPlayer
 	u8  sprt;
 } Player;
 
+
 typedef struct tagGameData
 {
 	u8               frame;
@@ -218,10 +228,12 @@ typedef struct tagGameData
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
 	u8               blockGen[32*32];
-	
+	// timer
 	u8               count;
 	u8               second;
 	u8               minute;
+	// options
+	u8               shadeTrack;
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -263,9 +275,10 @@ void StateStartGame();
 void StateUpdateGame();
 
 // Menu callback
-void StartGame(i8 value);
-void SelectPlayer(i8 value);
-void SelectRule(i8 value);
+const char* StartGame(u8 op, i8 value);
+const char* SelectPlayer(u8 op, i8 value);
+const char* SelectRule(u8 op, i8 value);
+const char* OptionShade(u8 op, i8 value);
 
 
 //-----------------------------------------------------------------------------
@@ -335,15 +348,15 @@ void SelectRule(i8 value);
 const Car g_Cars[5] = 
 {
 	// 0. Cop
-	{ 5, { 25, 35, 40 }, 6 },
+	{ 5, { 10, 25, 35, 40 }, 6 },
 	// 1. Camaro (Chevrolet)
-	{ 4, { 20, 35, 60 }, 7 },
+	{ 4, { 5, 20, 35, 60 }, 7 },
 	// 2. Ferrari
-	{ 4, { 20, 40, 55 }, 7 },
+	{ 4, { 5, 20, 40, 55 }, 7 },
 	// 3. Turtule
-	{ 6, { 30, 30, 30 }, 5 },
+	{ 6, { 15, 30, 30, 30 }, 5 },
 	// 4. Pilot
-	{ 10, { 15, 15, 15 }, 5 },
+	{ 10, { 5, 10, 15, 20 }, 5 },
 };
 
 /** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
@@ -358,32 +371,32 @@ const Background g_BG[] =
 	// 3. 
 	{ 0, 0, 0, 0, 0 },
 	// 4. OP_SPEEDER
-	{ 2, 2, 4, COLOR_MAUVE, COLOR_DARKMAUVE },
+	{ 3, 2, 4, COLOR_MAUVE, COLOR_DARKMAUVE },
 	// 5. OP_JUMPER
-	{ 2, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
+	{ 3, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
 	// 6. OP_MAGMA
-	{ 0, 4, 8, COLOR_RED, COLOR_DARKRED },
+	{ 1, 4, 8, COLOR_RED, COLOR_DARKRED },
 	// 7. OP_HEALTH
-	{ 0, 0, 0, COLOR_LIME, COLOR_DARKLIME },
+	{ 1, 0, 0, COLOR_LIME, COLOR_DARKLIME },
 	// 8. OP_HOLE
-	{ 0, 0, 0, COLOR_BLACK, COLOR_BLACK },
+	{ 1, 0, 0, COLOR_BLACK, COLOR_BLACK },
 	// 9. OP_ASPHALT
-	{ 2, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
+	{ 3, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
 	// 10. OP_MUD
-	{ 1, 8, 4, COLOR_BROWN, COLOR_DARKBROWN },
+	{ 2, 8, 4, COLOR_BROWN, COLOR_DARKBROWN },
 	// 11. OP_SAND
-	{ 0, 8, 4, COLOR_YELLOW, COLOR_DARKYELLOW },
+	{ 1, 8, 4, COLOR_YELLOW, COLOR_DARKYELLOW },
 	// 12. OP_GRASS
-	{ 1, 4, 4, COLOR_GREEN, COLOR_DARKGREEN },
+	{ 2, 4, 4, COLOR_GREEN, COLOR_DARKGREEN },
 	// 13. OP_SNOW
-	{ 0, 8, 8, COLOR_WHITE, COLOR_LIGHTGRAY },
+	{ 1, 8, 8, COLOR_WHITE, COLOR_LIGHTGRAY },
 	// 14. OP_ICE
-	{ 2, 2, 0, COLOR_CYAN, COLOR_LIGHTBLUE },
+	{ 3, 2, 0, COLOR_CYAN, COLOR_LIGHTBLUE },
 	// 15. OP_WATER
 	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
 		
-const u8 testTrack[] = 
+const u8 g_TrackTiles01[] = 
 {
 	// line 0
 	TILE1(OP_ASPHALT, 0, 1, OP_SAND)
@@ -435,176 +448,20 @@ const u8 testTrack[] =
 	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
 };
 
-const u8 g_TrackTiles01[] = 
-{
-	// line 0
-	2 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	2 + ROT_90, COLOR_KHAKI, COLOR_GRAY,
-	2 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	2 + ROT_90, COLOR_KHAKI, COLOR_GRAY,
-	// line 1
-	0 + ROT_0, COLOR_GRAY,
-	1 + ROT_0, COLOR_GRAY, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	2 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
-	2 + ROT_180, COLOR_KHAKI, COLOR_GRAY,
-	1 + ROT_90, COLOR_GRAY, COLOR_KHAKI,
-	0 + ROT_0, COLOR_GRAY,
-	// line 2
-	3 + ROT_0, COLOR_WHITE, COLOR_GRAY,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_GRAY,
-	// line 3
-	0 + ROT_0, COLOR_GRAY,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	1 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	// line 4
-	9 + ROT_90, COLOR_YELLOW, COLOR_GRAY,
-	2 + ROT_0, COLOR_KHAKI, COLOR_YELLOW,
-	0 + ROT_0, COLOR_YELLOW,
-	0 + ROT_0, COLOR_KHAKI,
-	11 + ROT_270, COLOR_ORANGE, COLOR_GRAY,
-	4 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	// line 5
-	2 + ROT_270, COLOR_KHAKI, COLOR_YELLOW,
-	0 + ROT_0, COLOR_YELLOW,
-	1 + ROT_0, COLOR_YELLOW, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	1 + ROT_90, COLOR_GRAY, COLOR_KHAKI,
-	0 + ROT_0, COLOR_GRAY,
-	2 + ROT_180, COLOR_KHAKI, COLOR_GRAY,
-};
-
-const u8 g_TrackTiles02[] = 
-{
-	// line 0
-	1 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
-	5 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
-	5 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	5 + ROT_0, COLOR_KHAKI, COLOR_BLACK,
-	0 + ROT_0, COLOR_BLACK,
-	0 + ROT_0, COLOR_BLACK,
-	// line 1
-	1 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	11 + ROT_90, COLOR_ORANGE, COLOR_GRAY,
-	0 + ROT_0, COLOR_BLACK,
-	9 + ROT_0, COLOR_YELLOW, COLOR_GRAY,
-	2 + ROT_90, COLOR_BLACK, COLOR_YELLOW,
-	0 + ROT_0, COLOR_BLACK,
-	// line 2
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	11 + ROT_0, COLOR_ORANGE, COLOR_GRAY,
-	0 + ROT_0, COLOR_KHAKI,
-	4 + ROT_0, COLOR_BLACK, COLOR_YELLOW,
-	0 + ROT_0, COLOR_BLACK,
-	// line 3
-	1 + ROT_0, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	10 + ROT_0, COLOR_CYAN, COLOR_GRAY,
-	2 + ROT_180, COLOR_KHAKI, COLOR_GRAY,
-	0 + ROT_0, COLOR_KHAKI,
-	1 + ROT_270, COLOR_KHAKI, COLOR_YELLOW,
-	1 + ROT_90, COLOR_KHAKI, COLOR_YELLOW,
-	// line 4
-	10 + ROT_0, COLOR_MAUVE, COLOR_GRAY,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	1 + ROT_0, COLOR_KHAKI, COLOR_YELLOW,
-	1 + ROT_180, COLOR_KHAKI, COLOR_YELLOW,
-	// line 5
-	1 + ROT_270, COLOR_KHAKI, COLOR_GRAY,
-	10 + ROT_0, COLOR_CYAN, COLOR_GRAY,
-	0 + ROT_0, COLOR_GRAY,
-	3 + ROT_90, COLOR_WHITE, COLOR_GRAY,
-	9 + ROT_0, COLOR_YELLOW, COLOR_GRAY,
-	4 + ROT_0, COLOR_BLACK, COLOR_YELLOW,
-	0 + ROT_0, COLOR_KHAKI,
-};
-
-const u8 g_TrackTiles03[] = 
-{
-	// line 0
-	0 + ROT_0, COLOR_KHAKI,
-	1 + ROT_0, COLOR_KHAKI, COLOR_CYAN,
-	10 + ROT_0, COLOR_BLUE, COLOR_CYAN,
-	0 + ROT_0, COLOR_CYAN,
-	10 + ROT_0, COLOR_BLUE, COLOR_CYAN,
-	10 + ROT_0, COLOR_MAUVE, COLOR_CYAN,
-	1 + ROT_90, COLOR_KHAKI, COLOR_CYAN,
-	// line 1
-	2 + ROT_0, COLOR_KHAKI, COLOR_CYAN,
-	10 + ROT_0, COLOR_MAUVE, COLOR_CYAN,
-	11 + ROT_270, COLOR_ORANGE, COLOR_CYAN,
-	1 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
-	0 + ROT_0, COLOR_CYAN,
-	10 + ROT_0, COLOR_BLUE, COLOR_CYAN,
-	1 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
-	// line 2
-	9 + ROT_90, COLOR_BROWN, COLOR_CYAN,
-	1 + ROT_270, COLOR_KHAKI, COLOR_CYAN,
-	1 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
-	0 + ROT_0, COLOR_KHAKI,
-	9 + ROT_90, COLOR_WHITE, COLOR_CYAN,
-	1 + ROT_270, COLOR_KHAKI, COLOR_CYAN,
-	1 + ROT_90, COLOR_KHAKI, COLOR_CYAN,
-	// line 3
-	0 + ROT_0, COLOR_BROWN,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	10 + ROT_0, COLOR_MAUVE, COLOR_WHITE,
-	9 + ROT_0, COLOR_CYAN, COLOR_WHITE,
-	10 + ROT_0, COLOR_MAUVE, COLOR_CYAN,
-	// line 4
-	9 + ROT_90, COLOR_GRAY, COLOR_BROWN,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	0 + ROT_0, COLOR_KHAKI,
-	2 + ROT_270, COLOR_KHAKI, COLOR_CYAN,
-	2 + ROT_90, COLOR_KHAKI, COLOR_CYAN,
-	// line 5
-	0 + ROT_0, COLOR_GRAY,
-	11 + ROT_0, COLOR_YELLOW, COLOR_GRAY,
-	9 + ROT_0, COLOR_BLUE, COLOR_GRAY,
-	9 + ROT_0, COLOR_YELLOW, COLOR_BLUE,
-	9 + ROT_0, COLOR_CYAN, COLOR_YELLOW,
-	3 + ROT_90, COLOR_WHITE, COLOR_CYAN,
-	2 + ROT_180, COLOR_KHAKI, COLOR_CYAN,
-};
-
 const Track g_Tracks[] = 
 {
-	{ "AOI1", 7, 6, testTrack/*g_TrackTiles01*/, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "NOE1", 7, 6, testTrack/*g_TrackTiles02*/, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "NOE2", 7, 6, testTrack/*g_TrackTiles03*/, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "AOI1", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
+	{ "AOI2", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "NOE1", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
 //-----------------------------------------------------------------------------
 // Menu 0
 const MenuEntry g_MenuMain[] =
 {
-	{ "PLAY",     3, 0 },
+	{ "PLAY",     3, 0, 0 },
 	{ "EDITOR",   ITEM_INVALID, 0, 0 },
-	{ "OPTIONS",  ITEM_INVALID, 0, 0 },
+	{ "OPTIONS",  5, 0, 0 },
 	{ "CREDITS",  ITEM_INVALID, 0, 0 },
 };
 
@@ -615,7 +472,7 @@ const MenuEntry g_MenuMode[] =
 	{ "SURVIVOR", ITEM_INVALID, SelectRule, RULE_SURVIVOR },
 	{ "TAG",      ITEM_INVALID, SelectRule, RULE_TAG },
 	{ "SOCCER",   ITEM_INVALID, SelectRule, RULE_SOCCER },
-	{ "BACK",     3, 0, 0 },
+	{ "<BACK",    3, 0, 0 },
 };
 
 // Menu 2
@@ -623,7 +480,7 @@ const MenuEntry g_MenuTrack[] =
 {
 	{ "FROM ROM",  4, 0, 0 },
 	{ "FROM DISK", ITEM_INVALID, 0, 0 },
-	{ "BACK",      1, 0, 0 },
+	{ "<BACK",     1, 0, 0 },
 };
 
 // Menu 3
@@ -632,16 +489,23 @@ const MenuEntry g_MenuPlayer[] =
 	{ "2 PLAYERS", 1, SelectPlayer, 2 },
 	{ "3 PLAYERS", 1, SelectPlayer, 3 },
 	{ "4 PLAYERS", 1, SelectPlayer, 4 },
-	{ "BACK",      0, 0, 0 },
+	{ "<BACK",     0, 0, 0 },
 };
 
 // Menu 4
 const MenuEntry g_MenuTrackList[] =
 {
-	{ "AOI1", ITEM_ACTION, StartGame, 0 },
-	{ "NOE1", ITEM_ACTION, StartGame, 1 },
-	{ "NOE2", ITEM_ACTION, StartGame, 2 },
-	{ "BACK",           2, 0, 0 },
+	{ "AOI1",  ITEM_ACTION, StartGame, 0 },
+	{ "NOE1",  ITEM_ACTION, StartGame, 1 },
+	{ "NOE2",  ITEM_ACTION, StartGame, 2 },
+	{ "<BACK", 2, 0, 0 },
+};
+
+// Menu 5
+const MenuEntry g_MenuOption[] =
+{
+	{ "SHADE", ITEM_VARIABLE, OptionShade, 0 },
+	{ "<BACK", 0, 0, 0 },
 };
 
 const Menu g_Menus[] =
@@ -651,6 +515,7 @@ const Menu g_Menus[] =
 	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrack,     numberof(g_MenuTrack) },
 	{ "PLAYER SELECT", "PRESS SPACE", g_MenuPlayer,    numberof(g_MenuPlayer) },
 	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrackList, numberof(g_MenuTrackList) },
+	{ "OPTION",        "PRESS SPACE", g_MenuOption,    numberof(g_MenuOption) },
 };
 
 const u8 g_HeightTab[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
@@ -722,6 +587,8 @@ void StateInitialize()
 	game.minute = 0;
 	SetHook(H_TIMI, (u16)VBlankInterrupt);
 
+	game.shadeTrack = 0;
+
 	// Clear all VRAM
 	FillVRAM(0, 0,   256, 256, 0);
 	FillVRAM(0, 256, 256, 256, 0);
@@ -788,8 +655,8 @@ void StateInitialize()
 	
 	game.track = 0;
 	game.page = 0;
-	//game.state = StateTitle;
-	game.state = StateStartGame;
+	game.state = StateTitle;
+	//game.state = StateStartGame;
 }
 
 /** Initialize a given menu */
@@ -808,6 +675,8 @@ void InitializeMenu(u8 menu)
 	for(item = 0; item < g_Menus[game.menu].itemNum; item++)
 	{
 		DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].text, g_Menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
+		if(g_Menus[game.menu].items[item].nextIdx == ITEM_VARIABLE)
+			DrawText(MENU_X + 12 + 100, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].action(ACTION_GET,0), COLOR_WHITE);
 	}
 
 	HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
@@ -859,10 +728,21 @@ void StateMainMenu()
 	|| Joytrig(2) != 0)
 	{
 		if(g_Menus[game.menu].items[game.item].action != 0)
-			g_Menus[game.menu].items[game.item].action(g_Menus[game.menu].items[game.item].value);
+			g_Menus[game.menu].items[game.item].action(ACTION_SET, g_Menus[game.menu].items[game.item].value);
 		if((g_Menus[game.menu].items[game.item].nextIdx & 0x80) == 0)
 			InitializeMenu(g_Menus[game.menu].items[game.item].nextIdx);
 		return;
+	}
+
+	if((keyLine & KEY_RIGHT) == 0)
+	{
+		if(g_Menus[game.menu].items[game.item].action != 0)
+			g_Menus[game.menu].items[game.item].action(ACTION_INC, g_Menus[game.menu].items[game.item].value);
+	}
+	else if((keyLine & KEY_LEFT) == 0)
+	{
+		if(g_Menus[game.menu].items[game.item].action != 0)
+			g_Menus[game.menu].items[game.item].action(ACTION_DEC, g_Menus[game.menu].items[game.item].value);
 	}
 
 	// Handle navigation
@@ -902,6 +782,9 @@ void StateStartGame()
 	u8 i;
 	game.page = 0;
 	SetPage8(game.page);
+
+	HMMV(0, 0, 256, 212, 0);
+	HMMV(0, 256, 256, 212, 0);
 
 	//----------------------------------------
 	// Build background
@@ -1198,18 +1081,18 @@ void StateUpdateGame()
 		//FillVRAM(0, game.yOffset + 198 + 3 * i, curPly->life, 2, COLOR_GREEN);
 		//FillVRAM(curPly->life, game.yOffset + 198 + 3 * i, curPly->life - 255, 2, COLOR_RED);
 	}
-	for(i=0; i<12; i++)
-	{
-		if(game.smokes[i].step != 0xFF)
-		{
-			SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
-			game.smokes[i].step++;
-			if(game.smokes[i].step >= 8)
-				game.smokes[i].step = 0xFF;
-		}
-		else
-			SetSpriteUniColor(i, 0, 212, 0, 0);
-	}
+	//for(i=0; i<12; i++)
+	//{
+	//	if(game.smokes[i].step != 0xFF)
+	//	{
+	//		SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
+	//		game.smokes[i].step++;
+	//		if(game.smokes[i].step >= 8)
+	//			game.smokes[i].step = 0xFF;
+	//	}
+	//	else
+	//		SetSpriteUniColor(i, 0, 212, 0, 0);
+	//}
 
 	// restart
 	keyLine = GetKeyMatrixLine(7);
@@ -1218,8 +1101,11 @@ void StateUpdateGame()
 	if((keyLine & KEY_ESC) == 0)
 		game.state = StateTitle;
 
-	SetSpriteUniColor(0, 64,   64, game.second >> 4,   0x0F);
-	SetSpriteUniColor(1, 64+8, 64, game.second & 0x0F, 0x0F);
+	SetSpriteUniColor(0, 64+8*0, 64, game.minute >> 4,   0x0F);
+	SetSpriteUniColor(1, 64+8*1, 64, game.minute & 0x0F, 0x0F);
+	SetSpriteUniColor(2, 64+8*2, 64, ':' - '0',   0x0F);
+	SetSpriteUniColor(3, 64+8*3, 64, game.second >> 4,   0x0F);
+	SetSpriteUniColor(4, 64+8*4, 64, game.second & 0x0F, 0x0F);
 
 	waitRetrace();
 	game.frame++;
@@ -1699,51 +1585,82 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 
 void VBlankInterrupt() __naked
 {
-	__asm
+	__asm // backup registers
+		di
+        push    af
+        push    bc
+        push    de
+        push    hl
+	__endasm;
+
+	game.count++;
+	if(game.count == 60) // frame counter
+	{
+		game.count = 0;
+		game.second++;
+		if((game.second & 0x0F) == 0x0A)
+		{
+			game.second &= 0xF0;
+			game.second += 0x10;
+			if(game.second == 0x60)
+			{
+				game.second = 0;
+				game.minute++;
+				if((game.minute & 0x0F) == 0x0A)
+				{
+					game.minute &= 0xF0;
+					game.minute += 0x10;
+				}
+			}
+		}
+	}
+
+	__asm // restore registers
+        pop     hl
+        pop     de
+        pop     bc
+        pop     af
+		ei
 		ret
 	__endasm;
-	//game.count++;
-	//if(game.count == 60) // frame counter
-	//{
-	//	game.second++;
-	//	if((game.second & 0x0F) == 0x0A)
-	//	{
-	//		game.second &= 0xF0;
-	//		game.second += 0x10;
-	//		if(game.second == 0x60)
-	//		{
-	//			game.second = 0;
-	//			game.minute++;
-	//			if((game.minute & 0x0F) == 0x0A)
-	//			{
-	//				game.minute &= 0xF0;
-	//				game.minute += 0x10;
-	//			}
-	//		}
-	//	}
-	//}
 }
 
 //-----------------------------------------------------------------------------
 // MENU CALLBACKS
 
 /** Menu callback - Start game */
-void StartGame(i8 value)
+const char* StartGame(u8 op, i8 value)
 {
+	op;
 	game.track = value;
 	game.state = StateStartGame;
+	return "";
 }
 
 /** Menu callback - Select player number */
-void SelectPlayer(i8 value)
+const char* SelectPlayer(u8 op, i8 value)
 {
+	op;
 	game.playerNum = value;
+	return "";
 }
 
 /** Menu callback - Select game mode */
-void SelectRule(i8 value)
+const char* SelectRule(u8 op, i8 value)
 {
+	op;
 	game.rule = value;
+	return "";
 }
 
+const char* OptionShade(u8 op, i8 value)
+{
+	value;
+	if(op == ACTION_INC || op == ACTION_DEC)
+	{
+		game.shadeTrack = 1 - game.shadeTrack;
+		InitializeMenu(game.menu);
+	}
 
+	return game.shadeTrack ? "ON" : "OFF";
+}

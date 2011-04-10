@@ -1,3 +1,4 @@
+
 #include "core.h"
 #include "bios.h"
 
@@ -48,3 +49,4 @@ void SetHook(u16 hook, u16 function)
 		*((u16*)++hook) = function;
 	}
 }
+
