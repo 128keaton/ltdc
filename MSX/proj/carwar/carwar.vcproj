@@ -17,139 +17,53 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			OutputDirectory="out\"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="10"
 			CharacterSet="2"
+			DeleteExtensionsOnClean="*.asm;*.lst;*.rst;*.sym;*.rel;*.map;*.mem;*.ihx;*.adb;*.cdb;*.dump;*.bin;*.rom;$(TargetPath)"
+			BuildLogFile="$(OutDir)"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
 			/>
 			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
+				Description="----- Build carwar -----"
+				CommandLine="build.bat"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			OutputDirectory="out\"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="10"
 			CharacterSet="2"
+			DeleteExtensionsOnClean="*.asm;*.lst;*.rst;*.sym;*.rel;*.map;*.mem;*.ihx;*.adb;*.cdb;*.dump;*.bin;*.rom;$(TargetPath)"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(OutDir)"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
 			/>
 			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
+				Description="----- Build carwar -----"
+				CommandLine="build.bat"
 			/>
 		</Configuration>
 	</Configurations>
@@ -234,6 +148,28 @@
 			<File
 				RelativePath=".\3d.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\3d.h"
@@ -242,6 +178,26 @@
 			<File
 				RelativePath=".\bios.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\bios.h"
@@ -258,6 +214,26 @@
 			<File
 				RelativePath=".\files.asm"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdasz80 -losg out\$(InputName).rel $(InputFileName)&#x0D;&#x0A;"
+						Outputs="$(InputName).rel"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdasz80 -losg out\$(InputName).rel $(InputFileName)&#x0D;&#x0A;"
+						Outputs="$(InputName).rel"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\files.h"
@@ -310,6 +286,26 @@
 			<File
 				RelativePath=".\video.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\video.h"
@@ -318,6 +314,30 @@
 		</Filter>
 		<File
 			RelativePath=".\carwar.c"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="----- Compile $(InputFileName) -----"
+					CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+					Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="----- Compile $(InputFileName) -----"
+					CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputFileName) -o out\&#x0D;&#x0A;"
+					Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\temp.h"
 			>
 		</File>
 	</Files>

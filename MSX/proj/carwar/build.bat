@@ -3,36 +3,24 @@ SET PROGRAM=carwar
 SET LIBS=bios.c
 
 REM ////////////////////////////////////////
-ECHO --- SDCC Compile ---
+ECHO --- SDCC Build ---
+sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 --vc --opt-code-speed out\%PROGRAM%.rel out\bios.rel out\video.rel out\files.rel -o out\
 
-ECHO Compile bios.c
-sdcc -c -mz80 --vc bios.c
-
-ECHO Compile video.c
-sdcc -c -mz80 --vc video.c
-
-ECHO Compile files.asm
-sdasz80 -losg files.asm
-
-REM ## ECHO Compile 3d.c
-REM ## sdcc -c -mz80 --vc 3d.c
-
-ECHO Compile %PROGRAM%.c
-sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 --vc %PROGRAM%.c bios.rel video.rel files.rel
-
-ECHO ...compile completed
+ECHO ...build completed
 
 REM ////////////////////////////////////////
 ECHO --- hex2bin ---
-hex2bin –e bin %PROGRAM%.ihx
+hex2bin –e bin out\%PROGRAM%.ihx
 ECHO ...convert completed
 
 REM ////////////////////////////////////////
 ECHO --- Merge header ---
-copy /b rom_header.bin + /b %PROGRAM%.bin /b %PROGRAM%.rom
+copy /b rom_header.bin + /b out\%PROGRAM%.bin /b out\%PROGRAM%.rom
 ECHO ...merge completed
 
 REM ////////////////////////////////////////
 ECHO --- Fill ROM ---
-fillfile %PROGRAM%.rom 32768
+fillfile out\%PROGRAM%.rom 32768
 ECHO ...fill completed
+
+copy out\%PROGRAM%.rom %PROGRAM%.rom
