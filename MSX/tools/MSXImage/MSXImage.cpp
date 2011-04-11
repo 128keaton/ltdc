@@ -1,3 +1,6 @@
+// 1095
+// 
+
 // std
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,16 +14,17 @@
 #include "types.h"
 #include "color.h"
 
-#define VERSION "1.4"
+#define VERSION "1.5"
 
 enum Compressor
 {
-	COMPRESS_None,
-	COMPRESS_Crop256, // (max cropped size is 256x256)
-	COMPRESS_Crop16, // (max cropped size is 16x16)
+	COMPRESS_None,       // No compression
+	COMPRESS_Crop256,    // Crop sprite to keep only the non-transparent area (max size 256x256)
+	COMPRESS_Crop16,     // Crop sprite to keep only the non-transparent area (max size 16x16)
+	COMPRESS_CropLine16, // Crop each sprite line (max size 16x16)
 };
 
-const char* ARGV[] = { "", "-in", "cars.png", "-out", "sprt_car_1.h", "-pos", "0", "0", "-size", "13", "11", "-num", "16", "1", "-name", "g_Car1", "-trans", "0xE300E3", "-crop" };
+const char* ARGV[] = { "", "-in", "cars.png", "-out", "sprt_car_1.h", "-pos", "0", "0", "-size", "13", "11", "-num", "16", "1", "-name", "g_Car1", "-trans", "0xE300E3", "-cropline16" };
 const int ARGC = sizeof(ARGV)/sizeof(ARGV[0]);
 
 //=============================================================================
@@ -125,7 +129,8 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 		{
 			for(nx = 0; nx < numX; nx++)
 			{
-				if(comp != COMPRESS_None) // 8 bits crop; compute bound
+				// Compute bound for crop compression
+				if(comp != COMPRESS_None) 
 				{
 					minX = sizeX;
 					maxX = 0;
@@ -137,7 +142,6 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 						{
 							i32 pixel = posX + i + (nx * sizeX) + ((posY + j + (ny * sizeY)) * imageX);
 							u32 argb = ((u32*)bits)[pixel];
-							// convert to 8 bits GRB
 							if((argb & 0xFFFFFF) != transColor)
 							{
 								if(i < minX)
@@ -153,6 +157,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 					}
 				}
 
+				// Print sprite header
 				sprintf_s(tempData, 1024, "// Sprite[%i]\n", nx + ny * numX);
 				outData += tempData;
 				if(comp == COMPRESS_Crop256)
@@ -167,11 +172,40 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 					outData += tempData;
 					totalBytes += 2;
 				}
+				else if(comp == COMPRESS_CropLine16)
+				{
+					sprintf_s(tempData, 1024, "\t0x%02X, // minY|sizeY \n", (minY << 4) + (1 + maxY - minY));
+					outData += tempData;
+					totalBytes += 2;
+				}
+
+				// Print sprite content
 				for(j = 0; j < sizeY; j++)
 				{
 					if((comp == COMPRESS_None) || ((j >= minY) && (j <= maxY)))
 					{
 						outData += "\t";
+
+						if(comp == COMPRESS_CropLine16) // for line-crop, we need to recompute minX&maxX for each line
+						{
+							minX = sizeX;
+							maxX = 0;
+							for(i = 0; i < sizeX; i++)
+							{
+								i32 pixel = posX + i + (nx * sizeX) + ((posY + j + (ny * sizeY)) * imageX);
+								u32 argb = ((u32*)bits)[pixel];
+								if((argb & 0xFFFFFF) != transColor)
+								{
+									if(i < minX)
+										minX = i;
+									if(i > maxX)
+										maxX = i;
+								}
+							}
+							sprintf_s(tempData, 1024, "0x%02X, /* minX|sizeX */ ", (minX << 4) + (1 + maxX - minX));
+							outData += tempData;
+						}
+
 						for(i = 0; i < sizeX; i++)
 						{
 							if((comp == COMPRESS_None) || ((i >= minX) && (i <= maxX)))
@@ -325,9 +359,9 @@ int main(int argc, const char* argv[])
 		printf("   -color <n>       Number of color (now support 256 and 2)\n");
 		printf("   -trans <col>     Transparency color (in RGB 24 bits format)\n");
 		printf("   -name  <name>    Name of the structure to export\n");
-		printf("   -crop			Crop image to only the necessary erea (only supported on 8bits output)\n");
-		printf("   -crop256			idem\n");
-		printf("   -crop16			idem (max image size is 16x16)\n");
+		printf("   -crop256         Crop image to only the necessary area (max size 256x256)\n");
+		printf("   -crop16          Crop image to only the necessary area (max size 16x16)\n");
+		printf("   -cropline16      Crop image line-by-line to only the necessary area (max size 16x16)\n");
 	}
 
 	for(i=1; i<argc; i++)
@@ -367,10 +401,6 @@ int main(int argc, const char* argv[])
 		{
 			name = argv[++i];
 		}
-		else if(_stricmp(argv[i], "-crop") == 0)
-		{
-			comp = COMPRESS_Crop256;
-		}
 		else if(_stricmp(argv[i], "-crop256") == 0)
 		{
 			comp = COMPRESS_Crop256;
@@ -378,6 +408,10 @@ int main(int argc, const char* argv[])
 		else if(_stricmp(argv[i], "-crop16") == 0)
 		{
 			comp = COMPRESS_Crop16;
+		}
+		else if(_stricmp(argv[i], "-cropline16") == 0)
+		{
+			comp = COMPRESS_CropLine16;
 		}
 	}
 
