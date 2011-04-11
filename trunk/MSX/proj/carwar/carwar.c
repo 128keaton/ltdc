@@ -1563,23 +1563,44 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr)
 {
-	u8 i;
+	//u8 i;
+	//u8 oX, oY; // offset
+	//u8 dX, dY; // bound
+	//for(i=0; i<num; i++)
+	//{
+	//	oY = ((u8*)addr)[0];
+	//	oX = oY >> 4;
+	//	oY &= 0x0F;
+	//	dY = ((u8*)addr)[1];
+	//	dX = dY >> 4;
+	//	dY &= 0x0F;
+	//	addr += 2;
+	//	if(mod8 == 0)
+	//		RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY, dX, dY, addr);
+	//	else
+	//		RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY, dX, dY, addr);
+	//	addr += dX * dY;
+	//}
+
+
+	u8 i, j;
 	u8 oX, oY; // offset
 	u8 dX, dY; // bound
 	for(i=0; i<num; i++)
 	{
-		oY = ((u8*)addr)[0];
-		oX = oY >> 4;
-		oY &= 0x0F;
-		dY = ((u8*)addr)[1];
-		dX = dY >> 4;
+		dY = ((u8*)addr)[0];
+		oY = dY >> 4;
 		dY &= 0x0F;
 		addr += 2;
-		if(mod8 == 0)
-			RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY, dX, dY, addr);
-		else
-			RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY, dX, dY, addr);
-		addr += dX * dY;
+		for(j=0; j<dY; j++)
+		{
+			dX = ((u8*)addr)[0];
+			oX = dX >> 4;
+			dX &= 0x0F;
+			addr += 2;
+			RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY + j, dX, 1, addr);
+			addr += dX;
+		}
 	}
 }
 
