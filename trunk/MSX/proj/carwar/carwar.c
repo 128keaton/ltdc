@@ -540,6 +540,12 @@ GameData __at(0xC000) game;
 ///
 __sfr __at(0xA8) g_slotPort;
 
+//=============================================================================
+//
+//   C O D E
+//
+//=============================================================================
+
 //-----------------------------------------------------------------------------
 /** Program entry point */
 void main(void)
@@ -655,8 +661,8 @@ void StateInitialize()
 	
 	game.track = 0;
 	game.page = 0;
-	game.state = StateTitle;
-	//game.state = StateStartGame;
+	//game.state = StateTitle;
+	game.state = StateStartGame;
 }
 
 /** Initialize a given menu */
@@ -1081,18 +1087,18 @@ void StateUpdateGame()
 		//FillVRAM(0, game.yOffset + 198 + 3 * i, curPly->life, 2, COLOR_GREEN);
 		//FillVRAM(curPly->life, game.yOffset + 198 + 3 * i, curPly->life - 255, 2, COLOR_RED);
 	}
-	//for(i=0; i<12; i++)
-	//{
-	//	if(game.smokes[i].step != 0xFF)
-	//	{
-	//		SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
-	//		game.smokes[i].step++;
-	//		if(game.smokes[i].step >= 8)
-	//			game.smokes[i].step = 0xFF;
-	//	}
-	//	else
-	//		SetSpriteUniColor(i, 0, 212, 0, 0);
-	//}
+	for(i=0; i<12; i++)
+	{
+		if(game.smokes[i].step != 0xFF)
+		{
+			SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
+			game.smokes[i].step++;
+			if(game.smokes[i].step >= 8)
+				game.smokes[i].step = 0xFF;
+		}
+		else
+			SetSpriteUniColor(i, 0, 212, 0, 0);
+	}
 
 	// restart
 	keyLine = GetKeyMatrixLine(7);
@@ -1101,11 +1107,11 @@ void StateUpdateGame()
 	if((keyLine & KEY_ESC) == 0)
 		game.state = StateTitle;
 
-	SetSpriteUniColor(0, 64+8*0, 64, game.minute >> 4,   0x0F);
-	SetSpriteUniColor(1, 64+8*1, 64, game.minute & 0x0F, 0x0F);
-	SetSpriteUniColor(2, 64+8*2, 64, ':' - '0',   0x0F);
-	SetSpriteUniColor(3, 64+8*3, 64, game.second >> 4,   0x0F);
-	SetSpriteUniColor(4, 64+8*4, 64, game.second & 0x0F, 0x0F);
+	//SetSpriteUniColor(0, 64+8*0, 64, game.minute >> 4,   0x0F);
+	//SetSpriteUniColor(1, 64+8*1, 64, game.minute & 0x0F, 0x0F);
+	//SetSpriteUniColor(2, 64+8*2, 64, ':' - '0',   0x0F);
+	//SetSpriteUniColor(3, 64+8*3, 64, game.second >> 4,   0x0F);
+	//SetSpriteUniColor(4, 64+8*4, 64, game.second & 0x0F, 0x0F);
 
 	waitRetrace();
 	game.frame++;
@@ -1591,14 +1597,17 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 		dY = ((u8*)addr)[0];
 		oY = dY >> 4;
 		dY &= 0x0F;
-		addr += 2;
+		addr += 1;
 		for(j=0; j<dY; j++)
 		{
 			dX = ((u8*)addr)[0];
 			oX = dX >> 4;
 			dX &= 0x0F;
-			addr += 2;
-			RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY + j, dX, 1, addr);
+			addr += 1;
+			if(mod8 == 0)
+				RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY + j, dX, 1, addr);
+			else
+				RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY + j, dX, 1, addr);
 			addr += dX;
 		}
 	}
