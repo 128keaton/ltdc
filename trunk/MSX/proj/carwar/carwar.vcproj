@@ -336,10 +336,6 @@
 				/>
 			</FileConfiguration>
 		</File>
-		<File
-			RelativePath=".\temp.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
