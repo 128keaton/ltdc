@@ -2,6 +2,7 @@
 #include "core.h"
 #include "bios.h"
 #include "video.h"
+#include "files.h"
 
 //-----------------------------------------------------------------------------
 // D E F I N E S
@@ -52,7 +53,7 @@
 // Menu layout
 #define TITLE_X				16
 #define TITLE_Y				32
-#define MENU_X				84
+#define MENU_X				64
 #define MENU_Y				100
 #define LINE_SPACE			10
 #define TITLE_SPACE			16
@@ -91,10 +92,12 @@ enum
 // 
 enum
 {
-	RULE_RACE,     // Race
-	RULE_SURVIVOR, // Deathmatch
-	RULE_TAG,      // Chat
-	RULE_SOCCER,   // Soccer
+	RULE_FIRST,
+	RULE_RACE = RULE_FIRST, // Race
+	RULE_SURVIVOR,          // Deathmatch
+	RULE_TAG,               // Chat
+	RULE_SOCCER,            // Soccer
+	RULE_LAST = RULE_SOCCER,
 };
 
 // Tile render flag
@@ -212,28 +215,31 @@ typedef struct tagPlayer
 typedef struct tagGameData
 {
 	u8               frame;
-	u8               menu;
-	u8               item;
-	u8               pressed;
-	u8               rule;
-	u8               page;
-	u8               track;
 	u16              yOffset;
-	u8               colorCode[256];
 	u8               playerNum;
 	struct tagPlayer players[4];
 	void            (*state)(void);
-	u8               bitToByte[256 * 8];
 	Smoke            smokes[12];
 	VdpBuffer32      vdp32;
 	VdpBuffer36      vdp36;
-	u8               blockGen[32*32];
 	// timer
 	u8               count;
 	u8               second;
 	u8               minute;
+	// Menu
+	u8               menu;
+	u8               item;
+	u8               pressed;
 	// options
+	i8               rule;
+	u8               page;
+	u8               track;
 	u8               shadeTrack;
+	// buffers
+	u8               fileBuffer[256];
+	u8               colorCode[256];
+	u8               blockGen[32*32];
+	u8               bitToByte[256 * 8];
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -242,6 +248,7 @@ typedef struct tagGameData
 void MainLoop();
 void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot);
 void InitializeMenu(u8 menu);
+void ResetMenu();
 void CheckJoy(Player* ply, u8 joy);
 void CarToCarCollision(Player* ply1, Player* ply2);
 void CarToWallCollision(Player* ply);
@@ -276,9 +283,10 @@ void StateUpdateGame();
 
 // Menu callback
 const char* StartGame(u8 op, i8 value);
-const char* SelectPlayer(u8 op, i8 value);
 const char* SelectRule(u8 op, i8 value);
-const char* OptionShade(u8 op, i8 value);
+const char* SelectPlayer(u8 op, i8 value);
+const char* SelectShade(u8 op, i8 value);
+const char* SelectTrack(u8 op, i8 value);
 
 
 //-----------------------------------------------------------------------------
@@ -459,63 +467,43 @@ const Track g_Tracks[] =
 // Menu 0
 const MenuEntry g_MenuMain[] =
 {
-	{ "PLAY",     3, 0, 0 },
+	{ "PLAY",     1, 0, 0 },
 	{ "EDITOR",   ITEM_INVALID, 0, 0 },
-	{ "OPTIONS",  5, 0, 0 },
 	{ "CREDITS",  ITEM_INVALID, 0, 0 },
 };
 
 // Menu 1
 const MenuEntry g_MenuMode[] =
 {
-	{ "RACE",     2, SelectRule, RULE_RACE },
-	{ "SURVIVOR", ITEM_INVALID, SelectRule, RULE_SURVIVOR },
-	{ "TAG",      ITEM_INVALID, SelectRule, RULE_TAG },
-	{ "SOCCER",   ITEM_INVALID, SelectRule, RULE_SOCCER },
-	{ "<BACK",    3, 0, 0 },
+	{ "TYPE",         ITEM_VARIABLE, SelectRule, 0 },
+	{ "PLAYERS",      ITEM_VARIABLE, SelectPlayer, 0 },
+	{ "SELECT TRACK", 2, 0, 0 },
+	{ "<BACK",        0, 0, 0 },
 };
 
 // Menu 2
 const MenuEntry g_MenuTrack[] =
 {
-	{ "FROM ROM",  4, 0, 0 },
+	{ "FROM ROM",  3, 0, 0 },
 	{ "FROM DISK", ITEM_INVALID, 0, 0 },
 	{ "<BACK",     1, 0, 0 },
 };
 
 // Menu 3
-const MenuEntry g_MenuPlayer[] =
-{
-	{ "2 PLAYERS", 1, SelectPlayer, 2 },
-	{ "3 PLAYERS", 1, SelectPlayer, 3 },
-	{ "4 PLAYERS", 1, SelectPlayer, 4 },
-	{ "<BACK",     0, 0, 0 },
-};
-
-// Menu 4
 const MenuEntry g_MenuTrackList[] =
 {
-	{ "AOI1",  ITEM_ACTION, StartGame, 0 },
-	{ "NOE1",  ITEM_ACTION, StartGame, 1 },
-	{ "NOE2",  ITEM_ACTION, StartGame, 2 },
-	{ "<BACK", 2, 0, 0 },
-};
-
-// Menu 5
-const MenuEntry g_MenuOption[] =
-{
-	{ "SHADE", ITEM_VARIABLE, OptionShade, 0 },
-	{ "<BACK", 0, 0, 0 },
+	{ "TRACK", ITEM_VARIABLE, SelectTrack, 0 },
+	{ "SHADE", ITEM_VARIABLE, SelectShade, 0 },
+	{ "START GAME",   ITEM_ACTION, StartGame, 2 },
+	{ "<BACK", 3, 0, 0 },
 };
 
 const Menu g_Menus[] =
 {
-	{ "",              "PRESS SPACE", g_MenuMain,      numberof(g_MenuMain) },
+	{ "MAIN MENU",     "PRESS SPACE", g_MenuMain,      numberof(g_MenuMain) },
 	{ "GAME MODE",     "PRESS SPACE", g_MenuMode,      numberof(g_MenuMode) },
 	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrack,     numberof(g_MenuTrack) },
-	{ "PLAYER SELECT", "PRESS SPACE", g_MenuPlayer,    numberof(g_MenuPlayer) },
 	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrackList, numberof(g_MenuTrackList) },
-	{ "OPTION",        "PRESS SPACE", g_MenuOption,    numberof(g_MenuOption) },
 };
 
 const u8 g_HeightTab[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
@@ -593,6 +581,9 @@ void StateInitialize()
 	game.minute = 0;
 	SetHook(H_TIMI, (u16)VBlankInterrupt);
 
+	game.rule = RULE_RACE;
+	game.playerNum = 4;
+	game.track = 0;
 	game.shadeTrack = 0;
 
 	// Clear all VRAM
@@ -658,11 +649,10 @@ void StateInitialize()
 	// Init smoke
 	for(x=0; x<12; x++)
 		game.smokes[x].step = 0xFF;
-	
-	game.track = 0;
+
 	game.page = 0;
-	//game.state = StateTitle;
-	game.state = StateStartGame;
+	game.state = StateTitle;
+	//game.state = StateStartGame;
 }
 
 /** Initialize a given menu */
@@ -682,11 +672,20 @@ void InitializeMenu(u8 menu)
 	{
 		DrawText(MENU_X + 12, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].text, g_Menus[game.menu].items[item].nextIdx == ITEM_INVALID ? COLOR_GRAY : COLOR_WHITE);
 		if(g_Menus[game.menu].items[item].nextIdx == ITEM_VARIABLE)
-			DrawText(MENU_X + 12 + 100, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].action(ACTION_GET,0), COLOR_WHITE);
+			DrawText(MENU_X + 12 + 80, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].action(ACTION_GET,0), COLOR_WHITE);
 	}
 
 	HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
 }
+
+void ResetMenu()
+{
+	u8 last_item;
+	last_item = game.item;
+	InitializeMenu(game.menu);
+	game.item = last_item;
+}
+
 
 /** State - Initialize title */
 void StateTitle()
@@ -786,6 +785,8 @@ void StateMainMenu()
 void StateStartGame()
 {
 	u8 i;
+	char file;
+
 	game.page = 0;
 	SetPage8(game.page);
 
@@ -794,9 +795,17 @@ void StateStartGame()
 
 	//----------------------------------------
 	// Build background
-	UpackTiles();
-	BuildTrack();
-	//ShadeTrack();
+	//UpackTiles();
+	//BuildTrack();
+	//if(game.shadeTrack)
+	//	ShadeTrack();
+	file = open("TRACK_01.SC8", O_RDONLY);
+	for(i=0; i<212; i++) // copy line-by-line
+	{
+		read(file, (int)&game.fileBuffer, 256);
+		HMMC(0, i, 256, 1, (u16)&game.fileBuffer);
+	}	
+	close(file);
 
 	HMMM(0, 0, 0, 256, 256, 212);
 
@@ -824,6 +833,10 @@ void StateStartGame()
 	ClearSprite();
 	for(i=0; i<32; i++)
 		SetSpriteUniColor(i, 0, 248, 0, 0);
+
+	// Reset counter
+	game.minute = 0;
+	game.second = 0;
 
 	game.state = StateUpdateGame;
 }
@@ -1661,36 +1674,109 @@ void VBlankInterrupt() __naked
 /** Menu callback - Start game */
 const char* StartGame(u8 op, i8 value)
 {
-	op;
+	op; value;
 	game.track = value;
 	game.state = StateStartGame;
 	return "";
 }
 
-/** Menu callback - Select player number */
-const char* SelectPlayer(u8 op, i8 value)
+/** Menu callback - Select game mode */
+const char* SelectTrack(u8 op, i8 value)
 {
-	op;
-	game.playerNum = value;
-	return "";
+	value;
+	if(op == ACTION_INC)
+	{
+		if(game.track == 2)
+			game.track = 0;
+		else
+			game.track++;
+		ResetMenu();
+	}
+	else if(op == ACTION_DEC)
+	{
+		if(game.track == 0)
+			game.track = 2;
+		else
+			game.track--;
+		ResetMenu();
+	}
+
+	switch(game.track)
+	{
+	case 0: return "<AOI1>";
+	case 1: return "<NOE1>";
+	case 2: return "<NOE2>";
+	}
 }
 
 /** Menu callback - Select game mode */
 const char* SelectRule(u8 op, i8 value)
 {
-	op;
-	game.rule = value;
-	return "";
+	value;
+	if(op == ACTION_INC)
+	{
+		if(game.rule == RULE_LAST)
+			game.rule = RULE_FIRST;
+		else
+			game.rule++;
+		ResetMenu();
+	}
+	else if(op == ACTION_DEC)
+	{
+		if(game.rule == RULE_FIRST)
+			game.rule = RULE_LAST;
+		else
+			game.rule--;
+		ResetMenu();
+	}
+
+	switch(game.rule)
+	{
+	case RULE_RACE:     return "<RACE>";
+	case RULE_SURVIVOR: return "<SURVIVOR>";
+	case RULE_TAG:      return "<TAG>";
+	case RULE_SOCCER:   return "<SOCCER>";
+	}
 }
 
-const char* OptionShade(u8 op, i8 value)
+/** Menu callback - Select game mode */
+const char* SelectPlayer(u8 op, i8 value)
+{
+	value;
+	if(op == ACTION_INC)
+	{
+		if(game.playerNum == 4)
+			game.playerNum = 2;
+		else
+			game.playerNum++;
+		ResetMenu();
+	}
+	else if(op == ACTION_DEC)
+	{
+		if(game.playerNum == 2)
+			game.playerNum = 4;
+		else
+			game.playerNum--;
+		ResetMenu();
+	}
+
+	if(game.playerNum == 2)
+		return "<2>";
+	else if(game.playerNum == 3)
+		return "<3>";
+	else if(game.playerNum == 4)
+		return "<4>";
+}
+
+/** Menu callback - Select game mode */
+const char* SelectShade(u8 op, i8 value)
 {
 	value;
 	if(op == ACTION_INC || op == ACTION_DEC)
 	{
 		game.shadeTrack = 1 - game.shadeTrack;
-		InitializeMenu(game.menu);
+		ResetMenu();
 	}
 
-	return game.shadeTrack ? "ON" : "OFF";
+	return game.shadeTrack ? "<ON>" : "<OFF>";
 }

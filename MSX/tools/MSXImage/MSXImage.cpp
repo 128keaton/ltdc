@@ -13,7 +13,7 @@
 // MSXImage
 #include "types.h"
 #include "color.h"
-#include "lang.h"
+#include "langage.h"
 
 #define VERSION "1.5"
 
@@ -25,8 +25,16 @@ enum Compressor
 	COMPRESS_CropLine16, // Crop each sprite line (max size 16x16)
 };
 
-const char* ARGV[] = { "", "-in", "cars.png", "-out", "sprt_car_1.h", "-pos", "0", "0", "-size", "13", "11", "-num", "16", "1", "-name", "g_Car1", "-trans", "0xE300E3", "-cropline16" };
-const int ARGC = sizeof(ARGV)/sizeof(ARGV[0]);
+enum Format
+{
+	FORMAT_Auto, // Auto-detection
+	FORMAT_C,    // C header file
+	FORMAT_Asm,  // Assembler header file
+	FORMAT_Raw,  // Raw data file
+};
+
+//const char* ARGV[] = { "", "-in", "cars.png", "-out", "sprt_car_1.h", "-pos", "0", "0", "-size", "13", "11", "-num", "16", "1", "-name", "g_Car1", "-trans", "0xE300E3", "-compress", "cropline16", "-format", "asm", "-data", "dec" };
+const char* ARGV[] = { "", "-in", "track_01.png", "-out", "track_01.sc8", "-size", "256", "212", "-format", "raw" };
 
 //=============================================================================
 // Program
@@ -221,7 +229,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 												c8 = 0x04;
 										}
 									}
-									outData += lang->Data8Bits((u8)c8, DATA_Hexa);
+									outData += lang->Data8Bits((u8)c8);
 									totalBytes++;
 								}
 								else if(colorNum == 16)
@@ -234,7 +242,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 										byte |= 1 << (7 - bit);
 									if((pixel & 0x7) == 0x7)
 									{
-										outData += lang->Data1Bit(byte, DATA_Hexa);
+										outData += lang->Data1Bit(byte);
 										totalBytes++;
 										byte = 0;
 									}
@@ -248,11 +256,102 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 		}
 		outData += lang->Footer(totalBytes);
 
+		delete bits;
+
 		// Write header file
 		FILE* file;
 		fopen_s(&file, outFile, "wb");
-		fwrite(outData.c_str(), outData.size(), 1, file);
+		fwrite(outData.c_str(), 1, outData.size(), file);
 		fclose(file);
+	}
+}
+
+/***/
+void ConvertToRaw(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 colorNum, u32 transColor)
+{
+	FIBITMAP *dib, *dib32;
+	i32 i, j, bit, outSize, outIdx = 0;
+	RGB24 c24;
+	GRB8 c8;
+	u8 byte = 0;
+		
+	dib = LoadImage(inFile); // open and load the file using the default load option
+	if(dib != NULL)
+	{
+		// Get 32 bits version
+		dib32 = FreeImage_ConvertTo32Bits(dib);
+		FreeImage_Unload(dib); // free the original dib
+		i32 imageX = FreeImage_GetWidth(dib32);
+		if(sizeX == 0)
+			sizeX = imageX;
+		i32 imageY = FreeImage_GetHeight(dib32);
+		if(sizeY == 0)
+			sizeY = imageY;
+		i32 scanWidth = FreeImage_GetPitch(dib32);
+		i32 bpp = FreeImage_GetBPP(dib32);
+		BYTE *bits = new BYTE[scanWidth * imageY];
+		FreeImage_ConvertToRawBits(bits, dib32, scanWidth, 32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, TRUE);
+		FreeImage_Unload(dib32);
+		if(colorNum == 256)
+			outSize = imageX * imageY;
+		else if(colorNum == 16)
+			outSize = imageX * imageY / 2;
+		else if(colorNum == 2)
+			outSize = imageX * imageY / 8;
+		u8 *outData = new u8[outSize];
+
+		for(j = 0; j < sizeY; j++)
+		{
+			for(i = 0; i < sizeX; i++)
+			{
+				i32 pixel = posX + i + ((posY + j) * imageX);
+				u32 argb = ((u32*)bits)[pixel];
+				if(colorNum == 256) // Convert to 8 bits GRB
+				{
+					if((argb & 0xFFFFFF) == transColor)
+					{
+						c8 = 0;
+					}
+					else
+					{
+						c24 = RGB24(argb);
+						c8 = GRB8(c24);
+						if(c8 == 0) // color 0 must be convert to the nearest color
+						{
+							if(c24.G > c24.R)
+								c8 = 0x20;
+							else
+								c8 = 0x04;
+						}
+					}
+					outData[outIdx++] = (u8)c8;
+				}
+				else if(colorNum == 16) // Convert to paletized 16 colors
+				{
+				}
+				else if(colorNum == 2) // Convert to binary
+				{
+					bit = pixel & 0x7;
+					if((argb & 0xFFFFFF) != transColor)
+						byte |= 1 << (7 - bit);
+					if((pixel & 0x7) == 0x7)
+					{
+						outData[outIdx++] = byte;
+						byte = 0;
+					}
+				}
+			}
+		}
+
+		delete bits;
+
+		// Write header file
+		FILE* file;
+		fopen_s(&file, outFile, "wb");
+		fwrite(outData, 1, outSize, file);
+		fclose(file);
+
+		delete outData;
 	}
 }
 
@@ -324,15 +423,18 @@ void PrintUsage()
 	printf("   -trans color    Transparency color (in RGB 24 bits format)\n");
 	printf("   -name name      Name of the structure to export\n");
 	printf("   -compress ?\n");
+	printf("      none         No compression (default)\n");
 	printf("      crop256      Crop image to only the necessary area (max size 256x256)\n");
 	printf("      crop16       Crop image to only the necessary area (max size 16x16)\n");
 	printf("      cropline16   Crop image on a per line basis (max size 16x16)\n");
-	printf("   -langage ?\n");
-	printf("      auto         Auto-detected using output file extension\n");
+	printf("   -format ?\n");
+	printf("      auto         Auto-detected using output file extension (default)\n");
 	printf("      c            C header file output\n");
 	printf("      asm          Assembler header file output\n");
-	printf("   -format ?\n");
+	printf("      raw          Raw data image\n");
+	printf("   -data ?\n");
 	printf("      dec          Decimal data (c & asm)\n");
+	printf("      hexa         Default hexadecimal data (depend on langage; default)\n");
 	printf("      hexa0x       Hexadecimal data (0xFF; c & asm)\n");
 	printf("      hexaH        Hexadecimal data (0FFh; asm only)\n");
 	printf("      hexa$        Hexadecimal data ($FF; asm only)\n");
@@ -345,7 +447,7 @@ void PrintUsage()
 */
 int main(int argc, const char* argv[])
 {
-	argc = ARGC; // for debug purpose
+	argc = sizeof(ARGV)/sizeof(ARGV[0]); // for debug purpose
 	argv = ARGV; // for debug purpose
 
 	FreeImage_Initialise();
@@ -353,7 +455,8 @@ int main(int argc, const char* argv[])
 	const char *inFile = NULL, *outFile = NULL, *name = NULL;
 	i32 i, colorNum = 256, posX = 0, posY = 0, sizeX = 0, sizeY = 0, numX = 1, numY = 1, transColor = 0;
 	Compressor comp = COMPRESS_None;
-	LangageInterface* lang = new LangageCPP;
+	DataFormat data = DATA_Hexa;
+	Format outFormat = FORMAT_Auto;
 
 	if(argc == 1)
 	{
@@ -398,17 +501,45 @@ int main(int argc, const char* argv[])
 		{
 			name = argv[++i];
 		}
-		else if(_stricmp(argv[i], "-crop256") == 0)
+		else if(_stricmp(argv[i], "-compress") == 0)
 		{
-			comp = COMPRESS_Crop256;
+			i++;
+			if(_stricmp(argv[i], "crop256") == 0)
+				comp = COMPRESS_Crop256;
+			else if(_stricmp(argv[i], "crop16") == 0)
+				comp = COMPRESS_Crop16;
+			else if(_stricmp(argv[i], "cropline16") == 0)
+				comp = COMPRESS_CropLine16;
 		}
-		else if(_stricmp(argv[i], "-crop16") == 0)
+		else if(_stricmp(argv[i], "-format") == 0)
 		{
-			comp = COMPRESS_Crop16;
+			i++;
+			if(_stricmp(argv[i], "auto") == 0)
+				outFormat = FORMAT_Auto;
+			else if(_stricmp(argv[i], "c") == 0)
+				outFormat = FORMAT_C;
+			else if(_stricmp(argv[i], "asm") == 0)
+				outFormat = FORMAT_Asm;
+			else if(_stricmp(argv[i], "raw") == 0)
+				outFormat = FORMAT_Raw;
 		}
-		else if(_stricmp(argv[i], "-cropline16") == 0)
+		else if(_stricmp(argv[i], "-data") == 0)
 		{
-			comp = COMPRESS_CropLine16;
+			i++;
+			if(_stricmp(argv[i], "dec") == 0)
+				data = DATA_Decimal;
+			else if(_stricmp(argv[i], "hexa") == 0)
+				data = DATA_Hexa;
+			else if(_stricmp(argv[i], "hexa0x") == 0)
+				data = DATA_HexaC;
+			else if(_stricmp(argv[i], "hexaH") == 0)
+				data = DATA_HexaAsm;
+			else if(_stricmp(argv[i], "hexa$") == 0)
+				data = DATA_HexaDollar;
+			else if(_stricmp(argv[i], "hexa#") == 0)
+				data = DATA_HexaSharp;
+			else if(_stricmp(argv[i], "bin") == 0)
+				data = DATA_Binary;
 		}
 	}
 
@@ -425,9 +556,19 @@ int main(int argc, const char* argv[])
 	// Convert
 	if(inFile && outFile)
 	{
-		if(strstr(outFile, ".h") ||strstr(outFile, ".H"))
+		if((outFormat == FORMAT_C) || ((outFormat == FORMAT_Auto) && strstr(outFile, ".h")))
 		{
-			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum, transColor, name, comp, lang);
+			LangageInterface* langInter = new LangageC(data);
+			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum, transColor, name, comp, langInter);
+		}
+		else if((outFormat == FORMAT_Asm) || ((outFormat == FORMAT_Auto) && (strstr(outFile, ".s") || strstr(outFile, ".asm"))))
+		{
+			LangageInterface* langInter = new LangageASM(data);
+			ConvertToHeader(inFile, outFile, posX, posY, sizeX, sizeY, numX, numY, colorNum, transColor, name, comp, langInter);
+		}
+		else if((outFormat == FORMAT_Raw) || ((outFormat == FORMAT_Auto) && strstr(outFile, ".raw")))
+		{
+			ConvertToRaw(inFile, outFile, posX, posY, sizeX, sizeY, colorNum, transColor);
 		}
 		else
 		{

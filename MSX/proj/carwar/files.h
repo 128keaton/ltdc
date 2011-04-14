@@ -27,9 +27,7 @@
 #define  SEEK_CUR  1
 #define  SEEK_END  2
 
-
 extern unsigned char last_error;
-
 
 extern char open(char *, unsigned char);
 extern char creat(char *, unsigned char, unsigned char);
@@ -40,4 +38,3 @@ extern int write(char, void *, int);
 extern long lseek(char, long, char);
 extern void exit(char);
 
-#endif
