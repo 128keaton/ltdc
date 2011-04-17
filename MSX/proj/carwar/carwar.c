@@ -1,8 +1,8 @@
-/* 3D on MSX */
+/* CARWAR */
 #include "core.h"
 #include "bios.h"
 #include "video.h"
-#include "files.h"
+//#include "files.h"
 
 //-----------------------------------------------------------------------------
 // D E F I N E S
@@ -475,9 +475,9 @@ const MenuEntry g_MenuMain[] =
 // Menu 1
 const MenuEntry g_MenuMode[] =
 {
+	{ "SELECT TRACK", 2, 0, 0 },
 	{ "TYPE",         ITEM_VARIABLE, SelectRule, 0 },
 	{ "PLAYERS",      ITEM_VARIABLE, SelectPlayer, 0 },
-	{ "SELECT TRACK", 2, 0, 0 },
 	{ "<BACK",        0, 0, 0 },
 };
 
@@ -492,9 +492,9 @@ const MenuEntry g_MenuTrack[] =
 // Menu 3
 const MenuEntry g_MenuTrackList[] =
 {
+	{ "START GAME",   ITEM_ACTION, StartGame, 2 },
 	{ "TRACK", ITEM_VARIABLE, SelectTrack, 0 },
 	{ "SHADE", ITEM_VARIABLE, SelectShade, 0 },
-	{ "START GAME",   ITEM_ACTION, StartGame, 2 },
 	{ "<BACK", 3, 0, 0 },
 };
 
@@ -799,13 +799,14 @@ void StateStartGame()
 	//BuildTrack();
 	//if(game.shadeTrack)
 	//	ShadeTrack();
-	file = open("TRACK_01.SC8", O_RDONLY);
-	for(i=0; i<212; i++) // copy line-by-line
-	{
-		read(file, (int)&game.fileBuffer, 256);
-		HMMC(0, i, 256, 1, (u16)&game.fileBuffer);
-	}	
-	close(file);
+	//file = open("TRACK_01.SC8", O_RDONLY);
+	//for(i=0; i<212; i++) // copy line-by-line
+	//{
+	//	read(file, (int)&game.fileBuffer, 256);
+	//	HMMC(0, i, 256, 1, (u16)&game.fileBuffer);
+	//}	
+	//close(file);
+	LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
 
 	HMMM(0, 0, 0, 256, 256, 212);
 

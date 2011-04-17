@@ -1,5 +1,7 @@
 #pragma once
 
+// File I/O for MSX-DOS
+
 /* standard descriptors */
 #define  STDIN   0
 #define  STDOUT  1
