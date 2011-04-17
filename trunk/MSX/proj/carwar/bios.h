@@ -114,6 +114,9 @@
 //FFC0 H.SCRE
 //FFC5 H.PLAY
 
+// Hook
+void SetHook(u16 hook, u16 function);
+
 // Joystick
 char Joystick(char n);
 char Joytrig(char n);
@@ -121,5 +124,6 @@ char Joytrig(char n);
 // Keyboard
 u8 GetKeyMatrixLine(u8 n);
 
-// Hook
-void SetHook(u16 hook, u16 function);
+// Files
+#define FILE(str) "\"" str "\""
+void LoadToVRAM(const char* filename, u16 x, u16 y);

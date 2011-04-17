@@ -119,30 +119,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="build"
-			>
-			<File
-				RelativePath=".\build.bat"
-				>
-			</File>
-			<File
-				RelativePath=".\carwar.asm"
-				>
-			</File>
-			<File
-				RelativePath=".\carwar.lst"
-				>
-			</File>
-			<File
-				RelativePath=".\carwar.map"
-				>
-			</File>
-			<File
-				RelativePath=".\carwar.sym"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="CMSX"
 			>
 			<File
@@ -204,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\build_trigo.bat"
-				>
-			</File>
-			<File
 				RelativePath=".\core.h"
 				>
 			</File>
@@ -216,6 +188,7 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -226,6 +199,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -241,46 +215,6 @@
 			</File>
 			<File
 				RelativePath=".\keyboard.h"
-				>
-			</File>
-			<File
-				RelativePath=".\proj64.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\rot16.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\rot256.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\rot64.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\sqrt1024.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\sqrt256.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\trigo16.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\trigo256.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\trigo32.inc"
-				>
-			</File>
-			<File
-				RelativePath=".\trigo64.inc"
 				>
 			</File>
 			<File
@@ -311,7 +245,59 @@
 				RelativePath=".\video.h"
 				>
 			</File>
+			<Filter
+				Name="data"
+				>
+				<File
+					RelativePath=".\build_trigo.bat"
+					>
+				</File>
+				<File
+					RelativePath=".\proj64.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\rot16.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\rot256.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\rot64.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\sqrt1024.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\sqrt256.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\trigo16.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\trigo256.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\trigo32.inc"
+					>
+				</File>
+				<File
+					RelativePath=".\trigo64.inc"
+					>
+				</File>
+			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\build.bat"
+			>
+		</File>
 		<File
 			RelativePath=".\carwar.c"
 			>

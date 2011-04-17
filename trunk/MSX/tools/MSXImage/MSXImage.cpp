@@ -292,13 +292,22 @@ void ConvertToRaw(const char* inFile, const char* outFile, i32 posX, i32 posY, i
 		BYTE *bits = new BYTE[scanWidth * imageY];
 		FreeImage_ConvertToRawBits(bits, dib32, scanWidth, 32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, TRUE);
 		FreeImage_Unload(dib32);
+		
+		// allocate memory
 		if(colorNum == 256)
 			outSize = imageX * imageY;
 		else if(colorNum == 16)
 			outSize = imageX * imageY / 2;
 		else if(colorNum == 2)
 			outSize = imageX * imageY / 8;
+		outSize += 4;
 		u8 *outData = new u8[outSize];
+		
+		// write header
+		*((u16*)&outData[outIdx]) = (u16)sizeX;
+		outIdx += 2;
+		*((u16*)&outData[outIdx]) = (u16)sizeY;
+		outIdx += 2;
 
 		for(j = 0; j < sizeY; j++)
 		{
