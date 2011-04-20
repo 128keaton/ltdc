@@ -1,6 +1,10 @@
 #pragma once
 #include "keyboard.h"
 
+// Bios 
+#define CALSLT 0x1C
+
+// Hook
 #define H_KEYI 0xFD9A 
 #define H_TIMI 0xFD9F
 #define H_CHPU 0xFDA4 

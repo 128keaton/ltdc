@@ -295,12 +295,12 @@ void ConvertToRaw(const char* inFile, const char* outFile, i32 posX, i32 posY, i
 		
 		// allocate memory
 		if(colorNum == 256)
-			outSize = imageX * imageY;
+			outSize = sizeX * sizeY;
 		else if(colorNum == 16)
-			outSize = imageX * imageY / 2;
+			outSize = sizeX * sizeY / 2;
 		else if(colorNum == 2)
-			outSize = imageX * imageY / 8;
-		outSize += 4;
+			outSize = sizeX * sizeY / 8;
+		outSize += 4; // header
 		u8 *outData = new u8[outSize];
 		
 		// write header
