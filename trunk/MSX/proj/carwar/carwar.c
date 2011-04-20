@@ -538,9 +538,40 @@ __sfr __at(0xA8) g_slotPort;
 /** Program entry point */
 void main(void)
 {
+#if 1
 	__asm
 		di
-		ld sp, (#0xFC4A)
+		call	#0x0138 ;// RSLREG: Lit l'état courant du registre du slot primaire.
+		rrca
+		rrca
+		and		#3
+		ld		c,a
+		ld		b,#0
+		ld		hl,#0xFCC1
+		add		hl,bc
+		or		(hl)
+		ld		c,a
+		inc		hl
+		inc		hl
+		inc		hl
+		inc		hl
+		ld		a,(hl)
+		and		#0x0C
+		or		c
+		ld		(#0xC399),a
+		ld		h,a
+		ld		l,#0xF7
+		ld		(#0xFEDA),hl
+		ld		hl,#init_end
+		ld		(#0xFEDC),hl
+		ret
+	init_end:
+	__endasm;
+#endif
+
+	__asm
+		di
+		ld		sp, (#0xFC4A)
 		ei
 	__endasm;
 
@@ -806,7 +837,8 @@ void StateStartGame()
 	//	HMMC(0, i, 256, 1, (u16)&game.fileBuffer);
 	//}	
 	//close(file);
-	LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
+	//LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
+	LoadToVRAM(FILE("TEST.PIC"), 0, 0);
 
 	HMMM(0, 0, 0, 256, 256, 212);
 

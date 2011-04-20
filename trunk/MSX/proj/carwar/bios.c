@@ -77,15 +77,15 @@ void LoadToVRAM(const char* filename, u16 x, u16 y)
 #define EXTROM  #0x015F
 #define BLTVD   #0x019D
 
-#define SX		0xF562 // X-coordinate of the source
-#define SY		0xF564 // Y-coordinate of the source
-#define DX		0xF566 // X-coordinate of the destination
-#define DY		0xF568 // Y-coordinate of the destination
-#define NX		0xF56A // number of dots in the X direction
-#define NY		0xF56C // number of dots in the Y direction
-#define CDUMMY	0xF56E // dummy (not required to be set)
-#define ARG		0xF56F // selects the direction and expansion RAM (same as VDP R#45)
-#define LOGOP	0xF570 // logical operation code (same as the logical operation code of VDP) 
+//#define SX		0xF562 // X-coordinate of the source
+//#define SY		0xF564 // Y-coordinate of the source
+//#define DX		0xF566 // X-coordinate of the destination
+//#define DY		0xF568 // Y-coordinate of the destination
+//#define NX		0xF56A // number of dots in the X direction
+//#define NY		0xF56C // number of dots in the Y direction
+//#define CDUMMY	0xF56E // dummy (not required to be set)
+//#define ARG		0xF56F // selects the direction and expansion RAM (same as VDP R#45)
+//#define LOGOP		xF570 // logical operation code (same as the logical operation code of VDP) 
 
 	__asm
 		//ld		l,4(ix)
@@ -105,5 +105,10 @@ void LoadToVRAM(const char* filename, u16 x, u16 y)
 		ld		hl, #_subRom ;// SX
 		ld		ix, BLTVD
 		call	EXTROM
-	__endasm;
+
+		//ld		IX,	BLTVD	;// 019Dh
+		//ld		IY,	#0x3	;// 00000011b, Slot 3-0 (toujours la?)
+		//call	CALSLT		;// 1Ch
+		//ei
+__endasm;
 }
