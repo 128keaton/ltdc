@@ -2,7 +2,7 @@
 #include "core.h"
 #include "bios.h"
 #include "video.h"
-//#include "files.h"
+#include "files.h"
 
 //-----------------------------------------------------------------------------
 // D E F I N E S
@@ -259,7 +259,7 @@ u8 VectorToAngle256(i16 x, i16 y);
 //u16 GetVectorLenght1024(i16 x, i16 y);
 u16 GetVectorLenght256(i16 x, i16 y);
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr);
-void VBlankInterrupt();
+//void VBlankInterrupt();
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -566,6 +566,32 @@ void main(void)
 		ld		(#0xFEDC),hl
 		ret
 	init_end:
+		di
+		ld		b,#5 ;// delete hook
+		ld		a,#0xC9
+		ld		hl, #0xFEDA ;// HSTKE
+	del_hook:
+		ld		(hl),a
+		inc		hl
+		djnz	del_hook
+		; Check if disk found
+		ld		a,(#0xFFA7)		              ;// checks if there is any diskrom (HPHYD)
+		cp		#0xC9
+		jr		z,return_clear
+		; comprueba version de DOS y guarda
+		ld		c,#0x6F ;// _DOSVER_
+		call	#0xF37D ;// BDOS: Send DOSVER command to dos
+		ld		a,b
+		inc		a
+		;//ld		(DOSFOUND),a		;// Save dos version
+		;//call	InitDskError		;// Initialices Disk Error routines (mail me if you need them)
+		jp		game_start
+	return_clear:
+		xor		a
+		;//ld		(DOSFOUND),a
+		jp		game_start
+	game_start:
+
 	__endasm;
 #endif
 
@@ -610,7 +636,7 @@ void StateInitialize()
 	game.count = 0;
 	game.second = 0;
 	game.minute = 0;
-	SetHook(H_TIMI, (u16)VBlankInterrupt);
+	//SetHook(H_TIMI, (u16)VBlankInterrupt);
 
 	game.rule = RULE_RACE;
 	game.playerNum = 4;
@@ -838,9 +864,9 @@ void StateStartGame()
 	//}	
 	//close(file);
 	//LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
-	LoadToVRAM(FILE("TEST.PIC"), 0, 0);
+	LoadToVRAM(FILE("TEST.PIC"), 100, 300);
 
-	HMMM(0, 0, 0, 256, 256, 212);
+	//HMMM(0, 0, 0, 256, 256, 212);
 
 	//----------------------------------------
 	// Copy cars to VRAM
@@ -1659,47 +1685,47 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 	}
 }
 
-void VBlankInterrupt() __naked
-{
-	__asm // backup registers
-		di
-        push    af
-        push    bc
-        push    de
-        push    hl
-	__endasm;
-
-	game.count++;
-	if(game.count == 60) // frame counter
-	{
-		game.count = 0;
-		game.second++;
-		if((game.second & 0x0F) == 0x0A)
-		{
-			game.second &= 0xF0;
-			game.second += 0x10;
-			if(game.second == 0x60)
-			{
-				game.second = 0;
-				game.minute++;
-				if((game.minute & 0x0F) == 0x0A)
-				{
-					game.minute &= 0xF0;
-					game.minute += 0x10;
-				}
-			}
-		}
-	}
-
-	__asm // restore registers
-        pop     hl
-        pop     de
-        pop     bc
-        pop     af
-		ei
-		ret
-	__endasm;
-}
+//void VBlankInterrupt() __naked
+//{
+//	__asm // backup registers
+//		di
+//        push    af
+//        push    bc
+//        push    de
+//        push    hl
+//	__endasm;
+//
+//	game.count++;
+//	if(game.count == 60) // frame counter
+//	{
+//		game.count = 0;
+//		game.second++;
+//		if((game.second & 0x0F) == 0x0A)
+//		{
+//			game.second &= 0xF0;
+//			game.second += 0x10;
+//			if(game.second == 0x60)
+//			{
+//				game.second = 0;
+//				game.minute++;
+//				if((game.minute & 0x0F) == 0x0A)
+//				{
+//					game.minute &= 0xF0;
+//					game.minute += 0x10;
+//				}
+//			}
+//		}
+//	}
+//
+//	__asm // restore registers
+//        pop     hl
+//        pop     de
+//        pop     bc
+//        pop     af
+//		ei
+//		ret
+//	__endasm;
+//}
 
 //-----------------------------------------------------------------------------
 // MENU CALLBACKS
