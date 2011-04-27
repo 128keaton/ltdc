@@ -520,7 +520,8 @@ const u8 g_SmokeFrq[] = { 4,  4,  8,  16, 32, 64, 128, 255 };
 // R A M   D A T A
 
 // Game data
-GameData __at(0xC000) game;
+GameData __at(0xC000+256) game;
+u8 __at(0xC000+256+sizeof(game)) freeRam;
 
 //-----------------------------------------------------------------------------
 // P R O G R A M
@@ -545,43 +546,45 @@ void main(void)
 		rrca
 		rrca
 		and		#3
-		ld		c,a
-		ld		b,#0
-		ld		hl,#0xFCC1
-		add		hl,bc
+		ld		c, a
+		ld		b, #0
+		ld		hl, #0xFCC1
+		add		hl, bc
 		or		(hl)
-		ld		c,a
+		ld		c, a
 		inc		hl
 		inc		hl
 		inc		hl
 		inc		hl
-		ld		a,(hl)
+		ld		a, (hl)
 		and		#0x0C
 		or		c
-		ld		(#0xC399),a
-		ld		h,a
-		ld		l,#0xF7
-		ld		(#0xFEDA),hl
-		ld		hl,#init_end
-		ld		(#0xFEDC),hl
+		;//ld		(#0xC399),a
+		ld		h, a
+		ld		l, #0xF7
+		ld		(#0xFEDA), hl
+		ld		hl, #game_entry_point
+		ld		(#0xFEDC), hl
+		ld		a, #0xC9
+		ld		(#0xFEDE), a
 		ret
-	init_end:
+	game_entry_point:
 		di
-		ld		b,#5 ;// delete hook
-		ld		a,#0xC9
+		ld		b, #5 ;// delete hook
+		ld		a, #0xC9
 		ld		hl, #0xFEDA ;// HSTKE
 	del_hook:
-		ld		(hl),a
+		ld		(hl), a
 		inc		hl
 		djnz	del_hook
-		; Check if disk found
-		ld		a,(#0xFFA7)		              ;// checks if there is any diskrom (HPHYD)
+		;// Check if disk found
+		ld		a, (#0xFFA7)		              ;// checks if there is any diskrom (HPHYD)
 		cp		#0xC9
-		jr		z,return_clear
-		; comprueba version de DOS y guarda
-		ld		c,#0x6F ;// _DOSVER_
+		jr		z, return_clear
+		;// comprueba version de DOS y guarda
+		ld		c, #0x6F ;// _DOSVER_
 		call	#0xF37D ;// BDOS: Send DOSVER command to dos
-		ld		a,b
+		ld		a, b
 		inc		a
 		;//ld		(DOSFOUND),a		;// Save dos version
 		;//call	InitDskError		;// Initialices Disk Error routines (mail me if you need them)
@@ -591,17 +594,25 @@ void main(void)
 		;//ld		(DOSFOUND),a
 		jp		game_start
 	game_start:
-
+;//		ld		c, #0x1A
+;//		ld		de, #freeRam
+;//		call	#0xF37D
+;//		ld		c, #0x1B
+;//		ld		e, #0
+;//		call	#0xF37D
+;//		ld		c, #0x57
+;//		call	#0xF37D
 	__endasm;
 #endif
 
 	__asm
+	;game_entry_point:
 		di
 		ld		sp, (#0xFC4A)
 		ei
 	__endasm;
 
-	g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2);
+	g_slotPort = (g_slotPort & 0xCF) | ((g_slotPort & 0x0C) << 2); // Set Page 2 slot the same as Page 1 ()
 
 	MainLoop();
 }
@@ -864,9 +875,9 @@ void StateStartGame()
 	//}	
 	//close(file);
 	//LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
-	LoadToVRAM(FILE("TEST.PIC"), 100, 300);
+	LoadToVRAM(FILE("TEST.PIC"), 16, 32);
 
-	//HMMM(0, 0, 0, 256, 256, 212);
+	HMMM(0, 0, 0, 256, 256, 212);
 
 	//----------------------------------------
 	// Copy cars to VRAM

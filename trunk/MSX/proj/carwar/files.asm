@@ -1,13 +1,16 @@
 	.area _CODE
 
+	;//BDOS = #0x0005
+	BDOS = #0xF37D
+
 _last_error::
 	.ds 1
 
 
 _open::
-	push ix
-	ld ix,#0
-	add ix,sp
+	push	ix
+	ld		ix, #0
+	add		ix, sp
 
 	; path
 	ld e,4(ix)
@@ -16,7 +19,7 @@ _open::
 	ld a,6(ix)
 	; call
 	ld c,#0x43
-	call 5
+	call BDOS
 	; check error
 	ld (_last_error),a
 	add a,#0
@@ -46,7 +49,7 @@ _creat::
 	ld b,7(ix)
 	; call
 	ld c,#0x44
-	call 5
+	call BDOS
 	; check error
 	ld (_last_error),a
 	add a,#0
@@ -71,7 +74,7 @@ _close::
 	ld b,4(ix)
 	; call
 	ld c,#0x45
-	call 5
+	call BDOS
 	; return
 	ld (_last_error),a
 	ld l,a
@@ -90,7 +93,7 @@ _dup::
 	ld b,4(ix)
 	; call
 	ld c,#0x47
-	call 5
+	call BDOS
 	; return
 	ld (_last_error),a
 	add a,#0
@@ -121,7 +124,7 @@ _read::
 	ld h,8(ix)
 	; call
 	ld c,#0x48
-	call 5
+	call BDOS
 	; return
 	ld (_last_error),a
 	add a,#0
@@ -150,7 +153,7 @@ _write::
 	ld h,8(ix)
 	; call
 	ld c,#0x49
-	call 5
+	call BDOS
 	; return
 	ld (_last_error),a
 	add a,#0
@@ -180,7 +183,7 @@ _lseek::
 	ld a,9(ix)
 	; call
 	ld c,#0x4A
-	call 5
+	call BDOS
 	; return
 	ld (_last_error),a
 	add a,#0
@@ -201,7 +204,7 @@ _exit::
 
 	ld b,4(ix)
 	ld c,#0x62
-	call 5
+	call BDOS
 
 	pop ix
 	ret
