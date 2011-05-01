@@ -520,8 +520,8 @@ const u8 g_SmokeFrq[] = { 4,  4,  8,  16, 32, 64, 128, 255 };
 // R A M   D A T A
 
 // Game data
-GameData __at(0xC000+256) game;
-u8 __at(0xC000+256+sizeof(game)) freeRam;
+GameData __at(0xC000) game;
+u8 __at(0xC000+sizeof(game)) freeRam;
 
 //-----------------------------------------------------------------------------
 // P R O G R A M
@@ -594,6 +594,9 @@ void main(void)
 		;//ld		(DOSFOUND),a
 		jp		game_start
 	game_start:
+		ld		hl, #_freeRam
+		ld		(#0xF6C6), hl ;// Fin de la zone des variables = 0C000h
+
 ;//		ld		c, #0x1A
 ;//		ld		de, #freeRam
 ;//		call	#0xF37D
@@ -874,8 +877,8 @@ void StateStartGame()
 	//	HMMC(0, i, 256, 1, (u16)&game.fileBuffer);
 	//}	
 	//close(file);
-	//LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
-	LoadToVRAM(FILE("TEST.PIC"), 16, 32);
+	LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
+	//LoadToVRAM(FILE("TEST.PIC"), 16, 32);
 
 	HMMM(0, 0, 0, 256, 256, 212);
 
