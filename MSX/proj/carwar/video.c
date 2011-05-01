@@ -67,6 +67,9 @@ void SetScreen8(u8 flag)
 		//ld		a,VDP_REG(16)
 		//out		(VDP_ADDR),a
 
+		ld		hl,#0xFCAF
+		ld		(hl),#8
+
 	ei //; on autorise les interruptions
 
 	

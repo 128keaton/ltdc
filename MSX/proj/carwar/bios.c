@@ -110,11 +110,11 @@ void LoadToVRAM(const char* filename, u16 x, u16 y)
 		;//ld		ix, BLTVD
 		;//call	EXTROM
 
-		ld		hl, #BLTVD_Proc
-		ld		de, #0xC000
-		ld		bc, #0x00D0
-		ldir
-		jp		0xC000
+;//		ld		hl, #BLTVD_Proc
+;//		ld		de, #0xC000
+;//		ld		bc, #0x00D0
+;//		ldir
+;//		jp		0xC000
 
 	BLTVD_Proc:
 		ld		ix, #0x019D
@@ -124,7 +124,7 @@ void LoadToVRAM(const char* filename, u16 x, u16 y)
 ;//		ld		IY,	#0x3	;// 00000011b, Slot 3-0 (toujours la?)
 ;//		call	CALSLT		;// 1Ch
 		ei
-		jp		BLTVD_Exit
+;//		jp		BLTVD_Exit
 	
 	BLTVD_Exit:
 
