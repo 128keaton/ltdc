@@ -216,12 +216,7 @@ typedef struct tagGameData
 {
 	u8               frame;
 	u16              yOffset;
-	u8               playerNum;
-	struct tagPlayer players[4];
 	void            (*state)(void);
-	Smoke            smokes[12];
-	VdpBuffer32      vdp32;
-	VdpBuffer36      vdp36;
 	// timer
 	u8               count;
 	u8               second;
@@ -235,7 +230,13 @@ typedef struct tagGameData
 	u8               page;
 	u8               track;
 	u8               shadeTrack;
+	u8               playerNum;
+	// Gameplay
+	struct tagPlayer players[4];
+	Smoke            smokes[12];
 	// buffers
+	VdpBuffer32      vdp32;
+	VdpBuffer36      vdp36;
 	u8               fileBuffer[256];
 	u8               colorCode[256];
 	u8               blockGen[32*32];

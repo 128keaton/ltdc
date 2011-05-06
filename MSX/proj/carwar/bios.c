@@ -106,27 +106,10 @@ void LoadToVRAM(const char* filename, u16 x, u16 y)
 		ld		(ARG), a ;// ARG doit toujours être mis à zéro !!!
 		ld		(LOGOP), a ;// Idem LOGOP
 		;// Call BLTVD function
-		;//ld		hl, SX ;// #_subRom ;// 
-		;//ld		ix, BLTVD
-		;//call	EXTROM
-
-;//		ld		hl, #BLTVD_Proc
-;//		ld		de, #0xC000
-;//		ld		bc, #0x00D0
-;//		ldir
-;//		jp		0xC000
-
-	BLTVD_Proc:
-		ld		ix, #0x019D
+		di
 		ld		hl, #0xF562
-		call	#0x015F
-;//		ld		IX,	BLTVD	;// 019Dh
-;//		ld		IY,	#0x3	;// 00000011b, Slot 3-0 (toujours la?)
-;//		call	CALSLT		;// 1Ch
+		ld		ix, BLTVD
+		call	EXTROM
 		ei
-;//		jp		BLTVD_Exit
-	
-	BLTVD_Exit:
-
 	__endasm;
 }
