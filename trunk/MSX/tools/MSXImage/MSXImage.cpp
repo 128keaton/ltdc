@@ -456,8 +456,8 @@ void PrintUsage()
 */
 int main(int argc, const char* argv[])
 {
-	argc = sizeof(ARGV)/sizeof(ARGV[0]); // for debug purpose
-	argv = ARGV; // for debug purpose
+	//argc = sizeof(ARGV)/sizeof(ARGV[0]); // for debug purpose
+	//argv = ARGV; // for debug purpose
 
 	FreeImage_Initialise();
 

@@ -1,6 +1,15 @@
 #include "core.h"
 #include "video.h"
 
+VDP __at(0xC000) vdp;
+
+/** Initialize video library */
+void VideoInitialize()
+{
+	//vdp.vdp36.ARG = 0; 
+	vdp.vdp32.ARG = 0; 
+}
+
 /**
  *
  */
@@ -187,6 +196,7 @@ void SetPage8(u8 page)
 /**
  * PSET (128,96),255
  */
+#ifndef REM_DRAWPOINT8
 void DrawPoint8(u8 posX, u8 posY, u8 color)
 {
 	VdpBuffer36 buffer;
@@ -200,10 +210,12 @@ void DrawPoint8(u8 posX, u8 posY, u8 color)
 	buffer.CMD = 0x50;
 	VPDCommand36((u16)&buffer);
 }
+#endif
 
 /**
  * LINE (128,96),(190,56),255
  */
+#ifndef REM_DRAWLINE8
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 {
 	posX1; posY1; posX2; posY2; color;
@@ -338,11 +350,12 @@ void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 	__endasm;
 */
 }
+#endif
 
 /**
  *
  */
-void waitRetrace()
+void WaitRetrace()
 {
 	__asm
 
@@ -522,88 +535,86 @@ void VPDCommandLoop(u16 address)
 	__endasm;
 }
 
+///** Should be inline */
+//void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
+//{
+//	VdpBuffer36 buffer;
+//	
+//	buffer.DX = dx;
+//	buffer.DY = dy;
+//	buffer.NX = nx;
+//	buffer.NY = ny;
+//	buffer.CLR = ((u8*)ram)[0];
+//	buffer.ARG = 0;
+//	buffer.CMD = 0xF0;
+//	VPDCommand36((u16)&buffer);
+//	VPDCommandLoop(ram);
+//}
 
-/** Should be inline */
-void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
-{
-	VdpBuffer36 buffer;
-	
-	buffer.DX = dx;
-	buffer.DY = dy;
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = ((u8*)ram)[0];
-	buffer.ARG = 0;
-	buffer.CMD = 0xF0;
-	VPDCommand36((u16)&buffer);
-	VPDCommandLoop(ram);
-}
+///** Should be inline */
+//void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
+//{
+//	VdpBuffer36 buffer;
+//	
+//	buffer.DX = dx;
+//	buffer.DY = dy;
+//	buffer.NX = nx;
+//	buffer.NY = ny;
+//	buffer.CLR = ((u8*)ram)[0];
+//	buffer.ARG = 0;
+//	buffer.CMD = 0xB8;
+//	VPDCommand36((u16)&buffer);
+//	VPDCommandLoop(ram);
+//}
 
-/** Should be inline */
-void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram)
-{
-	VdpBuffer36 buffer;
-	
-	buffer.DX = dx;
-	buffer.DY = dy;
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = ((u8*)ram)[0];
-	buffer.ARG = 0;
-	buffer.CMD = 0xB8;
-	VPDCommand36((u16)&buffer);
-	VPDCommandLoop(ram);
-}
+///** Should be inline */
+//void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
+//{
+//	VdpBuffer36 buffer;
+//	
+//	buffer.DX = dx;
+//	buffer.DY = dy;
+//	buffer.NX = nx;
+//	buffer.NY = ny;
+//	buffer.CLR = color;
+//	buffer.ARG = 0;
+//	buffer.CMD = 0xC0;
+//	VPDCommand36((u16)&buffer);
+//}
 
-/** Should be inline */
-void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color)
-{
-	VdpBuffer36 buffer;
-	
-	buffer.DX = dx;
-	buffer.DY = dy;
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = color;
-	buffer.ARG = 0;
-	buffer.CMD = 0xC0;
-	VPDCommand36((u16)&buffer);
-}
+///** Should be inline */
+//void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
+//{
+//	VdpBuffer32 buffer;
+//	
+//	buffer.SX = sx;
+//	buffer.SY = sy;
+//	buffer.DX = dx;
+//	buffer.DY = dy;
+//	buffer.NX = nx;
+//	buffer.NY = ny;
+//	buffer.CLR = 0;
+//	buffer.ARG = 0;
+//	buffer.CMD = 0xD0;
+//	VPDCommand32((u16)&buffer);
+//}
 
-/** Should be inline */
-void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
-{
-	VdpBuffer32 buffer;
-	
-	buffer.SX = sx;
-	buffer.SY = sy;
-	buffer.DX = dx;
-	buffer.DY = dy;
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = 0;
-	buffer.ARG = 0;
-	buffer.CMD = 0xD0;
-	VPDCommand32((u16)&buffer);
-}
-
-/** Should be inline */
-void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
-{
-	VdpBuffer32 buffer;
-	
-	buffer.SX = sx;
-	buffer.SY = sy;
-	buffer.DX = dx;
-	buffer.DY = dy;
-	buffer.NX = nx;
-	buffer.NY = ny;
-	buffer.CLR = 0;
-	buffer.ARG = 0;
-	buffer.CMD = 0x98;
-	VPDCommand32((u16)&buffer);
-}
-
+///** Should be inline */
+//void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny)
+//{
+//	VdpBuffer32 buffer;
+//	
+//	buffer.SX = sx;
+//	buffer.SY = sy;
+//	buffer.DX = dx;
+//	buffer.DY = dy;
+//	buffer.NX = nx;
+//	buffer.NY = ny;
+//	buffer.CLR = 0;
+//	buffer.ARG = 0;
+//	buffer.CMD = 0x98;
+//	VPDCommand32((u16)&buffer);
+//}
 
 /**
  * Commande VDP (écriture registres 32 à 46)
@@ -718,8 +729,8 @@ void SetSpriteMultiColor(u8 index, u8 X, u8 Y, u8 shape, u16 ram)
 	sprt.posX = X;
 	sprt.posY = Y;
 	sprt.index = shape;
-	RAMtoVRAM((index * 16) % 256, 244 + (index / 16), 8, 1, ram);
-	RAMtoVRAM((index * 4) % 256, 246 + (index / 64), 3, 1, (u16)&sprt);
+	HMMC((index * 16) & 0x00FF, 244 + (index / 16), 8, 1, ram);
+	HMMC((index * 4) & 0x00FF, 246 + (index / 64), 3, 1, (u16)&sprt);
 }
 
 void SetSpriteUniColor(u8 index, u8 X, u8 Y, u8 shape, u8 color)
@@ -728,7 +739,7 @@ void SetSpriteUniColor(u8 index, u8 X, u8 Y, u8 shape, u8 color)
 	sprt.posX = X;
 	sprt.posY = Y;
 	sprt.index = shape;
-	FillVRAM((index * 16) % 256, 244 + (index / 16), 8, 1, color);
-	RAMtoVRAM((index * 4) % 256, 246 + (index / 64), 3, 1, (u16)&sprt);
+	HMMV((index * 16) & 0x00FF, 244 + (index / 16), 8, 1, color);
+	HMMC((index * 4) & 0x00FF, 246 + (index / 64), 3, 1, (u16)&sprt);
 }
 

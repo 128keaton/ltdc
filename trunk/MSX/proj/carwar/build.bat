@@ -4,7 +4,8 @@ SET LIBS=bios.c
 
 REM ////////////////////////////////////////
 ECHO --- SDCC Build ---
-sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 --vc --opt-code-speed out\%PROGRAM%.rel out\bios.rel out\video.rel out\files.rel -o out\
+REM // sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 --vc --opt-code-speed out\%PROGRAM%.rel out\bios.rel out\video.rel out\files.rel -o out\
+sdcc -mz80 --no-std-crt0 --code-loc 0x4010 --data-loc 0xC000 --vc --opt-code-speed out\%PROGRAM%.rel out\bios.rel out\video.rel -o out\
 
 ECHO ...build completed
 

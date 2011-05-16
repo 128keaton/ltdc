@@ -2,6 +2,7 @@
 
 	;//BDOS = #0x0005
 	BDOS = #0xF37D
+	EXTROM = #0x015F
 
 _last_error::
 	.ds 1

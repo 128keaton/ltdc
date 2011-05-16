@@ -118,24 +118,20 @@
 
 #define VDP_REG(num) #(0x80+num)
 
-#define POSI(a)    (a)
-#define NEGA(a)    ((^a)++)
+#define HMMC(dx, dy, nx, ny, ram)        vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CLR = ((u8*)ram)[0]; vdp.vdp32.CMD = VDP_CMD_HMMC;             VPDCommand36((u16)&vdp.vdp32+4); VPDCommandLoop(ram);
+#define LMMC(dx, dy, nx, ny, ram, op)    vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CLR = ((u8*)ram)[0]; vdp.vdp32.CMD = VDP_CMD_LMMC + op;        VPDCommand36((u16)&vdp.vdp32+4); VPDCommandLoop(ram);
+#define HMMM(sx, sy, dx, dy, nx, ny)     vdp.vdp32.SX = sx; vdp.vdp32.SY = sy; vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&vdp.vdp32);
+#define LMMM(sx, sy, dx, dy, nx, ny, op) vdp.vdp32.SX = sx; vdp.vdp32.SY = sy; vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&vdp.vdp32);
+#define HMMV(dx, dy, nx, ny, col)        vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CLR = col; vdp.vdp32.CMD = VDP_CMD_HMMV;                       VPDCommand36((u16)&vdp.vdp32+4);
+
+#define RAMtoVRAM	HMMC
+#define VRAMtoVRAM	HMMM
+#define FillVRAM	HMMV
 
 //----------------------------------------
 // T Y P E S
 
-typedef struct tagVdpBuffer36
-{
-	u16 DX;  // 36-37
-	u16 DY;  // 38-39
-	u16 NX;  // 40-41
-	u16 NY;  // 42-43
-	u8  CLR; // 44
-	u8  ARG; // 45
-	u8  CMD; // 46
-} VdpBuffer36;
-
-typedef struct tagVdpBuffer32
+typedef struct tagVdpBuffer
 {
 	u16 SX;  // 32-33
 	u16 SY;  // 34-35
@@ -146,9 +142,9 @@ typedef struct tagVdpBuffer32
 	u8  CLR; // 44
 	u8  ARG; // 45
 	u8  CMD; // 46
-} VdpBuffer32;
+} VdpBuffer;
 
-typedef struct
+typedef struct tagEntryTAS
 {
 	u8 posY;
 	u8 posX;
@@ -156,15 +152,25 @@ typedef struct
 	u8 reserved;
 } EntryTAS;
 
+typedef struct tagVDP
+{
+	VdpBuffer vdp32;
+} VDP;
+
 //----------------------------------------
 // P R O T O T Y P E S
 
+void VideoInitialize();
 void SetScreen8(u8 flag);
 void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas);
 void SetPage8(u8 page);
-void DrawPoint8(u8 posX, u8 posY, u8 color);
-void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
-void waitRetrace();
+#ifndef REM_DRAWPOINT8
+	void DrawPoint8(u8 posX, u8 posY, u8 color);
+#endif
+#ifndef REM_DRAWLINE8
+	void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color);
+#endif
+void WaitRetrace();
 void WaitForVDP();
 void WriteVRAM(u8 page, u16 addr, u8 value);
 u8 ReadVRAM(u8 page, u16 addr);
@@ -173,11 +179,11 @@ void PrintSprite(u8 X, u8 Y, const char* text, u16 colorTab);
 void ClearSprite();
 void SetSpriteMultiColor(u8 index, u8 X, u8 Y, u8 shape, u16 ram);
 void SetSpriteUniColor(u8 index, u8 X, u8 Y, u8 shape, u8 color);
-void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
-void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
-void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color);
-void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
-void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
+//void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
+//void RAMtoVRAMTrans(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
+//void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 color);
+//void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
+//void VRAMtoVRAMTrans(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
 
 void VPDCommand32(u16 address);
 void VPDCommand36(u16 address);
