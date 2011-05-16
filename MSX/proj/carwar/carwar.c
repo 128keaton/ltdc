@@ -53,7 +53,7 @@
 // Menu layout
 #define TITLE_X				16
 #define TITLE_Y				32
-#define MENU_X				64
+#define MENU_X				24
 #define MENU_Y				100
 #define LINE_SPACE			10
 #define TITLE_SPACE			16
@@ -61,6 +61,7 @@
 #define ITEM_INVALID		(0x80 + 0)
 #define ITEM_ACTION			(0x80 + 1)
 #define ITEM_VARIABLE		(0x80 + 2)
+#define ITEM_DUMMY			(0x80 + 3)
 
 // Color operator
 enum
@@ -96,8 +97,8 @@ enum
 	RULE_RACE = RULE_FIRST, // Race
 	RULE_SURVIVOR,          // Deathmatch
 	RULE_TAG,               // Chat
-	RULE_SOCCER,            // Soccer
-	RULE_LAST = RULE_SOCCER,
+	//RULE_SOCCER,            // Soccer
+	RULE_LAST = RULE_TAG,
 };
 
 // Tile render flag
@@ -229,17 +230,16 @@ typedef struct tagGameData
 	i8               rule;
 	u8               page;
 	u8               track;
-	u8               shadeTrack;
+	//u8               bFromDisk;
+	u8               bShadeTrack;
 	u8               playerNum;
 	// Gameplay
 	struct tagPlayer players[4];
 	Smoke            smokes[12];
 	// buffers
-	VdpBuffer32      vdp32;
-	VdpBuffer36      vdp36;
-	u8               fileBuffer[256];
+	//u8               fileBuffer[256];
 	u8               colorCode[256];
-	u8               blockGen[32*32];
+	//u8               blockGen[32*32];
 	u8               bitToByte[256 * 8];
 } GameData;
 
@@ -288,7 +288,8 @@ const char* SelectRule(u8 op, i8 value);
 const char* SelectPlayer(u8 op, i8 value);
 const char* SelectShade(u8 op, i8 value);
 const char* SelectTrack(u8 op, i8 value);
-
+//const char* SelectTrackDisk(u8 op, i8 value);
+//const char* SelectTrackSource(u8 op, i8 value);
 
 //-----------------------------------------------------------------------------
 // M A C R O S
@@ -296,20 +297,6 @@ const char* SelectTrack(u8 op, i8 value);
 #define PosToPxl(a) ((a) >> 8)
 #define PosXToSprt(a) (PosToPxl(a) - 6)
 #define PosYToSprt(a) (PosToPxl(a) - 5)
-
-#define HMMC(dx, dy, nx, ny, ram)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMC;                                  VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-#define LMMC(dx, dy, nx, ny, ram, op)    game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = ((u8*)ram)[0]; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_LMMC + op;                             VPDCommand36((u16)&game.vdp36); VPDCommandLoop(ram);
-#define HMMM(sx, sy, dx, dy, nx, ny)     game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&game.vdp32);
-#define LMMM(sx, sy, dx, dy, nx, ny, op) game.vdp32.SX = sx; game.vdp32.SY = sy; game.vdp32.DX = dx; game.vdp32.DY = dy; game.vdp32.NX = nx; game.vdp32.NY = ny; /*game.vdp32.CLR = 0; game.vdp32.ARG = 0;*/ game.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&game.vdp32);
-#define HMMV(dx, dy, nx, ny, col)        game.vdp36.DX = dx; game.vdp36.DY = dy; game.vdp36.NX = nx; game.vdp36.NY = ny; game.vdp36.CLR = col; /*game.vdp36.ARG = 0;*/ game.vdp36.CMD = VDP_CMD_HMMV;                                            VPDCommand36((u16)&game.vdp36);
-
-#define Abs8(i)  (((u8)(i) & 0x80) ? ~((u8)(i) - 1) : (i))
-#define Abs16(i) (((u16)(i) & 0x8000) ? ~((u16)(i) - 1) : (i))
-
-#define RGB8(r,g,b) (((g) << 5) + ((r) << 2) + (b))
-#define Modulo2(a,b) ((a) & ((b) - 1))
-
-#define Merge4(a,b) (((a) & 0xF) << 4 | ((b) & 0xF))
 
 #define TILE0(col0)\
 	Merge4(0, col0),
@@ -459,9 +446,9 @@ const u8 g_TrackTiles01[] =
 
 const Track g_Tracks[] = 
 {
-	{ "AOI1", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "AOI2", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "NOE1", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "<AOI1>", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
+	{ "<AOI2>", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "<NOE1>", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
 //-----------------------------------------------------------------------------
@@ -469,42 +456,60 @@ const Track g_Tracks[] =
 const MenuEntry g_MenuMain[] =
 {
 	{ "PLAY",     1, 0, 0 },
-	{ "EDITOR",   ITEM_INVALID, 0, 0 },
-	{ "CREDITS",  ITEM_INVALID, 0, 0 },
+	//{ "EDITOR",   ITEM_INVALID, 0, 0 },
+	{ "CREDITS",  4, 0, 0 },
 };
 
 // Menu 1
 const MenuEntry g_MenuMode[] =
 {
-	{ "SELECT TRACK", 2, 0, 0 },
+	{ "SELECT TRACK", 3, 0, 0 },
 	{ "TYPE",         ITEM_VARIABLE, SelectRule, 0 },
 	{ "PLAYERS",      ITEM_VARIABLE, SelectPlayer, 0 },
+	{ "",             ITEM_DUMMY, 0, 0 },
 	{ "<BACK",        0, 0, 0 },
 };
 
 // Menu 2
-const MenuEntry g_MenuTrack[] =
-{
-	{ "FROM ROM",  3, 0, 0 },
-	{ "FROM DISK", ITEM_INVALID, 0, 0 },
-	{ "<BACK",     1, 0, 0 },
-};
+//const MenuEntry g_MenuTrackSource[] =
+//{
+//	{ "FROM ROM",  3, SelectTrackSource, 0 },
+//	{ "FROM DISK", 3, SelectTrackSource, 1 },
+//	{ "",             ITEM_DUMMY, 0, 0 },
+//	{ "<BACK",     1, 0, 0 },
+//};
 
 // Menu 3
-const MenuEntry g_MenuTrackList[] =
+const MenuEntry g_MenuTrackSelect[] =	
 {
-	{ "START GAME",   ITEM_ACTION, StartGame, 2 },
-	{ "TRACK", ITEM_VARIABLE, SelectTrack, 0 },
-	{ "SHADE", ITEM_VARIABLE, SelectShade, 0 },
-	{ "<BACK", 3, 0, 0 },
+	{ "START GAME", ITEM_ACTION, StartGame, 2 },
+	{ "TRACK",      ITEM_VARIABLE, SelectTrack, 0 },
+	{ "SHADE",      ITEM_VARIABLE, SelectShade, 0 },
+	{ "",           ITEM_DUMMY, 0, 0 },
+	{ "<BACK",      1, 0, 0 },
+};
+
+// Menu 4
+const MenuEntry g_MenuCredits[] =
+{
+	{ "CODE:  AOINEKO", ITEM_DUMMY, 0, 0 },
+	{ "GRAPH: SENSOKAN,AOINEKO", ITEM_DUMMY, 0, 0 },
+	//{ "MUSIC: MAKOTO,NOE", ITEM_DUMMY, 0, 0 },
+	{ "TRACK: AOINEKO,NOE", ITEM_DUMMY, 0, 0 },
+	{ "", ITEM_DUMMY, 0, 0 },
+	{ "THANKS TO ALL MSX VILLAGE", ITEM_DUMMY, 0, 0 },
+	{ "MEMBERS FOR SUPPORT!", ITEM_DUMMY, 0, 0 },
+	{ "", ITEM_DUMMY, 0, 0 },
+	{ "<BACK", 0, 0, 0 },
 };
 
 const Menu g_Menus[] =
 {
-	{ "MAIN MENU",     "PRESS SPACE", g_MenuMain,      numberof(g_MenuMain) },
-	{ "GAME MODE",     "PRESS SPACE", g_MenuMode,      numberof(g_MenuMode) },
-	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrack,     numberof(g_MenuTrack) },
-	{ "TRACK SELECT",  "PRESS SPACE", g_MenuTrackList, numberof(g_MenuTrackList) },
+	{ "MAIN MENU",     0, g_MenuMain,        numberof(g_MenuMain) },
+	{ "GAME MODE",     0, g_MenuMode,        numberof(g_MenuMode) },
+	{ "TRACK SELECT",  0, 0/*g_MenuTrackSource*/, 0/*numberof(g_MenuTrackSource)*/ },
+	{ "TRACK SELECT",  0, g_MenuTrackSelect, numberof(g_MenuTrackSelect) },
+	{ "CREDITS",       0, g_MenuCredits,     numberof(g_MenuCredits) },
 };
 
 const u8 g_HeightTab[] = { 0, 2, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 7, 7, 6, 6, 5, 5, 4, 2, 0 };
@@ -521,8 +526,9 @@ const u8 g_SmokeFrq[] = { 4,  4,  8,  16, 32, 64, 128, 255 };
 // R A M   D A T A
 
 // Game data
-GameData __at(0xC000) game;
-u8 __at(0xC000+sizeof(game)) freeRam;
+extern VDP vdp;
+GameData __at(0xC000+sizeof(VDP)) game;
+u8* __at(0xC000+sizeof(VDP)+sizeof(GameData)) freeRam;
 
 //-----------------------------------------------------------------------------
 // P R O G R A M
@@ -540,74 +546,74 @@ __sfr __at(0xA8) g_slotPort;
 /** Program entry point */
 void main(void)
 {
-#if 1
-	__asm
-		di
-		call	#0x0138 ;// RSLREG: Lit l'état courant du registre du slot primaire.
-		rrca
-		rrca
-		and		#3
-		ld		c, a
-		ld		b, #0
-		ld		hl, #0xFCC1
-		add		hl, bc
-		or		(hl)
-		ld		c, a
-		inc		hl
-		inc		hl
-		inc		hl
-		inc		hl
-		ld		a, (hl)
-		and		#0x0C
-		or		c
-		;//ld		(#0xC399),a
-		ld		h, a
-		ld		l, #0xF7
-		ld		(#0xFEDA), hl
-		ld		hl, #game_entry_point
-		ld		(#0xFEDC), hl
-		ld		a, #0xC9
-		ld		(#0xFEDE), a
-		ret
-	game_entry_point:
-		di
-		ld		b, #5 ;// delete hook
-		ld		a, #0xC9
-		ld		hl, #0xFEDA ;// HSTKE
-	del_hook:
-		ld		(hl), a
-		inc		hl
-		djnz	del_hook
-		;// Check if disk found
-		ld		a, (#0xFFA7)		              ;// checks if there is any diskrom (HPHYD)
-		cp		#0xC9
-		jr		z, return_clear
-		;// comprueba version de DOS y guarda
-		ld		c, #0x6F ;// _DOSVER_
-		call	#0xF37D ;// BDOS: Send DOSVER command to dos
-		ld		a, b
-		inc		a
-		;//ld		(DOSFOUND),a		;// Save dos version
-		;//call	InitDskError		;// Initialices Disk Error routines (mail me if you need them)
-		jp		game_start
-	return_clear:
-		xor		a
-		;//ld		(DOSFOUND),a
-		jp		game_start
-	game_start:
-		ld		hl, #_freeRam
-		ld		(#0xF6C6), hl ;// Fin de la zone des variables = 0C000h
-
-;//		ld		c, #0x1A
-;//		ld		de, #freeRam
-;//		call	#0xF37D
-;//		ld		c, #0x1B
-;//		ld		e, #0
-;//		call	#0xF37D
-;//		ld		c, #0x57
-;//		call	#0xF37D
-	__endasm;
-#endif
+//#if 1
+//	__asm
+//		di
+//		call	#0x0138 ;// RSLREG: Lit l'état courant du registre du slot primaire.
+//		rrca
+//		rrca
+//		and		#3
+//		ld		c, a
+//		ld		b, #0
+//		ld		hl, #0xFCC1
+//		add		hl, bc
+//		or		(hl)
+//		ld		c, a
+//		inc		hl
+//		inc		hl
+//		inc		hl
+//		inc		hl
+//		ld		a, (hl)
+//		and		#0x0C
+//		or		c
+//		;//ld		(#0xC399),a
+//		ld		h, a
+//		ld		l, #0xF7
+//		ld		(#0xFEDA), hl
+//		ld		hl, #game_entry_point
+//		ld		(#0xFEDC), hl
+//		ld		a, #0xC9
+//		ld		(#0xFEDE), a
+//		ret
+//	game_entry_point:
+//		di
+//		ld		b, #5 ;// delete hook
+//		ld		a, #0xC9
+//		ld		hl, #0xFEDA ;// HSTKE
+//	del_hook:
+//		ld		(hl), a
+//		inc		hl
+//		djnz	del_hook
+//		;// Check if disk found
+//		ld		a, (#0xFFA7)		              ;// checks if there is any diskrom (HPHYD)
+//		cp		#0xC9
+//		jr		z, return_clear
+//		;// comprueba version de DOS y guarda
+//		ld		c, #0x6F ;// _DOSVER_
+//		call	#0xF37D ;// BDOS: Send DOSVER command to dos
+//		ld		a, b
+//		inc		a
+//		;//ld		(DOSFOUND),a		;// Save dos version
+//		;//call	InitDskError		;// Initialices Disk Error routines (mail me if you need them)
+//		jp		game_start
+//	return_clear:
+//		xor		a
+//		;//ld		(DOSFOUND),a
+//		jp		game_start
+//	game_start:
+//		ld		hl, #_freeRam
+//		ld		(#0xF6C6), hl ;// Fin de la zone des variables = 0C000h
+//
+//;//		ld		c, #0x1A
+//;//		ld		de, #freeRam
+//;//		call	#0xF37D
+//;//		ld		c, #0x1B
+//;//		ld		e, #0
+//;//		call	#0xF37D
+//;//		ld		c, #0x57
+//;//		call	#0xF37D
+//	__endasm;
+//#endif
 
 	__asm
 	;game_entry_point:
@@ -638,12 +644,11 @@ void MainLoop()
 /** State - initialize system */
 void StateInitialize()
 {
-	u16 x, i;
-
-	game.vdp36.ARG = 0; 
-	game.vdp32.ARG = 0; 
+	u16 x;
+	u8 i;
 
 	// Init
+	VideoInitialize();
 	SetFreq(FREQ_50);
 	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
@@ -656,49 +661,29 @@ void StateInitialize()
 	game.rule = RULE_RACE;
 	game.playerNum = 4;
 	game.track = 0;
-	game.shadeTrack = 0;
+	game.bShadeTrack = TRUE;
+	//game.bFromDisk = FALSE;
 
 	// Clear all VRAM
-	FillVRAM(0, 0,   256, 256, 0);
-	FillVRAM(0, 256, 256, 256, 0);
+	FillVRAM(0,   0, 256, 256, COLOR_BLACK);
+	FillVRAM(0, 256, 256, 256, COLOR_BLACK);
 
 	// Init color table
 	for(x=0; x<256; x++)
 		game.colorCode[x] = OP_NONE;
-
-	game.colorCode[COLOR_KHAKI]        = OP_WALL;
-	game.colorCode[COLOR_DARKKAKHI]    = OP_WALL;
-	game.colorCode[COLOR_SKIN]         = OP_BLADE;
-	game.colorCode[COLOR_DARKSKIN]     = OP_BLADE;
-	game.colorCode[COLOR_PINK]         = OP_BUMPER;
-	game.colorCode[COLOR_DARKPINK]     = OP_BUMPER;
-	game.colorCode[COLOR_SAND]         = OP_ASPHALT;
-	game.colorCode[COLOR_LIGHTMAUVE]   = OP_ASPHALT;
-	game.colorCode[COLOR_GRAY]         = OP_ASPHALT;
-	game.colorCode[COLOR_DARKGRAY]     = OP_ASPHALT;
-	game.colorCode[COLOR_BROWN]        = OP_MUD;
-	game.colorCode[COLOR_DARKBROWN]    = OP_MUD;
-	game.colorCode[COLOR_YELLOW]       = OP_SAND;
-	game.colorCode[COLOR_DARKYELLOW]   = OP_SAND;
-	game.colorCode[COLOR_GREEN]        = OP_GRASS;
-	game.colorCode[COLOR_DARKGREEN]    = OP_GRASS;
-	game.colorCode[COLOR_WHITE]        = OP_SNOW;
-	game.colorCode[COLOR_LIGHTGRAY]    = OP_SNOW;
-	game.colorCode[COLOR_CYAN]         = OP_ICE;
-	game.colorCode[COLOR_LIGHTBLUE]    = OP_ICE;
-	game.colorCode[COLOR_BLUE]         = OP_WATER;
-	game.colorCode[COLOR_DARKBLUE]     = OP_WATER;
-	game.colorCode[COLOR_MAUVE]        = OP_SPEEDER;
-	game.colorCode[COLOR_DARKMAUVE]    = OP_SPEEDER;
-	game.colorCode[COLOR_ORANGE]       = OP_JUMPER;
-	game.colorCode[COLOR_DARKORANGE]   = OP_JUMPER;
-	game.colorCode[COLOR_RED]          = OP_MAGMA;
-	game.colorCode[COLOR_DARKRED]      = OP_MAGMA;
-	game.colorCode[COLOR_BLACK]        = OP_HOLE;
-	game.colorCode[COLOR_NAVYBLUE]     = OP_HOLE;
-	game.colorCode[COLOR_DARKNAVYBLUE] = OP_HOLE;
-	game.colorCode[COLOR_LIME]         = OP_HEALTH;
-	game.colorCode[COLOR_DARKLIME]     = OP_HEALTH;
+	for(i=0; i<numberof(g_BG); i++)
+	{
+		game.colorCode[g_BG[i].ColorLight] = i;
+		game.colorCode[DarkenColor(g_BG[i].ColorLight, SHADOW_POWER)] = i;
+		game.colorCode[g_BG[i].ColorDark] = i;
+	}
+	game.colorCode[COLOR_SAND]                                  = OP_ASPHALT;
+	game.colorCode[DarkenColor(COLOR_SAND, SHADOW_POWER)]       = OP_ASPHALT;
+	game.colorCode[COLOR_LIGHTMAUVE]                            = OP_ASPHALT;
+	game.colorCode[DarkenColor(COLOR_LIGHTMAUVE, SHADOW_POWER)] = OP_ASPHALT;
+	game.colorCode[COLOR_NAVYBLUE]                              = OP_HOLE;
+	game.colorCode[DarkenColor(COLOR_NAVYBLUE, SHADOW_POWER)]   = OP_HOLE;
+	game.colorCode[COLOR_DARKNAVYBLUE]                          = OP_HOLE;
 
 	// Initialize (ASCII table) sprites
 	for(x=0; x<sizeof(g_CharTable) / 8; x++)
@@ -719,8 +704,8 @@ void StateInitialize()
 	}
 
 	// Init smoke
-	for(x=0; x<12; x++)
-		game.smokes[x].step = 0xFF;
+	for(i=0; i<12; i++)
+		game.smokes[i].step = 0xFF;
 
 	game.page = 0;
 	game.state = StateTitle;
@@ -733,11 +718,17 @@ void InitializeMenu(u8 menu)
 	u8 item;
 	game.menu = menu;
 	game.item = 0;
+	while(game.item < g_Menus[game.menu].itemNum)
+	{
+		if(g_Menus[game.menu].items[game.item].nextIdx != ITEM_DUMMY)
+			break;
+		game.item++;
+	}
 
 	game.page = 1;
 	SetPage8(game.page);
 
-	HMMV(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
+	FillVRAM(MENU_X, MENU_Y, 256 - MENU_X, 212 - MENU_Y, COLOR_BLACK);
 	
 	DrawText(MENU_X, MENU_Y, g_Menus[game.menu].title, COLOR_WHITE);
 	for(item = 0; item < g_Menus[game.menu].itemNum; item++)
@@ -747,7 +738,7 @@ void InitializeMenu(u8 menu)
 			DrawText(MENU_X + 12 + 80, MENU_Y + TITLE_SPACE + LINE_SPACE * item, g_Menus[game.menu].items[item].action(ACTION_GET,0), COLOR_WHITE);
 	}
 
-	HMMM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
+	VRAMtoVRAM(MENU_X, MENU_Y, MENU_X, MENU_Y + 256, 256 - MENU_X, 212 - MENU_Y);
 }
 
 void ResetMenu()
@@ -765,8 +756,8 @@ void StateTitle()
 	u8 i, j, byte;
 	// Hide working screen (0)
 	SetPage8(1);
-	FillVRAM(0,   0, 256, 212, 0);
-	FillVRAM(0, 256, 256, 212, 0);
+	FillVRAM(0, 0,   256, 212, COLOR_BLACK);
+	FillVRAM(0, 256, 256, 212, COLOR_BLACK);
 
 	// Build title
 	for(j=0; j<24; j++)
@@ -780,8 +771,10 @@ void StateTitle()
 			}
 		}
 		// Copy title to both screen
-		HMMM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
+		VRAMtoVRAM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
 	}
+	DrawText(150, 64,       "PHENIX 2011", COLOR_GRAY);
+	DrawText(150, 64 + 256, "PHENIX 2011", COLOR_GRAY);
 
 	InitializeMenu(0);
 	game.pressed = 0;
@@ -792,7 +785,7 @@ void StateTitle()
 /** State - Process main menu */
 void StateMainMenu()
 {
-	u8 keyLine;
+	u8 keyLine, i;
 
 	SetPage8(game.page);
 	game.page = 1 - game.page;
@@ -828,22 +821,44 @@ void StateMainMenu()
 	if(((keyLine & KEY_UP) == 0) && (game.item > 0))
 	{
 		if(game.pressed == 0)
-			game.item--;
+		{
+			i = game.item;
+			while(i > 0)
+			{
+				i--;
+				if(g_Menus[game.menu].items[i].nextIdx != ITEM_DUMMY)
+				{
+					game.item = i;
+					break;
+				}
+			}			
+		}
 		game.pressed++;
 	}
 	else if(((keyLine & KEY_DOWN) == 0) && (game.item < g_Menus[game.menu].itemNum - 1))
 	{
 		if(game.pressed == 0)
-			game.item++;
+		{
+			i = game.item;
+			while(i < g_Menus[game.menu].itemNum)
+			{
+				i++;
+				if(g_Menus[game.menu].items[i].nextIdx != ITEM_DUMMY)
+				{
+					game.item = i;
+					break;
+				}
+			}
+		}
 		game.pressed++;
 	}
 	else
 		game.pressed = 0;
 
 	// Render
-	HMMV(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * g_Menus[game.menu].itemNum, COLOR_BLACK);
+	FillVRAM(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset, 8, LINE_SPACE * g_Menus[game.menu].itemNum, COLOR_BLACK);
 	DrawText(MENU_X, MENU_Y + TITLE_SPACE + game.yOffset + (LINE_SPACE * game.item), "@", COLOR_WHITE);
-	waitRetrace();
+	WaitRetrace();
 }
 
 
@@ -857,31 +872,37 @@ void StateMainMenu()
 void StateStartGame()
 {
 	u8 i;
-	char file;
+	//char file;
 
 	game.page = 0;
 	SetPage8(game.page);
 
-	HMMV(0, 0, 256, 212, 0);
-	HMMV(0, 256, 256, 212, 0);
+	FillVRAM(0,   0, 256, 212, COLOR_BLACK);
+	FillVRAM(0, 256, 256, 212, COLOR_BLACK);
 
 	//----------------------------------------
 	// Build background
-	//UpackTiles();
-	//BuildTrack();
-	//if(game.shadeTrack)
-	//	ShadeTrack();
-	//file = open("TRACK_01.SC8", O_RDONLY);
-	//for(i=0; i<212; i++) // copy line-by-line
+	//if(game.bFromDisk)
 	//{
-	//	read(file, (int)&game.fileBuffer, 256);
-	//	HMMC(0, i, 256, 1, (u16)&game.fileBuffer);
-	//}	
-	//close(file);
-	LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
-	//LoadToVRAM(FILE("TEST.PIC"), 16, 32);
+	//	//file = open("TRACK_01.SC8", O_RDONLY);
+	//	//for(i=0; i<212; i++) // copy line-by-line
+	//	//{
+	//	//	read(file, (int)&game.fileBuffer, 256);
+	//	//	RAMtoVRAM(0, i, 256, 1, (u16)&game.fileBuffer);
+	//	//}	
+	//	//close(file);
+	//	LoadToVRAM(FILE("TRACK_01.SC8"), 0, 0);
+	//	//LoadToVRAM(FILE("TEST.PIC"), 16, 32);
+	//}
+	//else // from ROM
+	{
+		UpackTiles();
+		BuildTrack();
+		if(game.bShadeTrack)
+			ShadeTrack();
+	}
 
-	HMMM(0, 0, 0, 256, 256, 212);
+	VRAMtoVRAM(0, 0, 0, 256, 256, 212);
 
 	//----------------------------------------
 	// Copy cars to VRAM
@@ -900,8 +921,8 @@ void StateStartGame()
 	for(i=0; i<CAR_NUM; i++)
 	{
 		InitializePlayer(&game.players[i], i, g_Tracks[game.track].startPos[i].x, g_Tracks[game.track].startPos[i].y, g_Tracks[game.track].rotation);
-		HMMM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
-		HMMM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
+		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 0) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 0), 212, 13, 11 + 1);
+		VRAMtoVRAM(PosXToSprt(game.players[i].posX), (256 * 1) + PosYToSprt(game.players[i].posY), (13 * i) + (52 * 1), 212, 13, 11 + 1);
 	}
 
 	ClearSprite();
@@ -965,7 +986,7 @@ void StateUpdateGame()
 	// Restore background
 	for(i=0; i<CAR_NUM; i++)
 	{
-		HMMM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
+		VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
 	}
 
 	//----------------------------------------
@@ -1073,7 +1094,9 @@ void StateUpdateGame()
 				}
 			}
 			if(op == OP_SPEEDER)
+			{
 				speed += 8;
+			}
 			else if(op == OP_JUMPER)
 			{
 				curPly->jump = 20;
@@ -1134,7 +1157,7 @@ void StateUpdateGame()
 		curPly->posZ = g_HeightTab[curPly->jump];
 
 		// Backup background at new position
-		HMMM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
+		VRAMtoVRAM(PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, (13 * i) + (52 * game.page), 212, 13, 11 + 1 + game.players[i].posZ);
 	}
 
 	//----------------------------------------
@@ -1196,11 +1219,11 @@ void StateUpdateGame()
 
 	//SetSpriteUniColor(0, 64+8*0, 64, game.minute >> 4,   0x0F);
 	//SetSpriteUniColor(1, 64+8*1, 64, game.minute & 0x0F, 0x0F);
-	//SetSpriteUniColor(2, 64+8*2, 64, ':' - '0',   0x0F);
+	//SetSpriteUniColor(2, 64+8*2, 64, ':' - ' ',   0x0F);
 	//SetSpriteUniColor(3, 64+8*3, 64, game.second >> 4,   0x0F);
 	//SetSpriteUniColor(4, 64+8*4, 64, game.second & 0x0F, 0x0F);
 
-	waitRetrace();
+	WaitRetrace();
 	game.frame++;
 }
 
@@ -1436,7 +1459,7 @@ void UpackTiles()
 			{
 				for(x=0; x<32/8; x++)
 				{
-					HMMC(i * 32 + x * 8, 256 + j * 32 + y, 8, 1, (u16)&game.bitToByte[g_TrackTiles[(i + j * 8) * 32 * 4 + y * 4 + x] * 8]);
+					RAMtoVRAM(i * 32 + x * 8, 256 + j * 32 + y, 8, 1, (u16)&game.bitToByte[g_TrackTiles[(i + j * 8) * 32 * 4 + y * 4 + x] * 8]);
 				}
 			}
 		}
@@ -1486,7 +1509,7 @@ void BuildTrack()
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 
-	FillVRAM(0, 0, 128, 212, COLOR_KHAKI);
+	FillVRAM(  0, 0, 128, 212, COLOR_KHAKI);
 	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
 
 	block = g_Tracks[game.track].tiles;
@@ -1611,7 +1634,7 @@ void DrawCharacter(u16 x, u16 y, u8 chr, u8 color)
 {
 	u16 j;
 
-	HMMV(x, y, 8, 8, color);
+	FillVRAM(x, y, 8, 8, color);
 	for(j=0; j<8; j++)
 	{
 		LMMC(x, y + j, 8, 1, (u16)&game.bitToByte[g_CharTable[chr * 8 + j] * 8], VDP_OP_AND);
@@ -1634,7 +1657,7 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 		{
 			if(text[textIdx] != ' ')
 			{
-				DrawCharacter(curX, curY, text[textIdx] - '0', color);
+				DrawCharacter(curX, curY, text[textIdx] - ' ', color);
 				sprtIdx++;
 			}
 			curX += 8;
@@ -1692,9 +1715,13 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 			dX &= 0x0F;
 			addr += 1;
 			if(mod8 == 0)
+			{
 				RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY + j, dX, 1, addr);
+			}
 			else
+			{
 				RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY + j, dX, 1, addr);
+			}
 			addr += dX;
 		}
 	}
@@ -1760,7 +1787,7 @@ const char* SelectTrack(u8 op, i8 value)
 	value;
 	if(op == ACTION_INC)
 	{
-		if(game.track == 2)
+		if(game.track == numberof(g_Tracks) - 1)
 			game.track = 0;
 		else
 			game.track++;
@@ -1769,19 +1796,33 @@ const char* SelectTrack(u8 op, i8 value)
 	else if(op == ACTION_DEC)
 	{
 		if(game.track == 0)
-			game.track = 2;
+			game.track = numberof(g_Tracks) - 1;
 		else
 			game.track--;
 		ResetMenu();
 	}
 
-	switch(game.track)
-	{
-	case 0: return "<AOI1>";
-	case 1: return "<NOE1>";
-	case 2: return "<NOE2>";
-	}
+	return g_Tracks[game.track].name;
 }
+
+/** Menu callback - Select game mode */
+//const char* SelectTrackDisk(u8 op, i8 value)
+//{
+//	static char fileName[] = "TRACK_00.IMG";
+//	value;
+//	if(op == ACTION_INC)
+//	{
+//		game.track++;
+//		ResetMenu();
+//	}
+//	else if(op == ACTION_DEC)
+//	{
+//		game.track--;
+//		ResetMenu();
+//	}
+//	
+//	return fileName;
+//}
 
 /** Menu callback - Select game mode */
 const char* SelectRule(u8 op, i8 value)
@@ -1809,7 +1850,7 @@ const char* SelectRule(u8 op, i8 value)
 	case RULE_RACE:     return "<RACE>";
 	case RULE_SURVIVOR: return "<SURVIVOR>";
 	case RULE_TAG:      return "<TAG>";
-	case RULE_SOCCER:   return "<SOCCER>";
+	//case RULE_SOCCER:   return "<SOCCER>";
 	}
 }
 
@@ -1848,9 +1889,16 @@ const char* SelectShade(u8 op, i8 value)
 	value;
 	if(op == ACTION_INC || op == ACTION_DEC)
 	{
-		game.shadeTrack = 1 - game.shadeTrack;
+		game.bShadeTrack = 1 - game.bShadeTrack;
 		ResetMenu();
 	}
 
-	return game.shadeTrack ? "<ON>" : "<OFF>";
+	return game.bShadeTrack ? "<ON>" : "<OFF>";
 }
+
+/** Menu callback - Select track source (ROM or disk) */
+//const char* SelectTrackSource(u8 op, i8 value)
+//{
+//	if(op == ACTION_SET)
+//		game.bFromDisk = value;
+//}
