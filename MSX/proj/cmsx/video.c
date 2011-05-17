@@ -717,7 +717,7 @@ void PrintSprite(u8 X, u8 Y, const char* text, u16 colorTab)
 		{
 			if(text[textIdx] != ' ')
 			{
-				SetSpriteMultiColor(sprtIdx, curX, curY, text[textIdx] - '0', colorTab);
+				SetSpriteMultiColor(sprtIdx, curX, curY, text[textIdx] - ' ', colorTab);
 				sprtIdx++;
 			}
 			curX += 8;
