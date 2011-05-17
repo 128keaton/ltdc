@@ -8,11 +8,20 @@ void VideoInitialize()
 {
 	//vdp.vdp36.ARG = 0; 
 	vdp.vdp32.ARG = 0; 
+
+	// Clear all VRAM
+	FillVRAM(0,   0, 256, 256, 0);
+	FillVRAM(0, 256, 256, 256, 0);
 }
 
-/**
- *
- */
+/***/
+void ClearScreen8(u8 color)
+{
+	FillVRAM(0, 0,   256, 212, color);
+	FillVRAM(0, 256, 256, 212, color);
+}
+
+/***/
 void SetScreen8(u8 flag)
 {
 	flag;
@@ -729,8 +738,8 @@ void SetSpriteMultiColor(u8 index, u8 X, u8 Y, u8 shape, u16 ram)
 	sprt.posX = X;
 	sprt.posY = Y;
 	sprt.index = shape;
-	HMMC((index * 16) & 0x00FF, 244 + (index / 16), 8, 1, ram);
-	HMMC((index * 4) & 0x00FF, 246 + (index / 64), 3, 1, (u16)&sprt);
+	RAMtoVRAM((index * 16) & 0x00FF, 244 + (index / 16), 8, 1, ram);
+	RAMtoVRAM((index * 4) & 0x00FF, 246 + (index / 64), 3, 1, (u16)&sprt);
 }
 
 void SetSpriteUniColor(u8 index, u8 X, u8 Y, u8 shape, u8 color)
@@ -739,7 +748,13 @@ void SetSpriteUniColor(u8 index, u8 X, u8 Y, u8 shape, u8 color)
 	sprt.posX = X;
 	sprt.posY = Y;
 	sprt.index = shape;
-	HMMV((index * 16) & 0x00FF, 244 + (index / 16), 8, 1, color);
-	HMMC((index * 4) & 0x00FF, 246 + (index / 64), 3, 1, (u16)&sprt);
+	FillVRAM((index * 16) & 0x00FF, 244 + (index / 16), 8, 1, color);
+	RAMtoVRAM((index * 4) & 0x00FF, 246 + (index / 64), 3, 1, (u16)&sprt);
 }
 
+//#define RAMtoVRAM	HMMC
+//#define VRAMtoVRAM	HMMM
+//#define FillVRAM	HMMV
+void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram) { HMMC(dx, dy, nx, ny, ram); }
+void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny) { HMMM(sx, sy, dx, dy, nx, ny); }
+void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 col) { HMMV(dx, dy, nx, ny, col); }
