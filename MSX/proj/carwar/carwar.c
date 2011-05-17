@@ -298,6 +298,10 @@ const char* SelectTrack(u8 op, i8 value);
 #define PosXToSprt(a) (PosToPxl(a) - 6)
 #define PosYToSprt(a) (PosToPxl(a) - 5)
 
+#define Sinus(a) g_Sinus64[a]
+//#define Cosinus(a) g_Cosinus64[a]
+#define Cosinus(a) g_Sinus64[Modulo2((a) + 16, 64)]
+
 #define TILE0(col0)\
 	Merge4(0, col0),
 #define TILE1(col0, flag1, tile1, col1)\
@@ -482,7 +486,7 @@ const MenuEntry g_MenuMode[] =
 // Menu 3
 const MenuEntry g_MenuTrackSelect[] =	
 {
-	{ "START GAME", ITEM_ACTION, StartGame, 2 },
+	{ "START GAME", ITEM_ACTION, StartGame, 0 },
 	{ "TRACK",      ITEM_VARIABLE, SelectTrack, 0 },
 	{ "SHADE",      ITEM_VARIABLE, SelectShade, 0 },
 	{ "",           ITEM_DUMMY, 0, 0 },
@@ -664,10 +668,6 @@ void StateInitialize()
 	game.bShadeTrack = TRUE;
 	//game.bFromDisk = FALSE;
 
-	// Clear all VRAM
-	FillVRAM(0,   0, 256, 256, COLOR_BLACK);
-	FillVRAM(0, 256, 256, 256, COLOR_BLACK);
-
 	// Init color table
 	for(x=0; x<256; x++)
 		game.colorCode[x] = OP_NONE;
@@ -756,8 +756,7 @@ void StateTitle()
 	u8 i, j, byte;
 	// Hide working screen (0)
 	SetPage8(1);
-	FillVRAM(0, 0,   256, 212, COLOR_BLACK);
-	FillVRAM(0, 256, 256, 212, COLOR_BLACK);
+	ClearScreen8(COLOR_BLACK);
 
 	// Build title
 	for(j=0; j<24; j++)
@@ -876,9 +875,7 @@ void StateStartGame()
 
 	game.page = 0;
 	SetPage8(game.page);
-
-	FillVRAM(0,   0, 256, 212, COLOR_BLACK);
-	FillVRAM(0, 256, 256, 212, COLOR_BLACK);
+	ClearScreen8(COLOR_BLACK);
 
 	//----------------------------------------
 	// Build background
@@ -1044,8 +1041,8 @@ void StateUpdateGame()
 				else
 				{
 					dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
-					curPly->velX -= friction * g_Cosinus64[dir];
-					curPly->velY -= friction * g_Sinus64[dir];
+					curPly->velX -= friction * Cosinus(dir);
+					curPly->velY -= friction * Sinus(dir);
 				}
 			}
 
@@ -1065,8 +1062,8 @@ void StateUpdateGame()
 			{
 				speed = grip;
 				dir = VectorToAngle256(curPly->velX, curPly->velY) >> 2;
-				curPly->velX -= grip * g_Cosinus64[dir];
-				curPly->velY -= grip * g_Sinus64[dir];
+				curPly->velX -= grip * Cosinus(dir);
+				curPly->velY -= grip * Sinus(dir);
 			}
 
 			// Engine velocity
@@ -1103,8 +1100,8 @@ void StateUpdateGame()
 			}
 
 			dir = curPly->rot >> 2;
-			curPly->velX += speed * g_Cosinus64[dir];
-			curPly->velY += speed * g_Sinus64[dir];
+			curPly->velX += speed * Cosinus(dir);
+			curPly->velY += speed * Sinus(dir);
 
 			CarToWallCollision(curPly);
 		}
@@ -1181,8 +1178,8 @@ void StateUpdateGame()
 					curPly->sprt = 0;
 				game.smokes[j].step = 0;
 				dir = curPly->rot >> 2;
-				game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4 - (g_Cosinus64[dir] >> 5);
-				game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4 + (g_Sinus64[dir] >> 5) - curPly->posZ;
+				game.smokes[j].pos.x = PosToPxl(curPly->posX) - 4 - (Cosinus(dir) >> 5);
+				game.smokes[j].pos.y = PosToPxl(curPly->posY) - 4 + (Sinus(dir) >> 5) - curPly->posZ;
 			}
 		}
 		else // Draw pilot
@@ -1509,8 +1506,7 @@ void BuildTrack()
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 
-	FillVRAM(  0, 0, 128, 212, COLOR_KHAKI);
-	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
+	FillVRAM(0, 0, 256, 212, COLOR_KHAKI);
 
 	block = g_Tracks[game.track].tiles;
 	for(j=0; j<6; j++)
@@ -1776,7 +1772,6 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 const char* StartGame(u8 op, i8 value)
 {
 	op; value;
-	game.track = value;
 	game.state = StateStartGame;
 	return "";
 }

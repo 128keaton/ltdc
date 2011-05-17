@@ -124,9 +124,12 @@
 #define LMMM(sx, sy, dx, dy, nx, ny, op) vdp.vdp32.SX = sx; vdp.vdp32.SY = sy; vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&vdp.vdp32);
 #define HMMV(dx, dy, nx, ny, col)        vdp.vdp32.DX = dx; vdp.vdp32.DY = dy; vdp.vdp32.NX = nx; vdp.vdp32.NY = ny; vdp.vdp32.CLR = col; vdp.vdp32.CMD = VDP_CMD_HMMV;                       VPDCommand36((u16)&vdp.vdp32+4);
 
-#define RAMtoVRAM	HMMC
-#define VRAMtoVRAM	HMMM
-#define FillVRAM	HMMV
+//#define RAMtoVRAM	HMMC
+//#define VRAMtoVRAM	HMMM
+//#define FillVRAM	HMMV
+void RAMtoVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram);
+void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
+void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 col);
 
 //----------------------------------------
 // T Y P E S
@@ -164,6 +167,7 @@ void VideoInitialize();
 void SetScreen8(u8 flag);
 void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas);
 void SetPage8(u8 page);
+void ClearScreen8(u8 color);
 #ifndef REM_DRAWPOINT8
 	void DrawPoint8(u8 posX, u8 posY, u8 color);
 #endif
