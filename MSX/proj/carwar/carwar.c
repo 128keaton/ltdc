@@ -63,6 +63,13 @@
 #define ITEM_VARIABLE		(0x80 + 2)
 #define ITEM_DUMMY			(0x80 + 3)
 
+#define WALL_CHECK_LEN 4
+
+#define CAR_CHECK_LEN 10
+#define MAN_CHECK_LEN 6
+
+#define BLOCK_TIME 32
+
 // Color operator
 enum
 {
@@ -210,6 +217,8 @@ typedef struct tagPlayer
 	u16 nextY;
 	u8  life;
 	u8  sprt;
+	u8  ground;
+	u8  block;
 } Player;
 
 
@@ -298,9 +307,8 @@ const char* SelectTrack(u8 op, i8 value);
 #define PosXToSprt(a) (PosToPxl(a) - 6)
 #define PosYToSprt(a) (PosToPxl(a) - 5)
 
+#define Cosinus(a) g_Sinus64[Modulo2((a + 16), 64)]//g_Cosinus64[a]
 #define Sinus(a) g_Sinus64[a]
-//#define Cosinus(a) g_Cosinus64[a]
-#define Cosinus(a) g_Sinus64[Modulo2((a) + 16, 64)]
 
 #define TILE0(col0)\
 	Merge4(0, col0),
@@ -333,7 +341,8 @@ const char* SelectTrack(u8 op, i8 value);
 #include "data/sprt_car_2.h"
 #include "data/sprt_car_3.h"
 #include "data/sprt_car_4.h"
-#include "data/sprt_shadow.h"
+//#include "data/sprt_shadow.h"
+#include "data/sprt_crash.h"
 #include "data/sprt_alpha.h"
 #include "data/sprt_track.h"
 #include "data/sprt_title.h"
@@ -622,7 +631,8 @@ void main(void)
 	__asm
 	;game_entry_point:
 		di
-		ld		sp, (#0xFC4A)
+		;//ld		sp, (#0xFC4A)
+		ld		sp, #0xE000
 		ei
 	__endasm;
 
@@ -667,6 +677,9 @@ void StateInitialize()
 	game.track = 0;
 	game.bShadeTrack = TRUE;
 	//game.bFromDisk = FALSE;
+
+	// Clear all VRAM
+	ClearScreen8(COLOR_BLACK);
 
 	// Init color table
 	for(x=0; x<256; x++)
@@ -875,7 +888,9 @@ void StateStartGame()
 
 	game.page = 0;
 	SetPage8(game.page);
-	ClearScreen8(COLOR_BLACK);
+
+	FillVRAM(0,   0, 256, 212, COLOR_BLACK);
+	FillVRAM(0, 256, 256, 212, COLOR_BLACK);
 
 	//----------------------------------------
 	// Build background
@@ -909,7 +924,8 @@ void StateStartGame()
 	CopyCropped16(0, 256 + 212 + 11, 13, 11, 16, 0, (u16)&g_Car2);
 	CopyCropped16(0, 256 + 212 + 22, 13, 11, 16, 0, (u16)&g_Car3);
 	CopyCropped16(0, 256 + 212 + 33, 13, 11, 16, 0, (u16)&g_Car4);
-	RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
+	//RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
+	CopyCropped16(16 * 13, 256 + 212, 7, 4, 1, 0, (u16)&g_Crash);
 	CopyCropped16(208, 476, 6, 8, 8 * 3, 1, (u16)&g_Pilots);
 
 	//----------------------------------------
@@ -936,7 +952,7 @@ void StateStartGame()
 /** State - Process game */
 void StateUpdateGame()
 {
-	u8 i, j, keyLine, dir, ground, op, friction, grip, car;
+	u8 i, j, keyLine, dir, op, friction, grip, car;
 	Player* curPly;
 	u16 x, y, speed, speedSq, maxSpeed;
 
@@ -944,32 +960,42 @@ void StateUpdateGame()
 	game.page = 1 - game.page;
 	game.yOffset = 256 * game.page;
 
-	for(i=0; i<CAR_NUM; i++)
+	for(i=0; i<game.playerNum; i++)
 		game.players[i].flag = 0;
 
 	//----------------------------------------
 	// Player 1 gameplay
 	curPly = &game.players[0];
-	keyLine = GetKeyMatrixLine(8);
-	if((keyLine & KEY_LEFT) == 0)
-		curPly->flag |= CAR_TURN_LEFT;
-	if((keyLine & KEY_RIGHT) == 0)
-		curPly->flag |= CAR_TURN_RIGHT;
-	if((keyLine & KEY_UP) == 0)
-		curPly->flag |= CAR_MOVE;
+	if(curPly->block == 0)
+	{
+		keyLine = GetKeyMatrixLine(8);
+		if((keyLine & KEY_LEFT) == 0)
+			curPly->flag |= CAR_TURN_LEFT;
+		if((keyLine & KEY_RIGHT) == 0)
+			curPly->flag |= CAR_TURN_RIGHT;
+		if((keyLine & KEY_UP) == 0)
+			curPly->flag |= CAR_MOVE;
+	}
+	else
+		curPly->block--;
 
 	//----------------------------------------
 	// Player 2 gameplay
 	curPly = &game.players[1];
-	keyLine = GetKeyMatrixLine(5);
-	if((keyLine & KEY_Z) == 0)
-		curPly->flag |= CAR_TURN_LEFT;
-	keyLine = GetKeyMatrixLine(3);
-	if((keyLine & KEY_C) == 0)
-		curPly->flag |= CAR_TURN_RIGHT;
-	keyLine = GetKeyMatrixLine(5);
-	if((keyLine & KEY_X) == 0)
-		curPly->flag |= CAR_MOVE;
+	if(curPly->block == 0)
+	{
+		keyLine = GetKeyMatrixLine(5);
+		if((keyLine & KEY_Z) == 0)
+			curPly->flag |= CAR_TURN_LEFT;
+		keyLine = GetKeyMatrixLine(3);
+		if((keyLine & KEY_C) == 0)
+			curPly->flag |= CAR_TURN_RIGHT;
+		keyLine = GetKeyMatrixLine(5);
+		if((keyLine & KEY_X) == 0)
+			curPly->flag |= CAR_MOVE;
+	}
+	else
+		curPly->block--;
 
 	//----------------------------------------
 	// Player 3 gameplay
@@ -981,23 +1007,24 @@ void StateUpdateGame()
 
 	//----------------------------------------
 	// Restore background
-	for(i=0; i<CAR_NUM; i++)
+	for(i=0; i<game.playerNum; i++)
 	{
 		VRAMtoVRAM((13 * i) + (52 * game.page), 212, PosXToSprt(game.players[i].prevX), game.yOffset + PosYToSprt(game.players[i].prevY) - game.players[i].prevZ, 13, 11 + 1 + game.players[i].prevZ);
 	}
 
 	//----------------------------------------
 	// Update physic
-	for(i=0; i<CAR_NUM; i++)
+	for(i=0; i<game.playerNum; i++)
 	{
 		curPly = &game.players[i];
 
 		car = (curPly->life == 0) ? 4 : curPly->car;
 
+		curPly->ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
+
 		if(curPly->jump == 0)
 		{
-			ground = ReadVRAM(game.page, PosToPxl(curPly->posX) + 256 * PosToPxl(curPly->posY));
-			op = game.colorCode[ground];
+			op = game.colorCode[curPly->ground];
 
 			if(op >= OP_ROAD) // Backup last valid position
 			{
@@ -1127,19 +1154,27 @@ void StateUpdateGame()
 	}
 
 	// Check collision
-	// 1 player
 	// 2 players
-	CarToCarCollision(&game.players[0], &game.players[1]);
-	// 3 players
-	CarToCarCollision(&game.players[0], &game.players[2]);
-	CarToCarCollision(&game.players[1], &game.players[2]);
-	// 4 players
-	CarToCarCollision(&game.players[0], &game.players[3]);
-	CarToCarCollision(&game.players[1], &game.players[3]);
-	CarToCarCollision(&game.players[2], &game.players[3]);
+	if(game.playerNum >= 2)
+	{
+		CarToCarCollision(&game.players[0], &game.players[1]);
+		// 3 players
+		if(game.playerNum >= 3)
+		{
+			CarToCarCollision(&game.players[0], &game.players[2]);
+			CarToCarCollision(&game.players[1], &game.players[2]);
+			// 4 players
+			if(game.playerNum >= 4)
+			{
+				CarToCarCollision(&game.players[0], &game.players[3]);
+				CarToCarCollision(&game.players[1], &game.players[3]);
+				CarToCarCollision(&game.players[2], &game.players[3]);
+			}
+		}
+	}
 
 	// Fix position
-	for(i=0; i<CAR_NUM; i++)
+	for(i=0; i<game.playerNum; i++)
 	{
 		curPly = &game.players[i];
 
@@ -1159,14 +1194,18 @@ void StateUpdateGame()
 
 	//----------------------------------------
 	// Draw game element
-	for(i=0; i<CAR_NUM; i++)
+	for(i=0; i<game.playerNum; i++)
 	{
 		curPly = &game.players[i];
+		op = DarkenColor(curPly->ground, SHADOW_POWER);
 		if(curPly->life != 0) 
 		{
 			// Draw car
-			LMMM(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
-			LMMM(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
+			FillVRAM(PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) + 1, 7, 1, op);
+			FillVRAM(PosToPxl(curPly->posX) - 4, game.yOffset + PosToPxl(curPly->posY) + 2, 9, 3, op);
+			FillVRAM(PosToPxl(curPly->posX) - 2, game.yOffset + PosToPxl(curPly->posY) + 5, 5, 1, op);
+			//VRAMtoVRAMop(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
+			VRAMtoVRAMop(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
 			
 			// Spawn smoke
 			j = g_SmokeFrq[curPly->life >> 5];
@@ -1184,11 +1223,19 @@ void StateUpdateGame()
 		}
 		else // Draw pilot
 		{
-			if(curPly->flag & CAR_MOVE)
-				curPly->sprt = Modulo2(++curPly->sprt, 4);
-			else
-				curPly->sprt = 0;
-			LMMM(208 + 6 * (curPly->rot >> 5), 476 + 8 * g_AnimIndex[curPly->sprt], PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 - curPly->posZ, 6, 8, VDP_OP_TIMP);
+			if(curPly->block == 0)
+			{
+				if(curPly->flag & CAR_MOVE)
+					curPly->sprt = Modulo2(++curPly->sprt, 4);
+				else
+					curPly->sprt = 0;
+				FillVRAM(PosToPxl(curPly->posX) - 2, game.yOffset + PosToPxl(curPly->posY) + 1, 4, 3, op);
+				VRAMtoVRAMop(208 + 6 * (curPly->rot >> 5), 476 + 8 * g_AnimIndex[curPly->sprt], PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 4 - curPly->posZ, 6, 8, VDP_OP_TIMP);
+			}
+			else // crashed
+			{
+				VRAMtoVRAMop(16 * 13, 256 + 212, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 2, 7, 4, VDP_OP_TIMP);
+			}
 		}
 
 		//FillVRAM(0, game.yOffset + 198 + 3 * i, curPly->life, 2, COLOR_GREEN);
@@ -1198,7 +1245,7 @@ void StateUpdateGame()
 	{
 		if(game.smokes[i].step != 0xFF)
 		{
-			SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 3 + game.smokes[i].step, 0x07);
+			SetSpriteUniColor(i, game.smokes[i].pos.x, game.smokes[i].pos.y, 16 * 4 + game.smokes[i].step, 0x07);
 			game.smokes[i].step++;
 			if(game.smokes[i].step >= 8)
 				game.smokes[i].step = 0xFF;
@@ -1248,26 +1295,32 @@ void InitializePlayer(Player* ply, u8 car, u8 posX, u8 posY, u8 rot)
 	ply->prevZ = 0;
 	ply->life = 0xFF;
 	ply->sprt = 0;
+	ply->block = 0;
 }
 
 /***/
 void CheckJoy(Player* ply, u8 joy)
 {
-	switch (Joystick(joy)) // Joy 1 direction
+	if(ply->block == 0)
 	{
-	case 2: // up-right
-	case 3: // right
-	case 4: // down-right
-		ply->flag |= CAR_TURN_RIGHT;
-		break;
-	case 6: // down-left
-	case 7: // left
-	case 8:// up-left
-		ply->flag |= CAR_TURN_LEFT;
-		break;
+		switch (Joystick(joy)) // Joy 1 direction
+		{
+		case 2: // up-right
+		case 3: // right
+		case 4: // down-right
+			ply->flag |= CAR_TURN_RIGHT;
+			break;
+		case 6: // down-left
+		case 7: // left
+		case 8:// up-left
+			ply->flag |= CAR_TURN_LEFT;
+			break;
+		}
+		if(Joytrig(joy) != 0) // Joy 1 Button A
+			ply->flag |= CAR_MOVE;
 	}
-	if(Joytrig(joy) != 0) // Joy 1 Button A
-		ply->flag |= CAR_MOVE;
+	else
+		ply->block--;
 }
 
 /***/
@@ -1354,39 +1407,54 @@ u16 GetVectorLenght256(i16 x, i16 y)
 }
 
 /** Check collision */
-#define CAR_CHECK_LEN 10
 void CarToCarCollision(Player* ply1, Player* ply2)
 {
-	i16 x1, y1, x2, y2, dist;
+	i16 x1, y1, x2, y2, distSq;
 
-	dist = ply2->nextX - ply1->nextX;
-	x1 = dist >> 8;
-	dist = ply2->nextY - ply1->nextY;
-	y1 = dist >> 8;
-	dist = (x1 * x1) + (y1 * y1);
-	if(dist < CAR_CHECK_LEN * CAR_CHECK_LEN) // Collision occured
+	if((ply1->life == 0) && (ply2->life == 0))
+		return;
+
+	distSq = ply2->nextX - ply1->nextX;
+	x1 = distSq >> 8;
+	distSq = ply2->nextY - ply1->nextY;
+	y1 = distSq >> 8;
+	distSq = (x1 * x1) + (y1 * y1);
+
+	if((ply1->life > 0) && (ply2->life > 0))
 	{
-		x1 = ply1->velX;
-		y1 = ply1->velY;
-		x2 = ply2->velX;
-		y2 = ply2->velY;
+		if(distSq < CAR_CHECK_LEN * CAR_CHECK_LEN) // car-vs-car collision occured
+		{
+			x1 = ply1->velX;
+			y1 = ply1->velY;
+			x2 = ply2->velX;
+			y2 = ply2->velY;
 
-		ply1->velX = x2 - x1;
-		ply1->velY = y2 - y1;
-		ply2->velX = x1 - x2;
-		ply2->velY = y1 - y2;
+			ply1->velX = x2 - x1;
+			ply1->velY = y2 - y1;
+			ply2->velX = x1 - x2;
+			ply2->velY = y1 - y2;
 
-		ply1->nextX = ply1->posX;
-		ply1->nextY = ply1->posY;
-		ply2->nextX = ply2->posX;
-		ply2->nextY = ply2->posY;
+			ply1->nextX = ply1->posX;
+			ply1->nextY = ply1->posY;
+			ply2->nextX = ply2->posX;
+			ply2->nextY = ply2->posY;
 
-		DamageCar(ply1, 4);
-		DamageCar(ply2, 4);
+			DamageCar(ply1, 4);
+			DamageCar(ply2, 4);
+		}
+	}
+	else
+	{
+		if(distSq < MAN_CHECK_LEN * MAN_CHECK_LEN) // car-vs-pilot collision occured
+		{
+			if(ply1->life == 0)
+				ply1->block = BLOCK_TIME;
+			else
+				ply2->block = BLOCK_TIME;
+		}
 	}
 }
 
-#define WALL_CHECK_LEN 4
 void CarToWallCollision(Player* ply)
 {
 	u8 ground, op;
@@ -1506,7 +1574,8 @@ void BuildTrack()
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 
-	FillVRAM(0, 0, 256, 212, COLOR_KHAKI);
+	FillVRAM(  0, 0, 128, 212, COLOR_KHAKI);
+	FillVRAM(128, 0, 128, 212, COLOR_KHAKI);
 
 	block = g_Tracks[game.track].tiles;
 	for(j=0; j<6; j++)
@@ -1772,6 +1841,7 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 const char* StartGame(u8 op, i8 value)
 {
 	op; value;
+	game.track = value;
 	game.state = StateStartGame;
 	return "";
 }
