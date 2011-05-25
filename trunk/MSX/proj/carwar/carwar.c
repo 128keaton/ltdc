@@ -370,9 +370,9 @@ const Car g_Cars[5] =
 	// 0. Cop
 	{ 5, { 10, 25, 35, 40 }, 6 },
 	// 1. Camaro (Chevrolet)
-	{ 4, { 5, 20, 35, 60 }, 7 },
+	{ 4, { 5, 20, 35, 55 }, 7 },
 	// 2. Ferrari
-	{ 4, { 5, 20, 40, 55 }, 7 },
+	{ 4, { 5, 20, 40, 50 }, 7 },
 	// 3. Turtule
 	{ 6, { 15, 30, 30, 30 }, 5 },
 	// 4. Pilot
@@ -397,7 +397,7 @@ const Background g_BG[] =
 	// 6. OP_MAGMA
 	{ 1, 4, 8, COLOR_RED, COLOR_DARKRED },
 	// 7. OP_HEALTH
-	{ 1, 0, 0, COLOR_LIME, COLOR_DARKLIME },
+	{ 3, 4, 8, COLOR_LIME, COLOR_DARKLIME },
 	// 8. OP_HOLE
 	{ 1, 0, 0, COLOR_BLACK, COLOR_BLACK },
 	// 9. OP_ASPHALT
@@ -444,13 +444,21 @@ const u8 g_TrackTiles01[] =
 	TILE1(OP_SAND, SYM_D, 8, OP_WALL)
 	// line 3
 	TILE1(OP_SAND, SYM_H, 15, OP_WALL)
-	TILE1(OP_SAND, 0, 27, OP_JUMPER)
+	TILE2(OP_SAND, SYM_D, 24, OP_ASPHALT, 0, 27, OP_JUMPER)
 	TILE2(OP_SAND, SYM_V, 1, OP_WATER, SYM_H, 15, OP_WALL)
 	TILE0(OP_WATER)
 	TILE0(OP_WALL)
 	TILE1(OP_SAND, SYM_D, 8, OP_WALL)
 	TILE1(OP_SAND, SYM_H, 15, OP_WALL)
 	// line 4
+	TILE1(OP_SAND, SYM_H|SYM_D, 15, OP_WALL)
+	TILE0(OP_SAND)
+	TILE1(OP_SAND, SYM_D, 15, OP_WALL)
+	TILE0(OP_WATER)
+	TILE2(OP_SAND, SYM_V, 8, OP_WALL, 0, 31, OP_HEALTH)
+	TILE2(OP_SAND, SYM_D|SYM_V, 8, OP_WALL, SYM_D|SYM_H, 29, OP_WALL)
+	TILE0(OP_SAND)
+	// line 5
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
@@ -458,19 +466,11 @@ const u8 g_TrackTiles01[] =
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
-	// line 5
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
-	TILE1(OP_WATER, SYM_D+SYM_V, 25, OP_HOLE)
 };
 
 const Track g_Tracks[] = 
 {
-	{ "<AOI1>", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
+	{ "<BEACH>", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
 	{ "<AOI2>", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 	{ "<NOE1>", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
