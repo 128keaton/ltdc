@@ -70,6 +70,11 @@
 
 #define BLOCK_TIME 32
 
+#define SIDE_LEFT	0
+#define SIDE_RIGHT	1
+#define SIDE_UP		2
+#define SIDE_DOWN	3
+
 // Color operator
 enum
 {
@@ -129,6 +134,11 @@ typedef struct tagVectorU8
 {
 	u8 x, y;
 } VectorU8;
+
+typedef struct tagVectorI8
+{
+	i8 x, y;
+} VectorI8;
 
 typedef struct tagVectorU16
 {
@@ -270,6 +280,7 @@ u8 VectorToAngle256(i16 x, i16 y);
 u16 GetVectorLenght256(i16 x, i16 y);
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr);
 //void VBlankInterrupt();
+u8 GetGroundCollide(Player* ply, u8 index);
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
@@ -534,6 +545,8 @@ const u8 g_AnimIndex[] = { 0, 1, 0, 2 };
 //                        0   32  64  96  128 160 192 224
 //                        000 001 010 011 100 101 110 111
 const u8 g_SmokeFrq[] = { 4,  4,  8,  16, 32, 64, 128, 255 };
+
+const VectorI8 g_WallCheckOffset[] = { { -WALL_CHECK_LEN, 0 }, { WALL_CHECK_LEN, 0 }, { 0, -WALL_CHECK_LEN }, { 0, WALL_CHECK_LEN } };
  
 //-----------------------------------------------------------------------------
 // R A M   D A T A
@@ -1234,7 +1247,7 @@ void StateUpdateGame()
 			}
 			else // crashed
 			{
-				VRAMtoVRAMop(16 * 13, 256 + 212, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 2, 7, 4, VDP_OP_TIMP);
+				VRAMtoVRAMop(16 * 13, 256 + 212, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 0, 7, 4, VDP_OP_TIMP);
 			}
 		}
 
@@ -1455,57 +1468,70 @@ void CarToCarCollision(Player* ply1, Player* ply2)
 	}
 }
 
+u8 GetGroundCollide(Player* ply, u8 index)
+{
+	u8 ground, collide;
+	VectorI8 offset;
+	if(ply->life == 0)
+	{
+		offset.x = g_WallCheckOffset[index].x >> 2;
+		offset.y = g_WallCheckOffset[index].y >> 2;
+	}
+	else
+	{
+		offset.x = g_WallCheckOffset[index].x;
+		offset.y = g_WallCheckOffset[index].y;
+	}
+
+	ground = ReadVRAM(game.page, PosToPxl(ply->posX) + offset.x + 256 * (PosToPxl(ply->posY) + offset.y));
+	collide = game.colorCode[ground] == OP_WALL;
+	if(collide)
+	{
+		if(ply->flag & CAR_MOVE)
+			DamageCar(ply, 5);
+	}
+	return collide;
+}
+
 void CarToWallCollision(Player* ply)
 {
-	u8 ground, op;
+	u8 collide;
 
 	if((ply->rot > 64) && (ply->rot < 192))
 	{
-		ground = ReadVRAM(game.page, PosToPxl(ply->posX) - WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
-		op = game.colorCode[ground];
-		if(op == OP_WALL)
+		collide = GetGroundCollide(ply, SIDE_LEFT);
+		if(collide)
 		{
 			ply->velX = Abs16(ply->velX) /*>> 1*/;
 			ply->velY >>= 1;
-			if(ply->flag & CAR_MOVE)
-				DamageCar(ply, 5);
 		}
 	}
 	else
 	{
-		ground = ReadVRAM(game.page, PosToPxl(ply->posX) + WALL_CHECK_LEN + 256 * PosToPxl(ply->posY));
-		op = game.colorCode[ground];
-		if(op == OP_WALL)
+		collide = GetGroundCollide(ply, SIDE_RIGHT);
+		if(collide)
 		{
 			ply->velX = -(Abs16(ply->velX) /*>> 1*/);
 			ply->velY >>= 1;
-			if(ply->flag & CAR_MOVE)
-				DamageCar(ply, 5);
 		}
 	}
 
 	if(ply->rot < 128)
 	{
-		ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) - WALL_CHECK_LEN));
-		op = game.colorCode[ground];
-		if(op == OP_WALL)
+		collide = GetGroundCollide(ply, SIDE_UP);
+		if(collide)
 		{
 			ply->velX >>= 1;
 			ply->velY = -(Abs16(ply->velY) /*>> 1*/);
-			if(ply->flag & CAR_MOVE)
-				DamageCar(ply, 5);
 		}
 	}
 	else
 	{
-		ground = ReadVRAM(game.page, PosToPxl(ply->posX) + 256 * (PosToPxl(ply->posY) + WALL_CHECK_LEN));
-		op = game.colorCode[ground];
-		if(op == OP_WALL)
+		collide = GetGroundCollide(ply, SIDE_DOWN);
+		if(collide)
 		{
 			ply->velX >>= 1;
 			ply->velY = Abs16(ply->velY) /*>> 1*/;
-			if(ply->flag & CAR_MOVE)
-				DamageCar(ply, 5);
 		}
 	}
 }
