@@ -106,14 +106,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\data\sprt_shadow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_smoke.h"
-				>
-			</File>
-			<File
 				RelativePath=".\data\sprt_title.h"
 				>
 			</File>
