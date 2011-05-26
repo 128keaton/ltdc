@@ -117,6 +117,130 @@
 		<Filter
 			Name="CMSX"
 			>
+			<File
+				RelativePath="..\cmsx\3d.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\cmsx\3d.h"
+				>
+			</File>
+			<File
+				RelativePath="..\cmsx\bios.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\cmsx\bios.h"
+				>
+			</File>
+			<File
+				RelativePath="..\cmsx\core.h"
+				>
+			</File>
+			<File
+				RelativePath="..\cmsx\files.asm"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdasz80 -losg out\$(InputName).rel $(InputPath)&#x0D;&#x0A;"
+						Outputs="$(InputName).rel"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdasz80 -losg out\$(InputName).rel $(InputPath)&#x0D;&#x0A;"
+						Outputs="$(InputName).rel"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\cmsx\files.h"
+				>
+			</File>
+			<File
+				RelativePath="..\cmsx\keyboard.h"
+				>
+			</File>
+			<File
+				RelativePath="..\cmsx\video.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\ -DREM_DRAWPOINT8 -DREM_DRAWLINE8&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="----- Compile $(InputFileName) -----"
+						CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\ -DREM_DRAWPOINT8 -DREM_DRAWLINE8&#x0D;&#x0A;"
+						Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\cmsx\video.h"
+				>
+			</File>
 			<Filter
 				Name="data"
 				>
@@ -162,134 +286,6 @@
 				</File>
 				<File
 					RelativePath="..\cmsx\trigo64.inc"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="temp"
-				>
-				<File
-					RelativePath="..\cmsx\3d.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
-							Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
-							Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\cmsx\3d.h"
-					>
-				</File>
-				<File
-					RelativePath="..\cmsx\bios.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
-							Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\&#x0D;&#x0A;"
-							Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\cmsx\bios.h"
-					>
-				</File>
-				<File
-					RelativePath="..\cmsx\core.h"
-					>
-				</File>
-				<File
-					RelativePath="..\cmsx\files.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdasz80 -losg out\$(InputName).rel $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(InputName).rel"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdasz80 -losg out\$(InputName).rel $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(InputName).rel"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\cmsx\files.h"
-					>
-				</File>
-				<File
-					RelativePath="..\cmsx\keyboard.h"
-					>
-				</File>
-				<File
-					RelativePath="..\cmsx\video.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\ -DREM_DRAWPOINT8 -DREM_DRAWLINE8&#x0D;&#x0A;"
-							Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="----- Compile $(InputFileName) -----"
-							CommandLine="sdcc -c -mz80 --vc --opt-code-speed $(InputPath) -o out\ -DREM_DRAWPOINT8 -DREM_DRAWLINE8&#x0D;&#x0A;"
-							Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\cmsx\video.h"
 					>
 				</File>
 			</Filter>
