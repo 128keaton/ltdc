@@ -86,11 +86,13 @@ enum
 		OP_3____,
 	// Special
 	OP_SPECIAL = 4,
-		OP_SPEEDER = 4,
-		OP_JUMPER,
-		OP_MAGMA,
-		OP_HEALTH,
+		OP_MAGMA = 4,
 		OP_HOLE,
+	// Special
+	OP_GROUND = 6,
+		OP_SPEEDER = 6,
+		OP_JUMPER,
+		OP_HEALTH,
 	// Roads
 	OP_ROAD = 9,
 		OP_ASPHALT = 9,
@@ -379,7 +381,7 @@ const Car g_Cars[5] =
 	{ 10, { 5, 10, 15, 20 }, 5 },
 };
 
-/** MaxSpeed (x/4), Friction (4), Grip (8), ColorLight, ColorDark */
+/** MaxSpeed, Friction (4), Grip (8), ColorLight, ColorDark */
 const Background g_BG[] = 
 {
 	// 0. OP_WALL
@@ -390,16 +392,16 @@ const Background g_BG[] =
 	{ 0, 0, 0, COLOR_PINK, COLOR_DARKPINK },
 	// 3. 
 	{ 0, 0, 0, 0, 0 },
-	// 4. OP_SPEEDER
-	{ 3, 2, 4, COLOR_MAUVE, COLOR_DARKMAUVE },
-	// 5. OP_JUMPER
-	{ 3, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
-	// 6. OP_MAGMA
-	{ 1, 4, 8, COLOR_RED, COLOR_DARKRED },
-	// 7. OP_HEALTH
-	{ 3, 4, 8, COLOR_LIME, COLOR_DARKLIME },
-	// 8. OP_HOLE
+	// 4. OP_MAGMA
+	{ 0, 8, 8, COLOR_RED, COLOR_DARKRED },
+	// 5. OP_HOLE
 	{ 1, 0, 0, COLOR_BLACK, COLOR_BLACK },
+	// 6. OP_SPEEDER
+	{ 3, 2, 4, COLOR_MAUVE, COLOR_DARKMAUVE },
+	// 7. OP_JUMPER
+	{ 3, 2, 4, COLOR_ORANGE, COLOR_DARKORANGE },
+	// 8. OP_HEALTH
+	{ 3, 4, 8, COLOR_LIME, COLOR_DARKLIME },
 	// 9. OP_ASPHALT
 	{ 3, 4, 8, COLOR_GRAY, COLOR_DARKGRAY },
 	// 10. OP_MUD
@@ -415,8 +417,62 @@ const Background g_BG[] =
 	// 15. OP_WATER
 	{ 0, 2, 4, COLOR_BLUE, COLOR_DARKBLUE },
 };
-		
-const u8 g_TrackTiles01[] = 
+
+// TRACK - Sprint
+const u8 g_TrackTilesSprint[] = 
+{
+	// line 0
+	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	// line 1
+	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	// line 2
+	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	// line 3
+	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE0(OP_ASPHALT)
+	TILE0(OP_WALL)
+	TILE1(OP_ASPHALT, 0, 16, OP_ASPHALT)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	// line 4
+	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V, 9, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V, 17, OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	// line 5
+	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_D, 8, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
+};
+
+// TRACK - Beatch
+const u8 g_TrackTilesBeatch[] = 
 {
 	// line 0
 	TILE1(OP_ASPHALT, 0, 1, OP_SAND)
@@ -451,12 +507,12 @@ const u8 g_TrackTiles01[] =
 	TILE1(OP_SAND, SYM_D, 8, OP_WALL)
 	TILE1(OP_SAND, SYM_H, 15, OP_WALL)
 	// line 4
-	TILE1(OP_SAND, SYM_H|SYM_D, 15, OP_WALL)
+	TILE1(OP_SAND, SYM_H+SYM_D, 15, OP_WALL)
 	TILE0(OP_SAND)
 	TILE1(OP_SAND, SYM_D, 15, OP_WALL)
 	TILE0(OP_WATER)
 	TILE2(OP_SAND, SYM_V, 8, OP_WALL, 0, 31, OP_HEALTH)
-	TILE2(OP_SAND, SYM_D|SYM_V, 8, OP_WALL, SYM_D|SYM_H, 29, OP_WALL)
+	TILE2(OP_SAND, SYM_D+SYM_V, 8, OP_WALL, SYM_D|SYM_H, 29, OP_WALL)
 	TILE0(OP_SAND)
 	// line 5
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
@@ -468,11 +524,64 @@ const u8 g_TrackTiles01[] =
 	TILE1(OP_SAND, SYM_D+SYM_V, 25, OP_WATER)
 };
 
+// TRACK - Volcano
+const u8 g_TrackTilesVolcano[] = 
+{
+	// line 0
+	TILE1(OP_MUD, 0, 31, OP_HEALTH)
+	TILE0(OP_MUD)
+	TILE0(OP_MUD)
+	TILE0(OP_MUD)
+	TILE1(OP_MUD, 0, 28, OP_MAGMA)
+	TILE1(OP_MUD, SYM_H+SYM_V, 4, OP_MAGMA)
+	TILE1(OP_MUD, SYM_H, 4, OP_MAGMA)
+	// line 1
+	TILE2(OP_MAGMA, SYM_D, 9, OP_MUD, SYM_D+SYM_V, 8, OP_WALL)
+	TILE3(OP_MUD, SYM_D+SYM_V, 8, OP_WALL, SYM_H, 27, OP_JUMPER, 0, 27, OP_SPEEDER)
+	TILE3(OP_MAGMA, 0, 9, OP_MUD, SYM_D+SYM_V, 8, OP_WALL, SYM_V, 8, OP_WALL)
+	TILE1(OP_MUD, SYM_H, 2, OP_WALL)
+	TILE1(OP_MUD, 0, 10, OP_WALL)
+	TILE1(OP_MAGMA, 0, 25, OP_MUD)
+	TILE1(OP_MUD, SYM_H, 25, OP_MAGMA)
+	// line 2
+	TILE1(OP_ASPHALT, SYM_D+SYM_H, 17, OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_D+SYM_H, 16, OP_ASPHALT)
+	TILE3(OP_ASPHALT, SYM_D+SYM_H, 2, OP_WALL, SYM_D+SYM_H, 27, OP_JUMPER, SYM_D, 27, OP_SPEEDER)
+	TILE1(OP_WALL, SYM_D, 28, OP_MAGMA)
+	TILE1(OP_MUD, SYM_H, 2, OP_WALL)
+	TILE1(OP_MAGMA, 0, 9, OP_MUD)
+	TILE1(OP_MUD, 0, 4, OP_MAGMA)
+	// line 3
+	TILE1(OP_ASPHALT, SYM_V+SYM_H, 4, OP_MAGMA)
+	TILE2(OP_ASPHALT, SYM_D, 8, OP_WALL, SYM_H, 4, OP_MAGMA)
+	TILE1(OP_ASPHALT, SYM_V, 10, OP_WALL)
+	TILE3(OP_ASPHALT, 0, 2, OP_WALL, SYM_H, 27, OP_SPEEDER, 0, 27, OP_JUMPER)
+	TILE1(OP_ASPHALT, 0, 10, OP_WALL)
+	TILE2(OP_MUD, 0, 24, OP_ASPHALT, 0, 26, OP_MAGMA)
+	TILE1(OP_MUD, SYM_D, 29, OP_MAGMA)
+	// line 4
+	TILE1(OP_ASPHALT, SYM_V, 4, OP_MAGMA)
+	TILE2(OP_ASPHALT, 0, 4, OP_MAGMA, 0, 28, OP_MAGMA)
+	TILE2(OP_ASPHALT, SYM_V, 8, OP_WALL, SYM_H, 29, OP_MAGMA)
+	TILE1(OP_ASPHALT, SYM_H+SYM_V+SYM_D, 25, OP_MAGMA)
+	TILE2(OP_ASPHALT, 0, 8, OP_WALL, SYM_V+SYM_D, 25, OP_MAGMA)
+	TILE2(OP_ASPHALT, SYM_D, 8, OP_WALL, SYM_H+SYM_V+SYM_D, 25, OP_MAGMA)
+	TILE2(OP_ASPHALT, SYM_D, 8, OP_WALL, SYM_H, 4, OP_MAGMA)
+	// line 5
+	TILE1(OP_MAGMA, SYM_V, 1, OP_ASPHALT)
+	TILE0(OP_ASPHALT)
+	TILE2(OP_ASPHALT, 0, 31, OP_HEALTH, SYM_V, 8, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 27, OP_JUMPER)
+	TILE1(OP_ASPHALT, SYM_D+SYM_H, 25, OP_MAGMA)
+	TILE1(OP_ASPHALT, SYM_D, 25, OP_MAGMA)
+	TILE1(OP_ASPHALT, 0, 4, OP_MAGMA)
+};
+
 const Track g_Tracks[] = 
 {
-	{ "<BEACH>", 7, 6, g_TrackTiles01, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "<AOI2>", 7, 6, g_TrackTiles01, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "<NOE1>", 7, 6, g_TrackTiles01, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "<SPRINT>", 7, 6, g_TrackTilesSprint, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
+	{ "<BEACH>", 7, 6, g_TrackTilesBeatch, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "<VOLCANO>", 7, 6, g_TrackTilesVolcano, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
 };
 
 //-----------------------------------------------------------------------------
@@ -937,7 +1046,6 @@ void StateStartGame()
 	CopyCropped16(0, 256 + 212 + 11, 13, 11, 16, 0, (u16)&g_Car2);
 	CopyCropped16(0, 256 + 212 + 22, 13, 11, 16, 0, (u16)&g_Car3);
 	CopyCropped16(0, 256 + 212 + 33, 13, 11, 16, 0, (u16)&g_Car4);
-	//RAMtoVRAM(16 * 13, 256 + 212, 13, 8, (u16)&g_Shadow);
 	CopyCropped16(16 * 13, 256 + 212, 7, 4, 1, 0, (u16)&g_Crash);
 	CopyCropped16(208, 476, 6, 8, 8 * 3, 1, (u16)&g_Pilots);
 
@@ -1044,7 +1152,7 @@ void StateUpdateGame()
 				curPly->validX = curPly->posX;
 				curPly->validY = curPly->posY;
 			}
-			else if(op < OP_SPECIAL)
+			else if(op < OP_GROUND)
 			{
 				curPly->prevX = curPly->posX;
 				curPly->prevY = curPly->posY;
@@ -1052,7 +1160,7 @@ void StateUpdateGame()
 				curPly->nextY = curPly->validY;
 				curPly->velX = 0;
 				curPly->velY = 0;
-				//curPly->life = 0;
+				DamageCar(curPly, 32);
 				break;
 			}
 			if(op == OP_HEALTH)
@@ -1217,12 +1325,11 @@ void StateUpdateGame()
 			FillVRAM(PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) + 1, 7, 1, op);
 			FillVRAM(PosToPxl(curPly->posX) - 4, game.yOffset + PosToPxl(curPly->posY) + 2, 9, 3, op);
 			FillVRAM(PosToPxl(curPly->posX) - 2, game.yOffset + PosToPxl(curPly->posY) + 5, 5, 1, op);
-			//VRAMtoVRAMop(13 * 16, 256 + 212, PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) + 2, 13, 8, VDP_OP_TIMP);
 			VRAMtoVRAMop(13 * (curPly->rot >> 4), 256 + 212 + (11 * i), PosXToSprt(curPly->posX), game.yOffset + PosYToSprt(curPly->posY) - curPly->posZ, 13, 11, VDP_OP_TIMP);
 			
 			// Spawn smoke
 			j = g_SmokeFrq[curPly->life >> 5];
-			if((j != 255) && Modulo2(game.frame, j) == 0)
+			if((j != 255) && Modulo2(game.frame + i * 4, j) == 0)
 			{
 				j = (i * 3) + curPly->sprt;
 				curPly->sprt++;
@@ -1250,9 +1357,6 @@ void StateUpdateGame()
 				VRAMtoVRAMop(16 * 13, 256 + 212, PosToPxl(curPly->posX) - 3, game.yOffset + PosToPxl(curPly->posY) - 0, 7, 4, VDP_OP_TIMP);
 			}
 		}
-
-		//FillVRAM(0, game.yOffset + 198 + 3 * i, curPly->life, 2, COLOR_GREEN);
-		//FillVRAM(curPly->life, game.yOffset + 198 + 3 * i, curPly->life - 255, 2, COLOR_RED);
 	}
 	for(i=0; i<12; i++)
 	{
@@ -1596,6 +1700,7 @@ void BuildTrack()
 	u8 set0, op0;
 	u8 flag1, tile1, op1;
 	u8 flag2, tile2, op2;
+	u8 flag3, tile3, op3;
 	const u8* block;
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
@@ -1637,6 +1742,14 @@ void BuildTrack()
 
 					if(set0 >= 3) // third tile
 					{
+						flag3 = *block++;
+						tile3 = flag3 & 0x0F;
+						flag3 >>= 4;
+
+						op3 = *block++; 
+						op3 >>= 4;
+
+						BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag3, tile3, op3, op0);
 					}
 				}
 			}
@@ -1679,7 +1792,19 @@ void ShadeTrack()
 					else
 						break;
 				}
-				y += i;
+				y += ROAD_SHADOW;
+			}
+			else if(game.colorCode[cur] != OP_MAGMA && game.colorCode[next] == OP_MAGMA)
+			{
+				for(i=1; i<=ROAD_SHADOW; i++)
+				{
+					cur = ReadVRAM(0, x + 256 * (y + i));
+					if((y + i < 212) && (game.colorCode[cur] == OP_MAGMA))
+						WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
+					else
+						break;
+				}
+				y += ROAD_SHADOW;
 			}
 		}
 	}
@@ -1770,26 +1895,6 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr)
 {
-	//u8 i;
-	//u8 oX, oY; // offset
-	//u8 dX, dY; // bound
-	//for(i=0; i<num; i++)
-	//{
-	//	oY = ((u8*)addr)[0];
-	//	oX = oY >> 4;
-	//	oY &= 0x0F;
-	//	dY = ((u8*)addr)[1];
-	//	dX = dY >> 4;
-	//	dY &= 0x0F;
-	//	addr += 2;
-	//	if(mod8 == 0)
-	//		RAMtoVRAM(posX + (i * sizeX) + oX, posY + oY, dX, dY, addr);
-	//	else
-	//		RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY, dX, dY, addr);
-	//	addr += dX * dY;
-	//}
-
-
 	u8 i, j;
 	u8 oX, oY; // offset
 	u8 dX, dY; // bound
@@ -1867,7 +1972,7 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 const char* StartGame(u8 op, i8 value)
 {
 	op; value;
-	game.track = value;
+	//game.track = value;
 	game.state = StateStartGame;
 	return "";
 }
