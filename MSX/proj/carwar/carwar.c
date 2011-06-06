@@ -75,6 +75,8 @@
 #define SIDE_UP		2
 #define SIDE_DOWN	3
 
+#define USE_POSITION_DEBUG 0
+
 // Color operator
 enum
 {
@@ -115,19 +117,20 @@ enum
 	RULE_LAST = RULE_TAG,
 };
 
-// Tile render flag
-#define ROT_0	0x00	// 0°
-#define ROT_90	0x10	// 90°
-#define ROT_180	0x20	// 180°
-#define ROT_270	0x30	// 270°
-//#define SYM_H	0x40	// Horizontal symmetry
-//#define SYM_V	0x50	// Vertical symmetry
-#define MARKER	0x80	// Ground marker include
+// Tile init
+#define NUM_0		0x00
+#define NUM_1		0x01
+#define NUM_2		0x02
+#define NUM_3		0x03
+#define NUM_MASK	0x03
+#define OFFSET_X	0x04
+#define OFFSET_Y	0x08
 
+// Tile flag
 #define SYM_H	0x01	// Horizontal symmetry
 #define SYM_V	0x02	// Vertical symmetry
 #define SYM_D	0x04	// Diagonal symmetry
-#define BANK_2	0x08	// second tile bank
+#define BANK_2	0x08	// Second tile bank (tile id + 16)
 
 //-----------------------------------------------------------------------------
 // T Y P E S
@@ -288,6 +291,9 @@ void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
 
 //void DebugPrintInt(i16 i, u8 x, u8 y);
+#if USE_POSITION_DEBUG
+void DebugPrintVec(u8 i, u8 j, u8 x, u8 y);
+#endif
 void UpackTiles();
 void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0);
 void BuildTrack();
@@ -427,8 +433,8 @@ const u8 g_TrackTilesSprint[] =
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
-	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
-	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	TILE2(OP_ASPHALT, SYM_V, 25, OP_GRASS, SYM_D+SYM_V, 8, OP_WALL)
+	TILE1(OP_GRASS, SYM_V, 1, OP_WALL)
 	// line 1
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
@@ -436,7 +442,7 @@ const u8 g_TrackTilesSprint[] =
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
-	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE2(OP_WATER, SYM_D, 25, OP_GRASS, 0, 8, OP_WALL)
 	// line 2
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
@@ -444,7 +450,7 @@ const u8 g_TrackTilesSprint[] =
 	TILE0(OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
 	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
-	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE1(OP_WATER, 0, 8, OP_WALL)
 	// line 3
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
@@ -452,7 +458,7 @@ const u8 g_TrackTilesSprint[] =
 	TILE0(OP_WALL)
 	TILE1(OP_ASPHALT, 0, 16, OP_ASPHALT)
 	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
-	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE1(OP_WATER, 0, 8, OP_WALL)
 	// line 4
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V, 9, OP_WALL)
@@ -460,15 +466,68 @@ const u8 g_TrackTilesSprint[] =
 	TILE0(OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V, 17, OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
-	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
+	TILE2(OP_WATER, SYM_D+SYM_V, 25, OP_GRASS, 0, 8, OP_WALL)
 	// line 5
 	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
 	TILE0(OP_WALL)
 	TILE0(OP_WALL)
 	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
-	TILE1(OP_ASPHALT, SYM_D, 8, OP_WALL)
+	TILE2(OP_ASPHALT, SYM_V, 25, OP_GRASS, SYM_D, 8, OP_WALL)
+	TILE1(OP_GRASS, SYM_V+SYM_H, 1, OP_WALL)
+};
+
+// TRACK - Snow
+const u8 g_TrackTilesSnow[] = 
+{
+	// line 0
+	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
+	TILE0(OP_ASPHALT)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
+	// line 1
+	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_V+SYM_H, 0, OP_WALL)
+	TILE0(OP_WALL)
+	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
+	TILE1(OP_ASPHALT, SYM_H, 0, OP_WALL)
+	TILE0(OP_ASPHALT)
+	// line 2
+	TILE1(OP_ASPHALT, 0, 16, OP_ASPHALT)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE1(OP_ICE, SYM_D, 25, OP_ASPHALT)
+	// line 3
+	TILE1(OP_ASPHALT, SYM_V, 17, OP_ASPHALT)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE0(OP_WALL)
+	TILE1(OP_ICE, 0, 0, OP_WALL)
+	TILE0(OP_ICE)
+	// line 4
+	TILE1(OP_ASPHALT, SYM_D+SYM_V, 24, OP_SNOW)
+	TILE1(OP_SNOW, 0, 1, OP_WALL)
+	TILE0(OP_SNOW)
+	TILE0(OP_WALL)
+	TILE1(OP_ICE, SYM_D, 27, OP_JUMPER)
+	TILE1(OP_ICE, 0, 30, OP_WALL)
+	TILE0(OP_ICE)
+	// line 5
+	TILE1(OP_SNOW, SYM_H, 1, OP_WALL)
+	TILE0(OP_SNOW)
+	TILE1(OP_SNOW, SYM_H+SYM_V, 0, OP_WALL)
+	TILE0(OP_WALL)
+	TILE1(OP_ICE, SYM_H, 0, OP_WALL)
+	TILE0(OP_ICE)
+	TILE1(OP_ICE, SYM_H+SYM_V, 1, OP_WALL)
 };
 
 // TRACK - Beatch
@@ -478,7 +537,7 @@ const u8 g_TrackTilesBeatch[] =
 	TILE1(OP_ASPHALT, 0, 1, OP_SAND)
 	TILE0(OP_ASPHALT)
 	TILE0(OP_ASPHALT)
-	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_D+SYM_H, 17, OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_D, 16, OP_ASPHALT)
 	TILE0(OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
@@ -579,9 +638,10 @@ const u8 g_TrackTilesVolcano[] =
 
 const Track g_Tracks[] = 
 {
-	{ "<SPRINT>", 7, 6, g_TrackTilesSprint, { 16, 8 }, 64, { { 25, 100 }, { 40, 100 }, { 25, 120 }, { 40, 120 } } },
-	{ "<BEACH>", 7, 6, g_TrackTilesBeatch, { 16, 8 }, 128, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
-	{ "<VOLCANO>", 7, 6, g_TrackTilesVolcano, { 16, 8 }, 0, { { 130, 180 }, { 130, 195 }, { 145, 180 }, { 145, 195 } } },
+	{ "<SPRINT>", 7, 6, g_TrackTilesSprint, { 16, 8 }, 64, { { 146 + 6, 143 + 5 }, { 161 + 6, 139 + 5 }, { 146 + 6, 159 + 5 }, { 161 + 6, 155 + 5 } } },
+	{ "<SNOW>", 7, 6, g_TrackTilesSnow, { 16, 8 }, 64, { { 39, 112 }, { 24, 117 }, { 39, 127 }, { 24, 132 } } },
+	{ "<BEACH>", 7, 6, g_TrackTilesBeatch, { 16, 8 }, 0, { { 135, 15 }, { 131, 30 }, { 119, 16 }, { 115, 30 } } },
+	{ "<VOLCANO>", 7, 6, g_TrackTilesVolcano, { 16, 8 }, 0, { { 34 + 6, 73 + 5 }, { 30 + 6, 90 + 7 }, { 17 + 6, 74 + 7 }, { 14 + 6, 90 + 7 } } },
 };
 
 //-----------------------------------------------------------------------------
@@ -1384,6 +1444,10 @@ void StateUpdateGame()
 	//SetSpriteUniColor(3, 64+8*3, 64, game.second >> 4,   0x0F);
 	//SetSpriteUniColor(4, 64+8*4, 64, game.second & 0x0F, 0x0F);
 
+#if USE_POSITION_DEBUG
+	DebugPrintVec(PosToPxl(game.players[0].posX), PosToPxl(game.players[0].posY), 10, 10);
+#endif
+
 	WaitRetrace();
 	game.frame++;
 }
@@ -1696,7 +1760,7 @@ void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0)
 /***/
 void BuildTrack()
 {
-	u8 i, j;
+	u8 i, j, num;
 	u8 set0, op0;
 	u8 flag1, tile1, op1;
 	u8 flag2, tile2, op2;
@@ -1716,10 +1780,11 @@ void BuildTrack()
 			set0 = *block++;
 			op0 = set0 & 0x0F;
 			set0 >>= 4;
+			num = set0 & NUM_MASK;
 			
 			FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, g_BG[op0].ColorLight);
 			
-			if(set0 >= 1) // first tile
+			if(num >= 1) // first tile
 			{
 				flag1 = *block++;
 				tile1 = flag1 & 0x0F;
@@ -1730,7 +1795,7 @@ void BuildTrack()
 
 				BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag1, tile1, op1, op0);
 
-				if(set0 >= 2) // second tile
+				if(num >= 2) // second tile
 				{
 					flag2 &= 0x0F;
 
@@ -1740,7 +1805,7 @@ void BuildTrack()
 
 					BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag2, tile2, op2, op0);
 
-					if(set0 >= 3) // third tile
+					if(num >= 3) // third tile
 					{
 						flag3 = *block++;
 						tile3 = flag3 & 0x0F;
@@ -1884,14 +1949,27 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 
 //void DebugPrintInt(i16 i, u8 x, u8 y)
 //{
-//	SetSpriteUniColor(0, x + 0 * 8, y, (i / 100000) % 10, 0x0F);
-//	SetSpriteUniColor(1, x + 1 * 8, y, (i / 10000) % 10, 0x0F);
-//	SetSpriteUniColor(2, x + 2 * 8, y, (i / 1000) % 10, 0x0F);
-//	SetSpriteUniColor(3, x + 3 * 8, y, (i / 100) % 10, 0x0F);
-//	SetSpriteUniColor(4, x + 4 * 8, y, (i / 10) % 10, 0x0F);
-//	SetSpriteUniColor(5, x + 5 * 8, y, i % 10, 0x0F);
-//	SetSpriteUniColor(6, 0, 216, 0, 0);
+//	SetSpriteUniColor(0, x + 1 * 8, y, (i / 10000) % 10, 0x0F);
+//	SetSpriteUniColor(1, x + 2 * 8, y, (i / 1000) % 10, 0x0F);
+//	SetSpriteUniColor(2, x + 3 * 8, y, (i / 100) % 10, 0x0F);
+//	SetSpriteUniColor(3, x + 4 * 8, y, (i / 10) % 10, 0x0F);
+//	SetSpriteUniColor(4, x + 5 * 8, y, i % 10, 0x0F);
+//	SetSpriteUniColor(5, 0, 216, 0, 0);
 //}
+
+#if USE_POSITION_DEBUG
+void DebugPrintVec(u8 i, u8 j, u8 x, u8 y)
+{
+	SetSpriteUniColor(0, x + 0 * 8, y, '0' - ' ' + (i / 100) % 10, 0x0F);
+	SetSpriteUniColor(1, x + 1 * 8, y, '0' - ' ' + (i / 10) % 10, 0x0F);
+	SetSpriteUniColor(2, x + 2 * 8, y, '0' - ' ' + i % 10, 0x0F);
+	SetSpriteUniColor(3, x + 3 * 8, y, ',' - ' ', 0x0F);
+	SetSpriteUniColor(4, x + 4 * 8, y, '0' - ' ' + (j / 100) % 10, 0x0F);
+	SetSpriteUniColor(5, x + 5 * 8, y, '0' - ' ' + (j / 10) % 10, 0x0F);
+	SetSpriteUniColor(6, x + 6 * 8, y, '0' - ' ' + j % 10, 0x0F);
+	SetSpriteUniColor(7, 0, 216, 0, 0);
+}
+#endif
 
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr)
 {
