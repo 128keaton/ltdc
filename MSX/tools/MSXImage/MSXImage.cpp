@@ -21,6 +21,7 @@ enum Compressor
 {
 	COMPRESS_None,       // No compression
 	COMPRESS_Crop256,    // Crop sprite to keep only the non-transparent area (max size 256x256)
+	COMPRESS_Crop32,     // Crop sprite to keep only the non-transparent area (max size 32x32)
 	COMPRESS_Crop16,     // Crop sprite to keep only the non-transparent area (max size 16x16)
 	COMPRESS_CropLine16, // Crop each sprite line (max size 16x16)
 };
@@ -34,7 +35,7 @@ enum Format
 };
 
 //const char* ARGV[] = { "", "-in", "cars.png", "-out", "sprt_car_1.h", "-pos", "0", "0", "-size", "13", "11", "-num", "16", "1", "-name", "g_Car1", "-trans", "0xE300E3", "-compress", "cropline16", "-format", "asm", "-data", "dec" };
-const char* ARGV[] = { "", "-in", "track_01.png", "-out", "track_01.sc8", "-size", "256", "212", "-format", "raw" };
+const char* ARGV[] = { "", "-in", "track_tiles.png", "-out", "sprt_track.h", "-pos", "0", "0", "-size", "32", "32", "-num", "8", "4", "-name", "g_TrackTiles", "-trans", "0xDA48AA", "-color", "2", "-compress", "crop32" }; 
 
 //=============================================================================
 // Program
@@ -107,7 +108,7 @@ bool SaveImage(FIBITMAP* dib, const char* lpszPathName)
 void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY, i32 sizeX, i32 sizeY, i32 numX, i32 numY, i32 colorNum, u32 transColor, const char* name, Compressor comp, LangageInterface* lang)
 {
 	FIBITMAP *dib, *dib32;
-	i32 i, j, nx, ny, bit, minX, maxX, minY, maxY, totalBytes = 0;
+	i32 i, j, nx, ny, bit, minX, maxX, minY, maxY, width, height, totalBytes = 0;
 	std::string outData;
 	RGB24 c24;
 	GRB8 c8;
@@ -159,24 +160,59 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 							}
 						}
 					}
+					width = maxX > minX ? 1 + maxX - minX : 0;
+					height = maxY > minY ? 1 + maxY - minY : 0;
 				}
 
 				// Print sprite header
 				outData += lang->SpriteBegin(nx + ny * numX);
 				if(comp == COMPRESS_Crop256)
 				{
-					outData += lang->SpriteCrop256(u8(minX), u8(minY), u8(1 + maxX - minX), u8(1 + maxY - minY));
+					outData += lang->Line4Bytes(u8(minX), u8(minY), u8(width), u8(height), "minX minY sizeX sizeY");
 					totalBytes += 4;
+				}
+				else if(comp == COMPRESS_Crop32)
+				{
+					if(width == 0 || height == 0)
+					{
+						outData += lang->Line1Byte(0x80, "no data");
+						totalBytes += 1;
+					}
+					else 
+					{
+						minX >>= 3;
+						maxX >>= 3;
+						width = maxX - minX;
+						minY &= 0x1F; // Clamp to 5bits (0-31)
+						height &= 0x1F;
+						if(minX == 0 && minY == 0)
+						{
+							outData += lang->Line1Byte(u8(0x80 + (width << 5) + height), "sizeX|sizeY");
+							totalBytes += 1;
+						}
+						else
+						{
+							outData += lang->Line2Bytes(u8((minX << 5) + minY), u8(0x80 + (width << 5) + height), "minX|minY sizeX|sizeY");
+							totalBytes += 2;
+						}
+						minX *= 8;
+						maxX = (maxX * 8) + 7;
+						width = (width + 1) * 8;
+					}
 				}
 				else if(comp == COMPRESS_Crop16)
 				{
-					outData += lang->SpriteCrop16(u8((minX << 4) + minY), u8(((1 + maxX - minX) << 4) + (1 + maxY - minY)));
+					minX &= 0x0F; // Clamp to 4bits (0-15)
+					width &= 0x0F;
+					minY &= 0x0F;
+					height &= 0x0F;
+					outData += lang->Line2Bytes(u8((minX << 4) + minY), u8(((width) << 4) + (height)), "minX|minY sizeX|sizeY");
 					totalBytes += 2;
 				}
 				else if(comp == COMPRESS_CropLine16)
 				{
-					outData += lang->SpriteCropLine16(u8((minY << 4) + (1 + maxY - minY)));
-					totalBytes += 2;
+					outData += lang->Line1Byte(u8((minY << 4) + (height)), "minY|sizeY");
+					totalBytes += 1;
 				}
 
 				// Print sprite content
@@ -201,7 +237,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 										maxX = i;
 								}
 							}
-							outData += lang->LineCropLine16(u8((minX << 4) + (1 + maxX - minX)));
+							outData += lang->Line1Byte(u8((minX << 4) + (1 + maxX - minX)), "minX|sizeX");
 						}
 
 						for(i = 0; i < sizeX; i++)
@@ -434,6 +470,7 @@ void PrintUsage()
 	printf("   -compress ?\n");
 	printf("      none         No compression (default)\n");
 	printf("      crop256      Crop image to only the necessary area (max size 256x256)\n");
+	printf("      crop32       Crop image to only the necessary area (max size 32x32)\n");
 	printf("      crop16       Crop image to only the necessary area (max size 16x16)\n");
 	printf("      cropline16   Crop image on a per line basis (max size 16x16)\n");
 	printf("   -format ?\n");
@@ -456,8 +493,8 @@ void PrintUsage()
 */
 int main(int argc, const char* argv[])
 {
-	//argc = sizeof(ARGV)/sizeof(ARGV[0]); // for debug purpose
-	//argv = ARGV; // for debug purpose
+	argc = sizeof(ARGV)/sizeof(ARGV[0]); // for debug purpose
+	argv = ARGV; // for debug purpose
 
 	FreeImage_Initialise();
 
@@ -515,6 +552,8 @@ int main(int argc, const char* argv[])
 			i++;
 			if(_stricmp(argv[i], "crop256") == 0)
 				comp = COMPRESS_Crop256;
+			else if(_stricmp(argv[i], "crop32") == 0)
+				comp = COMPRESS_Crop32;
 			else if(_stricmp(argv[i], "crop16") == 0)
 				comp = COMPRESS_Crop16;
 			else if(_stricmp(argv[i], "cropline16") == 0)
