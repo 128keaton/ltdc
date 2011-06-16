@@ -25,11 +25,10 @@ public:
 	LangageInterface(DataFormat format): eFormat(format) {}
 	virtual std::string Header(const c8* version, const c8* name) = 0;
 	virtual std::string SpriteBegin(i32 number) = 0;
-	virtual std::string SpriteCrop256(u8 minX, u8 minY, u8 sizeX, u8 sizeY) = 0;
-	virtual std::string SpriteCrop16(u8 minXY, u8 sizeXY) = 0;
-	virtual std::string SpriteCropLine16(u8 minSizeY) = 0;
+	virtual std::string Line4Bytes(u8 minX, u8 minY, u8 sizeX, u8 sizeY, std::string comment) = 0;
+	virtual std::string Line2Bytes(u8 minXY, u8 sizeXY, std::string comment) = 0;
+	virtual std::string Line1Byte(u8 minSizeY, std::string comment) = 0;
 	virtual std::string LineBegin() = 0;
-	virtual std::string LineCropLine16(u8 minSizeY) = 0;
 	virtual std::string Data8Bits(u8 data) = 0;
 	virtual std::string Data1Bit(u8 data) = 0;
 	virtual std::string LineEnd() = 0;
@@ -84,39 +83,31 @@ public:
 		return strData; 
 	}
 
-	virtual std::string SpriteCrop256(u8 minX, u8 minY, u8 sizeX, u8 sizeY)
+	virtual std::string Line4Bytes(u8 minX, u8 minY, u8 sizeX, u8 sizeY, std::string comment)
 	{
 		sprintf_s(strFormat, BUFFER_SIZE, 
-			"\t%s, %s, %s, %s, // minX, minY, sizeX, sizeY\n", Format(), Format(), Format(), Format());
+			"\t%s, %s, %s, %s, // %s\n", Format(), Format(), Format(), Format(), comment.c_str());
 		sprintf_s(strData, BUFFER_SIZE, strFormat, minX, minY, sizeX, sizeY);
 		return strData; 
 	}
 
-	virtual std::string SpriteCrop16(u8 minXY, u8 sizeXY)
+	virtual std::string Line2Bytes(u8 minXY, u8 sizeXY, std::string comment)
 	{
 		sprintf_s(strFormat, BUFFER_SIZE, 
-			"\t%s, %s, // minX|minY, sizeX|sizeY\n", Format(), Format());
+			"\t%s, %s, // %s\n", Format(), Format(), comment.c_str());
 		sprintf_s(strData, BUFFER_SIZE, strFormat, minXY, sizeXY);
 		return strData; 
 	}
 
-	virtual std::string SpriteCropLine16(u8 minSizeY)
+	virtual std::string Line1Byte(u8 minSizeY, std::string comment)
 	{
 		sprintf_s(strFormat, BUFFER_SIZE, 
-			"\t%s, // minY|sizeY\n", Format());
+			"\t%s, // %s\n", Format(), comment.c_str());
 		sprintf_s(strData, BUFFER_SIZE, strFormat, minSizeY);
 		return strData; 
 	}
 
 	virtual std::string LineBegin() { return "\t"; }
-
-	virtual std::string LineCropLine16(u8 minSizeX)
-	{
-		sprintf_s(strFormat, BUFFER_SIZE, 
-			"%s, /* minX|sizeX */ ", Format());
-		sprintf_s(strData, BUFFER_SIZE, strFormat, minSizeX);
-		return strData; 
-	}
 
 	virtual std::string Data8Bits(u8 data)
 	{
@@ -203,39 +194,31 @@ public:
 		return strData; 
 	}
 
-	virtual std::string SpriteCrop256(u8 minX, u8 minY, u8 sizeX, u8 sizeY)
+	virtual std::string Line4Bytes(u8 minX, u8 minY, u8 sizeX, u8 sizeY, std::string comment)
 	{
 		sprintf_s(strFormat, BUFFER_SIZE, 
-			"\tdb %s %s %s %s ; minX minY sizeX sizeY\n", Format(), Format(), Format(), Format());
+			"\tdb %s %s %s %s ; %s\n", Format(), Format(), Format(), Format(), comment.c_str());
 		sprintf_s(strData, BUFFER_SIZE, strFormat, minX, minY, sizeX, sizeY);
 		return strData; 
 	}
 
-	virtual std::string SpriteCrop16(u8 minXY, u8 sizeXY)
+	virtual std::string Line2Bytes(u8 minXY, u8 sizeXY, std::string comment)
 	{
 		sprintf_s(strFormat, BUFFER_SIZE, 
-			"\tdb %s %s ; minX|minY sizeX|sizeY\n", Format(), Format());
+			"\tdb %s %s ; %s\n", Format(), Format(), comment.c_str());
 		sprintf_s(strData, BUFFER_SIZE, strFormat, minXY, sizeXY);
 		return strData; 
 	}
 
-	virtual std::string SpriteCropLine16(u8 minSizeY)
+	virtual std::string Line1Byte(u8 minSizeY, std::string comment)
 	{
 		sprintf_s(strFormat, BUFFER_SIZE, 
-			"\tdb %s ; minY|sizeY\n", Format());
+			"\tdb %s ; %s\n", Format(), comment.c_str());
 		sprintf_s(strData, BUFFER_SIZE, strFormat, minSizeY);
 		return strData; 
 	}
 
 	virtual std::string LineBegin() { return "\tdb "; }
-
-	virtual std::string LineCropLine16(u8 minSizeX)
-	{
-		sprintf_s(strFormat, BUFFER_SIZE, 
-			"%s ", Format());
-		sprintf_s(strData, BUFFER_SIZE, strFormat, minSizeX);
-		return strData; 
-	}
 
 	virtual std::string Data8Bits(u8 data)
 	{
