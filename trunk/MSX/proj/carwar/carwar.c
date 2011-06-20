@@ -294,7 +294,7 @@ void DrawText(u16 x, u16 y, const char* text, u8 color);
 #if USE_POSITION_DEBUG
 void DebugPrintVec(u8 i, u8 j, u8 x, u8 y);
 #endif
-void UpackTiles();
+//void UpackTiles();
 void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0);
 void BuildTrack();
 void ShadeTrack();
@@ -1090,7 +1090,7 @@ void StateStartGame()
 	//}
 	//else // from ROM
 	{
-		UpackTiles();
+		//UpackTiles();
 		BuildTrack();
 		if(game.bShadeTrack)
 			ShadeTrack();
@@ -1706,25 +1706,25 @@ void CarToWallCollision(Player* ply)
 
 
 /***/
-void UpackTiles()
-{
-	u8 i, j, x, y;
-	PrintSprite(64, 64, "UNPACK\nTILES", (u16)&g_DefaultColor);
-	for(j=0; j<4; j++)
-	{
-		for(i=0; i<8; i++)
-		{
-			for(y=0; y<32; y++)
-			{
-				for(x=0; x<32/8; x++)
-				{
-					RAMtoVRAM(i * 32 + x * 8, 256 + j * 32 + y, 8, 1, (u16)&game.bitToByte[g_TrackTiles[(i + j * 8) * 32 * 4 + y * 4 + x] * 8]);
-				}
-			}
-		}
-	}
-	ClearSprite();
-}
+//void UpackTiles()
+//{
+//	u8 i, j, x, y;
+//	PrintSprite(64, 64, "UNPACK\nTILES", (u16)&g_DefaultColor);
+//	for(j=0; j<4; j++)
+//	{
+//		for(i=0; i<8; i++)
+//		{
+//			for(y=0; y<32; y++)
+//			{
+//				for(x=0; x<32/8; x++)
+//				{
+//					RAMtoVRAM(i * 32 + x * 8, 256 + j * 32 + y, 8, 1, (u16)&game.bitToByte[g_TrackTiles[(i + j * 8) * 32 * 4 + y * 4 + x] * 8]);
+//				}
+//			}
+//		}
+//	}
+//	ClearSprite();
+//}
 
 /***/
 void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0)
