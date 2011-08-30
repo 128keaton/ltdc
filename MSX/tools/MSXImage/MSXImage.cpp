@@ -19,11 +19,12 @@
 
 enum Compressor
 {
-	COMPRESS_None,       // No compression
-	COMPRESS_Crop256,    // Crop sprite to keep only the non-transparent area (max size 256x256)
-	COMPRESS_Crop32,     // Crop sprite to keep only the non-transparent area (max size 32x32)
-	COMPRESS_Crop16,     // Crop sprite to keep only the non-transparent area (max size 16x16)
-	COMPRESS_CropLine16, // Crop each sprite line (max size 16x16)
+	COMPRESS_None,          // No compression
+	COMPRESS_Crop16,        // Crop sprite to keep only the non-transparent area (max size 16x16)
+	COMPRESS_CropLine16,    // Crop each sprite line (max size 16x16)
+	COMPRESS_Crop32,        // Crop sprite to keep only the non-transparent area (max size 32x32)
+	COMPRESS_Crop32_RLE4x4, // Crop sprite to keep only the non-transparent area (max size 32x32)
+	COMPRESS_Crop256,       // Crop sprite to keep only the non-transparent area (max size 256x256)
 };
 
 enum Format
@@ -187,12 +188,12 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 						height &= 0x1F;
 						if(minX == 0 && minY == 0)
 						{
-							outData += lang->Line1Byte(u8(0x80 + (width << 5) + height), "sizeX|sizeY");
+							outData += lang->Line1Byte(u8(0x80 + (width << 5) + height), "sizeX(2b)|sizeY(5b)");
 							totalBytes += 1;
 						}
 						else
 						{
-							outData += lang->Line2Bytes(u8((minX << 5) + minY), u8(0x80 + (width << 5) + height), "minX|minY sizeX|sizeY");
+							outData += lang->Line2Bytes(u8((minX << 5) + minY), u8(0x80 + (width << 5) + height), "minX(2b)|minY(5b) sizeX(2b)|sizeY(5b)");
 							totalBytes += 2;
 						}
 						minX *= 8;
@@ -469,10 +470,10 @@ void PrintUsage()
 	printf("   -name name      Name of the structure to export\n");
 	printf("   -compress ?\n");
 	printf("      none         No compression (default)\n");
-	printf("      crop256      Crop image to only the necessary area (max size 256x256)\n");
-	printf("      crop32       Crop image to only the necessary area (max size 32x32)\n");
 	printf("      crop16       Crop image to only the necessary area (max size 16x16)\n");
 	printf("      cropline16   Crop image on a per line basis (max size 16x16)\n");
+	printf("      crop32       Crop image to only the necessary area (max size 32x32)\n");
+	printf("      crop256      Crop image to only the necessary area (max size 256x256)\n");
 	printf("   -format ?\n");
 	printf("      auto         Auto-detected using output file extension (default)\n");
 	printf("      c            C header file output\n");
@@ -554,6 +555,8 @@ int main(int argc, const char* argv[])
 				comp = COMPRESS_Crop256;
 			else if(_stricmp(argv[i], "crop32") == 0)
 				comp = COMPRESS_Crop32;
+			else if(_stricmp(argv[i], "crop32rle") == 0)
+				comp = COMPRESS_Crop32_RLE4x4;
 			else if(_stricmp(argv[i], "crop16") == 0)
 				comp = COMPRESS_Crop16;
 			else if(_stricmp(argv[i], "cropline16") == 0)

@@ -263,8 +263,8 @@ typedef struct tagGameData
 	// buffers
 	//u8               fileBuffer[256];
 	u8               colorCode[256];
-	//u8               blockGen[32*32];
 	u8               bitToByte[256 * 8];
+	u8               trackTiles[32*32*4];
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -284,6 +284,7 @@ u8 VectorToAngle256(i16 x, i16 y);
 //u16 GetVectorLenght1024(i16 x, i16 y);
 u16 GetVectorLenght256(i16 x, i16 y);
 void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 addr);
+void UnpackTrackTiles();
 //void VBlankInterrupt();
 u8 GetGroundCollide(Player* ply, u8 index);
 
@@ -897,6 +898,9 @@ void StateInitialize()
 				game.bitToByte[x * 8 + i] = 0x00;
 		}		
 	}
+
+	// Unpack track tiles
+	UnpackTrackTiles();
 
 	// Init smoke
 	for(i=0; i<12; i++)
@@ -1750,7 +1754,8 @@ void BuildTile(u16 px, u16 py, u8 flag, u8 tile, u8 op, u8 op0)
 			else             { lx = x;	ly = y; }
 			if(flag & SYM_H) { ly = 31 - ly; }
 			if(flag & SYM_V) { lx = 31 - lx; }
-			byte = g_TrackTiles[(tile << 7) + (lx >> 3) + (ly << 2)];
+			//byte = g_TrackTiles[(tile << 7) + (lx >> 3) + (ly << 2)];
+			byte = game.trackTiles[(tile << 7) + (lx >> 3) + (ly << 2)];
 			if(byte & (1 << (7 - (lx & 0x07))))
 				WriteVRAM(0, (px + x) + 256 * (py + y), color);
 		}
@@ -1997,6 +2002,46 @@ void CopyCropped16(u8 posX, u16 posY, u8 sizeX, u8 sizeY, u8 num, u8 mod8, u16 a
 				RAMtoVRAM(posX + Modulo2(i, 8) * sizeX + oX, posY + sizeY * (i / 8) + oY + j, dX, 1, addr);
 			}
 			addr += dX;
+		}
+	}
+}
+
+void UnpackTrackTiles()
+{
+	u8 i, offsetX, offsetY, sizeX, sizeY, x, y;
+	u8* bits;
+	u16 idx;
+	bits = g_TrackTiles;
+	for(i=0; i<32; i++)
+	{
+		idx = i * 32 * 4;
+		for(x=0; x<32*4; x++)
+			game.trackTiles[idx + x] = 0;
+
+		offsetX = 0;
+		offsetY = 0;
+		sizeX = 0;
+		sizeY = 0;
+
+		if((*bits & 0x80) == 0)
+		{
+			offsetX = (*bits & 0x7F) >> 5;
+			offsetY = (*bits & 0x1F);
+			bits++;
+		}
+
+		sizeX = (*bits & 0x7F) >> 5;
+		sizeY = (*bits & 0x1F);
+		bits++;
+
+		if(sizeX > 0 && sizeY > 0)
+		{
+			for(x=offsetX; x<offsetX + sizeX; x++)
+				for(y=offsetY; y<offsetY + sizeY; y++)
+				{
+					game.trackTiles[idx + y * 4 + x] = *bits;
+					bits++;
+				}
 		}
 	}
 }
