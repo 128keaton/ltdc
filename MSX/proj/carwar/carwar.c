@@ -870,7 +870,7 @@ void StateInitialize()
 	for(i=0; i<numberof(g_BG); i++)
 	{
 		game.colorCode[g_BG[i].ColorLight] = i;
-		game.colorCode[DarkenColor(g_BG[i].ColorLight, SHADOW_POWER)] = i;
+		//game.colorCode[DarkenColor(g_BG[i].ColorLight, SHADOW_POWER)] = i;
 		game.colorCode[g_BG[i].ColorDark] = i;
 	}
 	game.colorCode[COLOR_SAND]                                  = OP_ASPHALT;
@@ -1771,6 +1771,7 @@ void BuildTrack()
 	u8 flag2, tile2, op2;
 	u8 flag3, tile3, op3;
 	const u8* block;
+	u16 x, y;
 
 	PrintSprite(64, 64, "BUILD\nTRACK", (u16)&g_DefaultColor);
 
@@ -1786,8 +1787,11 @@ void BuildTrack()
 			op0 = set0 & 0x0F;
 			set0 >>= 4;
 			num = set0 & NUM_MASK;
+
+			x = g_Tracks[game.track].offset.x + (32 * i);
+			y = g_Tracks[game.track].offset.y + (32 * j);
 			
-			FillVRAM(g_Tracks[game.track].offset.x + (32 * i), g_Tracks[game.track].offset.y + (32 * j), 32, 32, g_BG[op0].ColorLight);
+			FillVRAM(x, y, 32, 32, g_BG[op0].ColorLight);
 			
 			if(num >= 1) // first tile
 			{
@@ -1798,7 +1802,7 @@ void BuildTrack()
 				flag2 = *block++; 
 				op1 = flag2 >> 4;
 
-				BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag1, tile1, op1, op0);
+				BuildTile(x, y, flag1, tile1, op1, op0);
 
 				if(num >= 2) // second tile
 				{
@@ -1808,7 +1812,7 @@ void BuildTrack()
 					op2 = tile2 & 0x0F;
 					tile2 >>= 4;
 
-					BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag2, tile2, op2, op0);
+					BuildTile(x, y, flag2, tile2, op2, op0);
 
 					if(num >= 3) // third tile
 					{
@@ -1819,7 +1823,7 @@ void BuildTrack()
 						op3 = *block++; 
 						op3 >>= 4;
 
-						BuildTile(g_Tracks[game.track].offset.x + 32 * i, g_Tracks[game.track].offset.y + 32 * j, flag3, tile3, op3, op0);
+						BuildTile(x, y, flag3, tile3, op3, op0);
 					}
 				}
 			}
@@ -2011,37 +2015,45 @@ void UnpackTrackTiles()
 	u8 i, offsetX, offsetY, sizeX, sizeY, x, y;
 	u8* bits;
 	u16 idx;
-	bits = g_TrackTiles;
-	for(i=0; i<32; i++)
+
+	bits = (u8*)g_TrackTiles;
+	for(i=0; i<32; i++) // for each tile
 	{
+		//bits = g_TrackTiles;
+	
 		idx = i * 32 * 4;
-		for(x=0; x<32*4; x++)
+		for(x=0; x<32 * 4; x++)
 			game.trackTiles[idx + x] = 0;
 
-		offsetX = 0;
-		offsetY = 0;
-		sizeX = 0;
-		sizeY = 0;
-
-		if((*bits & 0x80) == 0)
+		if(*bits == 0x80) // empty tile
 		{
-			offsetX = (*bits & 0x7F) >> 5;
-			offsetY = (*bits & 0x1F);
 			bits++;
 		}
-
-		sizeX = (*bits & 0x7F) >> 5;
-		sizeY = (*bits & 0x1F);
-		bits++;
-
-		if(sizeX > 0 && sizeY > 0)
+		else
 		{
-			for(x=offsetX; x<offsetX + sizeX; x++)
-				for(y=offsetY; y<offsetY + sizeY; y++)
+			if((*bits & 0x80) == 0) // tile header = offset + size
+			{
+				offsetX = (*bits & 0x7F) >> 5;
+				offsetY = (*bits & 0x1F);
+				bits++;
+			}
+			else // tile header = size only
+			{
+				offsetX = 0;
+				offsetY = 0;
+			}
+
+			sizeX = 1 + ((*bits & 0x60) >> 5);
+			sizeY = 1 + (*bits & 0x1F);
+			bits++;
+
+			for(y = offsetY; y < offsetY + sizeY; y++)
+			{
+				for(x = offsetX; x < offsetX + sizeX; x++)
 				{
-					game.trackTiles[idx + y * 4 + x] = *bits;
-					bits++;
+					game.trackTiles[idx + y * 4 + x] = *bits++;
 				}
+			}
 		}
 	}
 }
