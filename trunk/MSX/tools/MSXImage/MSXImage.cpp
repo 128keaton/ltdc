@@ -185,6 +185,7 @@ void ConvertToHeader(const char* inFile, const char* outFile, i32 posX, i32 posY
 						maxX >>= 3;
 						width = maxX - minX;
 						minY &= 0x1F; // Clamp to 5bits (0-31)
+						height--;
 						height &= 0x1F;
 						if(minX == 0 && minY == 0)
 						{
