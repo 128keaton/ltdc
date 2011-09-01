@@ -36,19 +36,22 @@
 #define COLOR_DARKBLUE		RGB8(1,2,3)
 #define COLOR_NAVYBLUE		RGB8(0,0,2)
 #define COLOR_DARKNAVYBLUE	RGB8(0,0,1)
-#define COLOR_MAUVE			RGB8(6,4,3)
-#define COLOR_DARKMAUVE		RGB8(4,3,2)
+#define COLOR_MAUVE			RGB8(6,3,2)
+#define COLOR_DARKMAUVE		RGB8(4,2,1)
 #define COLOR_ORANGE		RGB8(7,4,0)
 #define COLOR_DARKORANGE	RGB8(6,2,0)
 #define COLOR_RED			RGB8(7,1,0)
 #define COLOR_DARKRED		RGB8(5,1,0)
 #define COLOR_BLACK			RGB8(0,0,0)
-#define COLOR_LIME			RGB8(6,7,0)
-#define COLOR_DARKLIME		RGB8(4,5,0)
+//#define COLOR_LIME			RGB8(6,7,0)
+//#define COLOR_DARKLIME		RGB8(4,5,0)
+#define COLOR_LIME			RGB8(3,7,0)
+#define COLOR_DARKLIME		RGB8(2,5,0)
 
+// Track shadow setup
 #define BLOCK_SHADOW		3
 #define ROAD_SHADOW			4
-#define SHADOW_POWER		2
+#define SHADOW_POWER		1
 
 // Menu layout
 #define TITLE_X				16
@@ -265,6 +268,7 @@ typedef struct tagGameData
 	u8               colorCode[256];
 	u8               bitToByte[256 * 8];
 	u8               trackTiles[32*32*4];
+	u8               darkenColor[256];
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -430,8 +434,8 @@ const u8 g_TrackTilesSprint[] =
 {
 	// line 0
 	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
-	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
-	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
+	TILE2(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL, SYM_H+SYM_D, 22, OP_SPEEDER)
+	TILE2(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL, SYM_H+SYM_D, 22, OP_SPEEDER)
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE2(OP_ASPHALT, SYM_V, 25, OP_GRASS, SYM_D+SYM_V, 8, OP_WALL)
@@ -443,28 +447,28 @@ const u8 g_TrackTilesSprint[] =
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_D+SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
-	TILE2(OP_WATER, SYM_D, 25, OP_GRASS, 0, 8, OP_WALL)
+	TILE3(OP_WATER, SYM_D, 25, OP_GRASS, 0, 14, OP_JUMPER, 0, 8, OP_WALL)
 	// line 2
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
 	TILE1(OP_ASPHALT, 0, 1, OP_WALL)
-	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_D, 22, OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V, 1, OP_WALL)
 	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
 	TILE1(OP_WATER, 0, 8, OP_WALL)
 	// line 3
+	TILE2(OP_ASPHALT, SYM_V, 8, OP_WALL, 0, 22, OP_SPEEDER)
 	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
-	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
-	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_H, 22, OP_ASPHALT)
 	TILE0(OP_WALL)
 	TILE1(OP_ASPHALT, 0, 16, OP_ASPHALT)
 	TILE1(OP_ASPHALT, 0, 8, OP_WALL)
 	TILE1(OP_WATER, 0, 8, OP_WALL)
 	// line 4
-	TILE1(OP_ASPHALT, SYM_V, 8, OP_WALL)
+	TILE2(OP_ASPHALT, SYM_V, 8, OP_WALL, 0, 22, OP_SPEEDER)
 	TILE1(OP_ASPHALT, SYM_V, 9, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
-	TILE0(OP_ASPHALT)
+	TILE1(OP_ASPHALT, SYM_H+SYM_D, 22, OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V, 17, OP_ASPHALT)
 	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
 	TILE2(OP_WATER, SYM_D+SYM_V, 25, OP_GRASS, 0, 8, OP_WALL)
@@ -472,7 +476,7 @@ const u8 g_TrackTilesSprint[] =
 	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_V+SYM_H, 1, OP_WALL)
 	TILE0(OP_WALL)
-	TILE0(OP_WALL)
+	TILE2(OP_HEALTH, 0, 9, OP_WALL, SYM_V, 9, OP_WALL)
 	TILE1(OP_ASPHALT, SYM_H, 1, OP_WALL)
 	TILE2(OP_ASPHALT, SYM_V, 25, OP_GRASS, SYM_D, 8, OP_WALL)
 	TILE1(OP_GRASS, SYM_V+SYM_H, 1, OP_WALL)
@@ -508,7 +512,7 @@ const u8 g_TrackTilesSnow[] =
 	// line 3
 	TILE1(OP_ASPHALT, SYM_V, 17, OP_ASPHALT)
 	TILE0(OP_WALL)
-	TILE0(OP_WALL)
+	TILE2(OP_SNOW, 0, 2, OP_WALL, 0, 28, OP_HEALTH)
 	TILE0(OP_WALL)
 	TILE0(OP_WALL)
 	TILE1(OP_ICE, 0, 0, OP_WALL)
@@ -866,20 +870,23 @@ void StateInitialize()
 
 	// Init color table
 	for(x=0; x<256; x++)
+	{
 		game.colorCode[x] = OP_NONE;
+		game.darkenColor[x] = DarkenColor(x, SHADOW_POWER);
+	}
 	for(i=0; i<numberof(g_BG); i++)
 	{
 		game.colorCode[g_BG[i].ColorLight] = i;
-		//game.colorCode[DarkenColor(g_BG[i].ColorLight, SHADOW_POWER)] = i;
+		game.colorCode[game.darkenColor[g_BG[i].ColorLight]] = i;
 		game.colorCode[g_BG[i].ColorDark] = i;
 	}
-	game.colorCode[COLOR_SAND]                                  = OP_ASPHALT;
-	game.colorCode[DarkenColor(COLOR_SAND, SHADOW_POWER)]       = OP_ASPHALT;
-	game.colorCode[COLOR_LIGHTMAUVE]                            = OP_ASPHALT;
-	game.colorCode[DarkenColor(COLOR_LIGHTMAUVE, SHADOW_POWER)] = OP_ASPHALT;
-	game.colorCode[COLOR_NAVYBLUE]                              = OP_HOLE;
-	game.colorCode[DarkenColor(COLOR_NAVYBLUE, SHADOW_POWER)]   = OP_HOLE;
-	game.colorCode[COLOR_DARKNAVYBLUE]                          = OP_HOLE;
+	game.colorCode[COLOR_SAND]                         = OP_ASPHALT;
+	game.colorCode[game.darkenColor[COLOR_SAND]]       = OP_ASPHALT;
+	game.colorCode[COLOR_LIGHTMAUVE]                   = OP_ASPHALT;
+	game.colorCode[game.darkenColor[COLOR_LIGHTMAUVE]] = OP_ASPHALT;
+	game.colorCode[COLOR_NAVYBLUE]                     = OP_HOLE;
+	game.colorCode[game.darkenColor[COLOR_NAVYBLUE]]   = OP_HOLE;
+	game.colorCode[COLOR_DARKNAVYBLUE]                 = OP_HOLE;
 
 	// Initialize (ASCII table) sprites
 	for(x=0; x<sizeof(g_CharTable) / 8; x++)
@@ -969,8 +976,9 @@ void StateTitle()
 			}
 		}
 		// Copy title to both screen
-		VRAMtoVRAM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
+//		VRAMtoVRAM(TITLE_X, TITLE_Y + j, TITLE_X, TITLE_Y + 256 + j, 232, 1);
 	}
+		VRAMtoVRAM(TITLE_X, TITLE_Y, TITLE_X, TITLE_Y + 256, 232, 24);
 	DrawText(150, 64,       "PHENIX 2011", COLOR_GRAY);
 	DrawText(150, 64 + 256, "PHENIX 2011", COLOR_GRAY);
 
@@ -1382,7 +1390,7 @@ void StateUpdateGame()
 	for(i=0; i<game.playerNum; i++)
 	{
 		curPly = &game.players[i];
-		op = DarkenColor(curPly->ground, SHADOW_POWER);
+		op = game.darkenColor[curPly->ground];
 		if(curPly->life != 0) 
 		{
 			// Draw car
@@ -1854,7 +1862,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(0, x + 256 * (y - i));
 					if((y - i < 212) && (game.colorCode[cur] < OP_SPECIAL))
-						WriteVRAM(0, x + 256 * (y - i), DarkenColor(cur, SHADOW_POWER));
+						WriteVRAM(0, x + 256 * (y - i), game.darkenColor[cur]);
 					else
 						break;
 				}
@@ -1862,7 +1870,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(0, x + 256 * (y + i));
 					if((y + i < 212) && (game.colorCode[cur] >= OP_SPECIAL))
-						WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
+						WriteVRAM(0, x + 256 * (y + i), game.darkenColor[cur]);
 					else
 						break;
 				}
@@ -1874,7 +1882,7 @@ void ShadeTrack()
 				{
 					cur = ReadVRAM(0, x + 256 * (y + i));
 					if((y + i < 212) && (game.colorCode[cur] == OP_MAGMA))
-						WriteVRAM(0, x + 256 * (y + i), DarkenColor(cur, SHADOW_POWER));
+						WriteVRAM(0, x + 256 * (y + i), game.darkenColor[cur]);
 					else
 						break;
 				}
