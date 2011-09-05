@@ -3,7 +3,8 @@
 #include <math.h>
 #include <string.h>
 
-const char* ARGV[] = { "", "-num", "1024", "-shift", "3", "-bytes", "1", "sqrt" };
+//const char* ARGV[] = { "", "-num", "1024", "-shift", "3", "-bytes", "1", "sqrt" };
+const char* ARGV[] = { "", "-num", "512", "-shift", "6", "-bytes", "2", "equa", "0", "1", "1", "-0.001953125", "1.5" };
 const int ARGC = sizeof(ARGV)/sizeof(ARGV[0]);
 
 #define VERSION_MAJ 1
@@ -54,6 +55,7 @@ void Help()
 	printf("   proj         3d vector projection tables\n");
 	printf("   rot          Rotation angle table\n");
 	printf("   sqrt         Square-root table\n");
+	printf("   equa         Equation of type y=A+B*(C+x*D)^E\n");
 }
 
 int main(int argc, const char* argv[])
@@ -245,6 +247,28 @@ int main(int argc, const char* argv[])
 			for(int i=0; i<number; i++)
 			{
 				double x = multi * sqrt((double)i);
+				if(bytes == 1)
+					printf("0x%02X, ", 0xFF & (int)x);
+				else
+					printf("0x%04X, ", 0xFFFF & (int)x);
+				if((i % 8 == 7) && (i < number - 1))
+					printf("\n\t");
+			}
+			printf("\n};\n");
+		}
+		else if(strcmp(argv[argIndex], "equa") == 0)
+		{
+			// 	Equation of type y=A+B*(C+x*D)^E\n");
+			double A = atof(argv[++argIndex]);
+			double B = atof(argv[++argIndex]);
+			double C = atof(argv[++argIndex]);
+			double D = atof(argv[++argIndex]);
+			double E = atof(argv[++argIndex]);
+
+			printf("\nstatic const unsigned %s g_Equa%d[%d] =\n{\n\t", bytes == 1 ? "char" : "int", number, number);
+			for(int i=0; i<number; i++)
+			{
+				double x = multi * (A + B * pow((C + (double)i * D), E));
 				if(bytes == 1)
 					printf("0x%02X, ", 0xFF & (int)x);
 				else

@@ -85,7 +85,7 @@ typedef struct tagGameData
 	u8               pressed;
 	// WorkArea
 	u8               bitToByte[256 * 8];
-	i16              projZ[512];
+	//i16              projZ[512];
 	i8               anaglyphFx[512];
 	// Gameplay
 	u8               anaglyph;
@@ -145,6 +145,7 @@ void ClearLine3D(const Vector3D* vec1, const Vector3D* vec2);
 #include "trigo64.inc"
 #include "rot256.inc"
 #include "sqrt256.inc"
+#include "projZ512.inc"
 
 //-----------------------------------------------------------------------------
 // Menu 0
@@ -357,7 +358,7 @@ void StateInitialize()
 	// Create 3D projection table
 	for(x=0; x<512; x++)
 	{
-		game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
+		//game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
 		game.anaglyphFx[x] = (256 - x) >> 6;
 	}
 	game.anaglyph = TRUE;
@@ -743,7 +744,8 @@ void Project(const Vector3D* v3d, VectorU8* v2d)
 {
 	i16 X, Y, Z;
 
-	Z = game.projZ[U2M(v3d->z)];
+	//Z = game.projZ[U2M(v3d->z)];
+	Z = g_Equa512[U2M(v3d->z)];
 	X = CENTER_X + UxU(v3d->x, Z);
 	Y = CENTER_Y - UxU(v3d->y, Z);
 
