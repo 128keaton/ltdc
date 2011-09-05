@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="carwar"
-	ProjectGUID="{DE2AC870-23ED-4B5F-A333-624E76B5A965}"
+	Name="ponglyph"
+	ProjectGUID="{DE2AC870-23ED-4B5F-1234-624E76B5A965}"
 	RootNamespace="ambidex"
 	TargetFrameworkVersion="196613"
 	>
@@ -36,7 +36,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="----- Build carwar -----"
+				Description="----- Build ponglyph -----"
 				CommandLine="build.bat"
 			/>
 		</Configuration>
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="----- Build carwar -----"
+				Description="----- Build ponglyph -----"
 				CommandLine="build.bat"
 			/>
 		</Configuration>
@@ -79,38 +79,6 @@
 			</File>
 			<File
 				RelativePath=".\data\sprt_alpha.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_car_1.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_car_2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_car_3.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_car_4.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_crash.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_pilots.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_title.h"
-				>
-			</File>
-			<File
-				RelativePath=".\data\sprt_track.h"
 				>
 			</File>
 		</Filter>
@@ -295,7 +263,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\carwar.c"
+			RelativePath=".\ponglyph.c"
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
@@ -317,10 +285,6 @@
 					Outputs="$(InputName).asm;$(InputName).lst;$(InputName).rst;$(InputName).sym;$(InputName).rel;$(InputName).map;$(InputName).mem;$(InputName).ihx;$(InputName).adb;$(InputName).cdb;$(InputName).;$(InputName).dump"
 				/>
 			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\cmsx.h"
-			>
 		</File>
 	</Files>
 	<Globals>

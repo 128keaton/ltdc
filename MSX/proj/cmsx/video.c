@@ -96,6 +96,31 @@ void SetScreen8(u8 flag)
 	__endasm;
 }
 
+//void SetBorderColor(u8 color)
+//{
+//	color;
+//
+//	WaitForVDP();
+//
+//	__asm
+//
+//		di //; on interdit les interruptions
+//
+//		//; - modification registre 7 -
+//;//		ld		a, 4(ix) ;// border color
+//;//		out		(VDP_ADDR),a
+//;//
+//;//		ld		a,VDP_REG(7)
+//;//		out		(VDP_ADDR),a
+//
+//		ld		a, 4(ix) ;// border color
+//		ld		(BDRCLR),a
+//
+//	ei //; on autorise les interruptions
+//
+//	__endasm;
+//}
+
 /***/
 //                    4            5         7-6      9-8
 void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas)
@@ -223,10 +248,53 @@ void DrawPoint8(u8 posX, u8 posY, u8 color)
 }
 #endif
 
+void Line(u16 x1, u16 y1, u16 x2, u16 y2, u8 color, u8 op)
+{
+	u16 dx, dy, maj, min;
+	u8 arg;
+
+	arg = 0;
+	if(x1 > x2)
+	{
+		arg |= ARG_DIX_LEFT;
+		dx = x1 - x2;
+	}
+	else // (x1 <= x2)
+	{
+		arg |= ARG_DIX_RIGHT;
+		dx = x2 - x1;
+	}
+	if(y1 > y2)
+	{
+		arg |= ARG_DIY_UP;
+		dy = y1 - y2;
+	}
+	else // (y1 <= y2)
+	{
+		arg |= ARG_DIY_DOWN;
+		dy = y2 - y1;
+	}
+	if(dx > dy)
+	{
+		arg |= ARG_MAJ_H;
+		maj = dx;
+		min = dy;
+	}
+	else // (dx <= dy)
+	{
+		arg |= ARG_MAJ_V;
+		maj = dy;
+		min = dx;
+	}
+
+	LINE(x1, y1, maj, min, color, arg, op);
+}
+
 /**
  * LINE (128,96),(190,56),255
  */
 #ifndef REM_DRAWLINE8
+
 void DrawLine8(char posX1, char posY1, char posX2, char posY2, char color)
 {
 	posX1; posY1; posX2; posY2; color;

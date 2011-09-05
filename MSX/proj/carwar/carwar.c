@@ -1,4 +1,5 @@
 /* CARWAR */
+#include "cmsx.h" // CMSX library setting
 #include "core.h"
 #include "bios.h"
 #include "video.h"
@@ -850,7 +851,7 @@ void StateInitialize()
 
 	// Init
 	VideoInitialize();
-	SetFreq(FREQ_50);
+	SetFreq(FREQ_60);
 	SetScreen8(LINES_212);
 	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
 
