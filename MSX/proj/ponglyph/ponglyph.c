@@ -86,9 +86,11 @@ typedef struct tagGameData
 	// WorkArea
 	u8               bitToByte[256 * 8];
 	//i16              projZ[512];
-	i8               anaglyphFx[512];
+	//i8               anaglyphFx[512];
+	// 3d Settings
+	u8               bAnaglyph;
+	u8               power3d;
 	// Gameplay
-	u8               anaglyph;
 	i16              plyDepth;
 } GameData;
 
@@ -127,15 +129,32 @@ void ClearLine3D(const Vector3D* vec1, const Vector3D* vec2);
 #define Cosinus(a) g_Sinus64[Modulo2((a + 16), 64)]
 #define Sinus(a) g_Sinus64[a]
 
-#define M2U(a)     ((a) << 6)
-#define U2M(a)     ((a) >> 6)
-#define UxU(a, b)  (((a) >> 3) * ((b) >> 3))
+// Float 2.14
+typedef int float2;
+#define F1_SET(a)			((a) << 14)
+#define F1_GET(a)			((a) >> 14)
+#define F1_MUL(a, b)		(((a) >> 7) * ((b) >> 7))
+#define F1_MUL_TINY(a, b)	((((a) >> 7) * (b)) >> 7)
+
+// Float 8.8
+typedef int float8;
+#define F8_SET(a)			((a) << 8)
+#define F8_GET(a)			((a) >> 8)
+#define F8_MUL(a, b)		(((a) >> 4) * ((b) >> 4))
+#define F8_MUL_TINY(a, b)	((((a) >> 4) * (b)) >> 4)
+
+// Float 10.6
+typedef int float10;
+#define F10_SET(a)			((a) << 6)
+#define F10_GET(a)			((a) >> 6)
+#define F10_MUL(a, b)		(((a) >> 3) * ((b) >> 3))
+#define F10_MUL_TINY(a, b)	((((a) >> 3) * ((b) >> 1)) >> 2)
 
 #define VEC_SET(vec, a, b, c) vec.x = a; vec.y = b; vec.z = c;
 
 
-#define CENTER_X	(M2U(255) >> 1) // 127.5
-#define CENTER_Y	(M2U(211) >> 1) // 105.5
+#define CENTER_X	(F10_SET(255) >> 1) // 127.5
+#define CENTER_Y	(F10_SET(211) >> 1) // 105.5
 
 //-----------------------------------------------------------------------------
 // R O M   D A T A
@@ -356,12 +375,13 @@ void StateInitialize()
 	}
 
 	// Create 3D projection table
-	for(x=0; x<512; x++)
-	{
-		//game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
-		game.anaglyphFx[x] = (256 - x) >> 6;
-	}
-	game.anaglyph = TRUE;
+	//for(x=0; x<512; x++)
+	//{
+	//	game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
+	//	game.anaglyphFx[x] = (256 - x) >> 6;
+	//}
+	game.bAnaglyph = TRUE;
+	game.power3d = 16;
 
 	game.page = 0;
 	game.state = StateTitle;
@@ -512,6 +532,7 @@ void StateMainMenu()
 void StateStartGame()
 {
 	Vector3D vec1, vec2;
+	i16 z;
 
 	game.page = 0;
 	SetPage8(game.page);
@@ -528,73 +549,82 @@ void StateStartGame()
 #define FIELD_DEPTH		256
 
 	// Front
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
+
+	z = 8;
+	while(z <= 256)
+	{
+		VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
+		VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
+		DrawLine3D(&vec1, &vec2);
+		z += 8;
+	}
 
 	// Mid
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(128));
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(128));
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(128));
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(128));
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(128));
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(128));
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(128));
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(128));
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
 	DrawLine3D(&vec1, &vec2);
 
-	// Front
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(FIELD_DEPTH));
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	// back
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(FIELD_DEPTH));
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(FIELD_DEPTH));
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(FIELD_DEPTH));
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
 
 	// Depth
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), 0);
-	VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(-FIELD_HEIGHT), M2U(FIELD_DEPTH));
+	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2);
 
 	// Side
-	//VEC_SET(vec1, M2U(0), M2U(FIELD_HEIGHT), 0);
-	//VEC_SET(vec2, M2U(0), M2U(FIELD_HEIGHT), M2U(256));
+	//VEC_SET(vec1, F10_SET(0), F10_SET(FIELD_HEIGHT), 0);
+	//VEC_SET(vec2, F10_SET(0), F10_SET(FIELD_HEIGHT), F10_SET(256));
 	//DrawLine3D(&vec1, &vec2);
-	//VEC_SET(vec1, M2U(FIELD_WIDTH), M2U(0), 0);
-	//VEC_SET(vec2, M2U(FIELD_WIDTH), M2U(0), M2U(256));
+	//VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(0), 0);
+	//VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(0), F10_SET(256));
 	//DrawLine3D(&vec1, &vec2);
-	//VEC_SET(vec1, M2U(0), M2U(-FIELD_HEIGHT), 0);
-	//VEC_SET(vec2, M2U(0), M2U(-FIELD_HEIGHT), M2U(256));
+	//VEC_SET(vec1, F10_SET(0), F10_SET(-FIELD_HEIGHT), 0);
+	//VEC_SET(vec2, F10_SET(0), F10_SET(-FIELD_HEIGHT), F10_SET(256));
 	//DrawLine3D(&vec1, &vec2);
-	//VEC_SET(vec1, M2U(-FIELD_WIDTH), M2U(0), 0);
-	//VEC_SET(vec2, M2U(-FIELD_WIDTH), M2U(0), M2U(256));
+	//VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(0), 0);
+	//VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(0), F10_SET(256));
 	//DrawLine3D(&vec1, &vec2);
 
 	// Racket
@@ -602,17 +632,17 @@ void StateStartGame()
 #define RACKET_WIDTH	16
 #define RACKET_HEIGHT	16
 
-	VEC_SET(vec1, M2U(-RACKET_WIDTH), M2U(RACKET_HEIGHT), 0);
-	VEC_SET(vec2, M2U(RACKET_WIDTH), M2U(RACKET_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(RACKET_WIDTH), M2U(RACKET_HEIGHT), 0);
-	VEC_SET(vec2, M2U(RACKET_WIDTH), M2U(-RACKET_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(RACKET_WIDTH), M2U(-RACKET_HEIGHT), 0);
-	VEC_SET(vec2, M2U(-RACKET_WIDTH), M2U(-RACKET_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, M2U(-RACKET_WIDTH), M2U(-RACKET_HEIGHT), 0);
-	VEC_SET(vec2, M2U(-RACKET_WIDTH), M2U(RACKET_HEIGHT), 0);
+	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
+	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
 	DrawLine3D(&vec1, &vec2);
 
 	game.plyDepth = 0;
@@ -624,6 +654,7 @@ void StateStartGame()
 void StateUpdateGame()
 {
 	Vector3D vec1, vec2;
+	u8 keyLine;
 
 	SetPage8(game.page);
 	//game.page = 1 - game.page;
@@ -632,13 +663,13 @@ void StateUpdateGame()
 	/* ... */
 	if(game.plyDepth > 256)
 	{
-		VEC_SET(vec1, M2U(0), M2U(10), M2U(512 - game.plyDepth));
-		VEC_SET(vec2, M2U(0), M2U(-10), M2U(512 - game.plyDepth));
+		VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(512 - game.plyDepth));
+		VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(512 - game.plyDepth));
 	}
 	else
 	{
-		VEC_SET(vec1, M2U(0), M2U(10), M2U(game.plyDepth));
-		VEC_SET(vec2, M2U(0), M2U(-10), M2U(game.plyDepth));
+		VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(game.plyDepth));
+		VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(game.plyDepth));
 	}
 	ClearLine3D(&vec1, &vec2);
 	
@@ -649,15 +680,30 @@ void StateUpdateGame()
 	}
 	if(game.plyDepth > 256)
 	{
-		vec1.z = M2U(512 - game.plyDepth);
-		vec2.z = M2U(512 - game.plyDepth);
+		vec1.z = F10_SET(512 - game.plyDepth);
+		vec2.z = F10_SET(512 - game.plyDepth);
 	}
 	else
 	{
-		vec1.z = M2U(game.plyDepth);
-		vec2.z = M2U(game.plyDepth);
+		vec1.z = F10_SET(game.plyDepth);
+		vec2.z = F10_SET(game.plyDepth);
 	}
 	DrawLine3D(&vec1, &vec2);
+
+	// 
+	keyLine = GetKeyMatrixLine(0);
+	if((keyLine & KEY_1) == 0)
+	{
+		if(game.power3d > 0)
+			game.power3d--;
+		game.state = StateStartGame;
+	}
+	if((keyLine & KEY_2) == 0)
+	{
+		if(game.power3d < 24)
+			game.power3d++;
+		game.state = StateStartGame;
+	}
 
 	WaitRetrace();
 	game.frame++;
@@ -744,13 +790,13 @@ void Project(const Vector3D* v3d, VectorU8* v2d)
 {
 	i16 X, Y, Z;
 
-	//Z = game.projZ[U2M(v3d->z)];
-	Z = g_Equa512[U2M(v3d->z)];
-	X = CENTER_X + UxU(v3d->x, Z);
-	Y = CENTER_Y - UxU(v3d->y, Z);
+	//Z = game.projZ[F10_GET(v3d->z)];
+	Z = g_Equa512[F10_GET(v3d->z)];
+	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
 
-	v2d->x = U2M(X);
-	v2d->y = U2M(Y);
+	v2d->x = F10_GET(X);
+	v2d->y = F10_GET(Y);
 }
 
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
@@ -761,10 +807,12 @@ void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
 	Project(vec1, &scr1);
 	Project(vec2, &scr2);
 	
-	if(game.anaglyph)
+	if(game.bAnaglyph)
 	{
-		str1 = game.anaglyphFx[U2M(vec1->z)];
-		str2 = game.anaglyphFx[U2M(vec2->z)];
+		//str1 = game.anaglyphFx[F10_GET(vec1->z)];
+		//str2 = game.anaglyphFx[F10_GET(vec2->z)];
+		str1 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec1->z)]);
+		str2 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec2->z)]);
 		Line(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y, COLOR8_RED, VDP_OP_AND);
 		Line(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y, COLOR8_CYAN, VDP_OP_AND);
 	}
@@ -782,10 +830,12 @@ void ClearLine3D(const Vector3D* vec1, const Vector3D* vec2)
 	Project(vec1, &scr1);
 	Project(vec2, &scr2);
 	
-	if(game.anaglyph)
+	if(game.bAnaglyph)
 	{
-		str1 = game.anaglyphFx[U2M(vec1->z)];
-		str2 = game.anaglyphFx[U2M(vec2->z)];
+		//str1 = game.anaglyphFx[F10_GET(vec1->z)];
+		//str2 = game.anaglyphFx[F10_GET(vec2->z)];
+		str1 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec1->z)]);
+		str2 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec2->z)]);
 		Line(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y, COLOR8_WHITE, VDP_OP_IMP);
 		Line(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y, COLOR8_WHITE, VDP_OP_IMP);
 	}
