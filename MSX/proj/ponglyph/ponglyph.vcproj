@@ -221,6 +221,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\cmsx\projZ512.inc"
+					>
+				</File>
+				<File
 					RelativePath="..\cmsx\rot16.inc"
 					>
 				</File>
