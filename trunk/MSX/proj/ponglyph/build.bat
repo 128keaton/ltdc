@@ -1,6 +1,6 @@
 @ECHO off
-SET PROGRAM=carwar
-SET ROM=..\..\tools\MakeROM
+SET PROGRAM=ponglyph
+SET ROM=%MSX_ROOT%\tools\MakeROM
 SET LIBS=bios.c
 
 REM ////////////////////////////////////////

@@ -33,3 +33,21 @@ typedef char c8;            // 8 bits character
 #define Modulo2(a,b) ((a) & ((b) - 1))
 
 #define Merge4(a,b) (((a) & 0xF) << 4 | ((b) & 0xF))
+
+//-----------------------------------------------------------------------------
+// Helper defines
+
+#define COLOR8_BLACK		RGB8(0,0,0)
+#define COLOR8_WHITE		RGB8(7,7,3)
+
+#define COLOR8_RED			RGB8(7,0,0)
+#define COLOR8_GREEN		RGB8(0,7,0)
+#define COLOR8_BLUE			RGB8(0,0,3)
+
+#define COLOR8_CYAN			RGB8(0,7,3)
+#define COLOR8_YELLOW		RGB8(7,7,0)
+#define COLOR8_MAGENTA		RGB8(7,0,3)
+
+#define COLOR8_DARKGRAY		RGB8(3,3,1)
+#define COLOR8_GRAY			RGB8(5,5,2)
+#define COLOR8_LIGHTGRAY	RGB8(6,6,3)

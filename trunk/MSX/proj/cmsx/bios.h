@@ -2,7 +2,16 @@
 #include "keyboard.h"
 
 // Bios 
-#define CALSLT 0x1C
+#define CALSLT 0x001C	// CALl SLoT
+#define	GTSTCK 0x00D5	// GeT joySTiCK status
+#define	GTTRIG 0x00D8	// GeT TRIGger button status
+#define	CHGCLR 0x0062	// CHanGe CoLoR
+#define	SNSMAT 0x0141	// ScaN Specified row in keyboar MATrix
+
+// SYSTEM VARIABLES
+#define FORCLR	#0xF3E9
+#define BAKCLR	#0xF3EA
+#define BDRCLR	#0xF3EB
 
 // Hook
 #define H_KEYI 0xFD9A 
@@ -127,6 +136,9 @@ char Joytrig(char n);
 
 // Keyboard
 u8 GetKeyMatrixLine(u8 n);
+
+// Screen
+void SetScreenColor(u8 text, u8 back, u8 border);
 
 // Files
 #define FILE(str) "\"" str "\""

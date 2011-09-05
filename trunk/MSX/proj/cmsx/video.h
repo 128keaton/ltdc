@@ -93,7 +93,6 @@
 #define VDP_OP_TXOR		0x0B // 1011
 #define VDP_OP_TNOT		0x0C // 1100
 
-
 #define DISP_PAGE	(1 << 5)
 
 #define SPRITE_OFF		0x02
@@ -113,16 +112,31 @@
 #define FREQ_60			0x00
 #define FREQ_MASK		0xFD // 1111 1101
 
+#define COLOR_INDEX_BLACK	0
+
+
 //----------------------------------------
 // M A C R O S
 
 #define VDP_REG(num) #(0x80+num)
 
 #define HMMC(dx, dy, nx, ny, ram)        vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_HMMC;           VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram);
-#define LMMC(dx, dy, nx, ny, ram, op)    vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_LMMC + op;      VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram);
+#define YMMM(sy, dx, dy, nx, ny)         vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_YMMM;                       VPDCommand32((u16)&vdp.cmd);
 #define HMMM(sx, sy, dx, dy, nx, ny)     vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&vdp.cmd);
-#define LMMM(sx, sy, dx, dy, nx, ny, op) vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&vdp.cmd);
 #define HMMV(dx, dy, nx, ny, col)        vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = col; vdp.cmd.CMD = VDP_CMD_HMMV;                     VPDCommand36((u16)&vdp.cmd+4);
+
+#define LMMC(dx, dy, nx, ny, ram, op)    vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_LMMC + op;      VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram);
+#define LMCM(sx, sy, nx, ny, ram)        /* not implemented */
+#define LMMM(sx, sy, dx, dy, nx, ny, op) vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&vdp.cmd);
+#define LMMV(dx, dy, nx, ny, col, op)    vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = col; vdp.cmd.CMD = VDP_CMD_LMMV + op;                VPDCommand36((u16)&vdp.cmd+4);
+
+#define ARG_DIY_DOWN	0
+#define ARG_DIY_UP		8
+#define ARG_DIX_RIGHT	0
+#define ARG_DIX_LEFT	4
+#define ARG_MAJ_H		0 // horizontal
+#define ARG_MAJ_V		1 // vertical
+#define LINE(dx, dy, maj, min, col, arg, op) vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = maj; vdp.cmd.NY = min; vdp.cmd.CLR = col; vdp.cmd.ARG = arg; vdp.cmd.CMD = VDP_CMD_LINE + op; VPDCommand36((u16)&vdp.cmd+4);
 
 //----------------------------------------
 // T Y P E S
@@ -158,6 +172,7 @@ typedef struct tagVDP
 
 void VideoInitialize();
 void SetScreen8(u8 flag);
+//void SetBorderColor(u8 color);
 void ClearScreen8(u8 color);
 void SetSpriteMode(u8 activate, u8 flag, u16 tgs, u16 tas);
 void SetPage8(u8 page);
@@ -191,6 +206,7 @@ void RAMtoVRAMop(u16 dx, u16 dy, u16 nx, u16 ny, u16 ram, u8 op);
 void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
 void VRAMtoVRAMop(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny, u8 op);
 //void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 col);
+void Line(u16 x1, u16 y1, u16 x2, u16 y2, u8 color, u8 op);
 
 //#define RAMtoVRAM		HMMC
 //#define VRAMtoVRAM		HMMM

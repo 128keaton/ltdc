@@ -23,7 +23,7 @@ char Joystick(char n)
 	n;
 	__asm
 		ld		a,4(ix)
-		call	0x00d5
+		call	GTSTCK
 		ld		l,a
 	__endasm;
 }
@@ -34,7 +34,7 @@ char Joytrig(char n)
 	n;
 	__asm
 		ld		a,4(ix)
-		call	0x00d8
+		call	GTTRIG
 		ld		h,#0x00
 		ld		l,a
 	__endasm;
@@ -46,8 +46,23 @@ u8 GetKeyMatrixLine(u8 n)
 	n;
 	__asm
 		ld		a,4(ix)
-		call	0x0141
+		call	SNSMAT
 		ld		l,a
+	__endasm;
+}
+
+//
+void SetScreenColor(u8 text, u8 back, u8 border)
+{
+	text; back; border;
+	__asm
+		ld		a,4(ix)
+		ld		(FORCLR),a
+		ld		a,5(ix)
+		ld		(BAKCLR),a
+		ld		a,6(ix)
+		ld		(BDRCLR),a
+		call	CHGCLR
 	__endasm;
 }
 
