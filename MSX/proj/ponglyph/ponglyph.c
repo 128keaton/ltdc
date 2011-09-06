@@ -19,6 +19,38 @@
 #define ITEM_VARIABLE		(0x80 + 2)
 #define ITEM_DUMMY			(0x80 + 3)
 
+#define CENTER_X	(F10_SET(255) >> 1) // 127.5
+#define CENTER_Y	(F10_SET(211) >> 1) // 105.5
+
+//-----------------------------------------------------------------------------
+// M A C R O S
+
+#define Cosinus(a) g_Sinus64[Modulo2((a + 16), 64)]
+#define Sinus(a) g_Sinus64[a]
+
+// Float 2.14
+typedef i16 float2;
+#define F1_SET(a)			((a) << 14)
+#define F1_GET(a)			((a) >> 14)
+#define F1_MUL(a, b)		(((a) >> 7) * ((b) >> 7))
+#define F1_MUL_TINY(a, b)	((((a) >> 7) * (b)) >> 7)
+
+// Float 8.8
+typedef i16 float8;
+#define F8_SET(a)			((a) << 8)
+#define F8_GET(a)			((a) >> 8)
+#define F8_MUL(a, b)		(((a) >> 4) * ((b) >> 4))
+#define F8_MUL_TINY(a, b)	((((a) >> 4) * (b)) >> 4)
+
+// Float 10.6
+typedef i16 float10;
+#define F10_SET(a)			((a) << 6)
+#define F10_GET(a)			((a) >> 6)
+#define F10_MUL(a, b)		(((a) >> 3) * ((b) >> 3))
+#define F10_MUL_TINY(a, b)	((((a) >> 2) * ((b) >> 2)) >> 2)
+
+#define VEC_SET(vec, a, b, c) { vec.x = a; vec.y = b; vec.z = c; }
+#define VEC_ADD(vec1, vec2) { vec1.x = vec2.x; vec1.y = vec2.y; vec1.z = vec2.z; }
 
 //-----------------------------------------------------------------------------
 // T Y P E S
@@ -72,6 +104,13 @@ typedef struct tagMenu
 	u8 itemNum;
 } Menu;
 
+typedef struct tagPlayerData
+{
+	u8			score;
+	Vector3D	position;
+	float10		angle;
+} PlayerData;
+
 typedef struct tagGameData
 {
 	// System
@@ -85,13 +124,15 @@ typedef struct tagGameData
 	u8               pressed;
 	// WorkArea
 	u8               bitToByte[256 * 8];
-	//i16              projZ[512];
+	i16              projZ[512];
 	//i8               anaglyphFx[512];
 	// 3d Settings
 	u8               bAnaglyph;
 	u8               power3d;
 	// Gameplay
 	i16              plyDepth;
+	PlayerData       players[2];
+	Vector3D         ballPos;
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -122,39 +163,7 @@ const char* StartGame(u8 op, i8 value);
 void Project(const Vector3D* v3d, VectorU8* v2d);
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2);
 void ClearLine3D(const Vector3D* vec1, const Vector3D* vec2);
-
-//-----------------------------------------------------------------------------
-// M A C R O S
-
-#define Cosinus(a) g_Sinus64[Modulo2((a + 16), 64)]
-#define Sinus(a) g_Sinus64[a]
-
-// Float 2.14
-typedef int float2;
-#define F1_SET(a)			((a) << 14)
-#define F1_GET(a)			((a) >> 14)
-#define F1_MUL(a, b)		(((a) >> 7) * ((b) >> 7))
-#define F1_MUL_TINY(a, b)	((((a) >> 7) * (b)) >> 7)
-
-// Float 8.8
-typedef int float8;
-#define F8_SET(a)			((a) << 8)
-#define F8_GET(a)			((a) >> 8)
-#define F8_MUL(a, b)		(((a) >> 4) * ((b) >> 4))
-#define F8_MUL_TINY(a, b)	((((a) >> 4) * (b)) >> 4)
-
-// Float 10.6
-typedef int float10;
-#define F10_SET(a)			((a) << 6)
-#define F10_GET(a)			((a) >> 6)
-#define F10_MUL(a, b)		(((a) >> 3) * ((b) >> 3))
-#define F10_MUL_TINY(a, b)	((((a) >> 3) * ((b) >> 1)) >> 2)
-
-#define VEC_SET(vec, a, b, c) vec.x = a; vec.y = b; vec.z = c;
-
-
-#define CENTER_X	(F10_SET(255) >> 1) // 127.5
-#define CENTER_Y	(F10_SET(211) >> 1) // 105.5
+void DrawSquare(const Vector3D* center, i16 size);
 
 //-----------------------------------------------------------------------------
 // R O M   D A T A
@@ -375,11 +384,11 @@ void StateInitialize()
 	}
 
 	// Create 3D projection table
-	//for(x=0; x<512; x++)
-	//{
-	//	game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
-	//	game.anaglyphFx[x] = (256 - x) >> 6;
-	//}
+	for(x=0; x<512; x++)
+	{
+		game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
+		//game.anaglyphFx[x] = (256 - x) >> 6;
+	}
 	game.bAnaglyph = TRUE;
 	game.power3d = 16;
 
@@ -629,23 +638,34 @@ void StateStartGame()
 
 	// Racket
 
-#define RACKET_WIDTH	16
-#define RACKET_HEIGHT	16
-
-	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
+//#define RACKET_WIDTH	16
+//#define RACKET_HEIGHT	16
+//
+//	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
+//	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
+//	DrawLine3D(&vec1, &vec2);
+//	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
+//	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
+//	DrawLine3D(&vec1, &vec2);
+//	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
+//	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
+//	DrawLine3D(&vec1, &vec2);
+//	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
+//	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
+//	DrawLine3D(&vec1, &vec2);
 
 	game.plyDepth = 0;
+
+	game.players[0].score = 0;
+	VEC_SET(game.players[0].position, F10_SET(50), F10_SET(50), F10_SET(0));
+	game.players[0].angle = 0;
+
+	game.players[1].score = 0;
+	VEC_SET(game.players[1].position, F10_SET(-50), F10_SET(-50), F10_SET(256));
+	game.players[1].angle = 0;
+
+	DrawSquare(&game.players[0].position, 20);
+	DrawSquare(&game.players[1].position, 20);
 
 	game.state = StateUpdateGame;
 }
@@ -653,7 +673,7 @@ void StateStartGame()
 /** State - Process game */
 void StateUpdateGame()
 {
-	Vector3D vec1, vec2;
+	//Vector3D vec1, vec2;
 	u8 keyLine;
 
 	SetPage8(game.page);
@@ -661,34 +681,34 @@ void StateUpdateGame()
 	game.yOffset = 256 * game.page;
 
 	/* ... */
-	if(game.plyDepth > 256)
-	{
-		VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(512 - game.plyDepth));
-		VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(512 - game.plyDepth));
-	}
-	else
-	{
-		VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(game.plyDepth));
-		VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(game.plyDepth));
-	}
-	ClearLine3D(&vec1, &vec2);
-	
-	game.plyDepth++;
-	if(game.plyDepth > 512)
-	{
-		game.plyDepth = 0;
-	}
-	if(game.plyDepth > 256)
-	{
-		vec1.z = F10_SET(512 - game.plyDepth);
-		vec2.z = F10_SET(512 - game.plyDepth);
-	}
-	else
-	{
-		vec1.z = F10_SET(game.plyDepth);
-		vec2.z = F10_SET(game.plyDepth);
-	}
-	DrawLine3D(&vec1, &vec2);
+	//if(game.plyDepth > 256)
+	//{
+	//	VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(512 - game.plyDepth));
+	//	VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(512 - game.plyDepth));
+	//}
+	//else
+	//{
+	//	VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(game.plyDepth));
+	//	VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(game.plyDepth));
+	//}
+	//ClearLine3D(&vec1, &vec2);
+	//
+	//game.plyDepth++;
+	//if(game.plyDepth > 512)
+	//{
+	//	game.plyDepth = 0;
+	//}
+	//if(game.plyDepth > 256)
+	//{
+	//	vec1.z = F10_SET(512 - game.plyDepth);
+	//	vec2.z = F10_SET(512 - game.plyDepth);
+	//}
+	//else
+	//{
+	//	vec1.z = F10_SET(game.plyDepth);
+	//	vec2.z = F10_SET(game.plyDepth);
+	//}
+	//DrawLine3D(&vec1, &vec2);
 
 	// 
 	keyLine = GetKeyMatrixLine(0);
@@ -797,6 +817,24 @@ void Project(const Vector3D* v3d, VectorU8* v2d)
 
 	v2d->x = F10_GET(X);
 	v2d->y = F10_GET(Y);
+}
+
+void DrawSquare(const Vector3D* center, i16 size)
+{
+	Vector3D vec1, vec2;
+
+	VEC_SET(vec1, center->x - F10_SET(size), center->y + F10_SET(size), center->z);
+	VEC_SET(vec2, center->x + F10_SET(size), center->y + F10_SET(size), center->z);
+	DrawLine3D(&vec1, &vec2);
+
+	VEC_SET(vec1, center->x + F10_SET(size), center->y - F10_SET(size), center->z);
+	DrawLine3D(&vec1, &vec2);
+
+	VEC_SET(vec2, center->x - F10_SET(size), center->y - F10_SET(size), center->z);
+	DrawLine3D(&vec1, &vec2);
+
+	VEC_SET(vec1, center->x - F10_SET(size), center->y + F10_SET(size), center->z);
+	DrawLine3D(&vec1, &vec2);
 }
 
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
