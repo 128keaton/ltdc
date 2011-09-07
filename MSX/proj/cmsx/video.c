@@ -290,6 +290,38 @@ void Line(u16 x1, u16 y1, u16 x2, u16 y2, u8 color, u8 op)
 	LINE(x1, y1, maj, min, color, arg, op);
 }
 
+void LineH(u16 x1, u16 x2, u16 y, u8 color, u8 op)
+{
+	u16 dx, nx;
+	if(x1 > x2)
+	{
+		dx = x2;
+		nx = x2 - x1;
+	}
+	else
+	{
+		dx = x1;
+		nx = x1 - x2;
+	}
+	LMMV(dx, y, nx, 1, color, op);
+}
+
+void LineV(u16 x, u16 y1, u16 y2, u8 color, u8 op)
+{
+	u16 dy, ny;
+	if(y1 > y2)
+	{
+		dy = y2;
+		ny = y2 - y1;
+	}
+	else
+	{
+		dy = y1;
+		ny = y1 - y2;
+	}
+	LMMV(x, dy, 1, ny, color, op);
+}
+
 /**
  * LINE (128,96),(190,56),255
  */

@@ -207,6 +207,8 @@ void VRAMtoVRAM(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny);
 void VRAMtoVRAMop(u16 sx, u16 sy, u16 dx, u16 dy, u16 nx, u16 ny, u8 op);
 //void FillVRAM(u16 dx, u16 dy, u16 nx, u16 ny, u8 col);
 void Line(u16 x1, u16 y1, u16 x2, u16 y2, u8 color, u8 op);
+void LineH(u16 x1, u16 y1, u16 x2, u8 color, u8 op);
+void LineV(u16 x1, u16 y1, u16 y2, u8 color, u8 op);
 
 //#define RAMtoVRAM		HMMC
 //#define VRAMtoVRAM		HMMM
