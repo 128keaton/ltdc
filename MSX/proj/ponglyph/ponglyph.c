@@ -52,8 +52,10 @@ typedef i16 float10;
 #define F10_MUL(a, b)		(((a) >> 3) * ((b) >> 3))
 #define F10_MUL_TINY(a, b)	((((a) >> 2) * ((b) >> 2)) >> 2)
 
+#define VEC_ZERO(vec) { vec.x = 0; vec.y = 0; vec.z = 0; }
 #define VEC_SET(vec, a, b, c) { vec.x = a; vec.y = b; vec.z = c; }
-#define VEC_ADD(vec1, vec2) { vec1.x = vec2.x; vec1.y = vec2.y; vec1.z = vec2.z; }
+#define VEC_ADD(vec1, vec2) { vec1.x += vec2.x; vec1.y += vec2.y; vec1.z += vec2.z; }
+#define VEC_SUB(vec1, vec2) { vec1.x -= vec2.x; vec1.y -= vec2.y; vec1.z -= vec2.z; }
 
 //-----------------------------------------------------------------------------
 // T Y P E S
@@ -146,6 +148,7 @@ void ResetMenu();
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
+void DrawBackground();
 
 // Color process
 u8 DarkenColor(u8 color, u8 power);
@@ -168,6 +171,7 @@ u8   ProjectLenght(i16 length, i16 z);
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2, u8 bDraw);
 void DrawLineH(const Vector3D* vec, i16 width, u8 bDraw);
 void DrawSquare(const Vector3D* center, i16 size);
+//void ClearSquare(const Vector3D* center, i16 size);
 
 //-----------------------------------------------------------------------------
 // R O M   D A T A
@@ -543,9 +547,6 @@ void StateMainMenu()
 /** State - Start game */
 void StateStartGame()
 {
-	Vector3D vec1, vec2;
-	i16 z;
-
 	game.page = 0;
 	SetPage8(game.page);
 
@@ -555,6 +556,30 @@ void StateStartGame()
 	ClearScreen8(COLOR8_WHITE);
 
 	/* ... */
+	DrawBackground();
+
+	game.plyDepth = 0;
+
+	game.players[0].score = 0;
+	VEC_SET(game.players[0].position, F10_SET(50), F10_SET(50), F10_SET(0));
+	game.players[0].angle = 0;
+
+	game.players[1].score = 0;
+	VEC_SET(game.players[1].position, F10_SET(-50), F10_SET(-50), F10_SET(256));
+	game.players[1].angle = 0;
+
+#define PLAYER_SIZE 20
+
+	DrawSquare(&game.players[0].position, PLAYER_SIZE);
+	DrawSquare(&game.players[1].position, PLAYER_SIZE);
+
+	game.state = StateUpdateGame;
+}
+
+void DrawBackground()
+{
+	Vector3D vec1, vec2;
+	i16 z;
 
 #define FIELD_WIDTH		120
 #define FIELD_HEIGHT	105
@@ -626,60 +651,14 @@ void StateStartGame()
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	DrawLine3D(&vec1, &vec2, OP_DRAW);
-
-	// Side
-	//VEC_SET(vec1, F10_SET(0), F10_SET(FIELD_HEIGHT), 0);
-	//VEC_SET(vec2, F10_SET(0), F10_SET(FIELD_HEIGHT), F10_SET(256));
-	//DrawLine3D(&vec1, &vec2, OP_DRAW);
-	//VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(0), 0);
-	//VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(0), F10_SET(256));
-	//DrawLine3D(&vec1, &vec2, OP_DRAW);
-	//VEC_SET(vec1, F10_SET(0), F10_SET(-FIELD_HEIGHT), 0);
-	//VEC_SET(vec2, F10_SET(0), F10_SET(-FIELD_HEIGHT), F10_SET(256));
-	//DrawLine3D(&vec1, &vec2, OP_DRAW);
-	//VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(0), 0);
-	//VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(0), F10_SET(256));
-	//DrawLine3D(&vec1, &vec2, OP_DRAW);
-
-	// Racket
-
-//#define RACKET_WIDTH	16
-//#define RACKET_HEIGHT	16
-//
-//	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-//	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-//	DrawLine3D(&vec1, &vec2, OP_DRAW);
-//	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-//	VEC_SET(vec2, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-//	DrawLine3D(&vec1, &vec2, OP_DRAW);
-//	VEC_SET(vec1, F10_SET(RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-//	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-//	DrawLine3D(&vec1, &vec2, OP_DRAW);
-//	VEC_SET(vec1, F10_SET(-RACKET_WIDTH), F10_SET(-RACKET_HEIGHT), 0);
-//	VEC_SET(vec2, F10_SET(-RACKET_WIDTH), F10_SET(RACKET_HEIGHT), 0);
-//	DrawLine3D(&vec1, &vec2, OP_DRAW);
-
-	game.plyDepth = 0;
-
-	game.players[0].score = 0;
-	VEC_SET(game.players[0].position, F10_SET(50), F10_SET(50), F10_SET(0));
-	game.players[0].angle = 0;
-
-	game.players[1].score = 0;
-	VEC_SET(game.players[1].position, F10_SET(-50), F10_SET(-50), F10_SET(256));
-	game.players[1].angle = 0;
-
-	DrawSquare(&game.players[0].position, 20);
-	DrawSquare(&game.players[1].position, 20);
-
-	game.state = StateUpdateGame;
 }
 
 /** State - Process game */
 void StateUpdateGame()
 {
 	//Vector3D vec1, vec2;
-	u8 keyLine;
+	Vector3D vecMove;
+	u8 keyLine, bMove;
 
 	SetPage8(game.page);
 	//game.page = 1 - game.page;
@@ -688,13 +667,13 @@ void StateUpdateGame()
 	/* ... */
 	//if(game.plyDepth > 256)
 	//{
-	//	VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(512 - game.plyDepth));
-	//	VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(512 - game.plyDepth));
+	//	VEC_SET(vec1, F10_SET(PLAYER_SIZE), F10_SET(10), F10_SET(512 - game.plyDepth));
+	//	VEC_SET(vec2, F10_SET(PLAYER_SIZE), F10_SET(-10), F10_SET(512 - game.plyDepth));
 	//}
 	//else
 	//{
-	//	VEC_SET(vec1, F10_SET(20), F10_SET(10), F10_SET(game.plyDepth));
-	//	VEC_SET(vec2, F10_SET(20), F10_SET(-10), F10_SET(game.plyDepth));
+	//	VEC_SET(vec1, F10_SET(PLAYER_SIZE), F10_SET(10), F10_SET(game.plyDepth));
+	//	VEC_SET(vec2, F10_SET(PLAYER_SIZE), F10_SET(-10), F10_SET(game.plyDepth));
 	//}
 	//DrawLine3D(&vec1, &vec2, OP_CLEAR);
 	//
@@ -714,6 +693,55 @@ void StateUpdateGame()
 	//	vec2.z = F10_SET(game.plyDepth);
 	//}
 	//DrawLine3D(&vec1, &vec2, OP_DRAW);
+
+	// 
+	keyLine = GetKeyMatrixLine(8);
+
+#define PLAYER_SPEED F10_SET(10)
+
+	bMove = FALSE;
+	VEC_SET(vecMove, 0, 0, 0);
+
+	if((keyLine & KEY_LEFT) == 0)
+	{
+		if(game.players[0].position.x > F10_SET(-120+PLAYER_SIZE))
+		{
+			bMove = TRUE;
+			vecMove.x -= PLAYER_SPEED;
+		}
+	}
+	else if((keyLine & KEY_RIGHT) == 0)
+	{
+		if(game.players[0].position.x < F10_SET(120-PLAYER_SIZE))
+		{
+			bMove = TRUE;
+			vecMove.x += PLAYER_SPEED;
+		}
+	}
+	if((keyLine & KEY_UP) == 0)
+	{
+		if(game.players[0].position.y < F10_SET(100-PLAYER_SIZE))
+		{
+			bMove = TRUE;
+			vecMove.y += PLAYER_SPEED;
+		}
+	}
+	else if((keyLine & KEY_DOWN) == 0)
+	{
+		if(game.players[0].position.y > F10_SET(-100+PLAYER_SIZE))
+		{
+			bMove = TRUE;
+			vecMove.y -= PLAYER_SPEED;
+		}
+	}
+
+	if(bMove)
+	{
+		//ClearSquare(&game.players[0].position, PLAYER_SIZE);
+		DrawBackground();
+		VEC_ADD(game.players[0].position, vecMove);
+		DrawSquare(&game.players[0].position, PLAYER_SIZE);
+	}
 
 	// 
 	keyLine = GetKeyMatrixLine(0);
