@@ -22,9 +22,6 @@
 #define CENTER_X	(F10_SET(255) >> 1) // 127.5
 #define CENTER_Y	(F10_SET(211) >> 1) // 105.5
 
-#define OP_DRAW		1
-#define OP_CLEAR	0
-
 //-----------------------------------------------------------------------------
 // M A C R O S
 
@@ -56,6 +53,27 @@ typedef i16 float10;
 #define VEC_SET(vec, a, b, c) { vec.x = a; vec.y = b; vec.z = c; }
 #define VEC_ADD(vec1, vec2) { vec1.x += vec2.x; vec1.y += vec2.y; vec1.z += vec2.z; }
 #define VEC_SUB(vec1, vec2) { vec1.x -= vec2.x; vec1.y -= vec2.y; vec1.z -= vec2.z; }
+
+#define STORE_LINE(a1, b1, a2, b2) {\
+	game.lineTab[game.lineIdx].dir = DIR_DIAG;\
+	game.lineTab[game.lineIdx].x1 = a1;\ 
+	game.lineTab[game.lineIdx].y1 = b1;\
+	game.lineTab[game.lineIdx].x2 = a2;\
+	game.lineTab[game.lineIdx++].y2 = b2; }
+
+#define STORE_LINE_H(a1, a2, b) {\
+	game.lineTab[game.lineIdx].dir = DIR_HORI;\
+	game.lineTab[game.lineIdx].x1 = a1;\ 
+	game.lineTab[game.lineIdx].y1 = b;\
+	game.lineTab[game.lineIdx].x2 = a2;\
+	game.lineTab[game.lineIdx++].y2 = b; }
+
+#define STORE_LINE_V(a, b1, b2) {\
+	game.lineTab[game.lineIdx].dir = DIR_VERT;\
+	game.lineTab[game.lineIdx].x1 = a;\ 
+	game.lineTab[game.lineIdx].y1 = b1;\
+	game.lineTab[game.lineIdx].x2 = a;\
+	game.lineTab[game.lineIdx++].y2 = b2; }
 
 //-----------------------------------------------------------------------------
 // T Y P E S
@@ -116,6 +134,19 @@ typedef struct tagPlayerData
 	float10		angle;
 } PlayerData;
 
+enum LINE_DIR
+{
+	DIR_DIAG,
+	DIR_HORI,
+	DIR_VERT,
+};
+
+typedef struct tagLineData
+{
+	u8 dir, x1, y1, x2, y2;
+} LineData;
+
+
 typedef struct tagGameData
 {
 	// System
@@ -130,6 +161,8 @@ typedef struct tagGameData
 	// WorkArea
 	u8               bitToByte[256 * 8];
 	i16              projZ[512];
+	LineData         lineTab[256];
+	u8               lineIdx;
 	// 3d Settings
 	u8               bAnaglyph;
 	u8               power3d;
@@ -168,8 +201,9 @@ const char* StartGame(u8 op, i8 value);
 void ProjectPoint(const Vector3D* v3d, VectorU8* v2d);
 u8   ProjectLenght(i16 length, i16 z);
 
-void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2, u8 bDraw);
-void DrawLineH(const Vector3D* vec, i16 width, u8 bDraw);
+void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2);
+void DrawLineH(const Vector3D* vec, i16 width);
+void DrawLineV(const Vector3D* vec, i16 height);
 void DrawSquare(const Vector3D* center, i16 size);
 //void ClearSquare(const Vector3D* center, i16 size);
 
@@ -367,7 +401,7 @@ void StateInitialize()
 	VideoInitialize();
 	SetFreq(FREQ_60);
 	SetScreen8(LINES_212);
-	SetSpriteMode(SPRITE_ON, SPRITE_NO_MAG + SPRITE_SIZE_8, 0xF800 >> 11, 0xF700 >> 7);
+	SetSpriteMode(SPRITE_OFF, 0, 0, 0);
 	SetScreenColor(0, 0, COLOR8_BLACK);
 
 	// Clear all VRAM
@@ -588,69 +622,69 @@ void DrawBackground()
 	// Front
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 
 	z = 8;
 	while(z <= 256)
 	{
 		//VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
 		//VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
-		//DrawLine3D(&vec1, &vec2, OP_DRAW);
+		//DrawLine3D(&vec1, &vec2);
 		VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
-		DrawLineH(&vec1, F10_SET(FIELD_WIDTH*2), OP_DRAW);
+		DrawLineH(&vec1, F10_SET(FIELD_WIDTH*2));
 		z += 8;
 	}
 
 	// Mid
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 
 	// back
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 
 	// Depth
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 }
 
 /** State - Process game */
@@ -692,7 +726,7 @@ void StateUpdateGame()
 	//	vec1.z = F10_SET(game.plyDepth);
 	//	vec2.z = F10_SET(game.plyDepth);
 	//}
-	//DrawLine3D(&vec1, &vec2, OP_DRAW);
+	//DrawLine3D(&vec1, &vec2);
 
 	// 
 	keyLine = GetKeyMatrixLine(8);
@@ -866,64 +900,68 @@ void DrawSquare(const Vector3D* center, i16 size)
 
 	VEC_SET(vec1, center->x - F10_SET(size), center->y + F10_SET(size), center->z);
 	VEC_SET(vec2, center->x + F10_SET(size), center->y + F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 
 	VEC_SET(vec1, center->x + F10_SET(size), center->y - F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 
 	VEC_SET(vec2, center->x - F10_SET(size), center->y - F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 
 	VEC_SET(vec1, center->x - F10_SET(size), center->y + F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2, OP_DRAW);
+	DrawLine3D(&vec1, &vec2);
 }
 
-const u8 drawColor[3*2] = { COLOR8_WHITE, COLOR8_WHITE, COLOR8_WHITE, COLOR8_RED, COLOR8_CYAN, COLOR8_BLACK };
-const u8 vdpOp[2] = { VDP_OP_IMP, VDP_OP_AND };
-
-void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2, u8 bDraw)
+void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
 {
 	VectorU8 scr1, scr2;
-	i8 str1, str2, colIdx;
+	i8 str1, str2;
 
 	ProjectPoint(vec1, &scr1);
 	ProjectPoint(vec2, &scr2);
-
-	colIdx = bDraw * 3;
 
 	if(game.bAnaglyph)
 	{
 		str1 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec1->z)]);
 		str2 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec2->z)]);
-		Line(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y, drawColor[colIdx + 0], vdpOp[bDraw]);
-		Line(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y, drawColor[colIdx + 1], vdpOp[bDraw]);
+		Line(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y, COLOR8_RED, VDP_OP_AND);
+		STORE_LINE(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y);
+		Line(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y, COLOR8_CYAN, VDP_OP_AND);
+		STORE_LINE(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y);
 	}
 	else
 	{
-		Line(scr1.x, scr1.y, scr2.x, scr2.y, drawColor[colIdx + 2], vdpOp[bDraw]);
+		Line(scr1.x, scr1.y, scr2.x, scr2.y, COLOR8_BLACK, VDP_OP_AND);
+		STORE_LINE(scr1.x, scr1.y, scr2.x, scr2.y);
 	}
 }
 
-void DrawLineH(const Vector3D* vec, i16 width, u8 bDraw)
+void DrawLineH(const Vector3D* vec, i16 width)
 {
 	VectorU8 scr;
-	i8 str, colIdx;
+	i8 str;
 
 	ProjectPoint(vec, &scr);
 	width = ProjectLenght(width, vec->z);
 
-	colIdx = bDraw * 3;
 
 	if(game.bAnaglyph)
 	{
 		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec->z)]);
-		LMMV(scr.x - str, scr.y, width - str, 1, drawColor[colIdx + 0], vdpOp[bDraw]);
-		LMMV(scr.x + str, scr.y, width + str, 1, drawColor[colIdx + 1], vdpOp[bDraw]);
+		LMMV(scr.x - str, scr.y, width - str, 1, COLOR8_RED, VDP_OP_AND);
+		STORE_LINE_H(scr.x - str, scr.y, width - str);
+		LMMV(scr.x + str, scr.y, width + str, 1, COLOR8_CYAN, VDP_OP_AND);
+		STORE_LINE_H(scr.x + str, scr.y, width + str);
 	}
 	else
 	{
-		LMMV(scr.x, scr.y, width, 1, drawColor[colIdx + 2], vdpOp[bDraw]);
+		LMMV(scr.x, scr.y, width, 1, COLOR8_BLACK, VDP_OP_AND);
+		STORE_LINE_H(scr.x, scr.y, scr.y + width);
 	}
+}
+
+void DrawLineV(const Vector3D* vec, i16 height)
+{
 }
 
 //-----------------------------------------------------------------------------
