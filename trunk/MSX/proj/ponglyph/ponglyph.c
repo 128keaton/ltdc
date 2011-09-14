@@ -199,6 +199,8 @@ const char* StartGame(u8 op, i8 value);
 
 // 3D
 void ProjectPoint(const Vector3D* v3d, VectorU8* v2d);
+void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d);
+void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, u8* y2d);
 u8   ProjectLenght(i16 length, i16 z);
 
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2);
@@ -886,6 +888,40 @@ void ProjectPoint(const Vector3D* v3d, VectorU8* v2d)
 	v2d->y = F10_GET(Y);
 }
 
+void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d)
+{
+	i16 X, Y, Z;
+
+	//Z = game.projZ[F10_GET(v3d->z)];
+	Z = g_Equa512[F10_GET(v3d->z)];
+
+	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
+	v2d->x = F10_GET(X);
+	
+	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
+	v2d->y = F10_GET(Y);
+
+	X = CENTER_X + F10_MUL_TINY(x3d, Z);
+	*x2d = F10_GET(X);
+}
+
+void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, i16* y2d)
+{
+	i16 X, Y, Z;
+
+	//Z = game.projZ[F10_GET(v3d->z)];
+	Z = g_Equa512[F10_GET(v3d->z)];
+
+	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
+	v2d->x = F10_GET(X);
+	
+	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
+	v2d->y = F10_GET(Y);
+
+	Y = CENTER_Y - F10_MUL_TINY(y3d, Z);
+	*y2d = F10_GET(Y);
+}
+
 u8 ProjectLenght(i16 length, i16 z)
 {
 	i16 X, Z;
@@ -925,14 +961,14 @@ void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
 		str1 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec1->z)]);
 		str2 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec2->z)]);
 		Line(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y, COLOR8_RED, VDP_OP_AND);
-		STORE_LINE(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y);
+		//STORE_LINE(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y);
 		Line(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y, COLOR8_CYAN, VDP_OP_AND);
-		STORE_LINE(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y);
+		//STORE_LINE(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y);
 	}
 	else
 	{
 		Line(scr1.x, scr1.y, scr2.x, scr2.y, COLOR8_BLACK, VDP_OP_AND);
-		STORE_LINE(scr1.x, scr1.y, scr2.x, scr2.y);
+		//STORE_LINE(scr1.x, scr1.y, scr2.x, scr2.y);
 	}
 }
 
@@ -940,23 +976,22 @@ void DrawLineH(const Vector3D* vec, i16 width)
 {
 	VectorU8 scr;
 	i8 str;
+	u8 x2d;
 
-	ProjectPoint(vec, &scr);
-	width = ProjectLenght(width, vec->z);
-
+	ProjectPointH(vec, vec->x + width, &scr, &x2d);
 
 	if(game.bAnaglyph)
 	{
 		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec->z)]);
 		LMMV(scr.x - str, scr.y, width - str, 1, COLOR8_RED, VDP_OP_AND);
-		STORE_LINE_H(scr.x - str, scr.y, width - str);
+		//STORE_LINE_H(scr.x - str, scr.y, x2d - scr.x - str);
 		LMMV(scr.x + str, scr.y, width + str, 1, COLOR8_CYAN, VDP_OP_AND);
-		STORE_LINE_H(scr.x + str, scr.y, width + str);
+		//STORE_LINE_H(scr.x + str, scr.y, x2d - scr.x + str);
 	}
 	else
 	{
 		LMMV(scr.x, scr.y, width, 1, COLOR8_BLACK, VDP_OP_AND);
-		STORE_LINE_H(scr.x, scr.y, scr.y + width);
+		//STORE_LINE_H(scr.x, scr.y, x2d);
 	}
 }
 
