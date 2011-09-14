@@ -136,7 +136,7 @@
 #define ARG_DIX_LEFT	4
 #define ARG_MAJ_H		0 // horizontal
 #define ARG_MAJ_V		1 // vertical
-#define LINE(dx, dy, maj, min, col, arg, op) vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = maj; vdp.cmd.NY = min; vdp.cmd.CLR = col; vdp.cmd.ARG = arg; vdp.cmd.CMD = VDP_CMD_LINE + op; VPDCommand36((u16)&vdp.cmd+4);
+#define LINE(dx, dy, maj, min, col, arg, op) vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = maj; vdp.cmd.NY = min; vdp.cmd.CLR = col; vdp.cmd.ARG = arg; vdp.cmd.CMD = VDP_CMD_LINE + op; VPDCommand36((u16)&vdp.cmd+4); vdp.cmd.ARG = 0;
 
 //----------------------------------------
 // T Y P E S
