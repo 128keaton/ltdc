@@ -163,6 +163,7 @@ typedef struct tagGameData
 	i16              projZ[512];
 	LineData         lineTab[256];
 	u8               lineIdx;
+	VectorU8         screenPos[4];
 	// 3d Settings
 	u8               bAnaglyph;
 	u8               power3d;
@@ -198,10 +199,15 @@ void StateUpdateGame();
 const char* StartGame(u8 op, i8 value);
 
 // 3D
-void ProjectPoint(const Vector3D* v3d, VectorU8* v2d);
-void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d);
-void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, u8* y2d);
-u8   ProjectLenght(i16 length, i16 z);
+//void ProjectPoint(const Vector3D* v3d, VectorU8* v2d);
+//void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d);
+//void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, u8* y2d);
+//u8   ProjectLenght(i16 length, i16 z);
+void ProjectPoint(const Vector3D* vec);
+void ProjectLine(const Vector3D* vec1, const Vector3D* vec2);
+void ProjectLineH(const Vector3D* vec, i16 width);
+void ProjectLineV(const Vector3D* vec, i16 height);
+void ProjectSquare(const Vector3D* min, const Vector3D* max);
 
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2);
 void DrawLineH(const Vector3D* vec, i16 width);
@@ -875,60 +881,154 @@ void DrawText(u16 x, u16 y, const char* text, u8 color)
 	}
 }
 
-void ProjectPoint(const Vector3D* v3d, VectorU8* v2d)
+void ProjectPoint(const Vector3D* vec)
 {
 	i16 X, Y, Z;
 
-	//Z = game.projZ[F10_GET(v3d->z)];
-	Z = g_Equa512[F10_GET(v3d->z)];
-	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
-	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
+	Z = g_Equa512[F10_GET(vec->z)];
+	X = CENTER_X + F10_MUL_TINY(vec->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(vec->y, Z);
 
-	v2d->x = F10_GET(X);
-	v2d->y = F10_GET(Y);
+	game.screenPos[0].x = F10_GET(X);
+	game.screenPos[0].y = F10_GET(Y);
 }
 
-void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d)
+void ProjectLine(const Vector3D* vec1, const Vector3D* vec2)
 {
 	i16 X, Y, Z;
 
-	//Z = game.projZ[F10_GET(v3d->z)];
-	Z = g_Equa512[F10_GET(v3d->z)];
+	Z = g_Equa512[F10_GET(vec1->z)];
+	X = CENTER_X + F10_MUL_TINY(vec1->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(vec1->y, Z);
 
-	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
-	v2d->x = F10_GET(X);
-	
-	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
-	v2d->y = F10_GET(Y);
+	game.screenPos[0].x = F10_GET(X);
+	game.screenPos[0].y = F10_GET(Y);
 
-	X = CENTER_X + F10_MUL_TINY(x3d, Z);
-	*x2d = F10_GET(X);
+	Z = g_Equa512[F10_GET(vec2->z)];
+	X = CENTER_X + F10_MUL_TINY(vec2->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(vec2->y, Z);
+
+	game.screenPos[1].x = F10_GET(X);
+	game.screenPos[1].y = F10_GET(Y);
 }
 
-void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, i16* y2d)
+void ProjectLineH(const Vector3D* vec, i16 width)
 {
 	i16 X, Y, Z;
 
-	//Z = game.projZ[F10_GET(v3d->z)];
-	Z = g_Equa512[F10_GET(v3d->z)];
+	Z = g_Equa512[F10_GET(vec->z)];
 
-	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
-	v2d->x = F10_GET(X);
-	
-	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
-	v2d->y = F10_GET(Y);
+	X = CENTER_X + F10_MUL_TINY(vec->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(vec->y, Z);
 
-	Y = CENTER_Y - F10_MUL_TINY(y3d, Z);
-	*y2d = F10_GET(Y);
+	game.screenPos[0].x = F10_GET(X);
+	game.screenPos[0].y = F10_GET(Y);
+
+	X = CENTER_X + F10_MUL_TINY(vec->x + width, Z);
+
+	game.screenPos[1].x = F10_GET(X);
+	game.screenPos[1].y = game.screenPos[0].y;
 }
 
-u8 ProjectLenght(i16 length, i16 z)
+void ProjectLineV(const Vector3D* vec, i16 height)
 {
-	i16 X, Z;
-	Z = g_Equa512[F10_GET(z)];
-	X = F10_MUL_TINY(length, Z);
-	return F10_GET(X);
+	i16 X, Y, Z;
+
+	Z = g_Equa512[F10_GET(vec->z)];
+
+	X = CENTER_X + F10_MUL_TINY(vec->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(vec->y, Z);
+
+	game.screenPos[0].x = F10_GET(X);
+	game.screenPos[0].y = F10_GET(Y);
+
+	Y = CENTER_Y - F10_MUL_TINY(vec->y + height, Z);
+
+	game.screenPos[1].x = game.screenPos[0].x;
+	game.screenPos[1].y = F10_GET(Y);
 }
+
+void ProjectSquare(const Vector3D* min, const Vector3D* max)
+{
+	i16 X, Y, Z;
+
+	Z = g_Equa512[F10_GET(min->z)];
+
+	X = CENTER_X + F10_MUL_TINY(max->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(max->y, Z);
+
+	game.screenPos[0].x = F10_GET(X);
+
+	game.screenPos[2].y = F10_GET(Y);
+
+	game.screenPos[3].x = F10_GET(X);
+	game.screenPos[3].y = F10_GET(Y);
+
+	X = CENTER_X + F10_MUL_TINY(min->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(min->y, Z);
+
+	game.screenPos[0].y = F10_GET(Y);
+
+	game.screenPos[1].x = F10_GET(X);
+	game.screenPos[1].y = F10_GET(Y);
+
+	game.screenPos[2].x = F10_GET(X);
+}
+
+//void ProjectPoint(const Vector3D* v3d, VectorU8* v2d)
+//{
+//	i16 X, Y, Z;
+//
+//	//Z = game.projZ[F10_GET(v3d->z)];
+//	Z = g_Equa512[F10_GET(v3d->z)];
+//	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
+//	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
+//
+//	v2d->x = F10_GET(X);
+//	v2d->y = F10_GET(Y);
+//}
+
+//void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d)
+//{
+//	i16 X, Y, Z;
+//
+//	//Z = game.projZ[F10_GET(v3d->z)];
+//	Z = g_Equa512[F10_GET(v3d->z)];
+//
+//	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
+//	v2d->x = F10_GET(X);
+//	
+//	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
+//	v2d->y = F10_GET(Y);
+//
+//	X = CENTER_X + F10_MUL_TINY(x3d, Z);
+//	*x2d = F10_GET(X);
+//}
+
+//void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, i16* y2d)
+//{
+//	i16 X, Y, Z;
+//
+//	//Z = game.projZ[F10_GET(v3d->z)];
+//	Z = g_Equa512[F10_GET(v3d->z)];
+//
+//	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
+//	v2d->x = F10_GET(X);
+//	
+//	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
+//	v2d->y = F10_GET(Y);
+//
+//	Y = CENTER_Y - F10_MUL_TINY(y3d, Z);
+//	*y2d = F10_GET(Y);
+//}
+
+//u8 ProjectLenght(i16 length, i16 z)
+//{
+//	i16 X, Z;
+//	Z = g_Equa512[F10_GET(z)];
+//	X = F10_MUL_TINY(length, Z);
+//	return F10_GET(X);
+//}
 
 void DrawSquare(const Vector3D* center, i16 size)
 {
@@ -950,53 +1050,59 @@ void DrawSquare(const Vector3D* center, i16 size)
 
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
 {
-	VectorU8 scr1, scr2;
 	i8 str1, str2;
 
-	ProjectPoint(vec1, &scr1);
-	ProjectPoint(vec2, &scr2);
+	ProjectLine(vec1, vec2);
 
 	if(game.bAnaglyph)
 	{
 		str1 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec1->z)]);
 		str2 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec2->z)]);
-		Line(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y, COLOR8_RED, VDP_OP_AND);
-		//STORE_LINE(scr1.x - str1, scr1.y, scr2.x - str2, scr2.y);
-		Line(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y, COLOR8_CYAN, VDP_OP_AND);
-		//STORE_LINE(scr1.x + str1, scr1.y, scr2.x + str2, scr2.y);
+		Line(game.screenPos[0].x - str1, game.screenPos[0].y, game.screenPos[1].x - str2, game.screenPos[1].y, COLOR8_RED, VDP_OP_AND);
+		Line(game.screenPos[0].x + str1, game.screenPos[0].y, game.screenPos[1].x + str2, game.screenPos[1].y, COLOR8_CYAN, VDP_OP_AND);
 	}
 	else
 	{
-		Line(scr1.x, scr1.y, scr2.x, scr2.y, COLOR8_BLACK, VDP_OP_AND);
-		//STORE_LINE(scr1.x, scr1.y, scr2.x, scr2.y);
+		Line(game.screenPos[0].x, game.screenPos[0].y, game.screenPos[1].x, game.screenPos[1].y, COLOR8_RED, VDP_OP_AND);
 	}
 }
 
 void DrawLineH(const Vector3D* vec, i16 width)
 {
-	VectorU8 scr;
 	i8 str;
-	u8 x2d;
 
-	ProjectPointH(vec, vec->x + width, &scr, &x2d);
+	ProjectLineH(vec, width);
 
 	if(game.bAnaglyph)
 	{
 		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec->z)]);
-		LMMV(scr.x - str, scr.y, width - str, 1, COLOR8_RED, VDP_OP_AND);
-		//STORE_LINE_H(scr.x - str, scr.y, x2d - scr.x - str);
-		LMMV(scr.x + str, scr.y, width + str, 1, COLOR8_CYAN, VDP_OP_AND);
-		//STORE_LINE_H(scr.x + str, scr.y, x2d - scr.x + str);
+
+		LMMV(game.screenPos[0].x - str, game.screenPos[0].y, game.screenPos[0].x - game.screenPos[1].x - str, 1, COLOR8_RED, VDP_OP_AND);
+		LMMV(game.screenPos[0].x + str, game.screenPos[0].y, game.screenPos[0].x - game.screenPos[1].x + str, 1, COLOR8_CYAN, VDP_OP_AND);
 	}
 	else
 	{
-		LMMV(scr.x, scr.y, width, 1, COLOR8_BLACK, VDP_OP_AND);
-		//STORE_LINE_H(scr.x, scr.y, x2d);
+		LMMV(game.screenPos[0].x, game.screenPos[0].y, game.screenPos[0].x - game.screenPos[1].x, 1, COLOR8_RED, VDP_OP_AND);
 	}
 }
 
 void DrawLineV(const Vector3D* vec, i16 height)
 {
+	i8 str;
+
+	ProjectLineV(vec, height);
+
+	if(game.bAnaglyph)
+	{
+		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec->z)]);
+
+		LMMV(game.screenPos[0].x - str, game.screenPos[0].y, 1, game.screenPos[0].y - game.screenPos[1].y - str, COLOR8_RED, VDP_OP_AND);
+		LMMV(game.screenPos[0].x + str, game.screenPos[0].y, 1, game.screenPos[0].y - game.screenPos[1].y + str, COLOR8_CYAN, VDP_OP_AND);
+	}
+	else
+	{
+		LMMV(game.screenPos[0].x, game.screenPos[0].y, 1, game.screenPos[0].y - game.screenPos[1].y, COLOR8_RED, VDP_OP_AND);
+	}
 }
 
 //-----------------------------------------------------------------------------
