@@ -19,8 +19,17 @@
 #define ITEM_VARIABLE		(0x80 + 2)
 #define ITEM_DUMMY			(0x80 + 3)
 
-#define CENTER_X	(F10_SET(255) >> 1) // 127.5
-#define CENTER_Y	(F10_SET(211) >> 1) // 105.5
+#define CENTER_X			(F10_SET(255) >> 1) // 127.5
+#define CENTER_Y			(F10_SET(211) >> 1) // 105.5
+
+#define BG_COLOR			COLOR8_WHITE
+
+#define PLAYER_SIZE			20
+#define PLAYER_SPEED		10
+	
+#define FIELD_WIDTH			120
+#define FIELD_HEIGHT		105
+#define FIELD_DEPTH			256
 
 //-----------------------------------------------------------------------------
 // M A C R O S
@@ -54,26 +63,13 @@ typedef i16 float10;
 #define VEC_ADD(vec1, vec2) { vec1.x += vec2.x; vec1.y += vec2.y; vec1.z += vec2.z; }
 #define VEC_SUB(vec1, vec2) { vec1.x -= vec2.x; vec1.y -= vec2.y; vec1.z -= vec2.z; }
 
-#define STORE_LINE(a1, b1, a2, b2) {\
-	game.lineTab[game.lineIdx].dir = DIR_DIAG;\
-	game.lineTab[game.lineIdx].x1 = a1;\ 
-	game.lineTab[game.lineIdx].y1 = b1;\
-	game.lineTab[game.lineIdx].x2 = a2;\
-	game.lineTab[game.lineIdx++].y2 = b2; }
-
-#define STORE_LINE_H(a1, a2, b) {\
-	game.lineTab[game.lineIdx].dir = DIR_HORI;\
-	game.lineTab[game.lineIdx].x1 = a1;\ 
-	game.lineTab[game.lineIdx].y1 = b;\
-	game.lineTab[game.lineIdx].x2 = a2;\
-	game.lineTab[game.lineIdx++].y2 = b; }
-
-#define STORE_LINE_V(a, b1, b2) {\
-	game.lineTab[game.lineIdx].dir = DIR_VERT;\
-	game.lineTab[game.lineIdx].x1 = a;\ 
-	game.lineTab[game.lineIdx].y1 = b1;\
-	game.lineTab[game.lineIdx].x2 = a;\
-	game.lineTab[game.lineIdx++].y2 = b2; }
+#define STORE_LINE(_dir, _x1, _y1, _x2, _y2) {\
+	game.lineTab[game.lineIdx].dir = _dir;\
+	game.lineTab[game.lineIdx].x1 = _x1;\
+	game.lineTab[game.lineIdx].y1 = _y1;\
+	game.lineTab[game.lineIdx].x2 = _x2;\
+	game.lineTab[game.lineIdx].y2 = _y2;\
+	game.lineIdx++; }
 
 //-----------------------------------------------------------------------------
 // T Y P E S
@@ -163,7 +159,7 @@ typedef struct tagGameData
 	i16              projZ[512];
 	LineData         lineTab[256];
 	u8               lineIdx;
-	VectorU8         screenPos[4];
+	VectorU8         screenPos[2];
 	// 3d Settings
 	u8               bAnaglyph;
 	u8               power3d;
@@ -183,6 +179,7 @@ void ResetMenu();
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
 void DrawBackground();
+void DrawPlayer(i8 idx);
 
 // Color process
 u8 DarkenColor(u8 color, u8 power);
@@ -209,10 +206,10 @@ void ProjectLineH(const Vector3D* vec, i16 width);
 void ProjectLineV(const Vector3D* vec, i16 height);
 void ProjectSquare(const Vector3D* min, const Vector3D* max);
 
-void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2);
-void DrawLineH(const Vector3D* vec, i16 width);
-void DrawLineV(const Vector3D* vec, i16 height);
-void DrawSquare(const Vector3D* center, i16 size);
+void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2, u8 bStore);
+void DrawLineH(const Vector3D* vec, i16 width, u8 bStore);
+void DrawLineV(const Vector3D* vec, i16 height, u8 bStore);
+void DrawSquare(const Vector3D* min, const Vector3D* max, u8 bStore);
 //void ClearSquare(const Vector3D* center, i16 size);
 
 //-----------------------------------------------------------------------------
@@ -440,6 +437,7 @@ void StateInitialize()
 	}
 	game.bAnaglyph = TRUE;
 	game.power3d = 16;
+	game.lineIdx = 0;
 
 	game.page = 0;
 	game.state = StateTitle;
@@ -592,10 +590,8 @@ void StateStartGame()
 	game.page = 0;
 	SetPage8(game.page);
 
-	SetScreenColor(0, 0, COLOR8_WHITE);
-	//FillVRAM(0,   0, 256, 212, COLOR8_BLACK);
-	//FillVRAM(0, 256, 256, 212, COLOR8_BLACK);
-	ClearScreen8(COLOR8_WHITE);
+	SetScreenColor(0, 0, BG_COLOR);
+	ClearScreen8(BG_COLOR);
 
 	/* ... */
 	DrawBackground();
@@ -610,12 +606,19 @@ void StateStartGame()
 	VEC_SET(game.players[1].position, F10_SET(-50), F10_SET(-50), F10_SET(256));
 	game.players[1].angle = 0;
 
-#define PLAYER_SIZE 20
-
-	DrawSquare(&game.players[0].position, PLAYER_SIZE);
-	DrawSquare(&game.players[1].position, PLAYER_SIZE);
+	DrawPlayer(0);
+	DrawPlayer(1);
 
 	game.state = StateUpdateGame;
+}
+
+void DrawPlayer(i8 idx)
+{
+	Vector3D min, max;
+
+	VEC_SET(min, game.players[idx].position.x - F10_SET(PLAYER_SIZE), game.players[idx].position.y - F10_SET(PLAYER_SIZE), game.players[idx].position.z);
+	VEC_SET(max, game.players[idx].position.x + F10_SET(PLAYER_SIZE), game.players[idx].position.y + F10_SET(PLAYER_SIZE), game.players[idx].position.z);
+	DrawSquare(&min, &max, TRUE);
 }
 
 void DrawBackground()
@@ -623,76 +626,55 @@ void DrawBackground()
 	Vector3D vec1, vec2;
 	i16 z;
 
-#define FIELD_WIDTH		120
-#define FIELD_HEIGHT	105
-#define FIELD_DEPTH		256
-
 	// Front
-	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
-	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	DrawLine3D(&vec1, &vec2);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
+	DrawSquare(&vec1, &vec2, FALSE);
 
-	z = 8;
-	while(z <= 256)
+	// Ground
+	for(z = 8; z <= 256; z += 8)
 	{
-		//VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
-		//VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
-		//DrawLine3D(&vec1, &vec2);
 		VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
-		DrawLineH(&vec1, F10_SET(FIELD_WIDTH*2));
-		z += 8;
+		DrawLineH(&vec1, F10_SET(FIELD_WIDTH*2), FALSE);		
 	}
 
 	// Mid
-	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
-	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
-	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	DrawLine3D(&vec1, &vec2);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
+	DrawSquare(&vec1, &vec2, FALSE);
 
 	// back
-	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
-	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
+	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
+	DrawSquare(&vec1, &vec2, FALSE);
 
 	// Depth
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
+	DrawLine3D(&vec1, &vec2, FALSE);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
+	DrawLine3D(&vec1, &vec2, FALSE);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
+	DrawLine3D(&vec1, &vec2, FALSE);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2);
+	DrawLine3D(&vec1, &vec2, FALSE);
+}
+
+/***/
+void ClearLines()
+{
+	i16 i;
+	for(i = 0; i < game.lineIdx; i++)
+	{
+		if(game.lineTab[i].dir == DIR_DIAG)
+			Line(game.lineTab[i].x1, game.lineTab[i].y1, game.lineTab[i].x2, game.lineTab[i].y2, BG_COLOR, VDP_OP_IMP);
+		else
+			HMMV(game.lineTab[i].x1, game.lineTab[i].y1, game.lineTab[i].x2, game.lineTab[i].y2, BG_COLOR);
+	}
+	game.lineIdx = 0;
 }
 
 /** State - Process game */
@@ -706,40 +688,10 @@ void StateUpdateGame()
 	//game.page = 1 - game.page;
 	game.yOffset = 256 * game.page;
 
-	/* ... */
-	//if(game.plyDepth > 256)
-	//{
-	//	VEC_SET(vec1, F10_SET(PLAYER_SIZE), F10_SET(10), F10_SET(512 - game.plyDepth));
-	//	VEC_SET(vec2, F10_SET(PLAYER_SIZE), F10_SET(-10), F10_SET(512 - game.plyDepth));
-	//}
-	//else
-	//{
-	//	VEC_SET(vec1, F10_SET(PLAYER_SIZE), F10_SET(10), F10_SET(game.plyDepth));
-	//	VEC_SET(vec2, F10_SET(PLAYER_SIZE), F10_SET(-10), F10_SET(game.plyDepth));
-	//}
-	//DrawLine3D(&vec1, &vec2, OP_CLEAR);
-	//
-	//game.plyDepth++;
-	//if(game.plyDepth > 512)
-	//{
-	//	game.plyDepth = 0;
-	//}
-	//if(game.plyDepth > 256)
-	//{
-	//	vec1.z = F10_SET(512 - game.plyDepth);
-	//	vec2.z = F10_SET(512 - game.plyDepth);
-	//}
-	//else
-	//{
-	//	vec1.z = F10_SET(game.plyDepth);
-	//	vec2.z = F10_SET(game.plyDepth);
-	//}
-	//DrawLine3D(&vec1, &vec2);
-
-	// 
+	//--------------------------------------------------------------------------------
+	// Move player
 	keyLine = GetKeyMatrixLine(8);
 
-#define PLAYER_SPEED F10_SET(10)
 
 	bMove = FALSE;
 	VEC_SET(vecMove, 0, 0, 0);
@@ -749,7 +701,7 @@ void StateUpdateGame()
 		if(game.players[0].position.x > F10_SET(-120+PLAYER_SIZE))
 		{
 			bMove = TRUE;
-			vecMove.x -= PLAYER_SPEED;
+			vecMove.x -= F10_SET(PLAYER_SPEED);
 		}
 	}
 	else if((keyLine & KEY_RIGHT) == 0)
@@ -757,7 +709,7 @@ void StateUpdateGame()
 		if(game.players[0].position.x < F10_SET(120-PLAYER_SIZE))
 		{
 			bMove = TRUE;
-			vecMove.x += PLAYER_SPEED;
+			vecMove.x += F10_SET(PLAYER_SPEED);
 		}
 	}
 	if((keyLine & KEY_UP) == 0)
@@ -765,7 +717,7 @@ void StateUpdateGame()
 		if(game.players[0].position.y < F10_SET(100-PLAYER_SIZE))
 		{
 			bMove = TRUE;
-			vecMove.y += PLAYER_SPEED;
+			vecMove.y += F10_SET(PLAYER_SPEED);
 		}
 	}
 	else if((keyLine & KEY_DOWN) == 0)
@@ -773,16 +725,17 @@ void StateUpdateGame()
 		if(game.players[0].position.y > F10_SET(-100+PLAYER_SIZE))
 		{
 			bMove = TRUE;
-			vecMove.y -= PLAYER_SPEED;
+			vecMove.y -= F10_SET(PLAYER_SPEED);
 		}
 	}
 
 	if(bMove)
 	{
-		//ClearSquare(&game.players[0].position, PLAYER_SIZE);
+		ClearLines();
 		DrawBackground();
 		VEC_ADD(game.players[0].position, vecMove);
-		DrawSquare(&game.players[0].position, PLAYER_SIZE);
+		DrawPlayer(0);
+		DrawPlayer(1);
 	}
 
 	// 
@@ -927,7 +880,6 @@ void ProjectLineH(const Vector3D* vec, i16 width)
 	X = CENTER_X + F10_MUL_TINY(vec->x + width, Z);
 
 	game.screenPos[1].x = F10_GET(X);
-	game.screenPos[1].y = game.screenPos[0].y;
 }
 
 void ProjectLineV(const Vector3D* vec, i16 height)
@@ -937,14 +889,13 @@ void ProjectLineV(const Vector3D* vec, i16 height)
 	Z = g_Equa512[F10_GET(vec->z)];
 
 	X = CENTER_X + F10_MUL_TINY(vec->x, Z);
-	Y = CENTER_Y - F10_MUL_TINY(vec->y, Z);
-
-	game.screenPos[0].x = F10_GET(X);
-	game.screenPos[0].y = F10_GET(Y);
-
 	Y = CENTER_Y - F10_MUL_TINY(vec->y + height, Z);
 
-	game.screenPos[1].x = game.screenPos[0].x;
+	game.screenPos[0].x = F10_GET(X);
+	game.screenPos[0].x = F10_GET(Y);
+
+	Y = CENTER_Y - F10_MUL_TINY(vec->y, Z);
+
 	game.screenPos[1].y = F10_GET(Y);
 }
 
@@ -954,101 +905,22 @@ void ProjectSquare(const Vector3D* min, const Vector3D* max)
 
 	Z = g_Equa512[F10_GET(min->z)];
 
-	X = CENTER_X + F10_MUL_TINY(max->x, Z);
+	X = CENTER_X + F10_MUL_TINY(min->x, Z);
 	Y = CENTER_Y - F10_MUL_TINY(max->y, Z);
 
 	game.screenPos[0].x = F10_GET(X);
-
-	game.screenPos[2].y = F10_GET(Y);
-
-	game.screenPos[3].x = F10_GET(X);
-	game.screenPos[3].y = F10_GET(Y);
-
-	X = CENTER_X + F10_MUL_TINY(min->x, Z);
-	Y = CENTER_Y - F10_MUL_TINY(min->y, Z);
-
 	game.screenPos[0].y = F10_GET(Y);
+
+	X = CENTER_X + F10_MUL_TINY(max->x, Z);
+	Y = CENTER_Y - F10_MUL_TINY(min->y, Z);
 
 	game.screenPos[1].x = F10_GET(X);
 	game.screenPos[1].y = F10_GET(Y);
-
-	game.screenPos[2].x = F10_GET(X);
 }
 
-//void ProjectPoint(const Vector3D* v3d, VectorU8* v2d)
-//{
-//	i16 X, Y, Z;
-//
-//	//Z = game.projZ[F10_GET(v3d->z)];
-//	Z = g_Equa512[F10_GET(v3d->z)];
-//	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
-//	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
-//
-//	v2d->x = F10_GET(X);
-//	v2d->y = F10_GET(Y);
-//}
+#define LINE_DIAG(x1, y1, x2, y2, color)	Line(x1, y1, x2, y2, color, VDP_OP_AND); if(bStore) STORE_LINE(DIR_DIAG, x1, y1, x2, y2);
 
-//void ProjectPointH(const Vector3D* v3d, i16 x3d, VectorU8* v2d, u8* x2d)
-//{
-//	i16 X, Y, Z;
-//
-//	//Z = game.projZ[F10_GET(v3d->z)];
-//	Z = g_Equa512[F10_GET(v3d->z)];
-//
-//	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
-//	v2d->x = F10_GET(X);
-//	
-//	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
-//	v2d->y = F10_GET(Y);
-//
-//	X = CENTER_X + F10_MUL_TINY(x3d, Z);
-//	*x2d = F10_GET(X);
-//}
-
-//void ProjectPointV(const Vector3D* v3d, i16 y3d, VectorU8* v2d, i16* y2d)
-//{
-//	i16 X, Y, Z;
-//
-//	//Z = game.projZ[F10_GET(v3d->z)];
-//	Z = g_Equa512[F10_GET(v3d->z)];
-//
-//	X = CENTER_X + F10_MUL_TINY(v3d->x, Z);
-//	v2d->x = F10_GET(X);
-//	
-//	Y = CENTER_Y - F10_MUL_TINY(v3d->y, Z);
-//	v2d->y = F10_GET(Y);
-//
-//	Y = CENTER_Y - F10_MUL_TINY(y3d, Z);
-//	*y2d = F10_GET(Y);
-//}
-
-//u8 ProjectLenght(i16 length, i16 z)
-//{
-//	i16 X, Z;
-//	Z = g_Equa512[F10_GET(z)];
-//	X = F10_MUL_TINY(length, Z);
-//	return F10_GET(X);
-//}
-
-void DrawSquare(const Vector3D* center, i16 size)
-{
-	Vector3D vec1, vec2;
-
-	VEC_SET(vec1, center->x - F10_SET(size), center->y + F10_SET(size), center->z);
-	VEC_SET(vec2, center->x + F10_SET(size), center->y + F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2);
-
-	VEC_SET(vec1, center->x + F10_SET(size), center->y - F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2);
-
-	VEC_SET(vec2, center->x - F10_SET(size), center->y - F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2);
-
-	VEC_SET(vec1, center->x - F10_SET(size), center->y + F10_SET(size), center->z);
-	DrawLine3D(&vec1, &vec2);
-}
-
-void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
+void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2, u8 bStore)
 {
 	i8 str1, str2;
 
@@ -1058,16 +930,18 @@ void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2)
 	{
 		str1 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec1->z)]);
 		str2 = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec2->z)]);
-		Line(game.screenPos[0].x - str1, game.screenPos[0].y, game.screenPos[1].x - str2, game.screenPos[1].y, COLOR8_RED, VDP_OP_AND);
-		Line(game.screenPos[0].x + str1, game.screenPos[0].y, game.screenPos[1].x + str2, game.screenPos[1].y, COLOR8_CYAN, VDP_OP_AND);
+		LINE_DIAG(game.screenPos[0].x - str1, game.screenPos[0].y, game.screenPos[1].x - str2, game.screenPos[1].y, COLOR8_RED);
+		LINE_DIAG(game.screenPos[0].x + str1, game.screenPos[0].y, game.screenPos[1].x + str2, game.screenPos[1].y, COLOR8_CYAN);
 	}
 	else
 	{
-		Line(game.screenPos[0].x, game.screenPos[0].y, game.screenPos[1].x, game.screenPos[1].y, COLOR8_RED, VDP_OP_AND);
+		LINE_DIAG(game.screenPos[0].x, game.screenPos[0].y, game.screenPos[1].x, game.screenPos[1].y, COLOR8_BLACK);
 	}
 }
 
-void DrawLineH(const Vector3D* vec, i16 width)
+#define LINE_HORI(x1, y1, x2, y2, color)	LMMV(x1, y1, x2, y2, color, VDP_OP_AND); if(bStore) STORE_LINE(DIR_HORI, x1, y1, x2, y2);
+
+void DrawLineH(const Vector3D* vec, i16 width, u8 bStore)
 {
 	i8 str;
 
@@ -1077,16 +951,16 @@ void DrawLineH(const Vector3D* vec, i16 width)
 	{
 		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec->z)]);
 
-		LMMV(game.screenPos[0].x - str, game.screenPos[0].y, game.screenPos[0].x - game.screenPos[1].x - str, 1, COLOR8_RED, VDP_OP_AND);
-		LMMV(game.screenPos[0].x + str, game.screenPos[0].y, game.screenPos[0].x - game.screenPos[1].x + str, 1, COLOR8_CYAN, VDP_OP_AND);
+		LINE_HORI(game.screenPos[0].x - str, game.screenPos[0].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_RED);
+		LINE_HORI(game.screenPos[0].x + str, game.screenPos[0].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_CYAN);
 	}
 	else
 	{
-		LMMV(game.screenPos[0].x, game.screenPos[0].y, game.screenPos[0].x - game.screenPos[1].x, 1, COLOR8_RED, VDP_OP_AND);
+		LINE_HORI(game.screenPos[0].x, game.screenPos[0].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_BLACK);
 	}
 }
 
-void DrawLineV(const Vector3D* vec, i16 height)
+void DrawLineV(const Vector3D* vec, i16 height, u8 bStore)
 {
 	i8 str;
 
@@ -1096,12 +970,43 @@ void DrawLineV(const Vector3D* vec, i16 height)
 	{
 		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(vec->z)]);
 
-		LMMV(game.screenPos[0].x - str, game.screenPos[0].y, 1, game.screenPos[0].y - game.screenPos[1].y - str, COLOR8_RED, VDP_OP_AND);
-		LMMV(game.screenPos[0].x + str, game.screenPos[0].y, 1, game.screenPos[0].y - game.screenPos[1].y + str, COLOR8_CYAN, VDP_OP_AND);
+		LINE_HORI(game.screenPos[0].x - str, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_RED);
+		LINE_HORI(game.screenPos[0].x + str, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_CYAN);
 	}
 	else
 	{
-		LMMV(game.screenPos[0].x, game.screenPos[0].y, 1, game.screenPos[0].y - game.screenPos[1].y, COLOR8_RED, VDP_OP_AND);
+		LINE_HORI(game.screenPos[0].x, game.screenPos[0].y, 1, game.screenPos[1].y - game.screenPos[0].y, COLOR8_BLACK);
+	}
+}
+
+void DrawSquare(const Vector3D* min, const Vector3D* max, u8 bStore)
+{
+	i8 str;
+
+	ProjectSquare(min, max);
+
+	if(game.bAnaglyph)
+	{
+		str = F10_GET(game.power3d * g_Equa512[255 + F10_GET(min->z)]);
+
+		LINE_HORI(game.screenPos[0].x - str, game.screenPos[0].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_RED);
+		LINE_HORI(game.screenPos[0].x + str, game.screenPos[0].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_CYAN);
+		
+		LINE_HORI(game.screenPos[0].x - str, game.screenPos[1].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_RED);
+		LINE_HORI(game.screenPos[0].x + str, game.screenPos[1].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_CYAN);
+		
+		LINE_HORI(game.screenPos[0].x - str, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_RED);
+		LINE_HORI(game.screenPos[0].x + str, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_CYAN);
+		
+		LINE_HORI(game.screenPos[1].x - str, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_RED);
+		LINE_HORI(game.screenPos[1].x + str, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_CYAN);
+	}
+	else
+	{
+		LINE_HORI(game.screenPos[0].x, game.screenPos[0].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_BLACK);
+		LINE_HORI(game.screenPos[0].x, game.screenPos[1].y, 1 + game.screenPos[1].x - game.screenPos[0].x, 1, COLOR8_BLACK);
+		LINE_HORI(game.screenPos[0].x, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_BLACK);
+		LINE_HORI(game.screenPos[1].x, game.screenPos[0].y, 1, 1 + game.screenPos[1].y - game.screenPos[0].y, COLOR8_BLACK);
 	}
 }
 
