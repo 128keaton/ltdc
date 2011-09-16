@@ -32,6 +32,10 @@
 #define FIELD_HEIGHT		105
 #define FIELD_DEPTH			256
 
+#define LINE_DRAW			0x1
+#define LINE_STORE			0x2
+#define LINE_DRAW_STORE		(LINE_DRAW + LINE_STORE)
+
 //-----------------------------------------------------------------------------
 // M A C R O S
 
@@ -64,13 +68,8 @@ typedef i16 float10;
 #define VEC_ADD(vec1, vec2) { vec1.x += vec2.x; vec1.y += vec2.y; vec1.z += vec2.z; }
 #define VEC_SUB(vec1, vec2) { vec1.x -= vec2.x; vec1.y -= vec2.y; vec1.z -= vec2.z; }
 
-#define STORE_LINE(_dir, _x1, _y1, _x2, _y2) {\
-	game.lineTab[game.lineIdx[game.page]][game.page].dir = _dir;\
-	game.lineTab[game.lineIdx[game.page]][game.page].x1 = _x1;\
-	game.lineTab[game.lineIdx[game.page]][game.page].y1 = _y1;\
-	game.lineTab[game.lineIdx[game.page]][game.page].x2 = _x2;\
-	game.lineTab[game.lineIdx[game.page]][game.page].y2 = _y2;\
-	game.lineIdx[game.page]++; }
+#define LINE_TAB game.lineTab[game.lineIdx[game.page]][game.page]
+#define STORE_LINE(_dir, _color, _x1, _y1, _x2, _y2) { LINE_TAB.dir = _dir; /*LINE_TAB.color = _color;*/ LINE_TAB.x1 = _x1; LINE_TAB.y1 = _y1; LINE_TAB.x2 = _x2; LINE_TAB.y2 = _y2; game.lineIdx[game.page]++; }
 
 //-----------------------------------------------------------------------------
 // T Y P E S
@@ -124,12 +123,23 @@ typedef struct tagMenu
 	u8 itemNum;
 } Menu;
 
+
+enum PLAYER_MOVE
+{
+	MOVE_UP    = 0x1,
+	MOVE_RIGHT = 0x2,
+	MOVE_DOWN  = 0x4,
+	MOVE_LEFT  = 0x8
+};
+
+
 typedef struct tagPlayerData
 {
 	u8			score;
 	Vector3D	position;
 	float10		angle;
 	VectorI16	speed;
+	u8          move;
 } PlayerData;
 
 enum LINE_DIR
@@ -141,7 +151,7 @@ enum LINE_DIR
 
 typedef struct tagLineData
 {
-	u8 dir;
+	u8 dir/*, color*/;
 	u16 x1, y1, x2, y2;
 } LineData;
 
@@ -163,6 +173,8 @@ typedef struct tagGameData
 	LineData         lineTab[256][2];
 	u8               lineIdx[2];
 	VectorU16        screenPos[2];
+	LineData         bgTab[256];
+	u8               bgIdx;
 	// 3d Settings
 	u8               bAnaglyph;
 	u8               power3d;
@@ -181,9 +193,11 @@ void ResetMenu();
 
 void DrawCharacter(u16 x, u16 y, u8 chr, u8 color);
 void DrawText(u16 x, u16 y, const char* text, u8 color);
+void InitBackground();
 void DrawBackground();
 void DrawPlayer(i8 idx);
 void DrawBall();
+void ClearLines();
 
 // Color process
 u8 DarkenColor(u8 color, u8 power);
@@ -304,79 +318,9 @@ __sfr __at(0xA8) g_slotPort;
 /** Program entry point */
 void main(void)
 {
-//#if 1
-//	__asm
-//		di
-//		call	#0x0138 ;// RSLREG: Lit l'état courant du registre du slot primaire.
-//		rrca
-//		rrca
-//		and		#3
-//		ld		c, a
-//		ld		b, #0
-//		ld		hl, #0xFCC1
-//		add		hl, bc
-//		or		(hl)
-//		ld		c, a
-//		inc		hl
-//		inc		hl
-//		inc		hl
-//		inc		hl
-//		ld		a, (hl)
-//		and		#0x0C
-//		or		c
-//		;//ld		(#0xC399),a
-//		ld		h, a
-//		ld		l, #0xF7
-//		ld		(#0xFEDA), hl
-//		ld		hl, #game_entry_point
-//		ld		(#0xFEDC), hl
-//		ld		a, #0xC9
-//		ld		(#0xFEDE), a
-//		ret
-//	game_entry_point:
-//		di
-//		ld		b, #5 ;// delete hook
-//		ld		a, #0xC9
-//		ld		hl, #0xFEDA ;// HSTKE
-//	del_hook:
-//		ld		(hl), a
-//		inc		hl
-//		djnz	del_hook
-//		;// Check if disk found
-//		ld		a, (#0xFFA7)		              ;// checks if there is any diskrom (HPHYD)
-//		cp		#0xC9
-//		jr		z, return_clear
-//		;// comprueba version de DOS y guarda
-//		ld		c, #0x6F ;// _DOSVER_
-//		call	#0xF37D ;// BDOS: Send DOSVER command to dos
-//		ld		a, b
-//		inc		a
-//		;//ld		(DOSFOUND),a		;// Save dos version
-//		;//call	InitDskError		;// Initialices Disk Error routines (mail me if you need them)
-//		jp		game_start
-//	return_clear:
-//		xor		a
-//		;//ld		(DOSFOUND),a
-//		jp		game_start
-//	game_start:
-//		ld		hl, #_freeRam
-//		ld		(#0xF6C6), hl ;// Fin de la zone des variables = 0C000h
-//
-//;//		ld		c, #0x1A
-//;//		ld		de, #freeRam
-//;//		call	#0xF37D
-//;//		ld		c, #0x1B
-//;//		ld		e, #0
-//;//		call	#0xF37D
-//;//		ld		c, #0x57
-//;//		call	#0xF37D
-//	__endasm;
-//#endif
-
 	__asm
 	;game_entry_point:
 		di
-		;//ld		sp, (#0xFC4A)
 		ld		sp, #0xE000
 		ei
 	__endasm;
@@ -440,7 +384,7 @@ void StateInitialize()
 		game.projZ[x] = (512 - x) >> 3; // (512 - x) << 6 / 512
 	}
 	game.bAnaglyph = TRUE;
-	game.power3d = 16;
+	game.power3d = 12;
 	game.lineIdx[0] = 0;
 	game.lineIdx[1] = 0;
 
@@ -601,27 +545,29 @@ void StateStartGame()
 
 	game.page = 0;
 	game.yOffset = 0;
-	DrawBackground();
-	game.page = 1;
-	game.yOffset = 256;
-	DrawBackground();
+	//InitBackground();
+
+	//game.page = 0;
+	//game.yOffset = 0;
+	//DrawBackground();
+
+	//game.page = 1;
+	//game.yOffset = 256;
+	//DrawBackground();
 
 	// Player 0
 	game.players[0].score = 0;
 	VEC_SET(game.players[0].position, F10_SET(50), F10_SET(50), F10_SET(0));
 	game.players[0].angle = 0;
-	DrawPlayer(0);
 
 	// Player 1
 	game.players[1].score = 0;
 	VEC_SET(game.players[1].position, F10_SET(-50), F10_SET(-50), F10_SET(256));
 	game.players[1].angle = 0;
-	DrawPlayer(1);
 
 	// Ball
 	VEC_SET(game.ballPos, 0, 0, F10_SET(128));
 	VEC_SET(game.ballDir, 0, 0, F10_SET(-8));
-	DrawBall();
 
 	game.state = StateUpdateGame;
 }
@@ -632,19 +578,29 @@ void DrawPlayer(i8 idx)
 
 	VEC_SET(min, game.players[idx].position.x - F10_SET(PLAYER_SIZE), game.players[idx].position.y - F10_SET(PLAYER_SIZE), game.players[idx].position.z);
 	VEC_SET(max, game.players[idx].position.x + F10_SET(PLAYER_SIZE), game.players[idx].position.y + F10_SET(PLAYER_SIZE), game.players[idx].position.z);
-	DrawSquare(&min, &max, TRUE);
+	DrawSquare(&min, &max, LINE_DRAW_STORE);
 }
 
 void DrawBall()
 {
 	Vector3D min, max;
-
 	VEC_SET(min, game.ballPos.x - F10_SET(BALL_SIZE), game.ballPos.y - F10_SET(BALL_SIZE), game.ballPos.z);
 	VEC_SET(max, game.ballPos.x + F10_SET(BALL_SIZE), game.ballPos.y + F10_SET(BALL_SIZE), game.ballPos.z);
-	DrawSquare(&min, &max, TRUE);
+	DrawSquare(&min, &max, LINE_DRAW_STORE);
+
+	//Vector3D p1, p2, p3, p4;
+	//VEC_SET(p1, game.ballPos.x - F10_SET(BALL_SIZE), game.ballPos.y + F10_SET(BALL_SIZE), game.ballPos.z);
+	//VEC_SET(p2, game.ballPos.x + F10_SET(BALL_SIZE), game.ballPos.y + F10_SET(BALL_SIZE), game.ballPos.z);
+	//VEC_SET(p3, game.ballPos.x + F10_SET(BALL_SIZE), game.ballPos.y - F10_SET(BALL_SIZE), game.ballPos.z);
+	//VEC_SET(p4, game.ballPos.x - F10_SET(BALL_SIZE), game.ballPos.y - F10_SET(BALL_SIZE), game.ballPos.z);
+
+	//DrawLine3D(&p1, &p2, LINE_DRAW_STORE);
+	//DrawLine3D(&p2, &p3, LINE_DRAW_STORE);
+	//DrawLine3D(&p3, &p4, LINE_DRAW_STORE);
+	//DrawLine3D(&p4, &p1, LINE_DRAW_STORE);
 }
 
-void DrawBackground()
+void InitBackground()
 {
 	Vector3D vec1, vec2;
 	i16 z;
@@ -652,38 +608,64 @@ void DrawBackground()
 	// Front
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
-	DrawSquare(&vec1, &vec2, FALSE);
+	DrawSquare(&vec1, &vec2, LINE_STORE);
 
 	// Ground
 	//for(z = 8; z <= 256; z += 8)
 	//{
 	//	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(z));
-	//	DrawLineH(&vec1, F10_SET(FIELD_WIDTH*2), FALSE);		
+	//	DrawLineH(&vec1, F10_SET(FIELD_WIDTH*2), LINE_STORE);		
 	//}
 
 	// Mid
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(128));
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(128));
-	DrawSquare(&vec1, &vec2, FALSE);
+	DrawSquare(&vec1, &vec2, LINE_STORE);
 
 	// back
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawSquare(&vec1, &vec2, FALSE);
+	DrawSquare(&vec1, &vec2, LINE_STORE);
 
 	// Depth
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, FALSE);
+	DrawLine3D(&vec1, &vec2, LINE_STORE);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, FALSE);
+	DrawLine3D(&vec1, &vec2, LINE_STORE);
 	VEC_SET(vec1, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(-FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, FALSE);
+	DrawLine3D(&vec1, &vec2, LINE_STORE);
 	VEC_SET(vec1, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), 0);
 	VEC_SET(vec2, F10_SET(FIELD_WIDTH), F10_SET(-FIELD_HEIGHT), F10_SET(FIELD_DEPTH));
-	DrawLine3D(&vec1, &vec2, FALSE);
+	DrawLine3D(&vec1, &vec2, LINE_STORE);
+
+	// Backup lines
+	game.bgIdx = game.lineIdx[game.page];
+	for(z=0; z<game.bgIdx; z++)
+	{
+		game.bgTab[z].dir = game.lineTab[z][game.page].dir;
+		//game.bgTab[z].color = game.lineTab[z][game.page].color;
+		game.bgTab[z].x1 = game.lineTab[z][game.page].x1;
+		game.bgTab[z].y1 = game.lineTab[z][game.page].y1;
+		game.bgTab[z].x2 = game.lineTab[z][game.page].x2;
+		game.bgTab[z].y2 = game.lineTab[z][game.page].y2;
+	}
+
+	ClearLines();
+}
+
+void DrawBackground()
+{
+	//i16 i;
+	//for(i = 0; i < game.bgIdx; i++)
+	//{
+	//	if(game.bgTab[i].dir == DIR_DIAG)
+	//		Line(game.bgTab[i].x1, game.bgTab[i].y1 + game.yOffset, game.bgTab[i].x2, game.bgTab[i].y2 + game.yOffset, game.bgTab[i].color, VDP_OP_AND);
+	//	else
+	//		LMMV(game.bgTab[i].x1, game.bgTab[i].y1 + game.yOffset, game.bgTab[i].x2, game.bgTab[i].y2 + game.yOffset, game.bgTab[i].color, VDP_OP_AND);
+	//}
 }
 
 /***/
@@ -700,6 +682,70 @@ void ClearLines()
 	game.lineIdx[game.page] = 0;
 }
 
+/** Move the given player */
+void MovePlayer(int id)
+{
+	if(game.players[id].move & MOVE_LEFT)
+	{
+		if(game.players[id].speed.x > -PLAYER_SPEED)
+			game.players[id].speed.x--;
+	}
+	else if(game.players[id].move & MOVE_RIGHT)
+	{
+		if(game.players[id].speed.x < PLAYER_SPEED)
+			game.players[id].speed.x++;
+	}
+	else
+	{
+		game.players[id].speed.x /= 2;
+	}
+
+	if(game.players[id].speed.x != 0)
+	{
+		game.players[id].position.x += F10_SET(game.players[id].speed.x);
+		if(game.players[id].position.x > F10_SET(FIELD_WIDTH-PLAYER_SIZE-1))
+		{
+			game.players[id].position.x = F10_SET(FIELD_WIDTH-PLAYER_SIZE-1);
+			game.players[id].speed.x = 0;
+		}
+		else if(game.players[id].position.x < F10_SET(-FIELD_WIDTH+PLAYER_SIZE+1))
+		{
+			game.players[id].position.x = F10_SET(-FIELD_WIDTH+PLAYER_SIZE+1);
+			game.players[id].speed.x = 0;
+		}
+	}
+
+	if(game.players[id].move & MOVE_DOWN)
+	{
+		if(game.players[id].speed.y > -PLAYER_SPEED)
+			game.players[id].speed.y--;
+	}
+	else if(game.players[id].move & MOVE_UP)
+	{
+		if(game.players[id].speed.y < PLAYER_SPEED)
+			game.players[id].speed.y++;
+	}
+	else
+	{
+		game.players[id].speed.y /= 2;
+	}
+
+	if(game.players[id].speed.y != 0)
+	{
+		game.players[id].position.y += F10_SET(game.players[id].speed.y);
+		if(game.players[id].position.y > F10_SET(FIELD_HEIGHT-PLAYER_SIZE-1))
+		{
+			game.players[id].position.y = F10_SET(FIELD_HEIGHT-PLAYER_SIZE-1);
+			game.players[id].speed.y = 0;
+		}
+		else if(game.players[id].position.y < F10_SET(-FIELD_HEIGHT+PLAYER_SIZE+1))
+		{
+			game.players[id].position.y = F10_SET(-FIELD_HEIGHT+PLAYER_SIZE+1);
+			game.players[id].speed.y = 0;
+		}
+	}
+}
+
 /** State - Process game */
 void StateUpdateGame()
 {
@@ -710,119 +756,59 @@ void StateUpdateGame()
 	game.page = 1 - game.page;
 	game.yOffset = 256 * game.page;
 
+	// Change analglyph effect power
+	keyLine = GetKeyMatrixLine(0);
+	if((keyLine & KEY_1) == 0)
+	{
+		if(game.power3d > 0)
+			game.power3d--;
+		ClearScreen8(BG_COLOR);
+	}
+	if((keyLine & KEY_2) == 0)
+	{
+		if(game.power3d < 24)
+			game.power3d++;
+		ClearScreen8(BG_COLOR);
+	}
+
 	// Clear
 	ClearLines();
-	DrawBackground();
+	//DrawBackground();
 
 	//--------------------------------------------------------------------------------
 	// Move player 0
+
+	game.players[0].move = 0;
 	keyLine = GetKeyMatrixLine(8);
 	if((keyLine & KEY_LEFT) == 0)
-	{
-		if(game.players[0].speed.x > -PLAYER_SPEED)
-			game.players[0].speed.x--;
-	}
+		game.players[0].move |= MOVE_LEFT;
 	else if((keyLine & KEY_RIGHT) == 0)
-	{
-		if(game.players[0].speed.x < PLAYER_SPEED)
-			game.players[0].speed.x++;
-	}
-	else
-	{
-		//if(game.players[0].speed.x > 1)
-		//	game.players[0].speed.x -= 2;
-		//else if(game.players[0].speed.x < 1)
-		//	game.players[0].speed.x += 2;
-		//else
-		//	game.players[0].speed.x = 0;
-		game.players[0].speed.x /= 2;
-	}
-
-	if(game.players[0].speed.x != 0)
-	{
-		game.players[0].position.x += F10_SET(game.players[0].speed.x);
-		if(game.players[0].position.x > F10_SET(FIELD_WIDTH-PLAYER_SIZE-1))
-		{
-			game.players[0].position.x = F10_SET(FIELD_WIDTH-PLAYER_SIZE-1);
-			game.players[0].speed.x = 0;
-		}
-		else if(game.players[0].position.x < F10_SET(-FIELD_WIDTH+PLAYER_SIZE+1))
-		{
-			game.players[0].position.x = F10_SET(-FIELD_WIDTH+PLAYER_SIZE+1);
-			game.players[0].speed.x = 0;
-		}
-	}
-
+		game.players[0].move |= MOVE_RIGHT;
 	if((keyLine & KEY_DOWN) == 0)
-	{
-		if(game.players[0].speed.y > -PLAYER_SPEED)
-			game.players[0].speed.y--;
-	}
+		game.players[0].move |= MOVE_DOWN;
 	else if((keyLine & KEY_UP) == 0)
-	{
-		if(game.players[0].speed.y < PLAYER_SPEED)
-			game.players[0].speed.y++;
-	}
-	else
-	{
-		//if(game.players[0].speed.y > 1)
-		//	game.players[0].speed.y -= 2;
-		//else if(game.players[0].speed.y < 1)
-		//	game.players[0].speed.y += 2;
-		//else
-		//	game.players[0].speed.y = 0;
-		game.players[0].speed.y /= 2;
-	}
+		game.players[0].move |= MOVE_UP;
 
-	if(game.players[0].speed.y != 0)
-	{
-		game.players[0].position.y += F10_SET(game.players[0].speed.y);
-		if(game.players[0].position.y > F10_SET(FIELD_HEIGHT-PLAYER_SIZE-1))
-		{
-			game.players[0].position.y = F10_SET(FIELD_HEIGHT-PLAYER_SIZE-1);
-			game.players[0].speed.y = 0;
-		}
-		else if(game.players[0].position.y < F10_SET(-FIELD_HEIGHT+PLAYER_SIZE+1))
-		{
-			game.players[0].position.y = F10_SET(-FIELD_HEIGHT+PLAYER_SIZE+1);
-			game.players[0].speed.y = 0;
-		}
-	}
+	MovePlayer(0);
 	DrawPlayer(0);
 
 	//--------------------------------------------------------------------------------
 	// Move player 1
+
+	game.players[1].move = 0;
 	keyLine = GetKeyMatrixLine(5);
 	if((keyLine & KEY_Z) == 0)
-	{
-		if(game.players[1].position.x > F10_SET(-FIELD_WIDTH+PLAYER_SIZE))
-		{
-			game.players[1].position.x -= F10_SET(PLAYER_SPEED);
-		}
-	}
+		game.players[1].move |= MOVE_LEFT;
 	keyLine = GetKeyMatrixLine(3);
 	if((keyLine & KEY_C) == 0)
-	{
-		if(game.players[1].position.x < F10_SET(FIELD_WIDTH-PLAYER_SIZE))
-		{
-			game.players[1].position.x += F10_SET(PLAYER_SPEED);
-		}
-	}
+		game.players[1].move |= MOVE_RIGHT;
 	keyLine = GetKeyMatrixLine(5);
 	if((keyLine & KEY_S) == 0)
-	{
-		if(game.players[1].position.y < F10_SET(FIELD_HEIGHT-PLAYER_SIZE))
-		{
-			game.players[1].position.y += F10_SET(PLAYER_SPEED);
-		}
-	}
+		game.players[1].move |= MOVE_UP;
 	else if((keyLine & KEY_X) == 0)
-	{
-		if(game.players[1].position.y > F10_SET(-FIELD_HEIGHT+PLAYER_SIZE))
-		{
-			game.players[1].position.y -= F10_SET(PLAYER_SPEED);
-		}
-	}
+		game.players[1].move |= MOVE_DOWN;
+
+	MovePlayer(1);
 	DrawPlayer(1);
 
 	//--------------------------------------------------------------------------------
@@ -839,21 +825,6 @@ void StateUpdateGame()
 		game.ballDir.z = -game.ballDir.z;
 	}
 	DrawBall();
-
-	// 
-	keyLine = GetKeyMatrixLine(0);
-	if((keyLine & KEY_1) == 0)
-	{
-		if(game.power3d > 0)
-			game.power3d--;
-		game.state = StateStartGame;
-	}
-	if((keyLine & KEY_2) == 0)
-	{
-		if(game.power3d < 24)
-			game.power3d++;
-		game.state = StateStartGame;
-	}
 
 	WaitRetrace();
 	game.frame++;
@@ -1020,8 +991,8 @@ void ProjectSquare(const Vector3D* min, const Vector3D* max)
 	game.screenPos[1].y = F10_GET(Y) + game.yOffset;
 }
 
-#define LINE_DIAG(x1, y1, x2, y2, color)	Line(x1, y1, x2, y2, color, VDP_OP_AND); if(bStore) STORE_LINE(DIR_DIAG, x1, y1, x2, y2);
-#define LINE_HORI(x1, y1, x2, y2, color)	LMMV(x1, y1, x2, y2, color, VDP_OP_AND); if(bStore) STORE_LINE(DIR_HORI, x1, y1, x2, y2);
+#define LINE_DIAG(x1, y1, x2, y2, color)	/*if((bStore & LINE_DRAW) != 0)*/ { Line(x1, y1, x2, y2, color, VDP_OP_AND); } if((bStore & LINE_STORE) != 0) { STORE_LINE(DIR_DIAG, color, x1, y1, x2, y2); }
+#define LINE_HORI(x1, y1, x2, y2, color)	/*if((bStore & LINE_DRAW) != 0)*/ { LMMV(x1, y1, x2, y2, color, VDP_OP_AND); } if((bStore & LINE_STORE) != 0) { STORE_LINE(DIR_HORI, color, x1, y1, x2, y2); }
 
 /***/
 void DrawLine3D(const Vector3D* vec1, const Vector3D* vec2, u8 bStore)
