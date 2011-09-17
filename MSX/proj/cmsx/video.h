@@ -120,15 +120,15 @@
 
 #define VDP_REG(num) #(0x80+num)
 
-#define HMMC(dx, dy, nx, ny, ram)        vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_HMMC;           VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram);
-#define YMMM(sy, dx, dy, nx, ny)         vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_YMMM;                       VPDCommand32((u16)&vdp.cmd);
-#define HMMM(sx, sy, dx, dy, nx, ny)     vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&vdp.cmd);
-#define HMMV(dx, dy, nx, ny, col)        vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = col; vdp.cmd.CMD = VDP_CMD_HMMV;                     VPDCommand36((u16)&vdp.cmd+4);
+#define HMMC(dx, dy, nx, ny, ram)        { vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_HMMC;           VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram); }
+#define YMMM(sy, dx, dy, nx, ny)         { vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_YMMM;                       VPDCommand32((u16)&vdp.cmd); }
+#define HMMM(sx, sy, dx, dy, nx, ny)     { vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_HMMM;      VPDCommand32((u16)&vdp.cmd); }
+#define HMMV(dx, dy, nx, ny, col)        { vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = col; vdp.cmd.CMD = VDP_CMD_HMMV;                     VPDCommand36((u16)&vdp.cmd+4); }
 
-#define LMMC(dx, dy, nx, ny, ram, op)    vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_LMMC + op;      VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram);
+#define LMMC(dx, dy, nx, ny, ram, op)    { vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = ((u8*)ram)[0]; vdp.cmd.CMD = VDP_CMD_LMMC + op;      VPDCommand36((u16)&vdp.cmd+4); VPDCommandLoop(ram); }
 #define LMCM(sx, sy, nx, ny, ram)        /* not implemented */
-#define LMMM(sx, sy, dx, dy, nx, ny, op) vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&vdp.cmd);
-#define LMMV(dx, dy, nx, ny, col, op)    vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = col; vdp.cmd.CMD = VDP_CMD_LMMV + op;                VPDCommand36((u16)&vdp.cmd+4);
+#define LMMM(sx, sy, dx, dy, nx, ny, op) { vdp.cmd.SX = sx; vdp.cmd.SY = sy; vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CMD = VDP_CMD_LMMM + op; VPDCommand32((u16)&vdp.cmd); }
+#define LMMV(dx, dy, nx, ny, col, op)    { vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = nx; vdp.cmd.NY = ny; vdp.cmd.CLR = col; vdp.cmd.CMD = VDP_CMD_LMMV + op;                VPDCommand36((u16)&vdp.cmd+4); }
 
 #define ARG_DIY_DOWN	0
 #define ARG_DIY_UP		8
@@ -136,7 +136,7 @@
 #define ARG_DIX_LEFT	4
 #define ARG_MAJ_H		0 // horizontal
 #define ARG_MAJ_V		1 // vertical
-#define LINE(dx, dy, maj, min, col, arg, op) vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = maj; vdp.cmd.NY = min; vdp.cmd.CLR = col; vdp.cmd.ARG = arg; vdp.cmd.CMD = VDP_CMD_LINE + op; VPDCommand36((u16)&vdp.cmd+4); vdp.cmd.ARG = 0;
+#define LINE(dx, dy, maj, min, col, arg, op) { vdp.cmd.DX = dx; vdp.cmd.DY = dy; vdp.cmd.NX = maj; vdp.cmd.NY = min; vdp.cmd.CLR = col; vdp.cmd.ARG = arg; vdp.cmd.CMD = VDP_CMD_LINE + op; VPDCommand36((u16)&vdp.cmd+4); vdp.cmd.ARG = 0; }
 
 //----------------------------------------
 // T Y P E S
