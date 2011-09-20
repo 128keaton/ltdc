@@ -25,11 +25,13 @@
 #define BG_COLOR			COLOR8_WHITE
 
 #define PLAYER_SIZE			20
-#define PLAYER_SPEED		10
+#define PLAYER_SPEED		16
+
+#define RACKET_EFFECT		2
 
 #define BALL_SIZE			4
 #define BALL_SPEED			8
-#define BALL_IMPULSE		16
+#define BALL_IMPULSE		64
 	
 #define FIELD_WIDTH			120
 #define FIELD_HEIGHT		105
@@ -547,9 +549,9 @@ void StateStartGame()
 	}
 	switch(game.gameSpeed)
 	{
-		case 0: game.ballSpeed = 8; break;
-		case 1: game.ballSpeed = 16; break;
-		case 2: game.ballSpeed = 32; break;
+		case 0: game.ballSpeed = 10; break;
+		case 1: game.ballSpeed = 15; break;
+		case 2: game.ballSpeed = 20; break;
 	}
 
 	game.page = 0;
@@ -688,19 +690,7 @@ void DrawBall()
 	DrawSquare(&min, &max, LINE_DRAW_STORE);
 
 	VEC_SET(min, game.ballPos.x - F10_SET(BALL_SIZE), F10_SET(-FIELD_HEIGHT), game.ballPos.z);
-	VEC_SET(max, game.ballPos.x + F10_SET(BALL_SIZE), F10_SET(-FIELD_HEIGHT), game.ballPos.z);
-	DrawSquare(&min, &max, LINE_DRAW_STORE);
-
-	//Vector3D p1, p2, p3, p4;
-	//VEC_SET(p1, game.ballPos.x - F10_SET(BALL_SIZE), game.ballPos.y + F10_SET(BALL_SIZE), game.ballPos.z);
-	//VEC_SET(p2, game.ballPos.x + F10_SET(BALL_SIZE), game.ballPos.y + F10_SET(BALL_SIZE), game.ballPos.z);
-	//VEC_SET(p3, game.ballPos.x + F10_SET(BALL_SIZE), game.ballPos.y - F10_SET(BALL_SIZE), game.ballPos.z);
-	//VEC_SET(p4, game.ballPos.x - F10_SET(BALL_SIZE), game.ballPos.y - F10_SET(BALL_SIZE), game.ballPos.z);
-
-	//DrawLine3D(&p1, &p2, LINE_DRAW_STORE);
-	//DrawLine3D(&p2, &p3, LINE_DRAW_STORE);
-	//DrawLine3D(&p3, &p4, LINE_DRAW_STORE);
-	//DrawLine3D(&p4, &p1, LINE_DRAW_STORE);
+	DrawLineH(&min, F10_SET(BALL_SIZE*2), LINE_DRAW_STORE);		
 }
 
 void InitBackground()
@@ -878,8 +868,8 @@ void MoveBall()
 		difY = game.ballPos.y - game.players[0].position.y;
 		if((Abs16(difX) <= len) && (Abs16(difY) <= len))
 		{
-			game.ballDir.x = difX >> 3;
-			game.ballDir.y = difY >> 3;
+			game.ballDir.x = difX >> RACKET_EFFECT;
+			game.ballDir.y = difY >> RACKET_EFFECT;
 			game.ballDir.z += BALL_IMPULSE;
 		}
 		else
@@ -897,8 +887,8 @@ void MoveBall()
 		difY = game.ballPos.y - game.players[1].position.y;
 		if((Abs16(difX) <= len) && (Abs16(difY) <= len))
 		{
-			game.ballDir.x = difX >> 3;
-			game.ballDir.y = difY >> 3;
+			game.ballDir.x = difX >> RACKET_EFFECT;
+			game.ballDir.y = difY >> RACKET_EFFECT;
 			game.ballDir.z -= BALL_IMPULSE;
 		}
 		else
