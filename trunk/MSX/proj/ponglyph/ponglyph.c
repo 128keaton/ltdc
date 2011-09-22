@@ -893,6 +893,17 @@ void MoveBall()
 			game.ballDir.x = difX >> RACKET_EFFECT;
 			game.ballDir.y = difY >> RACKET_EFFECT;
 			game.ballDir.z += BALL_IMPULSE;
+			if(game.playerNum == 1)
+			{
+				game.players[0].score++;
+				if((game.players[0].score & 0x0F) >= 10)
+				{
+					game.players[0].score -= 10;
+					game.players[0].score += 0x10;
+				}
+				if(game.players[0].score > game.bestScore)
+					game.bestScore = game.players[0].score;
+			}
 		}
 		else
 		{
@@ -927,19 +938,14 @@ void MoveBall()
 		}
 		else
 		{
-			game.players[0].score++;
-			if((game.players[0].score & 0x0F) >= 10)
+			if(game.playerNum == 2)
 			{
-				game.players[0].score -= 10;
-				game.players[0].score += 0x10;
-			}
-			if(game.playerNum == 1)
-			{
-				if(game.players[0].score > game.bestScore)
-					game.bestScore = game.players[0].score;
-			}
-			else // if(game.playerNum == 2)
-			{
+				game.players[0].score++;
+				if((game.players[0].score & 0x0F) >= 10)
+				{
+					game.players[0].score -= 10;
+					game.players[0].score += 0x10;
+				}
 				game.ballDir.z = -F10_SET(game.ballSpeed);
 			}
 		}
