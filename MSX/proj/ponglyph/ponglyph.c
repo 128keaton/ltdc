@@ -173,6 +173,7 @@ typedef struct tagGameData
 	u8               item;
 	u8               pressed;
 	// Option
+	i8               playerNum;
 	i8               anaglyphFx;
 	i8               gameSpeed;
 	u8               ballSpeed;
@@ -191,6 +192,7 @@ typedef struct tagGameData
 	PlayerData       players[2];
 	Vector3D         ballPos;
 	Vector3D         ballDir;
+	u8               bestScore;
 } GameData;
 
 //-----------------------------------------------------------------------------
@@ -224,6 +226,7 @@ void StateUpdateGame();
 
 // Menu callback
 const char* StartGame(u8 op, i8 value);
+const char* SelectPlayers(u8 op, i8 value);
 const char* SelectAnaglyph(u8 op, i8 value);
 const char* SelectSpeed(u8 op, i8 value);
 
@@ -261,6 +264,7 @@ const MenuEntry g_MenuMain[] =
 const MenuEntry g_MenuStart[] =	
 {
 	{ "START GAME", ITEM_ACTION, StartGame, 0 },
+	{ "PLAYERS",    ITEM_VARIABLE, SelectPlayers, 0 },
 	{ "ANAGLYPH",   ITEM_VARIABLE, SelectAnaglyph, 0 },
 	{ "SPEED",      ITEM_VARIABLE, SelectSpeed, 0 },
 	{ "",           ITEM_DUMMY, 0, 0 },
@@ -379,6 +383,7 @@ void StateInitialize()
 	game.lineNum[0] = 0;
 	game.lineNum[1] = 0;
 	game.anaglyphFx = 2;
+	game.playerNum = 2;
 	game.gameSpeed = 0;
 
 	game.page = 0;
@@ -559,6 +564,7 @@ void StateStartGame()
 	InitBackground();
 	game.lineNum[0] = 0;
 	game.lineNum[1] = 0;
+	game.bestScore = 0;
 
 	// Player 0
 	game.players[0].score = 0;
@@ -606,9 +612,22 @@ void StateUpdateGame()
 	ClearLines();
 	DrawBackground();
 
-	DrawCharacter(128-12, 8 + game.yOffset, '0'+game.players[0].score-' ', COLOR8_WHITE);
-	DrawCharacter(128-4,  8 + game.yOffset, '-'-' ', COLOR8_WHITE);
-	DrawCharacter(128+4,  8 + game.yOffset, '0'+game.players[1].score-' ', COLOR8_WHITE);
+	if(game.playerNum == 1)
+	{
+		DrawCharacter(128-20, 8 + game.yOffset, '0' + (game.players[0].score >> 4) - ' ', COLOR8_WHITE);
+		DrawCharacter(128-12, 8 + game.yOffset, '0' + (game.players[0].score & 0x0F) - ' ', COLOR8_WHITE);
+		DrawCharacter(128-4,  8 + game.yOffset, '-' - ' ', COLOR8_WHITE);
+		DrawCharacter(128+4,  8 + game.yOffset, '0' + (game.bestScore >> 4) - ' ', COLOR8_WHITE);
+		DrawCharacter(128+12, 8 + game.yOffset, '0' + (game.bestScore & 0x0F) - ' ', COLOR8_WHITE);
+	}
+	else // if(game.playerNum == 2)
+	{
+		DrawCharacter(128-20, 8 + game.yOffset, '0' + (game.players[0].score >> 4) - ' ', COLOR8_WHITE);
+		DrawCharacter(128-12, 8 + game.yOffset, '0' + (game.players[0].score & 0x0F) - ' ', COLOR8_WHITE);
+		DrawCharacter(128-4,  8 + game.yOffset, '-' - ' ', COLOR8_WHITE);
+		DrawCharacter(128+4,  8 + game.yOffset, '0' + (game.players[1].score >> 4) - ' ', COLOR8_WHITE);
+		DrawCharacter(128+12, 8 + game.yOffset, '0' + (game.players[1].score & 0x0F) - ' ', COLOR8_WHITE);
+	}
 
 	//--------------------------------------------------------------------------------
 	// Move player 0
@@ -632,22 +651,25 @@ void StateUpdateGame()
 	//--------------------------------------------------------------------------------
 	// Move player 1
 
-	game.players[1].move = 0;
-	keyLine = GetKeyMatrixLine(5);
-	if((keyLine & KEY_Z) == 0)
-		game.players[1].move |= MOVE_LEFT;
-	keyLine = GetKeyMatrixLine(3);
-	if((keyLine & KEY_C) == 0)
-		game.players[1].move |= MOVE_RIGHT;
-	keyLine = GetKeyMatrixLine(5);
-	if((keyLine & KEY_S) == 0)
-		game.players[1].move |= MOVE_UP;
-	else if((keyLine & KEY_X) == 0)
-		game.players[1].move |= MOVE_DOWN;
-	CheckJoystick(1);
+	if(game.playerNum == 2)
+	{
+		game.players[1].move = 0;
+		keyLine = GetKeyMatrixLine(5);
+		if((keyLine & KEY_Z) == 0)
+			game.players[1].move |= MOVE_LEFT;
+		keyLine = GetKeyMatrixLine(3);
+		if((keyLine & KEY_C) == 0)
+			game.players[1].move |= MOVE_RIGHT;
+		keyLine = GetKeyMatrixLine(5);
+		if((keyLine & KEY_S) == 0)
+			game.players[1].move |= MOVE_UP;
+		else if((keyLine & KEY_X) == 0)
+			game.players[1].move |= MOVE_DOWN;
+		CheckJoystick(1);
 
-	MovePlayer(1);
-	DrawPlayer(1);
+		MovePlayer(1);
+		DrawPlayer(1);
+	}
 
 	//--------------------------------------------------------------------------------
 	// Move ball
@@ -874,7 +896,19 @@ void MoveBall()
 		}
 		else
 		{
-			game.players[1].score++;
+			if(game.playerNum == 1)
+			{
+				game.players[0].score = 0;
+			}
+			else // if(game.playerNum == 2)
+			{
+				game.players[1].score++;
+				if((game.players[1].score & 0x0F) >= 10)
+				{
+					game.players[1].score -= 10;
+					game.players[1].score += 0x10;
+				}
+			}
 			game.ballDir.z = F10_SET(game.ballSpeed);
 		}
 	}
@@ -894,7 +928,20 @@ void MoveBall()
 		else
 		{
 			game.players[0].score++;
-			game.ballDir.z = -F10_SET(game.ballSpeed);
+			if((game.players[0].score & 0x0F) >= 10)
+			{
+				game.players[0].score -= 10;
+				game.players[0].score += 0x10;
+			}
+			if(game.playerNum == 1)
+			{
+				if(game.players[0].score > game.bestScore)
+					game.bestScore = game.players[0].score;
+			}
+			else // if(game.playerNum == 2)
+			{
+				game.ballDir.z = -F10_SET(game.ballSpeed);
+			}
 		}
 	}
 
@@ -1221,6 +1268,28 @@ const char* StartGame(u8 op, i8 value)
 	op; value;
 	//game.track = value;
 	game.state = StateStartGame;
+	return "";
+}
+
+/** Menu callback - Select game mode */
+const char* SelectPlayers(u8 op, i8 value)
+{
+	value;
+	if((op == ACTION_INC) || (op == ACTION_DEC))
+	{
+		game.playerNum++;
+		if(game.playerNum > 2)
+			game.playerNum = 1;
+		ResetMenu();
+	}
+
+	switch(game.playerNum)
+	{
+	case 1:
+		return "<1>";
+	case 2:
+		return "<2>";
+	}
 	return "";
 }
 
